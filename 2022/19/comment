@@ -1,0 +1,5 @@
+Look at index.fastest.ts and index.notsofastest.ts.
+
+Just adding an object to group resources and robots, makes the code 10x slower.
+
+it is the same algorithm.

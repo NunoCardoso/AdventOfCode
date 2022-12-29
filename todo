@@ -1,0 +1,15 @@
+
+2022:
+12: on 2 seconds
+    - remove header
+15: on 16 seconds
+16: - errors on test part2
+    - error on part 2 value (execution is fine)
+    - over 1 min
+
+22: test not work
+
+another clean from 19
+try 19 with recurse
+
+
