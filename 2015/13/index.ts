@@ -63,13 +63,13 @@ export default async (lineReader: any, params: Params) => {
     scores1[subj1][subj2] = value * (oper === 'lose' ? -1 : 1)
   }
 
-  people2.push('Nuno')
+  people2.push(params.name)
   const scores2: Scores = _.cloneDeep(scores1)
 
-  scores2.Nuno = {}
+  scores2[params.name] = {}
   people1.forEach((name: string) => {
-    scores2[name].Nuno = 0
-    scores2.Nuno[name] = 0
+    scores2[name][params.name] = 0
+    scores2[params.name][name] = 0
   })
 
   if (params.part1?.skip !== true) {

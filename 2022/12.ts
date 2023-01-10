@@ -3,7 +3,7 @@ import aoc from '../aoc'
 aoc({
   year: '2022',
   day: '12',
-  mode: 'nicest',
+  mode: 'fastest',
   ui: {
     show: true,
     during: false,

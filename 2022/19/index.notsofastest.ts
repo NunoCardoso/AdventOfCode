@@ -100,7 +100,7 @@ export default async (lineReader: any, params: Params) => {
             ore: resources.ore - blueprint.geodeRobot.ore + robots.ore * newTime,
             clay: resources.clay + robots.clay * newTime,
             obsidian: resources.obsidian - blueprint.geodeRobot.obsidian + robots.obsidian * newTime,
-            geode: resources.geode + maxMinutes - (time + newTime),
+            geode: resources.geode + maxMinutes - (time + newTime)
           },
           {
             ...robots,
@@ -190,22 +190,22 @@ export default async (lineReader: any, params: Params) => {
     if (m) {
       blueprints.push({
         id: parseInt(m[1]),
-        oreRobot: {ore: parseInt(m[2])},
-        clayRobot: {ore: parseInt(m[3])},
-        obsidianRobot: {ore: parseInt(m[4]), clay: parseInt(m[5])},
-        geodeRobot: {ore: parseInt(m[6]), obsidian: parseInt(m[7])}
+        oreRobot: { ore: parseInt(m[2]) },
+        clayRobot: { ore: parseInt(m[3]) },
+        obsidianRobot: { ore: parseInt(m[4]), clay: parseInt(m[5]) },
+        geodeRobot: { ore: parseInt(m[6]), obsidian: parseInt(m[7]) }
       })
     }
   }
 
-  let part1: number = 0, part2: number = 1
+  let part1: number = 0; let part2: number = 1
 
   if (params.part1?.skip !== true) {
     blueprints.forEach((blueprint) => {
       const finished = getThemGeodes(
         blueprint,
-        {ore: 0, clay: 0, obsidian: 0, geode: 0},
-        {ore: 1, clay: 0, obsidian: 0, geode: 0},
+        { ore: 0, clay: 0, obsidian: 0, geode: 0 },
+        { ore: 1, clay: 0, obsidian: 0, geode: 0 },
         0,
         params.part1.limit
       )
@@ -219,8 +219,8 @@ export default async (lineReader: any, params: Params) => {
     blueprints.slice(0, 3).forEach((blueprint) => {
       const finished = getThemGeodes(
         blueprint,
-        {ore: 0, clay: 0, obsidian: 0, geode: 0},
-        {ore: 1, clay: 0, obsidian: 0, geode: 0},
+        { ore: 0, clay: 0, obsidian: 0, geode: 0 },
+        { ore: 1, clay: 0, obsidian: 0, geode: 0 },
         0,
         params.part2.limit
       )

@@ -7,7 +7,7 @@ export default async (lineReader: any, params: Params) => {
 
   type Point = [number, number]
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0, part2: number = 0
   const instructions: Array<[string, number]> = []
 
   for await (const line of lineReader) {

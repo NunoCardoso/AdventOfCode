@@ -17,9 +17,9 @@ export default async (lineReader: any, params: Params) => {
   const matrix1: Matrix = []
   const matrix2: Matrix = []
 
-  for (let i = 0; i < 1000; i++) {
-    matrix1.push(new Array(1000).fill(0))
-    matrix2.push(new Array(1000).fill(0))
+  for (let i = 0; i < params.dimension; i++) {
+    matrix1.push(new Array(params.dimension).fill(0))
+    matrix2.push(new Array(params.dimension).fill(0))
   }
 
   for await (const line of lineReader) {

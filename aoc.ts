@@ -51,13 +51,21 @@ export default async (config: Partial<Config> = {}) => {
     if (_config.time) {
       console.timeEnd('answer time ' + targetFile)
     }
-    if (run?.part1) {
-      console.log('Year', _config.year, 'Day', _config.day, 'Part 1', (isTest ? 'test' : 'prod'), '- got', answer.part1,
-        (run.part1.answer === answer.part1 ? good : 'Expected ' + run.part1.answer + ' ' + bad))
+    if (_params.part1?.skip === true) {
+      console.log('Year', _config.year, 'Day', _config.day, 'Part 1', (isTest ? 'test' : 'prod'), '- skipped')
+    } else {
+      if (run?.part1) {
+        console.log('Year', _config.year, 'Day', _config.day, 'Part 1', (isTest ? 'test' : 'prod'), '- got', answer.part1,
+          (run.part1.answer === answer.part1 ? good : 'Expected ' + run.part1.answer + ' ' + bad))
+      }
     }
-    if (run?.part2) {
-      console.log('Year', _config.year, 'Day', _config.day, 'Part 2', (isTest ? 'test' : 'prod'), '- got', answer.part2,
-        (run.part2.answer === answer.part2 ? good : 'Expected ' + run.part2.answer + ' ' + bad))
+    if (_params.part2?.skip === true) {
+      console.log('Year', _config.year, 'Day', _config.day, 'Part 2', (isTest ? 'test' : 'prod'), '- skipped')
+    } else {
+      if (run?.part2) {
+        console.log('Year', _config.year, 'Day', _config.day, 'Part 2', (isTest ? 'test' : 'prod'), '- got', answer.part2,
+          (run.part2.answer === answer.part2 ? good : 'Expected ' + run.part2.answer + ' ' + bad))
+      }
     }
   }
 

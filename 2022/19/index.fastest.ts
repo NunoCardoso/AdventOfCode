@@ -88,7 +88,6 @@ export default async (lineReader: any, params: Params) => {
       if (canBuildGeodeRobot(blueprint, obsidianRobot)) {
         log.trace('I can build geode robot')
         const newTime: number = timeToMakeAGeodeRobot(blueprint, obsidian, ore, obsidianRobot, oreRobot)
-        // console.log('newTime', newTime, 'time', time, 'geode', geode, 'geodeRobot', geodeRobot, 'new geode',maxMinutes - (time + newTime))
         searchAlgorithm(
           blueprint,
           ore - blueprint[4][0] + oreRobot * newTime,
@@ -175,7 +174,7 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  let part1: number = 0, part2: number = 1
+  let part1: number = 0; let part2: number = 1
 
   if (params.part1?.skip !== true) {
     blueprints.forEach((blueprint) => {
@@ -186,7 +185,7 @@ export default async (lineReader: any, params: Params) => {
         0,
         params.part1.limit
       )
-      log.warn('Blueprint', blueprint[0], 'path', 'geodes', finished)
+      log.info('Blueprint', blueprint[0], 'path', 'geodes', finished)
 
       part1 += blueprint[0] * finished
     })
@@ -201,7 +200,7 @@ export default async (lineReader: any, params: Params) => {
         0,
         params.part2.limit
       )
-      log.warn('Blueprint', blueprint[0], 'geodes', finished)
+      log.info('Blueprint', blueprint[0], 'geodes', finished)
       part2 *= finished
     })
   }

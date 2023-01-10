@@ -11,7 +11,7 @@ export default async (lineReader: any, params: Params) => {
     const vals = password.split('').map((s: string) => letters.indexOf(s))
     vals[vals.length - 1]++
     for (let i = vals.length - 1; i > 0; i--) {
-      if (vals[i] === 26) {
+      if (vals[i] === letters.length) {
         vals[i] = 0
         vals[i - 1]++
       }

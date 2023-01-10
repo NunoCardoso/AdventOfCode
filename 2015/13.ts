@@ -9,6 +9,9 @@ aoc({
       answer: 330
     }
   },
+  params: {
+    name: 'Nuno'
+  },
   prod: {
     part1: {
       answer: 664

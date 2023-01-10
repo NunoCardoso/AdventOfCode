@@ -3,7 +3,7 @@ import aoc from '../aoc'
 aoc({
   year: '2022',
   day: '19',
-  logLevel: 'info',
+  logLevel: 'warn',
   mode: 'fastest',
   params: {
     part1: {
@@ -16,11 +16,6 @@ aoc({
   test: {
     id: 'test',
     skip: false,
-    params: {
-      part2: {
-        skip: true
-      }
-    },
     part1: {
       answer: 33
     },

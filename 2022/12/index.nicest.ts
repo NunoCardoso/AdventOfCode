@@ -67,13 +67,12 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const makeNewPaths = (path: Points, opened: Paths, visited: Points, finished: Points | undefined) => {
-
     const head: Point = path[path.length - 1]
     let newPoints: Points = [
-      { x: head.x - 1, y: head.y, cost: head.cost + 1, distance: getDistanceToFinish({x: head.x - 1, y: head.y}, end) },
-      { x: head.x + 1, y: head.y, cost: head.cost + 1, distance: getDistanceToFinish({x: head.x + 1, y: head.y}, end) },
-      { x: head.x, y: head.y - 1, cost: head.cost + 1, distance: getDistanceToFinish({x: head.x, y: head.y - 1}, end) },
-      { x: head.x, y: head.y + 1, cost: head.cost + 1, distance: getDistanceToFinish({x: head.x, y: head.y + 1}, end) }
+      { x: head.x - 1, y: head.y, cost: head.cost + 1, distance: getDistanceToFinish({ x: head.x - 1, y: head.y }, end) },
+      { x: head.x + 1, y: head.y, cost: head.cost + 1, distance: getDistanceToFinish({ x: head.x + 1, y: head.y }, end) },
+      { x: head.x, y: head.y - 1, cost: head.cost + 1, distance: getDistanceToFinish({ x: head.x, y: head.y - 1 }, end) },
+      { x: head.x, y: head.y + 1, cost: head.cost + 1, distance: getDistanceToFinish({ x: head.x, y: head.y + 1 }, end) }
     ]
     newPoints = _.reject(newPoints, (newPoint: Point) => {
       if (newPoint.x < 0 || newPoint.y < 0 || newPoint.x >= world.length || newPoint.y >= world[0].length) {
@@ -114,11 +113,9 @@ export default async (lineReader: any, params: Params) => {
 
       // if it matches somewhere in a finished tail, and this new path has a batter cost than the matched finished tail,
       // then replace that part of the finished tail, and recalculate costs.
+      // if new path is worse than the matched finished tail, it can still improve fill out other info
 
-      // if new path is worse than the matched finished tail, it can still improve
-      // fill out other info
-      // sort new candidates by cost + distance from end
-
+      // this shaves some time off the final solution
       if (finished) {
         const matchFinishedPathIndex: number = _.findLastIndex(finished,
           (p: Point) => isSame(p, newPoint))
@@ -143,7 +140,7 @@ export default async (lineReader: any, params: Params) => {
 
   const searchAlgorithm = async (opened: Paths, visited: Points, finished: Points | undefined) => {
     const path: Points = opened.splice(-1)[0]
-    const head: Point =  path[path.length - 1]
+    const head: Point = path[path.length - 1]
     log.debug('=== Starting ===', head)
     log.debug('path', head, 'opened', opened.length, 'finished', finished ? finished[finished.length - 1].cost : '-')
 

@@ -1,33 +1,16 @@
 import { Params } from '../../aoc.d'
+import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   let part1: number = 0; let part2: number = 0
 
   let input = params.input
-  for (let i = 1; i <= 50; i++) {
-    const vals = input.split('')
-    const seq = []
-    let cur = ''
-    vals.forEach((val: string) => {
-      if (cur === '') {
-        cur = val
-      } else {
-        if (val === cur[0]) {
-          cur = cur + val
-        } else {
-          seq.push(cur)
-          cur = val
-        }
-      }
-    })
-    if (cur !== '') {
-      seq.push(cur)
-    }
-    let res = ''
-    seq.forEach(s => {
-      res = res + s.length + s[0]
-    })
-
+  for (let i = 1; i <= Math.max(params.part1.limit, params.part2.limit); i++) {
+    // matches a char, plus a 0-n number of same char, g repeats to all
+    const seq: Array<string> = input.match(/(.)\1*/g)
+    const res = _.reduce(seq, (memo, val) => (
+      memo + val.length + val[0]
+    ), '')
     if (i % params.part1.limit === 0) {
       part1 = res.length
     }

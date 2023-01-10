@@ -22,6 +22,7 @@ aoc({
     }
   },
   prod: {
+    skip: false,
     part1: {
       answer: 18965440
     },

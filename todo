@@ -1,15 +1,22 @@
 
+2015:
+
+04: md5, > 2 s
+all good!
+19: here
+
+2016:
+05: md5, > 1m
+
 2022:
-12: on 2 seconds
-    - remove header
-15: on 16 seconds
+
+15: on 16 seconds. rotate -45 deg
 16: - errors on test part2
     - error on part 2 value (execution is fine)
     - over 1 min
-
 22: test not work
+23: 6 seconds
+24: too long
 
-another clean from 19
-try 19 with recurse
 
 
