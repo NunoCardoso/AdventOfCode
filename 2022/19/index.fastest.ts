@@ -15,51 +15,62 @@ export default async (lineReader: any, params: Params) => {
   const haveResourcesForObsidianRobot = (blueprint: Blueprint, clay: number, ore: number) =>
     clay >= blueprint[3][1] && ore >= blueprint[3][0]
 
-  const haveResourcesForClayRobot = (blueprint: Blueprint, ore: number) =>
-    ore >= blueprint[2]
+  const haveResourcesForClayRobot = (blueprint: Blueprint, ore: number) => ore >= blueprint[2]
 
-  const haveResourcesForOreRobot = (blueprint: Blueprint, ore: number) =>
-    ore >= blueprint[1]
+  const haveResourcesForOreRobot = (blueprint: Blueprint, ore: number) => ore >= blueprint[1]
 
-  const timeToMakeAGeodeRobot = (blueprint: Blueprint,
-    obsidian: number, ore: number, obsidianRobot: number, oreRobot: number
+  const timeToMakeAGeodeRobot = (
+    blueprint: Blueprint,
+    obsidian: number,
+    ore: number,
+    obsidianRobot: number,
+    oreRobot: number
   ): number =>
-    1 + (haveResourcesForGeodeRobot(blueprint, obsidian, ore)
+    1 +
+    (haveResourcesForGeodeRobot(blueprint, obsidian, ore)
       ? 0
       : Math.max(
-        Math.ceil((blueprint[4][1] - obsidian) / obsidianRobot),
-        Math.ceil((blueprint[4][0] - ore) / oreRobot)
-      ))
+          Math.ceil((blueprint[4][1] - obsidian) / obsidianRobot),
+          Math.ceil((blueprint[4][0] - ore) / oreRobot)
+        ))
 
-  const timeToMakeAnObsidianRobot = (blueprint: Blueprint,
-    clay: number, ore: number, clayRobot: number, oreRobot: number): number =>
-    1 + (haveResourcesForObsidianRobot(blueprint, clay, ore)
+  const timeToMakeAnObsidianRobot = (
+    blueprint: Blueprint,
+    clay: number,
+    ore: number,
+    clayRobot: number,
+    oreRobot: number
+  ): number =>
+    1 +
+    (haveResourcesForObsidianRobot(blueprint, clay, ore)
       ? 0
       : Math.max(
-        Math.ceil((blueprint[3][1] - clay) / clayRobot),
-        Math.ceil((blueprint[3][0] - ore) / oreRobot)
-      ))
+          Math.ceil((blueprint[3][1] - clay) / clayRobot),
+          Math.ceil((blueprint[3][0] - ore) / oreRobot)
+        ))
 
   const timeToMakeAClayRobot = (blueprint: Blueprint, ore: number, oreRobot: number): number =>
-    1 + (haveResourcesForClayRobot(blueprint, ore)
-      ? 0
-      : Math.ceil((blueprint[2] - ore) / oreRobot)
-    )
+    1 + (haveResourcesForClayRobot(blueprint, ore) ? 0 : Math.ceil((blueprint[2] - ore) / oreRobot))
 
   const timeToMakeAnOreRobot = (blueprint: Blueprint, ore: number, oreRobot: number): number =>
-    1 + (haveResourcesForOreRobot(blueprint, ore)
-      ? 0
-      : Math.ceil((blueprint[1] - ore) / oreRobot)
-    )
+    1 + (haveResourcesForOreRobot(blueprint, ore) ? 0 : Math.ceil((blueprint[1] - ore) / oreRobot))
 
   const canBuildGeodeRobot = (blueprint: Blueprint, obsidianRobot: number) => obsidianRobot > 0
 
   const canBuildObsidianRobot = (blueprint: Blueprint, clayRobot: number) => clayRobot > 0
 
-  const getThemGeodes = (blueprint: Blueprint,
-    ore: number, clay: number, obsidian: number, geode: number,
-    oreRobot: number, clayRobot: number, obsidianRobot: number, geodeRobot: number,
-    time: number, maxMinutes: number
+  const getThemGeodes = (
+    blueprint: Blueprint,
+    ore: number,
+    clay: number,
+    obsidian: number,
+    geode: number,
+    oreRobot: number,
+    clayRobot: number,
+    obsidianRobot: number,
+    geodeRobot: number,
+    time: number,
+    maxMinutes: number
   ) => {
     // I should have max robots that allow me to build any robot in 1 min.
     const maxRobots: Robots = [
@@ -72,9 +83,16 @@ export default async (lineReader: any, params: Params) => {
 
     const searchAlgorithm = (
       blueprint: Blueprint,
-      ore: number, clay: number, obsidian: number, geode: number,
-      oreRobot: number, clayRobot: number, obsidianRobot: number, geodeRobot: number,
-      time: number, maxMinutes: number
+      ore: number,
+      clay: number,
+      obsidian: number,
+      geode: number,
+      oreRobot: number,
+      clayRobot: number,
+      obsidianRobot: number,
+      geodeRobot: number,
+      time: number,
+      maxMinutes: number
     ) => {
       if (time >= maxMinutes) {
         return
@@ -94,7 +112,10 @@ export default async (lineReader: any, params: Params) => {
           clay + clayRobot * newTime,
           obsidian - blueprint[4][1] + obsidianRobot * newTime,
           geode + maxMinutes - (time + newTime),
-          oreRobot, clayRobot, obsidianRobot, geodeRobot + 1,
+          oreRobot,
+          clayRobot,
+          obsidianRobot,
+          geodeRobot + 1,
           time + newTime,
           maxMinutes
         )
@@ -116,7 +137,10 @@ export default async (lineReader: any, params: Params) => {
             clay - blueprint[3][1] + clayRobot * newTime,
             obsidian + obsidianRobot * newTime,
             geode,
-            oreRobot, clayRobot, obsidianRobot + 1, geodeRobot,
+            oreRobot,
+            clayRobot,
+            obsidianRobot + 1,
+            geodeRobot,
             time + newTime,
             maxMinutes
           )
@@ -132,7 +156,10 @@ export default async (lineReader: any, params: Params) => {
             clay + clayRobot * newTime,
             obsidian + obsidianRobot * newTime,
             geode,
-            oreRobot, clayRobot + 1, obsidianRobot, geodeRobot,
+            oreRobot,
+            clayRobot + 1,
+            obsidianRobot,
+            geodeRobot,
             time + newTime,
             maxMinutes
           )
@@ -148,7 +175,10 @@ export default async (lineReader: any, params: Params) => {
             clay + clayRobot * newTime,
             obsidian + obsidianRobot * newTime,
             geode,
-            oreRobot + 1, clayRobot, obsidianRobot, geodeRobot,
+            oreRobot + 1,
+            clayRobot,
+            obsidianRobot,
+            geodeRobot,
             time + newTime,
             maxMinutes
           )
@@ -156,35 +186,43 @@ export default async (lineReader: any, params: Params) => {
       }
     }
 
-    searchAlgorithm(blueprint,
-      ore, clay, obsidian, geode,
-      oreRobot, clayRobot, obsidianRobot, geodeRobot,
-      time, maxMinutes)
+    searchAlgorithm(
+      blueprint,
+      ore,
+      clay,
+      obsidian,
+      geode,
+      oreRobot,
+      clayRobot,
+      obsidianRobot,
+      geodeRobot,
+      time,
+      maxMinutes
+    )
     return geodeHighScore
   }
 
   for await (const line of lineReader) {
-    const m = line.match(/^Blueprint (\d+): Each ore robot costs (\d+) ore. Each clay robot costs (\d+) ore. Each obsidian robot costs (\d+) ore and (\d+) clay. Each geode robot costs (\d+) ore and (\d+) obsidian.$/)
+    const m = line.match(
+      /^Blueprint (\d+): Each ore robot costs (\d+) ore. Each clay robot costs (\d+) ore. Each obsidian robot costs (\d+) ore and (\d+) clay. Each geode robot costs (\d+) ore and (\d+) obsidian.$/
+    )
     if (m) {
       blueprints.push([
-        parseInt(m[1]), parseInt(m[2]), parseInt(m[3]),
+        parseInt(m[1]),
+        parseInt(m[2]),
+        parseInt(m[3]),
         [parseInt(m[4]), parseInt(m[5])],
         [parseInt(m[6]), parseInt(m[7])]
       ])
     }
   }
 
-  let part1: number = 0; let part2: number = 1
+  let part1: number = 0
+  let part2: number = 1
 
   if (params.part1?.skip !== true) {
     blueprints.forEach((blueprint) => {
-      const finished = getThemGeodes(
-        blueprint,
-        0, 0, 0, 0,
-        1, 0, 0, 0,
-        0,
-        params.part1.limit
-      )
+      const finished = getThemGeodes(blueprint, 0, 0, 0, 0, 1, 0, 0, 0, 0, params.part1.limit)
       log.info('Blueprint', blueprint[0], 'path', 'geodes', finished)
 
       part1 += blueprint[0] * finished
@@ -193,13 +231,7 @@ export default async (lineReader: any, params: Params) => {
 
   if (params.part2?.skip !== true) {
     blueprints.slice(0, 3).forEach((blueprint) => {
-      const finished = getThemGeodes(
-        blueprint,
-        0, 0, 0, 0,
-        1, 0, 0, 0,
-        0,
-        params.part2.limit
-      )
+      const finished = getThemGeodes(blueprint, 0, 0, 0, 0, 1, 0, 0, 0, 0, params.part2.limit)
       log.info('Blueprint', blueprint[0], 'geodes', finished)
       part2 *= finished
     })

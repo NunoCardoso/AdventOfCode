@@ -4,7 +4,7 @@ import _ from 'lodash'
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  type Container = {id: number, value: number}
+  type Container = { id: number; value: number }
   type Containers = Array<Container>
 
   const containers: Containers = []
@@ -20,7 +20,10 @@ export default async (lineReader: any, params: Params) => {
       const sum: number = _.reduce(next, (memo, val) => memo + val.value, 0)
       if (sum >= target) {
         if (sum === target) {
-          const key = next.map(_c => '[' + _c.id + ']').sort().join('')
+          const key = next
+            .map((_c) => '[' + _c.id + ']')
+            .sort()
+            .join('')
           fills[key] = 1
           if (next.length < minimumFill) {
             minimumFill = next.length

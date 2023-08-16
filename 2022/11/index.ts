@@ -6,7 +6,7 @@ export default async (lineReader: any, params: Params) => {
 
   type Monkey = {
     items: Array<number>
-    operation: {op: '+' | '*', op2: string | number}
+    operation: { op: '+' | '*'; op2: string | number }
     divisible: number
     iftrue: number
     iffalse: number
@@ -50,8 +50,7 @@ export default async (lineReader: any, params: Params) => {
 
   // all tests are a mod. If I make a mod that combines all monkey mods,
   // them it is a test that is approved for all of them, regardless of how big the number is
-  const monkeyMod: number = _.reduce(monkeys, (memo: number, monkey: Monkey) =>
-    memo * monkey.divisible, 1)
+  const monkeyMod: number = _.reduce(monkeys, (memo: number, monkey: Monkey) => memo * monkey.divisible, 1)
 
   const generateMonkeyBusiness = (rounds: number, monkeys: Array<Monkey>, mode: string) => {
     for (let i = 0; i < rounds; i++) {
@@ -60,8 +59,10 @@ export default async (lineReader: any, params: Params) => {
         // items
         for (let k = 0; k < monkeys[j].items.length; k++) {
           log.debug('    Monkey inspects', monkeys[j].items[k])
-          const op2: number = monkeys[j].operation.op2 === 'x' ? monkeys[j].items[k] : monkeys[j].operation.op2 as number
-          let newItem = monkeys[j].operation.op === '+' ? monkeys[j].items[k] + op2 : monkeys[j].items[k] * op2
+          const op2: number =
+            monkeys[j].operation.op2 === 'x' ? monkeys[j].items[k] : (monkeys[j].operation.op2 as number)
+          let newItem =
+            monkeys[j].operation.op === '+' ? monkeys[j].items[k] + op2 : monkeys[j].items[k] * op2
           log.debug('    worry level is now ', newItem)
           if (mode === 'part1') {
             newItem = Math.floor(newItem / 3)

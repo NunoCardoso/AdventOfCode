@@ -83,7 +83,7 @@ export default async (lineReader: any, params: Params) => {
         }
       })
       if (!cantMoveToRight) {
-        rock.map(p => p[0]++)
+        rock.map((p) => p[0]++)
       }
     }
     if (wind === '<') {
@@ -101,29 +101,30 @@ export default async (lineReader: any, params: Params) => {
         }
       })
       if (!cantMoveToLeft) {
-        rock.map(p => p[0]--)
+        rock.map((p) => p[0]--)
       }
     }
   }
   const makeGravity = (rock: Array<Point>) => {
-    rock.map(p => p[1]--)
+    rock.map((p) => p[1]--)
   }
 
   const checkIfStopped = (well: Well, rock: Rock): boolean => {
-    const stopped = _.find(rock, (p: Point) => {
-      // we hit the bottom
-      if (p[1] === 0) {
-        return true
-      }
-      const rowToCheck = p[1] - 1
-      if (rowToCheck < well.length) {
-        const wellRow = well[rowToCheck]
-        if (wellRow.split('')[p[0]] === '#') {
+    const stopped =
+      _.find(rock, (p: Point) => {
+        // we hit the bottom
+        if (p[1] === 0) {
           return true
         }
-      }
-      return false
-    }) !== undefined
+        const rowToCheck = p[1] - 1
+        if (rowToCheck < well.length) {
+          const wellRow = well[rowToCheck]
+          if (wellRow.split('')[p[0]] === '#') {
+            return true
+          }
+        }
+        return false
+      }) !== undefined
     return stopped
   }
 
@@ -156,9 +157,8 @@ export default async (lineReader: any, params: Params) => {
     }
 
     for (let i = line.length - 1; i >= 0; i--) {
-      console.log(clc.cyan('|') +
-        line[i].replaceAll('@', clc.red('@')).replaceAll('#', clc.yellow('#')) +
-        clc.cyan('|')
+      console.log(
+        clc.cyan('|') + line[i].replaceAll('@', clc.red('@')).replaceAll('#', clc.yellow('#')) + clc.cyan('|')
       )
     }
     console.log(clc.cyan('+' + '-'.repeat(wellWidth) + '|'))
@@ -203,19 +203,51 @@ export default async (lineReader: any, params: Params) => {
         if (windIterations === firstCutoff) {
           heightFirstStage = well.length
           rocksFirstStage = numberRocks
-          log.info('First cutoff, number rocks', rocksFirstStage, 'wind iteration', windIterations, 'height', heightFirstStage)
+          log.info(
+            'First cutoff, number rocks',
+            rocksFirstStage,
+            'wind iteration',
+            windIterations,
+            'height',
+            heightFirstStage
+          )
         }
         if (windIterations === secondCutoff) {
           heightSecondStage = well.length - heightFirstStage
           rocksSecondStage = numberRocks - rocksFirstStage
-          log.info('Second cutoff, number rocks', rocksSecondStage, 'wind iteration', windIterations, 'height', heightSecondStage)
+          log.info(
+            'Second cutoff, number rocks',
+            rocksSecondStage,
+            'wind iteration',
+            windIterations,
+            'height',
+            heightSecondStage
+          )
 
-          const howManyTimesICanRepeatThePattern = Math.floor((finalTarget - rocksFirstStage) / rocksSecondStage)
+          const howManyTimesICanRepeatThePattern = Math.floor(
+            (finalTarget - rocksFirstStage) / rocksSecondStage
+          )
           log.info('I think pattern repeats', howManyTimesICanRepeatThePattern, 'times')
           const howManyRocksNow = rocksFirstStage + howManyTimesICanRepeatThePattern * rocksSecondStage
-          log.info('Rocks grow', howManyTimesICanRepeatThePattern, 'times', rocksSecondStage, '+', rocksFirstStage, '=', howManyRocksNow)
+          log.info(
+            'Rocks grow',
+            howManyTimesICanRepeatThePattern,
+            'times',
+            rocksSecondStage,
+            '+',
+            rocksFirstStage,
+            '=',
+            howManyRocksNow
+          )
           howMuchHeightToAddLater = howManyTimesICanRepeatThePattern * heightSecondStage
-          log.info('height grow', howManyTimesICanRepeatThePattern, 'times', heightSecondStage, '=', howMuchHeightToAddLater)
+          log.info(
+            'height grow',
+            howManyTimesICanRepeatThePattern,
+            'times',
+            heightSecondStage,
+            '=',
+            howMuchHeightToAddLater
+          )
           // I have to remove the time I added already
           howMuchHeightToAddLater = howMuchHeightToAddLater - heightSecondStage
           log.info('howMuchHeightToAddLater', howMuchHeightToAddLater)
@@ -230,14 +262,15 @@ export default async (lineReader: any, params: Params) => {
       numberRocks++
     }
     const finalHeight = well.length + howMuchHeightToAddLater
-    log.info('doRun complete, number of rocks', numberRocks, 'height', finalHeight)//, 'first line', well[0],'last line', well[well.length -1])
+    log.info('doRun complete, number of rocks', numberRocks, 'height', finalHeight) //, 'first line', well[0],'last line', well[well.length -1])
     return finalHeight
   }
 
   const wellWidth: number = params!.wellWidth
   const well1: Well = []
   const well2: Well = []
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   for await (const line of lineReader) {
     windData = line.split('')

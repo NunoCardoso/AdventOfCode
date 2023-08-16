@@ -6,9 +6,9 @@ export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   type Coord = 'N' | 'NW' | 'NE' | 'W' | 'E' | 'SW' | 'S' | 'SE'
-  type Matrix = {rows: number, columns: number}
-  type Elf = { x: number, y: number, id: number, wants?: {x: number, y: number, d: Coord} }
-  type ElfAround = {x: number, y: number, d: Coord }
+  type Matrix = { rows: number; columns: number }
+  type Elf = { x: number; y: number; id: number; wants?: { x: number; y: number; d: Coord } }
+  type ElfAround = { x: number; y: number; d: Coord }
   type ElfsAround = Array<ElfAround>
   type Elves = Array<Elf>
 
@@ -31,18 +31,29 @@ export default async (lineReader: any, params: Params) => {
 
   const elfsAround = (elf: Elf, matrix: Matrix, elvesKeys: Record<string, Elf>): ElfsAround => {
     const candidates: Array<[number, number, string]> = [
-      [elf.x - 1, elf.y - 1, 'NW'], [elf.x - 1, elf.y, 'N'], [elf.x - 1, elf.y + 1, 'NE'],
-      [elf.x, elf.y - 1, 'W'], [elf.x, elf.y + 1, 'E'],
-      [elf.x + 1, elf.y - 1, 'SW'], [elf.x + 1, elf.y, 'S'], [elf.x + 1, elf.y + 1, 'SE']
+      [elf.x - 1, elf.y - 1, 'NW'],
+      [elf.x - 1, elf.y, 'N'],
+      [elf.x - 1, elf.y + 1, 'NE'],
+      [elf.x, elf.y - 1, 'W'],
+      [elf.x, elf.y + 1, 'E'],
+      [elf.x + 1, elf.y - 1, 'SW'],
+      [elf.x + 1, elf.y, 'S'],
+      [elf.x + 1, elf.y + 1, 'SE']
     ]
-    return _.filter(candidates, (c: [number, number, string]) =>
-      c[0] >= 0 && c[0] < matrix.rows && c[1] >= 0 && c[1] < matrix.columns &&
-      Object.prototype.hasOwnProperty.call(elvesKeys, '' + c[0] + ',' + c[1])
-    ).map((c: [number, number, string]) => ({ x: c[0], y: c[1], d: c[2] } as ElfAround))
+    return _.filter(
+      candidates,
+      (c: [number, number, string]) =>
+        c[0] >= 0 &&
+        c[0] < matrix.rows &&
+        c[1] >= 0 &&
+        c[1] < matrix.columns &&
+        Object.prototype.hasOwnProperty.call(elvesKeys, '' + c[0] + ',' + c[1])
+    ).map((c: [number, number, string]) => ({ x: c[0], y: c[1], d: c[2] }) as ElfAround)
   }
 
   const getElfWish = (direction: string, otherElfs: ElfsAround): string => {
-    const foundElfBlocking: boolean = _.find(otherElfs, (elf: ElfAround) => elf.d.indexOf(direction) >= 0) !== undefined
+    const foundElfBlocking: boolean =
+      _.find(otherElfs, (elf: ElfAround) => elf.d.indexOf(direction) >= 0) !== undefined
     return foundElfBlocking ? '' : direction
   }
 
@@ -51,13 +62,11 @@ export default async (lineReader: any, params: Params) => {
     for (let i = 0; i < matrix.rows; i++) {
       m.push(new Array(matrix.columns).fill('.'))
     }
-    elves.forEach(elf => {
+    elves.forEach((elf) => {
       m[elf.x][elf.y] = clc.red('#')
     })
     console.log(clc.cyan('+' + '-'.repeat(matrix.columns) + '+'))
-    m.forEach((row: Array<string>) => console.log(clc.cyan('|') +
-      row.join('') +
-      clc.cyan('|')))
+    m.forEach((row: Array<string>) => console.log(clc.cyan('|') + row.join('') + clc.cyan('|')))
     console.log(clc.cyan('+' + '-'.repeat(matrix.columns) + '+'))
   }
 
@@ -67,7 +76,7 @@ export default async (lineReader: any, params: Params) => {
 
   const generateKeys = (elves: Elves): Record<string, Elf> => {
     const elvesKeys: Record<string, Elf> = {}
-    elves.forEach(elf => {
+    elves.forEach((elf) => {
       elvesKeys['' + elf.x + ',' + elf.y] = elf
     })
     return elvesKeys
@@ -94,8 +103,7 @@ export default async (lineReader: any, params: Params) => {
         // stage 1: check if elf has a moving wish
         let elfWish: string = ''
         if (!_.isEmpty(otherElfs)) {
-          wishLoop:
-          for (let j = 0; j < order.length; j++) {
+          wishLoop: for (let j = 0; j < order.length; j++) {
             const index = (j + round) % order.length
             elfWish = getElfWish(order[index], otherElfs)
             if (elfWish !== '') {
@@ -127,7 +135,7 @@ export default async (lineReader: any, params: Params) => {
         }
       }
 
-      Object.keys(wishedSpaces).forEach(key => {
+      Object.keys(wishedSpaces).forEach((key) => {
         // only move the ones with no conflicts
         if (wishedSpaces[key].length === 1) {
           const movedElf: Elf = wishedSpaces[key][0]
@@ -150,11 +158,11 @@ export default async (lineReader: any, params: Params) => {
       // now, elves moved, let's widen the grid if necessary
       if (widenTheGrid.indexOf('N') >= 0) {
         matrix.rows += 1
-        elves = elves.map(elf => ({ ...elf, x: elf.x + 1 }))
+        elves = elves.map((elf) => ({ ...elf, x: elf.x + 1 }))
       }
       if (widenTheGrid.indexOf('W') >= 0) {
         matrix.columns += 1
-        elves = elves.map(elf => ({ ...elf, y: elf.y + 1 }))
+        elves = elves.map((elf) => ({ ...elf, y: elf.y + 1 }))
       }
       if (widenTheGrid.indexOf('S') >= 0) {
         matrix.rows += 1
@@ -165,7 +173,9 @@ export default async (lineReader: any, params: Params) => {
 
       // reset the index with new moved elfs
       elvesKeys = {}
-      elves.forEach(elf => { elvesKeys['' + elf.x + ',' + elf.y] = _.cloneDeep(elf) })
+      elves.forEach((elf) => {
+        elvesKeys['' + elf.x + ',' + elf.y] = _.cloneDeep(elf)
+      })
 
       allSpaced = _allSpaced
       round++
@@ -180,7 +190,7 @@ export default async (lineReader: any, params: Params) => {
       return round
     }
     const b = { minX: 10000, maxX: -10000, minY: 10000, maxY: -10000 }
-    elves.forEach(elf => {
+    elves.forEach((elf) => {
       if (elf.x < b.minX) {
         b.minX = elf.x
       }
@@ -197,7 +207,8 @@ export default async (lineReader: any, params: Params) => {
     return (b.maxX - b.minX + 1) * (b.maxY - b.minY + 1) - elves.length
   }
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
   if (params.part1?.skip !== true) {
     part1 = runSimulation(params!.part1.iterations, _.cloneDeep(originalElves), 'emptySpaces')
   }

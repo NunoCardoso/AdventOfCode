@@ -6,7 +6,8 @@ export default async (lineReader: any, params: Params) => {
   type Portions = Array<number>
   type Recipes = Array<Recipe>
   type Result = Array<number>
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   const recipes: Recipes = []
   for await (const line of lineReader) {
@@ -36,16 +37,19 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     res.pop() // remove calories from final equation
-    return _.reduce(res, (memo: number, val: number) => (
-      memo * (val < 0 ? 0 : val)
-    ), 1)
+    return _.reduce(res, (memo: number, val: number) => memo * (val < 0 ? 0 : val), 1)
   }
 
   const getThemRecipes = (calories: any) => {
     const iterators: Array<number> = new Array(recipes.length).fill(0)
     let res = 0
 
-    const doIterations = (iterators: Array<number>, remaining: number, portions: Array<number>, calorieTarget: undefined | number) => {
+    const doIterations = (
+      iterators: Array<number>,
+      remaining: number,
+      portions: Array<number>,
+      calorieTarget: undefined | number
+    ) => {
       if (iterators.length > 1) {
         for (let i = iterators[0]; i <= remaining; i++) {
           doIterations(iterators.slice(1, iterators.length), remaining - i, portions.concat(i), calorieTarget)

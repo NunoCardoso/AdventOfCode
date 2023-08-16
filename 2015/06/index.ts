@@ -5,14 +5,21 @@ export default async (lineReader: any, params: Params) => {
   type Matrix = Array<Array<number>>
 
   const howMany = (matrix: Matrix) =>
-    _.reduce(matrix, (memo: number, arr: Array<number>) => {
-      return memo + _.filter(arr, (x: number) => x === 1).length
-    }, 0)
+    _.reduce(
+      matrix,
+      (memo: number, arr: Array<number>) => {
+        return memo + _.filter(arr, (x: number) => x === 1).length
+      },
+      0
+    )
 
   const howMany2 = (matrix: Matrix) =>
-    _.reduce(matrix, (memo: number, arr: Array<number>) =>
-      memo + _.reduce(arr, (_memo: number, _arr: number) => (_memo + _arr), 0)
-    , 0)
+    _.reduce(
+      matrix,
+      (memo: number, arr: Array<number>) =>
+        memo + _.reduce(arr, (_memo: number, _arr: number) => _memo + _arr, 0),
+      0
+    )
 
   const matrix1: Matrix = []
   const matrix2: Matrix = []

@@ -13,8 +13,12 @@ export default async (lineReader: any, params: Params) => {
     if (_.isNumber(monkeys[monkey])) {
       return monkeys[monkey]
     }
-    const src1 = _.isNumber(monkeys[monkey].src1) ? monkeys[monkey].src1 : resolve(monkeys, monkeys[monkey].src1)
-    const src2 = _.isNumber(monkeys[monkey].src2) ? monkeys[monkey].src2 : resolve(monkeys, monkeys[monkey].src2)
+    const src1 = _.isNumber(monkeys[monkey].src1)
+      ? monkeys[monkey].src1
+      : resolve(monkeys, monkeys[monkey].src1)
+    const src2 = _.isNumber(monkeys[monkey].src2)
+      ? monkeys[monkey].src2
+      : resolve(monkeys, monkeys[monkey].src2)
     let res = 0
 
     if (monkeys[monkey].op === '/') {
@@ -47,7 +51,8 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const monkeys2: any = _.cloneDeep(monkeys1)
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   if (params.part1?.skip !== true) {
     part1 = resolve(monkeys1, 'root')

@@ -1,4 +1,3 @@
-
 import { Params } from '../../aoc.d'
 import _ from 'lodash'
 
@@ -7,7 +6,8 @@ export default async (lineReader: any, params: Params) => {
 
   type Point = [number, number]
 
-  let part1: number = 0, part2: number = 0
+  let part1: number = 0,
+    part2: number = 0
   const instructions: Array<[string, number]> = []
 
   for await (const line of lineReader) {
@@ -24,7 +24,7 @@ export default async (lineReader: any, params: Params) => {
   const visitedPoints: Array<Point> = []
   let visitedPoint: Point | undefined
 
-  instructions.forEach(instruction => {
+  instructions.forEach((instruction) => {
     if (currentDirection === '') {
       currentDirection = instruction[0] === 'L' ? '<' : '>'
     } else {
@@ -41,7 +41,10 @@ export default async (lineReader: any, params: Params) => {
       for (let i = 0; i < instruction[1]; i++) {
         point[0] += directionsMap[currentDirection][0]
         point[1] += directionsMap[currentDirection][1]
-        const isVisited: number = _.findIndex(visitedPoints, (v: Point) => v[0] === point[0] && v[1] === point[1])
+        const isVisited: number = _.findIndex(
+          visitedPoints,
+          (v: Point) => v[0] === point[0] && v[1] === point[1]
+        )
         if (isVisited >= 0 && visitedPoint === undefined) {
           visitedPoint = [point[0], point[1]]
         }

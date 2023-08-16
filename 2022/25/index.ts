@@ -85,9 +85,13 @@ export default async (lineReader: any, params: Params) => {
     const total = val?.split('').map(decode)
     log.debug('val', val, 'total', total)
     let i = 0
-    return _.reduceRight(total, (memo: number, val: number) => {
-      return memo + val * Math.pow(5, i++)
-    }, 0)
+    return _.reduceRight(
+      total,
+      (memo: number, val: number) => {
+        return memo + val * Math.pow(5, i++)
+      },
+      0
+    )
   }
 
   for await (const line of lineReader) {
@@ -117,7 +121,7 @@ export default async (lineReader: any, params: Params) => {
     if (params.part1?.skip !== true) {
       log.debug('data length', data.length)
       const decimals: Array<number> = data.map(SNAFU2dec)
-      const total: number = _.reduce(decimals, (memo: number, val: number) => (memo + val), 0)
+      const total: number = _.reduce(decimals, (memo: number, val: number) => memo + val, 0)
       log.debug('total', total)
       part1 = dec2SNAFU('' + total)
     }

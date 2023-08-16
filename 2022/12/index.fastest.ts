@@ -11,7 +11,9 @@ export default async (lineReader: any, params: Params) => {
   type WorldSize = [number, number]
 
   const world: World = {}
-  let start: Point; const starts: Points = []; let end: Point
+  let start: Point
+  const starts: Points = []
+  let end: Point
   const worldSize: WorldSize = [0, 0]
 
   const getHeight = (level: string): number => 'abcdefghijklmnopqrstuvwxyz'.indexOf(level)
@@ -19,7 +21,7 @@ export default async (lineReader: any, params: Params) => {
   const getDistanceToFinish = (x: number, y: number, end: Point): number =>
     Math.sqrt((x - end[0]) * (x - end[0]) + (y - end[1]) * (y - end[1]))
 
-  const isSame = (p: Point, p2: Point) : boolean => p[0] === p2[0] && p[1] === p2[1]
+  const isSame = (p: Point, p2: Point): boolean => p[0] === p2[0] && p[1] === p2[1]
 
   const getKey = (p: Point): string => '' + p[0] + ',' + p[1]
 
@@ -47,39 +49,47 @@ export default async (lineReader: any, params: Params) => {
         }
       }
 
-      const newPoints: Points = _.reject([
-        [head[0] - 1, head[1], getDistanceToFinish(head[0] - 1, head[1], end), head[3] + 1],
-        [head[0] + 1, head[1], getDistanceToFinish(head[0] + 1, head[1], end), head[3] + 1],
-        [head[0], head[1] - 1, getDistanceToFinish(head[0], head[1] - 1, end), head[3] + 1],
-        [head[0], head[1] + 1, getDistanceToFinish(head[0], head[1] + 1, end), head[3] + 1]
-      ], (newPoint: Point) => {
-        const newKey = getKey(newPoint)
-        if (newPoint[0] < 0 || newPoint[1] < 0 || newPoint[0] >= worldSize[0] || newPoint[1] >= worldSize[1]) {
-          return true
-        }
-        // console.log(newKey, key,world[newKey] , world[key], getHeight(world[newKey]), getHeight(world[key]))
-        if ((getHeight(world[newKey]) - getHeight(world[key])) > 1) {
-          return true
-        }
-        const matchOpenedPathIndex = _.findIndex(opened, (p: Point) => isSame(p, newPoint))
-        if (matchOpenedPathIndex >= 0) {
-          if (opened[matchOpenedPathIndex][3] <= newPoint[3]) {
+      const newPoints: Points = _.reject(
+        [
+          [head[0] - 1, head[1], getDistanceToFinish(head[0] - 1, head[1], end), head[3] + 1],
+          [head[0] + 1, head[1], getDistanceToFinish(head[0] + 1, head[1], end), head[3] + 1],
+          [head[0], head[1] - 1, getDistanceToFinish(head[0], head[1] - 1, end), head[3] + 1],
+          [head[0], head[1] + 1, getDistanceToFinish(head[0], head[1] + 1, end), head[3] + 1]
+        ],
+        (newPoint: Point) => {
+          const newKey = getKey(newPoint)
+          if (
+            newPoint[0] < 0 ||
+            newPoint[1] < 0 ||
+            newPoint[0] >= worldSize[0] ||
+            newPoint[1] >= worldSize[1]
+          ) {
             return true
-          } else {
-            opened.splice(matchOpenedPathIndex, 1)
           }
-        }
+          // console.log(newKey, key,world[newKey] , world[key], getHeight(world[newKey]), getHeight(world[key]))
+          if (getHeight(world[newKey]) - getHeight(world[key]) > 1) {
+            return true
+          }
+          const matchOpenedPathIndex = _.findIndex(opened, (p: Point) => isSame(p, newPoint))
+          if (matchOpenedPathIndex >= 0) {
+            if (opened[matchOpenedPathIndex][3] <= newPoint[3]) {
+              return true
+            } else {
+              opened.splice(matchOpenedPathIndex, 1)
+            }
+          }
 
-        // reject if it's in the visited list, and it has a worst cost; otherwise, keep it
-        if (Object.prototype.hasOwnProperty.call(visited, newKey) && visited[newKey] <= newPoint[3]) {
-          return true
+          // reject if it's in the visited list, and it has a worst cost; otherwise, keep it
+          if (Object.prototype.hasOwnProperty.call(visited, newKey) && visited[newKey] <= newPoint[3]) {
+            return true
+          }
+          return false
         }
-        return false
-      })
+      )
 
       if (newPoints.length !== 0) {
         opened.push(...newPoints)
-        opened.sort((a, b) => (b[2] - a[2]))
+        opened.sort((a, b) => b[2] - a[2])
       }
     }
 
@@ -105,14 +115,15 @@ export default async (lineReader: any, params: Params) => {
       if (val === 'E') {
         end = [it, i, 0, 0]
       }
-      world['' + it + ',' + i] = (val === 'E' ? 'z' : val)
+      world['' + it + ',' + i] = val === 'E' ? 'z' : val
     })
     it++
   }
   worldSize[0] = it
 
   log.info('world dimensions', worldSize)
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   if (params.part1?.skip !== true) {
     part1 = getThemPath([start!], {})

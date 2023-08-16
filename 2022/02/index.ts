@@ -1,7 +1,8 @@
 import { Params } from '../../aoc.d'
 
 export default async (lineReader: any, params: Params) => {
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   const scoresPart1: Record<string, Record<string, Array<number>>> = {
     A: { X: [1, 3], Y: [2, 6], Z: [3, 0] },
@@ -17,10 +18,10 @@ export default async (lineReader: any, params: Params) => {
   for await (const line of lineReader) {
     const vals = line.split(/\s+/)
     if (params.part1?.skip !== true) {
-      part1 += (scoresPart1[vals[0]][vals[1]][0] + scoresPart1[vals[0]][vals[1]][1])
+      part1 += scoresPart1[vals[0]][vals[1]][0] + scoresPart1[vals[0]][vals[1]][1]
     }
     if (params.part2?.skip !== true) {
-      part2 += (scoresPart2[vals[0]][vals[1]][0] + scoresPart2[vals[0]][vals[1]][1])
+      part2 += scoresPart2[vals[0]][vals[1]][0] + scoresPart2[vals[0]][vals[1]][1]
     }
   }
 

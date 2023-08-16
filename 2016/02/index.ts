@@ -3,7 +3,8 @@ import { Params } from '../../aoc.d'
 export default async (lineReader: any, params: Params) => {
   type Point = [number, number]
 
-  let part1: string = '', part2: string = ''
+  let part1: string = '',
+    part2: string = ''
 
   const codes: Array<string> = []
   for await (const line of lineReader) {
@@ -49,7 +50,7 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const valueFromSquareKeypad = (point: Point): string => ((point[0] + 1) + point[1] * 3).toString()
+  const valueFromSquareKeypad = (point: Point): string => (point[0] + 1 + point[1] * 3).toString()
 
   const valueFromLosangeKeypad = (point: Point): string => {
     const values: Record<string, string> = {
@@ -68,7 +69,7 @@ export default async (lineReader: any, params: Params) => {
       '0,2': 'D'
     }
 
-    return values[point.map(x => x.toString()).join(',')]
+    return values[point.map((x) => x.toString()).join(',')]
   }
 
   const runKeypad = (

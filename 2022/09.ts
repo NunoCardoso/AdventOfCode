@@ -11,17 +11,20 @@ aoc({
       ropeLength: 10
     }
   },
-  test: [{
-    id: 'test1',
-    part1: {
-      answer: 13
+  test: [
+    {
+      id: 'test1',
+      part1: {
+        answer: 13
+      }
+    },
+    {
+      id: 'test2',
+      part2: {
+        answer: 36
+      }
     }
-  }, {
-    id: 'test2',
-    part2: {
-      answer: 36
-    }
-  }],
+  ],
   prod: {
     part1: {
       answer: 6367

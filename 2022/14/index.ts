@@ -7,7 +7,7 @@ export default async (lineReader: any, params: Params) => {
   type Grid = Array<Array<string>>
   type Dimensions = Record<string, number>
   type World = {
-    grid: Grid,
+    grid: Grid
     dimensions: Dimensions
   }
 
@@ -29,21 +29,23 @@ export default async (lineReader: any, params: Params) => {
     for (let y = world.dimensions.minY; y <= world.dimensions.maxY; y++) {
       let line: string = ''
       for (let x = world.dimensions.minX; x <= world.dimensions.maxX; x++) {
-        line += (
+        line +=
           world.grid[y][x] === '#'
             ? clc.red('#')
             : world.grid[y][x] === 'o'
-              ? clc.yellow('o')
-              : world.grid[y][x] === '+' ? clc.green('+') : world.grid[y][x]
-        )
+            ? clc.yellow('o')
+            : world.grid[y][x] === '+'
+            ? clc.green('+')
+            : world.grid[y][x]
       }
       lines.push(line)
     }
     lines.forEach((b, i) => console.log(i.toString().padStart(3, '0'), b))
   }
 
-  const dropSand = (world: any, origin: Point): {newPos: Point, fellDown: boolean, stuck: boolean} => {
-    let newX = origin[0]; let newY = origin[1] + 1
+  const dropSand = (world: any, origin: Point): { newPos: Point; fellDown: boolean; stuck: boolean } => {
+    let newX = origin[0]
+    let newY = origin[1] + 1
     if (newY > world.dimensions.maxY) {
       return { newPos: [newX, newY], fellDown: true, stuck: false }
     }
@@ -53,7 +55,8 @@ export default async (lineReader: any, params: Params) => {
       return dropSand(world, [newX, newY])
     }
     if (below === '#' || below === 'o') {
-      const newX = origin[0] - 1; const newY = origin[1] + 1
+      const newX = origin[0] - 1
+      const newY = origin[1] + 1
       const below = world.grid[newY][newX]
       if (below === '.') {
         // console.log('dropping left', newX, newY, below)
@@ -98,7 +101,10 @@ export default async (lineReader: any, params: Params) => {
   const wallPoints: Array<Point> = []
 
   const d: Dimensions = {
-    minX: 500, minY: 0, maxX: 500, maxY: 0
+    minX: 500,
+    minY: 0,
+    maxX: 500,
+    maxY: 0
   }
 
   for await (const line of lineReader) {
@@ -106,21 +112,30 @@ export default async (lineReader: any, params: Params) => {
     for (let i = 0; i < vals.length - 1; i++) {
       const from: Point = vals[i].split(',').map((x: string) => parseInt(x)) as Point
       const to: Point = vals[i + 1].split(',').map((x: string) => parseInt(x)) as Point
-      const jDir: number = (to[0] - from[0] < 0 ? -1 : 1)
-      const kDir: number = (to[1] - from[1] < 0 ? -1 : 1)
+      const jDir: number = to[0] - from[0] < 0 ? -1 : 1
+      const kDir: number = to[1] - from[1] < 0 ? -1 : 1
       for (let j = from[0]; jDir === -1 ? j >= to[0] : j <= to[0]; j = j + jDir) {
         for (let k = from[1]; kDir === -1 ? k >= to[1] : k <= to[1]; k = k + kDir) {
-          if (j < d.minX) { d.minX = j }
-          if (j > d.maxX) { d.maxX = j }
-          if (k < d.minY) { d.minY = k }
-          if (k > d.maxY) { d.maxY = k }
+          if (j < d.minX) {
+            d.minX = j
+          }
+          if (j > d.maxX) {
+            d.maxX = j
+          }
+          if (k < d.minY) {
+            d.minY = k
+          }
+          if (k > d.maxY) {
+            d.maxY = k
+          }
           wallPoints.push([j, k])
         }
       }
     }
   }
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
   if (params.part1?.skip !== true) {
     const world1: World = fillOutData(wallPoints, d)
     part1 = startSand(world1, [500, 0])

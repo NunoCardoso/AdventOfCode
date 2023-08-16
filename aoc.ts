@@ -10,16 +10,18 @@ const defaultConfig = {
 
 export default async (config: Partial<Config> = {}) => {
   const _config = { ...defaultConfig, ...config }
-  const app = require('./' + _config.year + '/' + _config.day + '/index' +
+  const app = require('./' +
+    _config.year +
+    '/' +
+    _config.day +
+    '/index' +
     (_config.mode ? '.' + _config.mode : '')).default
 
   const bad = clc.red('Error')
   const good = clc.green('OK')
 
   const doRun = async (run: Test | Prod, isTest: boolean, params: Params) => {
-    const targetFile = isTest
-      ? (run as Test).id
-      : 'input'
+    const targetFile = isTest ? (run as Test).id : 'input'
 
     let _params: Params = {
       ...(params ?? {}),
@@ -31,7 +33,7 @@ export default async (config: Partial<Config> = {}) => {
 
     _params = {
       ..._params,
-      ...(isTest ? (_params.test ?? {}) : (_params.prod ?? {}))
+      ...(isTest ? _params.test ?? {} : _params.prod ?? {})
     }
 
     delete _params.test
@@ -52,19 +54,37 @@ export default async (config: Partial<Config> = {}) => {
       console.timeEnd('answer time ' + targetFile)
     }
     if (_params.part1?.skip === true) {
-      console.log('Year', _config.year, 'Day', _config.day, 'Part 1', (isTest ? 'test' : 'prod'), '- skipped')
+      console.log('Year', _config.year, 'Day', _config.day, 'Part 1', isTest ? 'test' : 'prod', '- skipped')
     } else {
       if (run?.part1) {
-        console.log('Year', _config.year, 'Day', _config.day, 'Part 1', (isTest ? 'test' : 'prod'), '- got', answer.part1,
-          (run.part1.answer === answer.part1 ? good : 'Expected ' + run.part1.answer + ' ' + bad))
+        console.log(
+          'Year',
+          _config.year,
+          'Day',
+          _config.day,
+          'Part 1',
+          isTest ? 'test' : 'prod',
+          '- got',
+          answer.part1,
+          run.part1.answer === answer.part1 ? good : 'Expected ' + run.part1.answer + ' ' + bad
+        )
       }
     }
     if (_params.part2?.skip === true) {
-      console.log('Year', _config.year, 'Day', _config.day, 'Part 2', (isTest ? 'test' : 'prod'), '- skipped')
+      console.log('Year', _config.year, 'Day', _config.day, 'Part 2', isTest ? 'test' : 'prod', '- skipped')
     } else {
       if (run?.part2) {
-        console.log('Year', _config.year, 'Day', _config.day, 'Part 2', (isTest ? 'test' : 'prod'), '- got', answer.part2,
-          (run.part2.answer === answer.part2 ? good : 'Expected ' + run.part2.answer + ' ' + bad))
+        console.log(
+          'Year',
+          _config.year,
+          'Day',
+          _config.day,
+          'Part 2',
+          isTest ? 'test' : 'prod',
+          '- got',
+          answer.part2,
+          run.part2.answer === answer.part2 ? good : 'Expected ' + run.part2.answer + ' ' + bad
+        )
       }
     }
   }

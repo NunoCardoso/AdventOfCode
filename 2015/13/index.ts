@@ -24,12 +24,12 @@ export default async (lineReader: any, params: Params) => {
 
   const getHighScore = (permutes: Array<Peoples>, scores: Scores): number => {
     let highScore = 0
-    permutes.forEach(permute => {
+    permutes.forEach((permute) => {
       let score = 0
       for (let i = 0; i < permute.length; i++) {
         const pers1 = i
-        const pers2 = (i + 1 === permute.length) ? 0 : i + 1
-        score += (scores[permute[pers1]][permute[pers2]] + scores[permute[pers2]][permute[pers1]])
+        const pers2 = i + 1 === permute.length ? 0 : i + 1
+        score += scores[permute[pers1]][permute[pers2]] + scores[permute[pers2]][permute[pers1]]
       }
       if (score > highScore) {
         highScore = score
@@ -38,7 +38,8 @@ export default async (lineReader: any, params: Params) => {
     return highScore
   }
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
   const scores1: Scores = {}
   const people1: Peoples = []
   const people2: Peoples = []
@@ -82,6 +83,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   return {
-    part1, part2
+    part1,
+    part2
   }
 }

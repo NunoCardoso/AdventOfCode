@@ -1,4 +1,3 @@
-
 const getNewIndex = (_oldIndex: number, _shiftHowMuch: number, _listLength: number) => {
   if (_shiftHowMuch === 0) {
     return _oldIndex
@@ -9,7 +8,7 @@ const getNewIndex = (_oldIndex: number, _shiftHowMuch: number, _listLength: numb
   if (_oldIndex + modifiedShift <= 0) {
     while (res <= 0) {
       res += _listLength
-      if (res < (_oldIndex + 2)) {
+      if (res < _oldIndex + 2) {
         res -= 1
       }
     }
@@ -23,7 +22,7 @@ const getNewIndex = (_oldIndex: number, _shiftHowMuch: number, _listLength: numb
       res += 1
     }
   } else if (_oldIndex + modifiedShift > 0 && _oldIndex + modifiedShift < _listLength) {
-    if (res > (_oldIndex)) {
+    if (res > _oldIndex) {
       res += 1
     }
   }

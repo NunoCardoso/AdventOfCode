@@ -15,7 +15,7 @@ export default async (lineReader: any, params: Params) => {
     if (_oldIndex + modifiedShift <= 0) {
       while (res <= 0) {
         res += _listLength
-        if (res < (_oldIndex + 2)) {
+        if (res < _oldIndex + 2) {
           res -= 1
         }
       }
@@ -29,7 +29,7 @@ export default async (lineReader: any, params: Params) => {
         res += 1
       }
     } else if (_oldIndex + modifiedShift > 0 && _oldIndex + modifiedShift < _listLength) {
-      if (res > (_oldIndex)) {
+      if (res > _oldIndex) {
         res += 1
       }
     }
@@ -91,7 +91,8 @@ export default async (lineReader: any, params: Params) => {
   const indexList2: Array<number> = _.cloneDeep(indexList1)
 
   let oldIndex, index1, index2, index3
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   if (params.part1?.skip !== true) {
     doMixIn(mainList1, indexList1)

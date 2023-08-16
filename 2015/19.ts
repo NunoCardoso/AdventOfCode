@@ -9,25 +9,28 @@ aoc({
     during: false,
     end: true
   },
-  test: [{
-    skip: true,
-    id: 'test1',
-    part1: {
-      answer: 4
+  test: [
+    {
+      skip: true,
+      id: 'test1',
+      part1: {
+        answer: 4
+      },
+      part2: {
+        answer: 3
+      }
     },
-    part2: {
-      answer: 3
+    {
+      skip: true,
+      id: 'test2',
+      part1: {
+        answer: 7
+      },
+      part2: {
+        answer: 6
+      }
     }
-  }, {
-    skip: true,
-    id: 'test2',
-    part1: {
-      answer: 7
-    },
-    part2: {
-      answer: 6
-    }
-  }],
+  ],
   prod: {
     skip: false,
     params: {

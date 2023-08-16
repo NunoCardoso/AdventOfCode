@@ -1,7 +1,7 @@
 import { Params } from '../../aoc.d'
 
 export default async (lineReader: any, params: Params) => {
-  const target : Record<string, number> = {
+  const target: Record<string, number> = {
     children: 3,
     cats: 7,
     samoyeds: 2,
@@ -14,14 +14,15 @@ export default async (lineReader: any, params: Params) => {
     perfumes: 1
   }
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   for await (const line of lineReader) {
     const m = line.match(/^Sue (\d+): (.*)$/)
     let stuffMatchesForPart1 = true
     let stuffMatchesForPart2 = true
     m[2].split(', ').forEach((el: string) => {
-      const els = el.split((': '))
+      const els = el.split(': ')
       if (target[els[0]] !== parseInt(els[1])) {
         stuffMatchesForPart1 = false
       }

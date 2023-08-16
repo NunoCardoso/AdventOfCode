@@ -7,17 +7,20 @@ aoc({
   params: {
     needle: 'very encrypted name'
   },
-  test: [{
-    id: 'test',
-    part1: {
-      answer: 1514
+  test: [
+    {
+      id: 'test',
+      part1: {
+        answer: 1514
+      }
+    },
+    {
+      id: 'test2',
+      part2: {
+        answer: 343
+      }
     }
-  }, {
-    id: 'test2',
-    part2: {
-      answer: 343
-    }
-  }],
+  ],
   prod: {
     params: {
       needle: 'northpole object storage'

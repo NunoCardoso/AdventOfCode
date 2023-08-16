@@ -17,20 +17,23 @@ aoc({
       iterations: 10000000
     }
   },
-  test: [{
-    id: 'test1',
-    part1: {
-      answer: 25
-    }
-  }, {
-    id: 'test2',
-    part1: {
-      answer: 110
+  test: [
+    {
+      id: 'test1',
+      part1: {
+        answer: 25
+      }
     },
-    part2: {
-      answer: 20
+    {
+      id: 'test2',
+      part1: {
+        answer: 110
+      },
+      part2: {
+        answer: 20
+      }
     }
-  }],
+  ],
   prod: {
     part1: {
       answer: 4249

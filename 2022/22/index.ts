@@ -8,10 +8,10 @@ export default async (lineReader: any, params: Params) => {
   type Matrix = Array<Array<string>>
   type Point = [number, number]
   type Instruction = number | string
-  type Step = {direction: string, point: Point}
+  type Step = { direction: string; point: Point }
   type Instructions = Array<Instruction>
   type Path = Array<Step>
-  type SideAndIndex = {side: string, index: number}
+  type SideAndIndex = { side: string; index: number }
   type WhereTo = [number, string, string, boolean]
   const directions = ['>', 'v', '<', '^']
   const matrix: Matrix = []
@@ -89,7 +89,7 @@ export default async (lineReader: any, params: Params) => {
   log.info('rows', numberRows, 'columns', numberColumns)
   log.info('start', start)
 
-  const getColumn = (matrix: Matrix, column: number) => matrix.map(row => row[column])
+  const getColumn = (matrix: Matrix, column: number) => matrix.map((row) => row[column])
 
   const getDirection = (direction: string, instruction: Instruction): string => {
     let newIndex: number = 0
@@ -183,7 +183,7 @@ export default async (lineReader: any, params: Params) => {
           whichSideAndIndex.push({ side: '^', index: currentCursor.point[1] % cubeSide })
         }
       }
-      if (currentCursor.point[0] === (cubeSide * 2 - 1)) {
+      if (currentCursor.point[0] === cubeSide * 2 - 1) {
         if (currentCursor.point[1] < cubeSide) {
           whichCubeAmI = 2
           whichSideAndIndex.push({ side: 'v', index: currentCursor.point[1] % cubeSide })
@@ -195,7 +195,7 @@ export default async (lineReader: any, params: Params) => {
           whichSideAndIndex.push({ side: 'v', index: currentCursor.point[1] % cubeSide })
         }
       }
-      if (currentCursor.point[0] === (cubeSide * 3)) {
+      if (currentCursor.point[0] === cubeSide * 3) {
         if (currentCursor.point[1] < cubeSide * 3) {
           whichCubeAmI = 5
           whichSideAndIndex.push({ side: '^', index: currentCursor.point[1] % cubeSide })
@@ -216,7 +216,7 @@ export default async (lineReader: any, params: Params) => {
         whichCubeAmI = 3
         whichSideAndIndex.push({ side: '<', index: currentCursor.point[0] % cubeSide })
       }
-      if (currentCursor.point[1] === (cubeSide * 2 - 1)) {
+      if (currentCursor.point[1] === cubeSide * 2 - 1) {
         whichCubeAmI = 3
         whichSideAndIndex.push({ side: '>', index: currentCursor.point[0] % cubeSide })
       }
@@ -232,11 +232,11 @@ export default async (lineReader: any, params: Params) => {
           whichSideAndIndex.push({ side: '<', index: currentCursor.point[0] % cubeSide })
         }
       }
-      if (currentCursor.point[1] === (cubeSide * 3 - 1)) {
+      if (currentCursor.point[1] === cubeSide * 3 - 1) {
         if (currentCursor.point[0] < cubeSide) {
           whichCubeAmI = 1
           whichSideAndIndex.push({ side: '>', index: currentCursor.point[0] % cubeSide })
-        } else if (currentCursor.point[0] < (cubeSide * 2)) {
+        } else if (currentCursor.point[0] < cubeSide * 2) {
           whichCubeAmI = 4
           whichSideAndIndex.push({ side: '>', index: currentCursor.point[0] % cubeSide })
         } else {
@@ -244,11 +244,11 @@ export default async (lineReader: any, params: Params) => {
           whichSideAndIndex.push({ side: '>', index: currentCursor.point[0] % cubeSide })
         }
       }
-      if (currentCursor.point[1] === (cubeSide * 3)) {
+      if (currentCursor.point[1] === cubeSide * 3) {
         whichCubeAmI = 6
         whichSideAndIndex.push({ side: '<', index: currentCursor.point[0] % cubeSide })
       }
-      if (currentCursor.point[1] === (cubeSide * 4 - 1)) {
+      if (currentCursor.point[1] === cubeSide * 4 - 1) {
         whichCubeAmI = 6
         whichSideAndIndex.push({ side: '>', index: currentCursor.point[0] % cubeSide })
       }
@@ -366,90 +366,137 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const calculateNewPosition = (
-    nextCursor: Step, currentCursor: Step, whichSideAndIndex: Array<SideAndIndex>,
-    cubeNumber: number, cubePosition: string, newDirection: string, invertIndex: boolean
+    nextCursor: Step,
+    currentCursor: Step,
+    whichSideAndIndex: Array<SideAndIndex>,
+    cubeNumber: number,
+    cubePosition: string,
+    newDirection: string,
+    invertIndex: boolean
   ) => {
     nextCursor.direction = newDirection
 
     if (params.isTest) {
       if (cubeNumber === 1) {
         if (cubePosition === '^') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 3 * cubeSide - 1
           nextCursor.point[1] = 2 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
         if (cubePosition === '<') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = cubeSide
           nextCursor.point[1] = cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
         if (cubePosition === 'v') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 2 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 2 * cubeSide
         }
       }
       if (cubeNumber === 2) {
         if (cubePosition === '^') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 0
           nextCursor.point[1] = 2 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
         if (cubePosition === '<') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 3 * cubeSide - 1
           nextCursor.point[1] = 3 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
         if (cubePosition === 'v') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 3 * cubeSide - 1
           nextCursor.point[1] = 2 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
       }
       if (cubeNumber === 3) {
         if (cubePosition === '^') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 0 + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 2 * cubeSide
         }
         if (cubePosition === 'v') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 2 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 2 * cubeSide
         }
       }
       if (cubeNumber === 4) {
         if (cubePosition === '>') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 2 * cubeSide
           nextCursor.point[1] = 3 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
       }
       if (cubeNumber === 5) {
         if (cubePosition === '<') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 2 * cubeSide
           nextCursor.point[1] = cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
         if (cubePosition === 'v') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 2 * cubeSide - 1
           nextCursor.point[1] = 0 + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
       }
       if (cubeNumber === 6) {
         if (cubePosition === '^') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 3 * cubeSide - 1
         }
         if (cubePosition === '>') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 0 + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 3 * cubeSide - 1
         }
         if (cubePosition === 'v') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 0
         }
@@ -457,53 +504,80 @@ export default async (lineReader: any, params: Params) => {
     } else {
       if (cubeNumber === 1) {
         if (cubePosition === '^') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 0
           nextCursor.point[1] = 2 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
         if (cubePosition === 'v') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = cubeSide - 1
           nextCursor.point[1] = 2 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
         if (cubePosition === '>') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
-          nextCursor.point[0] = (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
+          nextCursor.point[0] = invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index
           nextCursor.point[1] = 3 * cubeSide - 1
         }
       }
       if (cubeNumber === 2) {
         if (cubePosition === '^') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 0
           nextCursor.point[1] = cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
         if (cubePosition === '<') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
-          nextCursor.point[0] = (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
+          nextCursor.point[0] = invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index
           nextCursor.point[1] = cubeSide
         }
       }
       if (cubeNumber === 3) {
         if (cubePosition === '<') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = cubeSide
         }
         if (cubePosition === '>') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 2 * cubeSide - 1
         }
       }
       if (cubeNumber === 4) {
         if (cubePosition === '>') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 2 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 2 * cubeSide - 1
         }
         if (cubePosition === 'v') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 3 * cubeSide - 1
           nextCursor.point[1] = cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
         }
@@ -511,32 +585,47 @@ export default async (lineReader: any, params: Params) => {
 
       if (cubeNumber === 5) {
         if (cubePosition === '^') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 2 * cubeSide
-          nextCursor.point[1] = (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
+          nextCursor.point[1] = invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index
         }
         if (cubePosition === '<') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 2 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 0
         }
       }
       if (cubeNumber === 6) {
         if (cubePosition === '<') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 3 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = 0
         }
         if (cubePosition === '>') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 3 * cubeSide + (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
           nextCursor.point[1] = cubeSide - 1
         }
 
         if (cubePosition === 'v') {
-          const sandi: SideAndIndex | undefined = _.find(whichSideAndIndex, (it: SideAndIndex) => it.side === currentCursor.direction)
+          const sandi: SideAndIndex | undefined = _.find(
+            whichSideAndIndex,
+            (it: SideAndIndex) => it.side === currentCursor.direction
+          )
           nextCursor.point[0] = 4 * cubeSide - 1
-          nextCursor.point[1] = (invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index)
+          nextCursor.point[1] = invertIndex ? cubeSide - 1 - sandi!.index : sandi!.index
         }
       }
     }
@@ -573,7 +662,18 @@ export default async (lineReader: any, params: Params) => {
       log.debug('doJump: I am at', currentCursor, 'in side', whichCubeAmI)
       const whereTo: WhereTo = seeWhereTo(whichCubeAmI, currentCursor.direction)
       calculateNewPosition(nextCursor, currentCursor, whichSideAndIndex, ...whereTo)
-      log.debug('doJump: I am now going to', nextCursor.point, ': that is side', whereTo[0], 'position', whereTo[1], 'direction', whereTo[2], 'invert', whereTo[3])
+      log.debug(
+        'doJump: I am now going to',
+        nextCursor.point,
+        ': that is side',
+        whereTo[0],
+        'position',
+        whereTo[1],
+        'direction',
+        whereTo[2],
+        'invert',
+        whereTo[3]
+      )
     }
   }
 
@@ -585,7 +685,10 @@ export default async (lineReader: any, params: Params) => {
       log.trace(i, 'moving', currentCursor, 'instruction', duration)
       if (currentCursor.direction === '>') {
         nextCursor.point[1] = currentCursor.point[1] + 1
-        if (nextCursor.point[1] >= matrix[0].length || matrix[nextCursor.point[0]][nextCursor.point[1]] === ' ') {
+        if (
+          nextCursor.point[1] >= matrix[0].length ||
+          matrix[nextCursor.point[0]][nextCursor.point[1]] === ' '
+        ) {
           doJump(currentCursor, nextCursor, matrix, asCube)
         }
       }
@@ -597,7 +700,10 @@ export default async (lineReader: any, params: Params) => {
       }
       if (currentCursor.direction === 'v') {
         nextCursor.point[0] = currentCursor.point[0] + 1
-        if (nextCursor.point[0] >= matrix.length || matrix[nextCursor.point[0]][nextCursor.point[1]] === ' ') {
+        if (
+          nextCursor.point[0] >= matrix.length ||
+          matrix[nextCursor.point[0]][nextCursor.point[1]] === ' '
+        ) {
           doJump(currentCursor, nextCursor, matrix, asCube)
         }
       }
@@ -618,8 +724,13 @@ export default async (lineReader: any, params: Params) => {
     return steps
   }
 
-  const renderMatrix = async (matrix: Matrix, instructions: Instructions, path: Path, start: Point, asCube: boolean)
-    : Promise<Path> => {
+  const renderMatrix = async (
+    matrix: Matrix,
+    instructions: Instructions,
+    path: Path,
+    start: Point,
+    asCube: boolean
+  ): Promise<Path> => {
     let cursor: Step = { point: [start[0], start[1]], direction: '>' }
     for (let i = 0; i < instructions.length; i++) {
       let newSteps: Array<Step> = []
@@ -634,7 +745,7 @@ export default async (lineReader: any, params: Params) => {
       }
       if (params.ui?.show && params.ui?.during) {
         printMatrix(matrix, path, start)
-        await new Promise(resolve => setTimeout(resolve, 100))
+        await new Promise((resolve) => setTimeout(resolve, 100))
       }
     }
     return path
@@ -644,7 +755,9 @@ export default async (lineReader: any, params: Params) => {
     const _start = clc.red('O')
 
     const _matrix = _.cloneDeep(matrix)
-    path.forEach((step: Step) => { _matrix[step.point[0]][step.point[1]] = clc.green(step.direction) })
+    path.forEach((step: Step) => {
+      _matrix[step.point[0]][step.point[1]] = clc.green(step.direction)
+    })
     _matrix[start[0]][start[1]] = _start
 
     console.log(clc.cyan('+' + '-'.repeat(_matrix[0].length) + '+'))
@@ -652,7 +765,8 @@ export default async (lineReader: any, params: Params) => {
     console.log(clc.cyan('+' + '-'.repeat(_matrix[0].length) + '+'))
   }
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
   if (params.part1?.skip !== true) {
     const path1 = await renderMatrix(matrix, instructions, [], start, false)
     const endPathRow1 = path1[path1.length - 1].point[0] + 1

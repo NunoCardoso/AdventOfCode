@@ -17,15 +17,17 @@ export default async (lineReader: any, params: Params) => {
   type BetterData = Record<string, Record<string, Cost>>
   type Step = {
     human: {
-      valve: string,
-      remaining ?: number
+      valve: string
+      remaining?: number
       action: 'start' | 'moving' | 'opening' | 'stay'
     }
-    elephant: {
-      valve: string
-      remaining ?: number
-      action: 'start' | 'moving' | 'opening' | 'stay'
-    } | undefined
+    elephant:
+      | {
+          valve: string
+          remaining?: number
+          action: 'start' | 'moving' | 'opening' | 'stay'
+        }
+      | undefined
     time: number
     pressure: number
     pressureIncrease: number
@@ -44,26 +46,44 @@ export default async (lineReader: any, params: Params) => {
   const areAllValvesOpened = (path: Path, valves: Array<string>): boolean =>
     _.intersection(path.head.valvesOpened, valves).length === valves.length
 
-  const printAction = (a: string) => a === 'moving' ? '🚀 ' : a === 'opening' ? '☸️  ' : a === 'stay' ? '🪑 ' : '🚩 '
+  const printAction = (a: string) =>
+    a === 'moving' ? '🚀 ' : a === 'opening' ? '☸️  ' : a === 'stay' ? '🪑 ' : '🚩 '
 
-  const printStep = (s: Step) => (
+  const printStep = (s: Step) =>
     '🧍{' +
     printAction(s.human.action) +
     s.human.valve +
     (_.isNil(s.human.remaining) ? '' : '(+' + s.human.remaining + ')') +
     '}' +
     (s.withElephant
-      ? '🐘 {' + printAction(s.elephant!.action) +
-         s.elephant!.valve + (_.isNil(s.elephant!.remaining)
-          ? ''
-          : '(+' + s.elephant!.remaining + ')') + '}'
+      ? '🐘 {' +
+        printAction(s.elephant!.action) +
+        s.elephant!.valve +
+        (_.isNil(s.elephant!.remaining) ? '' : '(+' + s.elephant!.remaining + ')') +
+        '}'
       : '') +
-     '[💨 ' + s.pressure + '(+' + s.pressureIncrease + ')][🕗' + s.time + ']'
-  )
+    '[💨 ' +
+    s.pressure +
+    '(+' +
+    s.pressureIncrease +
+    ')][🕗' +
+    s.time +
+    ']'
 
-  const generateStep = ({ head, tail, nextValve, human, elephant, time }:
-  {head: Step, tail: Steps, nextValve: Array<string>, time: number,
-    human: any, elephant: any,
+  const generateStep = ({
+    head,
+    tail,
+    nextValve,
+    human,
+    elephant,
+    time
+  }: {
+    head: Step
+    tail: Steps
+    nextValve: Array<string>
+    time: number
+    human: any
+    elephant: any
   }): Path => {
     return {
       head: {
@@ -71,7 +91,8 @@ export default async (lineReader: any, params: Params) => {
         human: human,
         elephant: elephant,
         time: head.time + time,
-        pressureIncrease: head.pressureIncrease +
+        pressureIncrease:
+          head.pressureIncrease +
           _.reduce(nextValve, (memo: number, val: string) => memo + data[val].flow, 0),
         pressure: head.pressure + time * head.pressureIncrease,
         valvesOpened: head.valvesOpened.concat(nextValve)
@@ -80,8 +101,16 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const makeNewPaths = ({ path, allValidValves, timeLimit, betterData }: {
-    path: Path, allValidValves: Array<string>, timeLimit: number, betterData: BetterData
+  const makeNewPaths = ({
+    path,
+    allValidValves,
+    timeLimit,
+    betterData
+  }: {
+    path: Path
+    allValidValves: Array<string>
+    timeLimit: number
+    betterData: BetterData
   }) => {
     if (path.head.time >= timeLimit) {
       return []
@@ -142,10 +171,10 @@ export default async (lineReader: any, params: Params) => {
       if (path.head.valvesOpened.indexOf(v) >= 0) {
         return true
       }
-      if ((path.head.human.action === 'moving') && v === path.head.human.valve) {
+      if (path.head.human.action === 'moving' && v === path.head.human.valve) {
         return true
       }
-      if ((path.head.elephant?.action === 'moving') && v === path.head.elephant?.valve) {
+      if (path.head.elephant?.action === 'moving' && v === path.head.elephant?.valve) {
         return true
       }
       return false
@@ -153,8 +182,10 @@ export default async (lineReader: any, params: Params) => {
 
     remainingValves.sort((a: string, b: string) => data[b].flow - data[a].flow)
 
-    const isHumanAvailable: boolean = path.head.human.action === 'opening' || path.head.human.action === 'start'
-    const isElephantAvailable: boolean = path.head.elephant!.action === 'opening' || path.head.elephant!.action === 'start'
+    const isHumanAvailable: boolean =
+      path.head.human.action === 'opening' || path.head.human.action === 'start'
+    const isElephantAvailable: boolean =
+      path.head.elephant!.action === 'opening' || path.head.elephant!.action === 'start'
     const isHumanDone: boolean = path.head.human.action === 'stay'
     const isElephantDone: boolean = path.head.elephant!.action === 'stay'
 
@@ -200,7 +231,8 @@ export default async (lineReader: any, params: Params) => {
           const humanTime = betterData[path.head.human.valve][nextValve].time + 1
           const humanAction = humanTime > elephantTime ? 'moving' : 'opening'
           const elephantAction = elephantTime > humanTime ? 'moving' : 'opening'
-          let humanRemaining: number = 0; let elephantRemaining: number = 0
+          let humanRemaining: number = 0
+          let elephantRemaining: number = 0
           const _nextValve = []
           if (humanAction === 'moving') {
             humanRemaining = humanTime - elephantTime
@@ -214,8 +246,24 @@ export default async (lineReader: any, params: Params) => {
           }
           const time = Math.min(humanTime, elephantTime)
           log.debug('make new paths:', path?.tail.map(printStep).join(' '))
-          log.debug('only human available, human time', humanTime, 'elephant time', elephantTime, 'valve', nextValve, 'human action', humanAction,
-            'humanRemaining', humanRemaining, 'elephantAction', elephantAction, 'elephantRemaining', elephantRemaining, 'time', time)
+          log.debug(
+            'only human available, human time',
+            humanTime,
+            'elephant time',
+            elephantTime,
+            'valve',
+            nextValve,
+            'human action',
+            humanAction,
+            'humanRemaining',
+            humanRemaining,
+            'elephantAction',
+            elephantAction,
+            'elephantRemaining',
+            elephantRemaining,
+            'time',
+            time
+          )
 
           const p = generateStep({
             head: path.head,
@@ -223,7 +271,11 @@ export default async (lineReader: any, params: Params) => {
             time: time,
             nextValve: _nextValve,
             human: { action: humanAction, valve: nextValve, remaining: humanRemaining },
-            elephant: { action: elephantAction, valve: path.head.elephant!.valve, remaining: elephantRemaining }
+            elephant: {
+              action: elephantAction,
+              valve: path.head.elephant!.valve,
+              remaining: elephantRemaining
+            }
           })
           newPaths.push(p)
           log.debug('I produced', JSON.stringify(p.head))
@@ -263,7 +315,8 @@ export default async (lineReader: any, params: Params) => {
           const elephantTime = betterData[path.head.elephant!.valve][nextValve].time + 1
           const elephantAction = elephantTime > humanTime ? 'moving' : 'opening'
           const humanAction = humanTime > elephantTime ? 'moving' : 'opening'
-          let humanRemaining: number = 0; let elephantRemaining: number = 0
+          let humanRemaining: number = 0
+          let elephantRemaining: number = 0
           const _nextValve = []
           if (humanAction === 'moving') {
             humanRemaining = humanTime - elephantTime
@@ -277,8 +330,24 @@ export default async (lineReader: any, params: Params) => {
           }
           const time = Math.min(humanTime, elephantTime)
           log.debug('make new paths:', path?.tail.map(printStep).join(' '))
-          log.debug('only elephant available, human time', humanTime, 'elephant time', elephantTime, 'valve', nextValve, 'human action', humanAction,
-            'humanRemaining', humanRemaining, 'elephantAction', elephantAction, 'elephantRemaining', elephantRemaining, 'time', time)
+          log.debug(
+            'only elephant available, human time',
+            humanTime,
+            'elephant time',
+            elephantTime,
+            'valve',
+            nextValve,
+            'human action',
+            humanAction,
+            'humanRemaining',
+            humanRemaining,
+            'elephantAction',
+            elephantAction,
+            'elephantRemaining',
+            elephantRemaining,
+            'time',
+            time
+          )
 
           const p = generateStep({
             head: path.head,
@@ -297,11 +366,11 @@ export default async (lineReader: any, params: Params) => {
 
     if (!isHumanAvailable && isElephantDone) {
       log.debug('make new paths:', path?.tail.map(printStep).join(' '))
-      log.debug('Elephant done, human still going, time', (path.head.human?.remaining ?? 0))
+      log.debug('Elephant done, human still going, time', path.head.human?.remaining ?? 0)
       const p = generateStep({
         head: path.head,
         tail: newTail,
-        time: (path.head.human?.remaining ?? 0),
+        time: path.head.human?.remaining ?? 0,
         nextValve: [path.head.human.valve],
         human: { action: 'opening', valve: path.head.human.valve },
         elephant: path.head.elephant
@@ -313,11 +382,11 @@ export default async (lineReader: any, params: Params) => {
 
     if (isHumanDone && !isElephantDone) {
       log.debug('make new paths:', path?.tail.map(printStep).join(' '))
-      log.debug('Human done, elephant still going, time', (path.head.human?.remaining ?? 0))
+      log.debug('Human done, elephant still going, time', path.head.human?.remaining ?? 0)
       const p = generateStep({
         head: path.head,
         tail: newTail,
-        time: (path.head.elephant?.remaining ?? 0),
+        time: path.head.elephant?.remaining ?? 0,
         nextValve: [path.head.elephant!.valve],
         elephant: { action: 'opening', valve: path.head.elephant!.valve },
         human: path.head.human
@@ -336,7 +405,8 @@ export default async (lineReader: any, params: Params) => {
 
     remainingValvesForHuman.forEach((v: string) => {
       _.reject(remainingValvesForElephant, (_v: string) => _v === v).forEach((v2: string) => {
-        let humanValve = v; let elephantValve = v2
+        let humanValve = v
+        let elephantValve = v2
         let humanTime = betterData[path.head.human.valve][humanValve].time + 1
         let elephantTime = betterData[path.head.elephant!.valve][elephantValve].time + 1
 
@@ -382,7 +452,16 @@ export default async (lineReader: any, params: Params) => {
         const time = Math.min(humanTime, elephantTime)
 
         log.debug('make new paths:', path?.tail.map(printStep).join(' '))
-        log.debug('Human and elephant still active, human time', humanTime, 'elephant time', elephantTime, 'human action', humanAction, 'elephant action', elephantAction)
+        log.debug(
+          'Human and elephant still active, human time',
+          humanTime,
+          'elephant time',
+          elephantTime,
+          'human action',
+          humanAction,
+          'elephant action',
+          elephantAction
+        )
 
         const p = generateStep({
           head: path.head,
@@ -401,7 +480,8 @@ export default async (lineReader: any, params: Params) => {
     if (path.head.human.action !== 'start' && path.head.elephant!.action !== 'start') {
       remainingValvesForElephant.forEach((v2: string) => {
         _.reject(remainingValvesForHuman, (_v: string) => _v === v2).forEach((v: string) => {
-          let humanValve = v; let elephantValve = v2
+          let humanValve = v
+          let elephantValve = v2
           let humanTime = betterData[path.head.human.valve][humanValve].time + 1
           let elephantTime = betterData[path.head.elephant!.valve][elephantValve].time + 1
 
@@ -465,7 +545,12 @@ export default async (lineReader: any, params: Params) => {
     return newPaths
   }
 
-  const filterNonPromisingPaths = (newPaths: Paths, timeLimit: number, allValidValves:Array<string>, finished: Path | undefined): Paths => {
+  const filterNonPromisingPaths = (
+    newPaths: Paths,
+    timeLimit: number,
+    allValidValves: Array<string>,
+    finished: Path | undefined
+  ): Paths => {
     if (!finished) {
       return newPaths
     }
@@ -475,29 +560,45 @@ export default async (lineReader: any, params: Params) => {
         if (p.head.valvesOpened.indexOf(v) >= 0) {
           return true
         }
-        if ((p.head.human.action === 'moving') && v === p.head.human.valve) {
+        if (p.head.human.action === 'moving' && v === p.head.human.valve) {
           return true
         }
-        if ((p.head.elephant?.action === 'moving') && v === p.head.elephant?.valve) {
+        if (p.head.elephant?.action === 'moving' && v === p.head.elephant?.valve) {
           return true
         }
         return false
       })
-      const remainingValvesIncrease: number = _.reduce(remainingValves, (memo: number, val: string) => memo + data[val].flow, 0)
-      const estimatedValue = p.head.pressure + (p.head.pressureIncrease + remainingValvesIncrease) * remainingTime
+      const remainingValvesIncrease: number = _.reduce(
+        remainingValves,
+        (memo: number, val: string) => memo + data[val].flow,
+        0
+      )
+      const estimatedValue =
+        p.head.pressure + (p.head.pressureIncrease + remainingValvesIncrease) * remainingTime
       // console.log('finished high score is', Math.max(finished.tail[finished.tail.length - 1].pressure, finished.head.pressure))
       // console.log('estimatedValue', estimatedValue, 'pressure now',  p.head.pressure, 'rate', (p.head.pressureIncrease + remainingValvesIncrease), 'remaining time', remainingTime )
 
-      if (estimatedValue < Math.max(finished.tail[finished.tail.length - 1].pressure, finished.head.pressure)) {
+      if (
+        estimatedValue < Math.max(finished.tail[finished.tail.length - 1].pressure, finished.head.pressure)
+      ) {
         return true
       }
       return false
     })
   }
 
-  const searchAlgorithm = ({ opened, finished, timeLimit, allValidValves, betterData }: {
-    opened: Paths, finished: Path | undefined, timeLimit: number,
-    allValidValves: Array<string>, betterData: BetterData
+  const searchAlgorithm = ({
+    opened,
+    finished,
+    timeLimit,
+    allValidValves,
+    betterData
+  }: {
+    opened: Paths
+    finished: Path | undefined
+    timeLimit: number
+    allValidValves: Array<string>
+    betterData: BetterData
   }) => {
     // removed from top
     const path: Path = opened.splice(-1)[0]
@@ -513,7 +614,10 @@ export default async (lineReader: any, params: Params) => {
     }
 
     const newPaths: Paths = makeNewPaths({
-      path, allValidValves, timeLimit, betterData
+      path,
+      allValidValves,
+      timeLimit,
+      betterData
     })
 
     if (newPaths.length > 0) {
@@ -522,19 +626,33 @@ export default async (lineReader: any, params: Params) => {
         log.info("I reduced new paths from", newPaths.length,'to', __newPaths.length)
       } */
       opened.push(...__newPaths)
-      opened.sort((a, b) =>
-        // orders from least to most, we pick best candidates from end of list
-        ((a.head.pressure + (a.head.pressureIncrease * (timeLimit - a.head.time))) -
-          (b.head.pressure + (b.head.pressureIncrease * (timeLimit - b.head.time)))))
+      opened.sort(
+        (a, b) =>
+          // orders from least to most, we pick best candidates from end of list
+          a.head.pressure +
+          a.head.pressureIncrease * (timeLimit - a.head.time) -
+          (b.head.pressure + b.head.pressureIncrease * (timeLimit - b.head.time))
+      )
     }
-    log.debug('Step', printStep(path.head), 'produced', newPaths.length, 'new paths',
-      newPaths.map(p => printStep(p.head)))
-    log.debug('opened most promising', opened.slice(-3).map(p => JSON.stringify(p.head)))
+    log.debug(
+      'Step',
+      printStep(path.head),
+      'produced',
+      newPaths.length,
+      'new paths',
+      newPaths.map((p) => printStep(p.head))
+    )
+    log.debug(
+      'opened most promising',
+      opened.slice(-3).map((p) => JSON.stringify(p.head))
+    )
   }
 
   const findCost = (betterData: BetterData, valve: string, valve2: string): Cost | undefined => {
-    if (Object.prototype.hasOwnProperty.call(betterData, valve2) &&
-      Object.prototype.hasOwnProperty.call(betterData[valve2], valve)) {
+    if (
+      Object.prototype.hasOwnProperty.call(betterData, valve2) &&
+      Object.prototype.hasOwnProperty.call(betterData[valve2], valve)
+    ) {
       return {
         name: valve,
         valves: betterData[valve2][valve].valves.reverse(),
@@ -572,13 +690,18 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     const m = line.match(/^Valve (.+) has flow rate=(.+); tunnels? leads? to valves? (.+)$/)
-    const name = m[1]; const flow = parseInt(m[2]); const valves = m[3].split(',').map((x: string) => x.trim())
+    const name = m[1]
+    const flow = parseInt(m[2])
+    const valves = m[3].split(',').map((x: string) => x.trim())
     data[name] = { name, flow, valves }
   }
 
   log.debug('Pipe data', data)
 
-  const allValidValves: Array<string> = Object.values(data).filter((v: Valve) => v.flow > 0).map((v: Valve) => v.name).sort()
+  const allValidValves: Array<string> = Object.values(data)
+    .filter((v: Valve) => v.flow > 0)
+    .map((v: Valve) => v.name)
+    .sort()
   allValidValves.unshift('AA')
 
   const betterData: any = {}
@@ -594,30 +717,37 @@ export default async (lineReader: any, params: Params) => {
   let finished: Path | undefined
   let opened: Paths
   let timeLimit: number
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   if (params.part1?.skip !== true) {
     finished = undefined
-    opened = [{
-      head: {
-        human: {
-          valve: 'AA',
-          action: 'start'
+    opened = [
+      {
+        head: {
+          human: {
+            valve: 'AA',
+            action: 'start'
+          },
+          elephant: undefined,
+          time: 0,
+          pressure: 0,
+          pressureIncrease: 0,
+          withElephant: false,
+          valvesOpened: ['AA']
         },
-        elephant: undefined,
-        time: 0,
-        pressure: 0,
-        pressureIncrease: 0,
-        withElephant: false,
-        valvesOpened: ['AA']
-      },
-      tail: []
-    }]
+        tail: []
+      }
+    ]
     timeLimit = params!.part1.limit
 
     while (!_.isEmpty(opened)) {
       const _finished: Path | undefined = await searchAlgorithm({
-        opened, finished, timeLimit, allValidValves, betterData
+        opened,
+        finished,
+        timeLimit,
+        allValidValves,
+        betterData
       })
       if (_finished) {
         finished = _finished
@@ -630,30 +760,36 @@ export default async (lineReader: any, params: Params) => {
 
   if (params.part2?.skip !== true) {
     finished = undefined
-    opened = [{
-      head: {
-        human: {
-          valve: 'AA',
-          action: 'start'
+    opened = [
+      {
+        head: {
+          human: {
+            valve: 'AA',
+            action: 'start'
+          },
+          elephant: {
+            valve: 'AA',
+            action: 'start'
+          },
+          time: 0,
+          pressure: 0,
+          pressureIncrease: 0,
+          withElephant: true,
+          valvesOpened: ['AA']
         },
-        elephant: {
-          valve: 'AA',
-          action: 'start'
-        },
-        time: 0,
-        pressure: 0,
-        pressureIncrease: 0,
-        withElephant: true,
-        valvesOpened: ['AA']
-      },
-      tail: []
-    }]
+        tail: []
+      }
+    ]
     timeLimit = params!.part2.limit
 
     let iteration: number = 0
     while (!_.isEmpty(opened)) {
       const _finished: Path | undefined = await searchAlgorithm({
-        opened, finished, timeLimit, allValidValves, betterData
+        opened,
+        finished,
+        timeLimit,
+        allValidValves,
+        betterData
       })
       if (_finished) {
         finished = _finished

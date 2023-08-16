@@ -1,11 +1,12 @@
 import { Params } from '../../aoc.d'
 
 export default async (lineReader: any, params: Params) => {
-  let part1: string = ''; let part2: string = ''
+  let part1: string = ''
+  let part2: string = ''
   const letters = 'abcdefghijklmnopqrstuvwxyz'
   let password = params.password
 
-  const writePass = (vals: Array<number>) => vals.map(x => letters[x]).join('')
+  const writePass = (vals: Array<number>) => vals.map((x) => letters[x]).join('')
 
   while (part1 === '' || part2 === '') {
     const vals = password.split('').map((s: string) => letters.indexOf(s))
@@ -27,7 +28,11 @@ export default async (lineReader: any, params: Params) => {
 
     let forbiddenLetters = false
     for (let i = 0; i < vals.length; i++) {
-      if (vals[i] === letters.indexOf('l') || vals[i] === letters.indexOf('i') || vals[i] === letters.indexOf('o')) {
+      if (
+        vals[i] === letters.indexOf('l') ||
+        vals[i] === letters.indexOf('i') ||
+        vals[i] === letters.indexOf('o')
+      ) {
         forbiddenLetters = true
       }
     }

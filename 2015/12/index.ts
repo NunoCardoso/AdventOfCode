@@ -3,7 +3,8 @@ import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   let map: Record<string, any> = {}
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   for await (const line of lineReader) {
     map = JSON.parse(line)

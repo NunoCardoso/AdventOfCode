@@ -7,7 +7,8 @@ export default async (lineReader: any, params: Params) => {
   const fileSystem: Record<string, any> = {}
   const dirSizes: Record<any, any> = {}
   let currentPath: Array<string> = []
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   for await (const line of lineReader) {
     const vals = line.split(' ')
@@ -34,7 +35,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const calculate = (dir: Record<any, any>, path: Array<string>) => {
-    Object.keys(dir).forEach(key => {
+    Object.keys(dir).forEach((key) => {
       if (_.isNumber(dir[key])) {
         for (let i = 0; i < path.length; i++) {
           const newPath = path.slice(0, i + 1).join('/')
@@ -58,9 +59,11 @@ export default async (lineReader: any, params: Params) => {
   calculate(fileSystem, [''])
 
   if (params.part1?.skip !== true) {
-    part1 = _.reduce(Object.keys(dirSizes), (memo: number, key: string) => (
-      memo + (dirSizes[key] < params!.cutoffDirSize ? dirSizes[key] : 0)
-    ), 0)
+    part1 = _.reduce(
+      Object.keys(dirSizes),
+      (memo: number, key: string) => memo + (dirSizes[key] < params!.cutoffDirSize ? dirSizes[key] : 0),
+      0
+    )
   }
 
   // part 2
@@ -72,8 +75,8 @@ export default async (lineReader: any, params: Params) => {
 
     Object.keys(dirSizes)
       .sort((a, b) => dirSizes[b] - dirSizes[a])
-      .every(key => {
-        if (dirSizes[key] < part2 && (dirSizes[key] > minimumNeededToDelete)) {
+      .every((key) => {
+        if (dirSizes[key] < part2 && dirSizes[key] > minimumNeededToDelete) {
           part2 = dirSizes[key]
         }
         if (dirSizes[key] < minimumNeededToDelete) {

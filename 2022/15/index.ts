@@ -4,8 +4,8 @@ import _ from 'lodash'
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  type Point = {x: number, y: number, distance?: number, range ?: Array<Point>}
-  type RRange =[number, number]
+  type Point = { x: number; y: number; distance?: number; range?: Array<Point> }
+  type RRange = [number, number]
   const dataBeacons: Array<Point> = []
   const dataSensors: Array<Point> = []
   let minX: number | undefined
@@ -118,15 +118,20 @@ export default async (lineReader: any, params: Params) => {
       log.info(i, 'calculating range for sensor', s)
       const rangePoints = generateRangeBoundariesForY(s, y, minX, maxX)
       if (rangePoints.length > 0) {
-        const foundIndex: number = _.findIndex(whereBeaconsAreNot, (p: RRange) =>
-          (p[0] >= rangePoints[0].x && p[0] <= rangePoints[rangePoints.length - 1].x) ||
-          (p[1] >= rangePoints[0].x && p[1] <= rangePoints[rangePoints.length - 1].x)
+        const foundIndex: number = _.findIndex(
+          whereBeaconsAreNot,
+          (p: RRange) =>
+            (p[0] >= rangePoints[0].x && p[0] <= rangePoints[rangePoints.length - 1].x) ||
+            (p[1] >= rangePoints[0].x && p[1] <= rangePoints[rangePoints.length - 1].x)
         )
         if (foundIndex < 0) {
           whereBeaconsAreNot.push([rangePoints[0].x, rangePoints[rangePoints.length - 1].x])
         } else {
           whereBeaconsAreNot[foundIndex][0] = Math.min(rangePoints[0].x, whereBeaconsAreNot[foundIndex][0])
-          whereBeaconsAreNot[foundIndex][1] = Math.max(rangePoints[rangePoints.length - 1].x, whereBeaconsAreNot[foundIndex][1])
+          whereBeaconsAreNot[foundIndex][1] = Math.max(
+            rangePoints[rangePoints.length - 1].x,
+            whereBeaconsAreNot[foundIndex][1]
+          )
         }
 
         let originalLength = whereBeaconsAreNot.length
@@ -149,7 +154,8 @@ export default async (lineReader: any, params: Params) => {
     findDistance(s, dataBeacons)
   })
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   if (params.part1?.skip !== true) {
     const y = params!.y
@@ -163,7 +169,11 @@ export default async (lineReader: any, params: Params) => {
     for (let i = 0; i < limit; i++) {
       const partialBeaconRange: Array<RRange> = numberOfPointsWithoutBeaconAt(i, 0, limit)
       // console.log(partialBeaconRange)
-      const partial: number = _.reduce(partialBeaconRange, (memo: number, val: RRange) => memo + (val[1] - val[0] + 1), 0)
+      const partial: number = _.reduce(
+        partialBeaconRange,
+        (memo: number, val: RRange) => memo + (val[1] - val[0] + 1),
+        0
+      )
       if (partial <= limit) {
         // returns range at y 2906626 Total x 4000000
         // [ [ 0, 2572894 ], [ 2572896, 4000000 ] ]

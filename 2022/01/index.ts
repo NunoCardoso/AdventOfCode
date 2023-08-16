@@ -5,9 +5,7 @@ export default async (lineReader: any, params: Params) => {
   const res: Array<number> = []
 
   for await (const line of lineReader) {
-    line === ''
-      ? index++
-      : !res[index] ? res[index] = parseInt(line) : res[index] += parseInt(line)
+    line === '' ? index++ : !res[index] ? (res[index] = parseInt(line)) : (res[index] += parseInt(line))
   }
 
   res.sort((a: number, b: number) => b - a)

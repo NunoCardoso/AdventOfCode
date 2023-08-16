@@ -7,9 +7,12 @@ export default async (lineReader: any, params: Params) => {
 
   type Point = [number, number, number]
 
-  let minX: number | undefined, maxX: number | undefined,
-    minY: number | undefined, maxY: number | undefined,
-    minZ: number | undefined, maxZ: number | undefined
+  let minX: number | undefined,
+    maxX: number | undefined,
+    minY: number | undefined,
+    maxY: number | undefined,
+    minZ: number | undefined,
+    maxZ: number | undefined
 
   const isObsidian = (needle: Point, haystack: Record<string, Point>): boolean =>
     Object.prototype.hasOwnProperty.call(haystack, '' + needle[0] + ',' + needle[1] + ',' + needle[2])
@@ -22,36 +25,51 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const numberOfExposedSurfaces = (point: Point, obsidianPointKeys: Record<string, Point>): number => {
-    return 6 -
+    return (
+      6 -
       (isObsidian([point[0] + 1, point[1], point[2]], obsidianPointKeys) ? 1 : 0) -
       (isObsidian([point[0] - 1, point[1], point[2]], obsidianPointKeys) ? 1 : 0) -
       (isObsidian([point[0], point[1] + 1, point[2]], obsidianPointKeys) ? 1 : 0) -
       (isObsidian([point[0], point[1] - 1, point[2]], obsidianPointKeys) ? 1 : 0) -
       (isObsidian([point[0], point[1], point[2] + 1], obsidianPointKeys) ? 1 : 0) -
       (isObsidian([point[0], point[1], point[2] - 1], obsidianPointKeys) ? 1 : 0)
+    )
   }
 
   const numberOfExposedSurfaces2 = (point: Point, outsidePointKeys: Record<string, Point>): number => {
-    return 0 +
+    return (
+      0 +
       (isOutside([point[0] + 1, point[1], point[2]], outsidePointKeys) ? 1 : 0) +
       (isOutside([point[0] - 1, point[1], point[2]], outsidePointKeys) ? 1 : 0) +
       (isOutside([point[0], point[1] + 1, point[2]], outsidePointKeys) ? 1 : 0) +
       (isOutside([point[0], point[1] - 1, point[2]], outsidePointKeys) ? 1 : 0) +
       (isOutside([point[0], point[1], point[2] + 1], outsidePointKeys) ? 1 : 0) +
       (isOutside([point[0], point[1], point[2] - 1], outsidePointKeys) ? 1 : 0)
+    )
   }
 
   const outsideBoundaries = (c: Point) => {
     return c[0] < minX! || c[0] > maxX! || c[1] < minY! || c[1] > maxY! || c[2] < minZ! || c[2] > maxZ!
   }
 
-  const getCandidates = (
-    { obsidianPointKeys, opened, visited, current }:
-      {obsidianPointKeys: Record<string, Point>, opened: Array<Point>, visited: Record<string, Point>, current: Point }) => {
+  const getCandidates = ({
+    obsidianPointKeys,
+    opened,
+    visited,
+    current
+  }: {
+    obsidianPointKeys: Record<string, Point>
+    opened: Array<Point>
+    visited: Record<string, Point>
+    current: Point
+  }) => {
     let candidates: Array<Point> = [
-      [current[0] + 1, current[1], current[2]], [current[0] - 1, current[1], current[2]],
-      [current[0], current[1] + 1, current[2]], [current[0], current[1] - 1, current[2]],
-      [current[0], current[1], current[2] + 1], [current[0], current[1], current[2] - 1]
+      [current[0] + 1, current[1], current[2]],
+      [current[0] - 1, current[1], current[2]],
+      [current[0], current[1] + 1, current[2]],
+      [current[0], current[1] - 1, current[2]],
+      [current[0], current[1], current[2] + 1],
+      [current[0], current[1], current[2] - 1]
     ]
 
     candidates = _.reject(candidates, (c: Point) => {
@@ -66,7 +84,7 @@ export default async (lineReader: any, params: Params) => {
         return true
       }
       // reject already opened
-      if (_.find(opened, (o: Point) => (o[0] === c[0] && o[1] === c[1] && o[2] === c[2])) !== undefined) {
+      if (_.find(opened, (o: Point) => o[0] === c[0] && o[1] === c[1] && o[2] === c[2]) !== undefined) {
         // console.log('rejected', c, 'already opened')
         return true
       }
@@ -89,7 +107,10 @@ export default async (lineReader: any, params: Params) => {
     visited['' + c[0] + ',' + c[1] + ',' + c[2]] = c
   }
 
-  const exploreOutside = (obsidianPointKeys: Record<string, Point>, initialPaths: Array<Point>): Record<string, Point> => {
+  const exploreOutside = (
+    obsidianPointKeys: Record<string, Point>,
+    initialPaths: Array<Point>
+  ): Record<string, Point> => {
     log.debug('started explore outside')
     const visited: Record<string, Point> = {}
     const opened: Array<Point> = initialPaths
@@ -109,7 +130,9 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     const matches = line.match(/^(\d+),(\d+),(\d+)$/)
-    const x = parseInt(matches![1]); const y = parseInt(matches![2]); const z = parseInt(matches![3])
+    const x = parseInt(matches![1])
+    const y = parseInt(matches![2])
+    const z = parseInt(matches![3])
     if (minX === undefined || x < minX) minX = x
     if (maxX === undefined || x > maxX) maxX = x
     if (minY === undefined || y < minY) minY = y
@@ -119,13 +142,14 @@ export default async (lineReader: any, params: Params) => {
     obsidianPointKeys[line] = [x, y, z]
   }
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
   const maxSpace = (maxX! - minX! + 1) * (maxY! - minY! + 1) * (maxZ! - minZ! + 1)
 
   if (params.part1?.skip !== true) {
     log.debug('obsidian points total', obsidianPointKeys.length)
-    log.debug('dimensions', (maxX! - minX! + 1), (maxY! - minY! + 1), (maxZ! - minZ! + 1), 'total ', maxSpace)
-    Object.values(obsidianPointKeys).forEach(point => {
+    log.debug('dimensions', maxX! - minX! + 1, maxY! - minY! + 1, maxZ! - minZ! + 1, 'total ', maxSpace)
+    Object.values(obsidianPointKeys).forEach((point) => {
       part1 += numberOfExposedSurfaces(point, obsidianPointKeys)
     })
   }
@@ -146,9 +170,19 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     const outsidePointKeys: Record<string, Point> = exploreOutside(obsidianPointKeys, initialPaths)
-    const insidePoints = maxSpace - Object.keys(obsidianPointKeys).length - Object.keys(outsidePointKeys).length
-    log.debug('max space', maxSpace, 'obsidians', Object.keys(obsidianPointKeys).length, 'outside', Object.keys(outsidePointKeys).length, 'inside', insidePoints)
-    Object.values(obsidianPointKeys).forEach(point => {
+    const insidePoints =
+      maxSpace - Object.keys(obsidianPointKeys).length - Object.keys(outsidePointKeys).length
+    log.debug(
+      'max space',
+      maxSpace,
+      'obsidians',
+      Object.keys(obsidianPointKeys).length,
+      'outside',
+      Object.keys(outsidePointKeys).length,
+      'inside',
+      insidePoints
+    )
+    Object.values(obsidianPointKeys).forEach((point) => {
       part2 += numberOfExposedSurfaces2(point, outsidePointKeys)
     })
 
@@ -169,7 +203,7 @@ export default async (lineReader: any, params: Params) => {
           lines.push(line)
         }
         console.log('z=', z)
-        lines.forEach(l => console.log(l))
+        lines.forEach((l) => console.log(l))
       }
     }
   }

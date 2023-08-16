@@ -49,8 +49,9 @@ export default async (lineReader: any, params: Params) => {
     combinations[key] = res
   })
 
-  const sortedKeys: Array<string> = Object.keys(combinations)
-    .sort((a, b) => combinations[a] - combinations[b])
+  const sortedKeys: Array<string> = Object.keys(combinations).sort(
+    (a, b) => combinations[a] - combinations[b]
+  )
 
   return {
     part1: combinations[sortedKeys[0]],

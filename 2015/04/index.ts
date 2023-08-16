@@ -2,7 +2,8 @@ import { Params } from '../../aoc.d'
 const MD5 = require('md5.js')
 
 export default async (lineReader: any, params: Params) => {
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
   let i: number = 0
 
   while (part2 === 0) {

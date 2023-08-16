@@ -7,10 +7,10 @@ export type Part = {
 }
 
 export type UI = {
-  show ?: boolean
-  wait ?: number
-  during ?: boolean
-  end ?: boolean
+  show?: boolean
+  wait?: number
+  during?: boolean
+  end?: boolean
 }
 
 export type Prod = {
@@ -27,11 +27,11 @@ export type Test = Prod & {
 export type Config = {
   year: string
   day: string
-  mode ?: string
-  params ?: Params
-  logLevel ?: string
-  ui ?: UI
+  mode?: string
+  params?: Params
+  logLevel?: string
+  ui?: UI
   time: boolean
-  test ?: Test | Array<Test>
-  prod ?: Prod
+  test?: Test | Array<Test>
+  prod?: Prod
 }

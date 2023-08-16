@@ -4,10 +4,11 @@ import _ from 'lodash'
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
-  type Wire1 = {op: string, src: string | number}
-  type Wire2 = {op: string, src1: string | number, src2: string | number}
+  type Wire1 = { op: string; src: string | number }
+  type Wire2 = { op: string; src1: string | number; src2: string | number }
   type Wire = number | string | Wire1 | Wire2
   type Wires = Record<string, Wire>
 
@@ -15,7 +16,10 @@ export default async (lineReader: any, params: Params) => {
 
   const _16bitNot = (numb: number) => {
     const bin = dec2bin(numb).padStart(16, '0')
-    const notbin = bin.split('').map(x => x === '0' ? '1' : '0').join('')
+    const notbin = bin
+      .split('')
+      .map((x) => (x === '0' ? '1' : '0'))
+      .join('')
     return parseInt(notbin, 2)
   }
 
@@ -77,7 +81,7 @@ export default async (lineReader: any, params: Params) => {
     }
     if ((wires[key] as Wire1).op === 'NOT') {
       const src: number = _.isNumber((wires[key] as Wire1).src)
-        ? (wires[key] as Wire1).src as number
+        ? ((wires[key] as Wire1).src as number)
         : resolve(wires, (wires[key] as Wire1).src)
       res = _16bitNot(src)
       wires[key] = res
@@ -85,10 +89,10 @@ export default async (lineReader: any, params: Params) => {
       return res
     }
     const src1: number = _.isNumber((wires[key] as Wire2).src1)
-      ? (wires[key] as Wire2).src1 as number
+      ? ((wires[key] as Wire2).src1 as number)
       : resolve(wires, (wires[key] as Wire2).src1)
     const src2: number = _.isNumber((wires[key] as Wire2).src2)
-      ? (wires[key] as Wire2).src2 as number
+      ? ((wires[key] as Wire2).src2 as number)
       : resolve(wires, (wires[key] as Wire2).src2)
     if ((wires[key] as Wire2).op === 'OR') {
       res = _16bitOr(src1, src2)
@@ -120,17 +124,13 @@ export default async (lineReader: any, params: Params) => {
     }
     // 1 -> c or x -> c
     if (vals.length === 3) {
-      const value = vals[0].match(/^\d+$/)
-        ? parseInt(vals[0])
-        : vals[0]
+      const value = vals[0].match(/^\d+$/) ? parseInt(vals[0]) : vals[0]
       const target = vals[2]
       wires1[target] = value
     }
     // 1 something b -> c or a something b -> c
     if (vals.length === 5) {
-      const source1 = vals[0].match(/^\d+$/)
-        ? parseInt(vals[0])
-        : vals[0]
+      const source1 = vals[0].match(/^\d+$/) ? parseInt(vals[0]) : vals[0]
       const operand = vals[1]
       const source2 = vals[2].match(/^\d+$/) ? parseInt(vals[2]) : vals[2]
       const target = vals[4]

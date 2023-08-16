@@ -6,7 +6,8 @@ export default async (lineReader: any, params: Params) => {
 
   type Stacks = Array<Array<string>>
 
-  let part1: string = ''; let part2: string = ''
+  let part1: string = ''
+  let part2: string = ''
 
   /*
   [T]             [P]     [J]
@@ -21,11 +22,7 @@ export default async (lineReader: any, params: Params) => {
    */
 
   const stacks1: Stacks = params.isTest
-    ? [
-        ['Z', 'N'],
-        ['M', 'C', 'D'],
-        ['P']
-      ]
+    ? [['Z', 'N'], ['M', 'C', 'D'], ['P']]
     : [
         ['Q', 'S', 'W', 'C', 'Z', 'V', 'F', 'T'],
         ['Q', 'R', 'B'],
@@ -40,7 +37,7 @@ export default async (lineReader: any, params: Params) => {
 
   const stacks2: Stacks = _.cloneDeep(stacks1)
 
-  const printStacks = (stack: Stacks) => stack.map(s => '[' + s.join('') + ']').join(',')
+  const printStacks = (stack: Stacks) => stack.map((s) => '[' + s.join('') + ']').join(',')
 
   for await (const line of lineReader) {
     const match = line.match(/^move (\d+) from (\d+) to (\d+)$/)
@@ -57,7 +54,7 @@ export default async (lineReader: any, params: Params) => {
         log.trace(printStacks(stacks1))
       }
       log.debug('part 1 end', printStacks(stacks1))
-      part1 = stacks1.map(s => s[s.length - 1]).join('')
+      part1 = stacks1.map((s) => s[s.length - 1]).join('')
     }
 
     // part 2
@@ -65,7 +62,7 @@ export default async (lineReader: any, params: Params) => {
       const elems = stacks2[from - 1].splice(-1 * howmuch)
       stacks2[to - 1].splice(stacks2[to - 1].length, 0, ...elems)
       log.debug('part 2 end', printStacks(stacks2))
-      part2 = stacks2.map(s => s[s.length - 1]).join('')
+      part2 = stacks2.map((s) => s[s.length - 1]).join('')
     }
   }
 

@@ -26,9 +26,7 @@ export default async (lineReader: any, params: Params) => {
     const cycleIndex: number = cycles - 1
     const cycleIndexInRow: number = cycleIndex % lineWidth
 
-    if (signal === cycleIndexInRow ||
-      (signal - 1) === cycleIndexInRow ||
-      (signal + 1) === cycleIndexInRow) {
+    if (signal === cycleIndexInRow || signal - 1 === cycleIndexInRow || signal + 1 === cycleIndexInRow) {
       printscreen[cycleIndex] = '#'
     }
   }
@@ -49,13 +47,20 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const part1 = _.reduce(Object.values(signals), (memo: number, val: number) => (memo + val), 0)
-  const part2 = '\n' + printscreen.slice(0, 40).join('') +
-    '\n' + printscreen.slice(40, 80).join('') +
-    '\n' + printscreen.slice(80, 120).join('') +
-    '\n' + printscreen.slice(120, 160).join('') +
-    '\n' + printscreen.slice(160, 200).join('') +
-    '\n' + printscreen.slice(200, 240).join('') +
+  const part1 = _.reduce(Object.values(signals), (memo: number, val: number) => memo + val, 0)
+  const part2 =
+    '\n' +
+    printscreen.slice(0, 40).join('') +
+    '\n' +
+    printscreen.slice(40, 80).join('') +
+    '\n' +
+    printscreen.slice(80, 120).join('') +
+    '\n' +
+    printscreen.slice(120, 160).join('') +
+    '\n' +
+    printscreen.slice(160, 200).join('') +
+    '\n' +
+    printscreen.slice(200, 240).join('') +
     '\n'
 
   return { part1, part2 }

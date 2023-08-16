@@ -4,17 +4,19 @@ export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   type Reindeer = {
-    name: string,
-    speed: number,
-    duration: number,
-    rest: number,
-    score: number,
+    name: string
+    speed: number
+    duration: number
+    rest: number
+    score: number
     distance: number
   }
 
   const reindeers: Record<string, Reindeer> = {}
   for await (const line of lineReader) {
-    const m = line.match(/^(.+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+) seconds.$/)
+    const m = line.match(
+      /^(.+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+) seconds.$/
+    )
     reindeers[m[1]] = {
       name: m[1],
       speed: parseInt(m[2]),
@@ -25,10 +27,11 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
   const timeCutoff = params.cutoff
 
-  Object.values(reindeers).forEach(reindeer => {
+  Object.values(reindeers).forEach((reindeer) => {
     let time = 0
     let distance = 0
     let mode = 'running'
@@ -75,8 +78,7 @@ export default async (lineReader: any, params: Params) => {
       time++
     }
 
-    const rankedReindeers = Object.keys(reindeers)
-      .sort((a, b) => reindeers[b].score - reindeers[a].score)
+    const rankedReindeers = Object.keys(reindeers).sort((a, b) => reindeers[b].score - reindeers[a].score)
     part2 = reindeers[rankedReindeers[0]].score
   }
 

@@ -4,7 +4,8 @@ import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   type Grid = Array<Array<string>>
-  let part1: number = 0; let part2: number = 0
+  let part1: number = 0
+  let part2: number = 0
 
   const grid: Grid = []
   for await (const line of lineReader) {
@@ -13,7 +14,7 @@ export default async (lineReader: any, params: Params) => {
 
   const printGrid = (grid: Grid, iteration: string | number) => {
     console.log('iteration', iteration)
-    grid.forEach(row => {
+    grid.forEach((row) => {
       const line = row.join('')
       console.log(line.replaceAll('#', clc.red('#')))
     })
@@ -51,9 +52,9 @@ export default async (lineReader: any, params: Params) => {
         for (let y = 0; y < _grid[x].length; y++) {
           const numberOfLights = calculateNumberOfLights(_grid, x, y)
           if (_grid[x][y] === '#') {
-            newRow.push((numberOfLights === 2 || numberOfLights === 3) ? '#' : '.')
+            newRow.push(numberOfLights === 2 || numberOfLights === 3 ? '#' : '.')
           } else {
-            newRow.push((numberOfLights === 3) ? '#' : '.')
+            newRow.push(numberOfLights === 3 ? '#' : '.')
           }
         }
         _newGrid.push(newRow)
@@ -77,16 +78,14 @@ export default async (lineReader: any, params: Params) => {
   if (params.part1?.skip !== true) {
     let grid1 = _.cloneDeep(grid)
     grid1 = flipIt(grid1, params.limit, false)
-    part1 = _.reduce(grid1, (memo, row) =>
-      (memo + _.filter(row, (cell) => cell === '#').length), 0)
+    part1 = _.reduce(grid1, (memo, row) => memo + _.filter(row, (cell) => cell === '#').length, 0)
   }
 
   if (params.part2?.skip !== true) {
     let grid2 = _.cloneDeep(grid)
     makeCornersOn(grid2)
     grid2 = flipIt(grid2, params.limit, true)
-    part2 = _.reduce(grid2, (memo, row) =>
-      (memo + _.filter(row, (cell) => cell === '#').length), 0)
+    part2 = _.reduce(grid2, (memo, row) => memo + _.filter(row, (cell) => cell === '#').length, 0)
   }
 
   return {
