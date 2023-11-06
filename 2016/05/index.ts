@@ -1,12 +1,12 @@
 import { Params } from '../../aoc.d'
-import _ from 'lodash'
+
 const MD5 = require('md5.js')
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  let part1: string = '',
-    part2: string = ''
+  let part1: string = ''
+  let part2: string = ''
 
   const solutionPart1: Array<string> = []
   const solutionPart2Index: Array<string> = []

@@ -2,21 +2,20 @@
 2015:
 
 04: md5, > 2 s, nothing I can do to make it faster
-all good!
-19: here
+19: stuck here on part 2 molecules
 
 2016:
 05: md5, > 1m, nothing I can do to make it faster
-
+07: free to start
 
 2022:
 15: on 16 seconds. rotate -45 deg
-16: - errors on test part2
+16: over 1 min
+    - errors on test part2
     - error on part 2 value (execution is fine)
-    - over 1 min
-22: test not work
-23: 6 seconds
-24: too long
+22: test does not work, have to reshape cube for test
+23: on 6 seconds
+24: too long, but it finishes with right solution
 
 
 

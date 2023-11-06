@@ -3,8 +3,8 @@ import { Params } from '../../aoc.d'
 export default async (lineReader: any, params: Params) => {
   type Point = [number, number]
 
-  let part1: string = '',
-    part2: string = ''
+  let part1: string = ''
+  let part2: string = ''
 
   const codes: Array<string> = []
   for await (const line of lineReader) {

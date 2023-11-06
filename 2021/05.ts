@@ -1,23 +1,23 @@
 import aoc from '../aoc'
 
 aoc({
-  year: '2022',
+  year: '2021',
   day: '05',
   test: {
     id: 'test',
     part1: {
-      answer: 'CMZ'
+      answer: 5
     },
     part2: {
-      answer: 'MCD'
+      answer: 12
     }
   },
   prod: {
     part1: {
-      answer: 'BZLVHBWQF'
+      answer: 5294
     },
     part2: {
-      answer: 'TDGJQTZSL'
+      answer: 21698
     }
   }
 })

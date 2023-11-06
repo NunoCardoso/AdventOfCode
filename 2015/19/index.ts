@@ -2,7 +2,7 @@ import { Params } from '../../aoc.d'
 import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
-  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   type Replacements = Record<string, Array<string>>
 
@@ -13,8 +13,8 @@ export default async (lineReader: any, params: Params) => {
 
   const replacements: Replacements = {}
 
-  let molecule: string = '',
-    moleculeBits: Array<string> = []
+  let molecule: string = ''
+  let moleculeBits: Array<string> = []
 
   const molecules: Record<string, any> = {}
 
@@ -57,8 +57,8 @@ export default async (lineReader: any, params: Params) => {
 
   const getThemMolecules = (start: string) => {
     let highScore: number = 1000
-    let opened: Array<Point> = [[start, 0, 0]]
-    let visited: Record<string, number> = {}
+    const opened: Array<Point> = [[start, 0, 0]]
+    const visited: Record<string, number> = {}
 
     const searchAlgorithm = (opened: Array<Point>, visited: Record<string, number>) => {
       const head: Point = opened.splice(-1)[0]
@@ -79,13 +79,13 @@ export default async (lineReader: any, params: Params) => {
         return
       }
 
-      let newMolecules: Points = []
+      const newMolecules: Points = []
 
       // in first 3 steps, perform breadth first
       if (head[1] < 3) {
         console.log('On BFS')
         opened.push(head)
-        let allStrings: any = {}
+        const allStrings: any = {}
         opened.forEach((o) => {
           doReact(o[0]).forEach((s: string) => {
             allStrings[s] = 1
@@ -104,7 +104,7 @@ export default async (lineReader: any, params: Params) => {
             if (head[0].endsWith(key)) {
               const index = _.lastIndexOf(head[0], key)
               replacements[key].forEach((trg) => {
-                let newCurrent = head[0].substring(0, index) + trg
+                const newCurrent = head[0].substring(0, index) + trg
                 if (!Object.prototype.hasOwnProperty.call(visited, newCurrent) && head[1] + 1 < highScore) {
                   newMolecules.push([newCurrent, head[1] + 1, divergingIndex(newCurrent)])
                 }
@@ -112,7 +112,7 @@ export default async (lineReader: any, params: Params) => {
             }
           })
         } else {
-          let index = divergingIndex(head[0])
+          const index = divergingIndex(head[0])
           const left = head[0].substring(0, index)
           const rest = head[0].substring(index, head[0].length)
 
@@ -121,8 +121,8 @@ export default async (lineReader: any, params: Params) => {
             if (rest.startsWith(key)) {
               const right = rest.substring(key.length, rest.length)
               replacements[key].forEach((trg) => {
-                let newCurrent = left + trg + right
-                let newIndex = divergingIndex(newCurrent)
+                const newCurrent = left + trg + right
+                const newIndex = divergingIndex(newCurrent)
                 if (
                   !Object.prototype.hasOwnProperty.call(visited, newCurrent) &&
                   head[1] + 1 < highScore &&
@@ -145,7 +145,7 @@ export default async (lineReader: any, params: Params) => {
         // biggest replacement molecule
         /* if (head[1] > 20) {
           opened = _.reject(opened, (o: Point) => o[1] + biggestReplacementSize < head[1])
-        }*/
+        } */
 
         opened.sort((a, b) => (a[2] - b[2] !== 0 ? a[2] - b[2] : b[0].length - a[0].length))
       }
@@ -162,7 +162,7 @@ export default async (lineReader: any, params: Params) => {
     const molecules: any = {}
     const atoms: Array<string> = breakIntoAtoms(molecule)
     for (let i = 0; i < atoms.length; i++) {
-      let reactions: Array<string> = replacements[atoms[i]]
+      const reactions: Array<string> = replacements[atoms[i]]
       reactions?.forEach((reaction: string) => {
         molecules['' + atoms.slice(0, i).join('') + reaction + atoms.slice(i + 1, atoms.length).join('')] = 1
       })

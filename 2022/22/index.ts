@@ -681,7 +681,7 @@ export default async (lineReader: any, params: Params) => {
     const steps: Array<Step> = []
     let currentCursor: Step = { point: [cursor.point[0], cursor.point[1]], direction: cursor.direction }
     const nextCursor: Step = { point: [cursor.point[0], cursor.point[1]], direction: cursor.direction }
-    for (let i = 0; i < duration; i++) {
+    for (let i = 0; i < (duration as number); i++) {
       log.trace(i, 'moving', currentCursor, 'instruction', duration)
       if (currentCursor.direction === '>') {
         nextCursor.point[1] = currentCursor.point[1] + 1

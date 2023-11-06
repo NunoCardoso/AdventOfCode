@@ -31,7 +31,6 @@ aoc({
     }
   ],
   prod: {
-    skip: false,
     part1: {
       answer: 279
     },
