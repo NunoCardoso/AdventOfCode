@@ -49,7 +49,9 @@ export default async (config: Partial<Config> = {}) => {
     if (_config.time) {
       console.time('Answer time ' + targetFile)
     }
-    console.log('Running ' + (_config.mode ?? 'normal'))
+    if (_config.mode) {
+      console.log('Running ' + (_config.mode ?? 'normal'))
+    }
     const answer = await app(lineReader, _params)
     if (_config.time) {
       console.timeEnd('Answer time ' + targetFile)

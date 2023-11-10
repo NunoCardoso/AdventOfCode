@@ -1,14 +1,19 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
+import { Point } from 'declarations'
 import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  type Point = [number, number]
-
   let part1: number = 0
   let part2: number = 0
   const instructions: Array<[string, number]> = []
+  const point: Point = [0, 0]
+  const directions: Array<string> = ['>', 'v', '<', '^']
+  const directionsMap: Record<string, Point> = { '>': [1, 0], v: [0, 1], '<': [-1, 0], '^': [0, -1] }
+  let currentDirection: string = ''
+  const visitedPoints: Array<Point> = []
+  let visitedPoint: Point | undefined
 
   for await (const line of lineReader) {
     const values = line.split(', ')
@@ -16,13 +21,6 @@ export default async (lineReader: any, params: Params) => {
       instructions.push([value.substring(0, 1), parseInt(value.substring(1, value.length))])
     )
   }
-
-  const point: Point = [0, 0]
-  const directions: Array<string> = ['>', 'v', '<', '^']
-  const directionsMap: Record<string, Point> = { '>': [1, 0], v: [0, 1], '<': [-1, 0], '^': [0, -1] }
-  let currentDirection: string = ''
-  const visitedPoints: Array<Point> = []
-  let visitedPoint: Point | undefined
 
   instructions.forEach((instruction) => {
     if (currentDirection === '') {
@@ -64,8 +62,6 @@ export default async (lineReader: any, params: Params) => {
   if (visitedPoint !== undefined) {
     part2 = Math.abs(visitedPoint[0]) + Math.abs(visitedPoint[1])
   }
-  return {
-    part1,
-    part2
-  }
+
+  return { part1, part2 }
 }

@@ -3,7 +3,7 @@ import aoc from '../aoc'
 aoc({
   year: '2021',
   day: '09',
-  ui: {show: true, end: true},
+  ui: { show: true, end: true },
   test: {
     id: 'test',
     part1: {

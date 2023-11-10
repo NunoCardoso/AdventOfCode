@@ -1,5 +1,5 @@
 import clc from 'cli-color'
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {

@@ -1,11 +1,11 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 import _ from 'lodash'
+
+type Triangle = [number, number, number]
 
 export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
-
-  type Triangle = [number, number, number]
 
   const dataForPart1: Array<Triangle> = []
   const dataForPart2: Array<Triangle> = []
@@ -38,8 +38,5 @@ export default async (lineReader: any, params: Params) => {
     if (checkTriangle(d)) part2++
   })
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

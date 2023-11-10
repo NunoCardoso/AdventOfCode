@@ -1,8 +1,7 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
+import { Point } from 'declarations'
 
 export default async (lineReader: any, params: Params) => {
-  type Point = [number, number]
-
   let part1: string = ''
   let part2: string = ''
 
@@ -91,8 +90,5 @@ export default async (lineReader: any, params: Params) => {
   part1 = runKeypad(codes, [1, 1], squareKeypad, valueFromSquareKeypad)
   part2 = runKeypad(codes, [-2, 0], losangeKeypad, valueFromLosangeKeypad)
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

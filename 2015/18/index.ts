@@ -1,18 +1,18 @@
 import clc from 'cli-color'
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
+import { Matrix } from 'declarations'
 import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
-  type Grid = Array<Array<string>>
   let part1: number = 0
   let part2: number = 0
 
-  const grid: Grid = []
+  const grid: Matrix<string> = []
   for await (const line of lineReader) {
     grid.push(line.split(''))
   }
 
-  const printGrid = (grid: Grid, iteration: string | number) => {
+  const printGrid = (grid: Matrix<string>, iteration: string | number) => {
     console.log('iteration', iteration)
     grid.forEach((row) => {
       const line = row.join('')
@@ -20,7 +20,7 @@ export default async (lineReader: any, params: Params) => {
     })
   }
 
-  const calculateNumberOfLights = (grid: Grid, x: number, y: number) => {
+  const calculateNumberOfLights = (grid: Matrix<string>, x: number, y: number) => {
     let total: number = 0
     if (x > 0 && y > 0) total += grid[x - 1][y - 1] === '#' ? 1 : 0
     if (x > 0) total += grid[x - 1][y] === '#' ? 1 : 0
@@ -35,18 +35,18 @@ export default async (lineReader: any, params: Params) => {
     return total
   }
 
-  const makeCornersOn = (grid: Grid) => {
+  const makeCornersOn = (grid: Matrix<string>) => {
     grid[0][0] = '#'
     grid[grid.length - 1][0] = '#'
     grid[0][grid[0].length - 1] = '#'
     grid[grid.length - 1][grid[0].length - 1] = '#'
   }
 
-  const flipIt = (grid: Grid, limit: number, cornerStuck: boolean) => {
-    let _grid: Grid = grid
+  const flipIt = (grid: Matrix<string>, limit: number, cornerStuck: boolean) => {
+    let _grid: Matrix<string> = grid
     let iteration: number = 0
     while (iteration < limit) {
-      const _newGrid: Grid = []
+      const _newGrid: Matrix<string> = []
       for (let x = 0; x < _grid.length; x++) {
         const newRow: Array<string> = []
         for (let y = 0; y < _grid[x].length; y++) {
@@ -88,8 +88,5 @@ export default async (lineReader: any, params: Params) => {
     part2 = _.reduce(grid2, (memo, row) => memo + _.filter(row, (cell) => cell === '#').length, 0)
   }
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

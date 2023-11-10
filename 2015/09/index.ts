@@ -1,41 +1,26 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
+import { permutation } from '../../utils'
 
+type Distances = Record<string, Record<string, number>>
 export default async (lineReader: any, params: Params) => {
-  const distances: Record<string, Record<string, number>> = {}
+  const distances: Distances = {}
 
   for await (const line of lineReader) {
-    const vals = line.split(' ')
-    if (!Object.prototype.hasOwnProperty.call(distances, vals[0])) {
-      distances[vals[0]] = {}
+    const values = line.split(' ')
+    if (!Object.prototype.hasOwnProperty.call(distances, values[0])) {
+      distances[values[0]] = {}
     }
-    if (!Object.prototype.hasOwnProperty.call(distances, vals[2])) {
-      distances[vals[2]] = {}
+    if (!Object.prototype.hasOwnProperty.call(distances, values[2])) {
+      distances[values[2]] = {}
     }
-    distances[vals[0]][vals[2]] = parseInt(vals[4])
-    distances[vals[2]][vals[0]] = parseInt(vals[4])
+    distances[values[0]][values[2]] = parseInt(values[4])
+    distances[values[2]][values[0]] = parseInt(values[4])
   }
 
   const places: Array<string> = Object.keys(distances)
   const permutes: Array<number> = new Array(places.length)
   for (let i = 0; i < permutes.length; i++) {
     permutes[i] = i
-  }
-
-  const permutation = (array: Array<number>): Array<Array<number>> => {
-    const p = (array: Array<number>, temp: Array<number>) => {
-      let i, x
-      if (!array.length) {
-        result.push(temp)
-      }
-      for (i = 0; i < array.length; i++) {
-        x = array.splice(i, 1)[0]
-        p(array, temp.concat(x))
-        array.splice(i, 0, x)
-      }
-    }
-    const result: Array<Array<number>> = []
-    p(array, [])
-    return result
   }
 
   const combinations: Record<string, number> = {}

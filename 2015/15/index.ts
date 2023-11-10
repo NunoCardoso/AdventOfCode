@@ -1,15 +1,17 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 import _ from 'lodash'
 
+type Recipe = [number, number, number, number, number]
+type Portions = Array<number>
+type Recipes = Array<Recipe>
+type Result = Array<number>
+
 export default async (lineReader: any, params: Params) => {
-  type Recipe = [number, number, number, number, number]
-  type Portions = Array<number>
-  type Recipes = Array<Recipe>
-  type Result = Array<number>
   let part1: number = 0
   let part2: number = 0
 
   const recipes: Recipes = []
+
   for await (const line of lineReader) {
     const m = line.match(/^(.*): capacity (.*), durability (.*), flavor (.*), texture (.*), calories (.*)$/)
     recipes.push([parseInt(m[2]), parseInt(m[3]), parseInt(m[4]), parseInt(m[5]), parseInt(m[6])])
@@ -40,7 +42,7 @@ export default async (lineReader: any, params: Params) => {
     return _.reduce(res, (memo: number, val: number) => memo * (val < 0 ? 0 : val), 1)
   }
 
-  const getThemRecipes = (calories: any) => {
+  const getThemRecipes = (calories: number) => {
     const iterators: Array<number> = new Array(recipes.length).fill(0)
     let res = 0
 

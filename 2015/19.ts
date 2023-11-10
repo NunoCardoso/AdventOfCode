@@ -11,7 +11,6 @@ aoc({
   },
   test: [
     {
-      skip: true,
       id: 'test1',
       part1: {
         answer: 4
@@ -21,7 +20,6 @@ aoc({
       }
     },
     {
-      skip: true,
       id: 'test2',
       part1: {
         answer: 7
@@ -32,12 +30,12 @@ aoc({
     }
   ],
   prod: {
-    skip: false,
-    params: {
+    skip: true,
+    /* params: {
       part1: {
         skip: true
       }
-    },
+    }, */
     part1: {
       answer: 576
     },

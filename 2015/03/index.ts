@@ -1,16 +1,14 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
+import { Point } from 'declarations'
 
 export default async (lineReader: any, params: Params) => {
-  type Point = [number, number]
-  type Map = Record<string, any>
-
-  const matrixOfPositionsPart1: Map = {}
+  const matrixOfPositionsPart1: Record<string, number> = {}
   const currentPositionPart1: Point = [0, 0]
-  const matrixOfPositionsPart2: Map = {}
+  const matrixOfPositionsPart2: Record<string, number> = {}
   const currentPositionSantaPart2: Point = [0, 0]
   const currentPositionRobotSantaPart2: Point = [0, 0]
 
-  const move = (direction: string, point: Point, map: Map) => {
+  const move = (direction: string, point: Point, map: Record<string, number>) => {
     if (direction === '^') point[1]--
     if (direction === 'v') point[1]++
     if (direction === '<') point[0]--

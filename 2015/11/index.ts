@@ -1,37 +1,38 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
   let part1: string = ''
   let part2: string = ''
+
   const letters = 'abcdefghijklmnopqrstuvwxyz'
   let password = params.password
 
   const writePass = (vals: Array<number>) => vals.map((x) => letters[x]).join('')
 
   while (part1 === '' || part2 === '') {
-    const vals = password.split('').map((s: string) => letters.indexOf(s))
-    vals[vals.length - 1]++
-    for (let i = vals.length - 1; i > 0; i--) {
-      if (vals[i] === letters.length) {
-        vals[i] = 0
-        vals[i - 1]++
+    const values = password.split('').map((s: string) => letters.indexOf(s))
+    values[values.length - 1]++
+    for (let i = values.length - 1; i > 0; i--) {
+      if (values[i] === letters.length) {
+        values[i] = 0
+        values[i - 1]++
       }
     }
-    password = writePass(vals)
+    password = writePass(values)
 
     let threeLettersFound = false
-    for (let i = 0; i < vals.length - 2; i++) {
-      if (vals[i] + 1 === vals[i + 1] && vals[i] + 2 === vals[i + 2]) {
+    for (let i = 0; i < values.length - 2; i++) {
+      if (values[i] + 1 === values[i + 1] && values[i] + 2 === values[i + 2]) {
         threeLettersFound = true
       }
     }
 
     let forbiddenLetters = false
-    for (let i = 0; i < vals.length; i++) {
+    for (let i = 0; i < values.length; i++) {
       if (
-        vals[i] === letters.indexOf('l') ||
-        vals[i] === letters.indexOf('i') ||
-        vals[i] === letters.indexOf('o')
+        values[i] === letters.indexOf('l') ||
+        values[i] === letters.indexOf('i') ||
+        values[i] === letters.indexOf('o')
       ) {
         forbiddenLetters = true
       }

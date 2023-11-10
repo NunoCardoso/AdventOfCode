@@ -1,18 +1,22 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
+
+type Reindeer = {
+  name: string
+  speed: number
+  duration: number
+  rest: number
+  score: number
+  distance: number
+}
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  type Reindeer = {
-    name: string
-    speed: number
-    duration: number
-    rest: number
-    score: number
-    distance: number
-  }
-
+  let part1: number = 0
+  let part2: number = 0
+  const timeCutoff = params.cutoff
   const reindeers: Record<string, Reindeer> = {}
+
   for await (const line of lineReader) {
     const m = line.match(
       /^(.+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+) seconds.$/
@@ -26,10 +30,6 @@ export default async (lineReader: any, params: Params) => {
       distance: 0
     }
   }
-
-  let part1: number = 0
-  let part2: number = 0
-  const timeCutoff = params.cutoff
 
   Object.values(reindeers).forEach((reindeer) => {
     let time = 0

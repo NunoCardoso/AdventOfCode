@@ -1,23 +1,22 @@
 import clc from 'cli-color'
+import { Matrix, Dimension } from 'declarations'
 import _ from 'lodash'
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 
-type Matrix = Array<Array<number>>
-type Dimension = Array<number>
 type Coord = {
   point: {
     x: number
     y: number
-  },
+  }
   height: number
-  basin ?: any
+  basin?: any
 }
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   const world: Matrix = []
-  let worldDimension: Dimension = []
+  let worldDimension: Dimension = [0, 0]
 
   for await (const line of lineReader) {
     world.push(line.split('').map((s: string) => parseInt(s)))
@@ -33,7 +32,7 @@ export default async (lineReader: any, params: Params) => {
     world.forEach((row, i) => {
       let line = ''
       row.forEach((cell, j) => {
-        let point = {point: {x: i, y: j}, height: world[i][j]}
+        const point = { point: { x: i, y: j }, height: world[i][j] }
         if (isCoordSeen(holes, point)) {
           line += clc.red(point.height)
         } else {
@@ -49,28 +48,40 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const getAdjacentCoords = (coord: Coord, excluding: Array<Coord> = []): Array<Coord> => {
-    let coords: Array<Coord> = []
+    const coords: Array<Coord> = []
     let newCoord: Coord
     if (coord.point.y > 0) {
-      newCoord = {point: {x: coord.point.x, y: (coord.point.y - 1)}, height: world[coord.point.x][(coord.point.y - 1)]}
+      newCoord = {
+        point: { x: coord.point.x, y: coord.point.y - 1 },
+        height: world[coord.point.x][coord.point.y - 1]
+      }
       if (!isCoordSeen(excluding, newCoord)) {
         coords.push(newCoord)
       }
     }
     if (coord.point.y < worldDimension[1] - 1) {
-      newCoord = {point: {x: coord.point.x, y: (coord.point.y + 1)}, height: world[coord.point.x][(coord.point.y + 1)]}
+      newCoord = {
+        point: { x: coord.point.x, y: coord.point.y + 1 },
+        height: world[coord.point.x][coord.point.y + 1]
+      }
       if (!isCoordSeen(excluding, newCoord)) {
         coords.push(newCoord)
       }
     }
     if (coord.point.x > 0) {
-      newCoord = {point: {x: (coord.point.x - 1), y: coord.point.y}, height: world[(coord.point.x - 1)][coord.point.y]}
+      newCoord = {
+        point: { x: coord.point.x - 1, y: coord.point.y },
+        height: world[coord.point.x - 1][coord.point.y]
+      }
       if (!isCoordSeen(excluding, newCoord)) {
         coords.push(newCoord)
       }
     }
     if (coord.point.x < worldDimension[0] - 1) {
-      newCoord = {point: {x: (coord.point.x + 1), y: coord.point.y}, height: world[(coord.point.x + 1)][coord.point.y]}
+      newCoord = {
+        point: { x: coord.point.x + 1, y: coord.point.y },
+        height: world[coord.point.x + 1][coord.point.y]
+      }
       if (!isCoordSeen(excluding, newCoord)) {
         coords.push(newCoord)
       }
@@ -82,8 +93,8 @@ export default async (lineReader: any, params: Params) => {
     return coords.filter((c: Coord) => c.height !== 9)
   }
 
-  const isLowerPoint = (c: Coord, adjacentCoords: Array<Coord> ) => {
-    return _.every(adjacentCoords, (_c => _c.height > c.height))
+  const isLowerPoint = (c: Coord, adjacentCoords: Array<Coord>) => {
+    return _.every(adjacentCoords, (_c) => _c.height > c.height)
   }
 
   const searchAlgorithm = async (visited: Array<Coord>, opened: Array<Coord>) => {
@@ -95,21 +106,21 @@ export default async (lineReader: any, params: Params) => {
       visited.push(coord)
     }
 
-    let candidateCoords: Array<Coord> = getCandidateCoords(neighborCoords)
-    candidateCoords.forEach(c => {
-       if (!isCoordSeen(opened, c)) {
-         opened.push(c)
-       }
+    const candidateCoords: Array<Coord> = getCandidateCoords(neighborCoords)
+    candidateCoords.forEach((c) => {
+      if (!isCoordSeen(opened, c)) {
+        opened.push(c)
+      }
     })
   }
 
-  let holes: Array<Coord> = []
-  let basins: Array<Coord> = []
+  const holes: Array<Coord> = []
+  const basins: Array<Coord> = []
 
   for (let row = 0; row < world.length; row++) {
     for (let column = 0; column < world[row].length; column++) {
-      let current: Coord = {point: {x: row, y: column}, height: world[row][column]}
-      let adjacentCoords = getAdjacentCoords(current)
+      const current: Coord = { point: { x: row, y: column }, height: world[row][column] }
+      const adjacentCoords = getAdjacentCoords(current)
       if (isLowerPoint(current, adjacentCoords)) {
         holes.push(current)
       }
@@ -117,11 +128,10 @@ export default async (lineReader: any, params: Params) => {
   }
 
   for (let i = 0; i < holes.length; i++) {
+    const hole = _.cloneDeep(holes[i])
 
-    let hole = _.cloneDeep(holes[i])
-
-    let visited: Array<Coord> = []
-    let opened: Array<Coord> = [hole]
+    const visited: Array<Coord> = []
+    const opened: Array<Coord> = [hole]
 
     while (!_.isEmpty(opened)) {
       await searchAlgorithm(visited, opened)
@@ -133,14 +143,12 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  let part1 = holes
-  .map((hole) => world[hole.point.x][hole.point.y])
-  .reduce((x, y) => x + y + 1, 0)
+  const part1 = holes.map((hole) => world[hole.point.x][hole.point.y]).reduce((x, y) => x + y + 1, 0)
 
-  let part2 = holes
-    .sort((a, b) => a.basin < b.basin ? 1 : -1)
-    .slice(0,3)
-    .map(hole => hole.basin!)
+  const part2 = holes
+    .sort((a, b) => (a.basin < b.basin ? 1 : -1))
+    .slice(0, 3)
+    .map((hole) => hole.basin!)
     .reduce((x, y) => x * y, 1)
 
   if (params.ui?.show && params.ui?.end) {

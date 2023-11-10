@@ -1,11 +1,11 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 import _ from 'lodash'
+
+type Container = { id: number; value: number }
+type Containers = Array<Container>
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
-
-  type Container = { id: number; value: number }
-  type Containers = Array<Container>
 
   const containers: Containers = []
   const fills: Record<string, number> = {}

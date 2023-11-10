@@ -1,5 +1,4 @@
-import { Params } from '../../aoc.d'
-
+import { Params } from 'aoc.d'
 const MD5 = require('md5.js')
 
 export default async (lineReader: any, params: Params) => {
@@ -12,6 +11,8 @@ export default async (lineReader: any, params: Params) => {
   const solutionPart2Index: Array<string> = []
   const solutionPart2: Array<string> = []
   let i: number = 0
+
+  log.info('Slow as this puzzle includes MD5')
 
   while (solutionPart2Index.length < 8) {
     const hash: string = params.secretKey + i

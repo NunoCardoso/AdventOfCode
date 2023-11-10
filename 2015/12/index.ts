@@ -1,4 +1,4 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
@@ -33,8 +33,6 @@ export default async (lineReader: any, params: Params) => {
   if (params.part2?.skip !== true) {
     part2 = recurse(map, 'part2')
   }
-  return {
-    part1,
-    part2
-  }
+
+  return { part1, part2 }
 }

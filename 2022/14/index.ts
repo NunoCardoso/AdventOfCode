@@ -1,4 +1,4 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 import _ from 'lodash'
 import clc from 'cli-color'
 

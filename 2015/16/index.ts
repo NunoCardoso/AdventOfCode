@@ -1,4 +1,4 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
   const target: Record<string, number> = {

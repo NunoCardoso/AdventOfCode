@@ -1,4 +1,5 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
+import { permutation } from '../../utils'
 
 type Digit = {
   source: string
@@ -84,23 +85,6 @@ export default async (lineReader: any, params: Params) => {
     return undefined
   }
 
-  const permutation = <T>(array: Array<T>): Array<Array<T>> => {
-    const p = (array: Array<T>, temp: Array<T>) => {
-      let i, x
-      if (!array.length) {
-        result.push(temp)
-      }
-      for (i = 0; i < array.length; i++) {
-        x = array.splice(i, 1)[0]
-        p(array, temp.concat(x))
-        array.splice(i, 0, x)
-      }
-    }
-    const result: Array<Array<T>> = []
-    p(array, [])
-    return result
-  }
-
   const solutions: Array<string> = []
 
   data.forEach((line: Puzzle) => {
@@ -130,7 +114,7 @@ export default async (lineReader: any, params: Params) => {
     }
 
     const rightCode: Array<number> = []
-    for (i = 0; i < line.right.length; i++) {
+    for (let i = 0; i < line.right.length; i++) {
       const possibleNumber: number | undefined = makeNumber(line.right[i].source.split(''), validPermutation)
       if (possibleNumber !== undefined) {
         rightCode.push(possibleNumber)

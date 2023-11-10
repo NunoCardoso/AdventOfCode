@@ -1,5 +1,4 @@
-import { Params } from '../../aoc.d'
-import _ from 'lodash'
+import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -8,12 +7,9 @@ export default async (lineReader: any, params: Params) => {
   const part2: number = 0
 
   for await (const line of lineReader) {
-    const val = line.split('')
-    log.debug(val, _.sort([]))
+    const values = line.split('')
+    log.info(values)
   }
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

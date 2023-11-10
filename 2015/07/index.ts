@@ -1,16 +1,16 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 import _ from 'lodash'
+
+type Wire1 = { op: string; src: string | number }
+type Wire2 = { op: string; src1: string | number; src2: string | number }
+type Wire = number | string | Wire1 | Wire2
+type Wires = Record<string, Wire>
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
-
-  type Wire1 = { op: string; src: string | number }
-  type Wire2 = { op: string; src1: string | number; src2: string | number }
-  type Wire = number | string | Wire1 | Wire2
-  type Wires = Record<string, Wire>
 
   const dec2bin = (dec: number) => (dec >>> 0).toString(2)
 
@@ -143,6 +143,7 @@ export default async (lineReader: any, params: Params) => {
   if (params.part1?.skip !== true) {
     part1 = resolve(wires1, 'a')
   }
+
   if (params.part2?.skip !== true) {
     wires2.b = part1
     part2 = resolve(wires2, 'a')

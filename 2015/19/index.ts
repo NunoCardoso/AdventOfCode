@@ -1,13 +1,14 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 import _ from 'lodash'
+
+type Replacements = Record<string, Array<string>>
+
+type Point = [string, number, number] // molecule, step, correctedness
+type Points = Array<Point>
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  type Replacements = Record<string, Array<string>>
-
-  type Point = [string, number, number] // molecule, step, correctedness
-  type Points = Array<Point>
   let part1: number = 0
   let part2: number = 0
 
@@ -16,7 +17,7 @@ export default async (lineReader: any, params: Params) => {
   let molecule: string = ''
   let moleculeBits: Array<string> = []
 
-  const molecules: Record<string, any> = {}
+  // const molecules: Record<string, any> = {}
 
   const breakIntoAtoms = (mol: string): Array<string> =>
     mol === 'e' ? ['e'] : (mol.match(/[A-Z][a-z]*/g) as Array<string>)

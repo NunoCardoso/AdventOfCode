@@ -1,11 +1,14 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 const MD5 = require('md5.js')
 
 export default async (lineReader: any, params: Params) => {
+  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+
   let part1: number = 0
   let part2: number = 0
   let i: number = 0
 
+  log.info('This will take some time, MD5 puzzle')
   while (part2 === 0) {
     const hash: string = params.secretKey + i
     const res: string = new MD5().update('' + hash).digest('hex')

@@ -1,4 +1,4 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -9,7 +9,6 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     let processedLine = line
-    processedLine = processedLine
       .replaceAll(/\\x[0-9a-f][0-9a-f]/g, '_')
       .replaceAll(/\\"/g, '"')
       .replaceAll(/\\\\/g, '\\')

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 
 type BingoCard = Array<Array<number | undefined>>
 

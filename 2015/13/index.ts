@@ -1,45 +1,14 @@
-import { Params } from '../../aoc.d'
+import { Params } from 'aoc.d'
 import _ from 'lodash'
+import { permutation } from '../../utils'
+
+type Peoples = Array<string>
+type Scores = Record<string, any>
 
 export default async (lineReader: any, params: Params) => {
-  type Peoples = Array<string>
-  type Scores = Record<string, any>
-
-  const permutator = (inputArr: Peoples): Array<Peoples> => {
-    const result: Array<Peoples> = []
-    const permute = (arr: Peoples, m: Peoples = []) => {
-      if (arr.length === 0) {
-        result.push(m)
-      } else {
-        for (let i = 0; i < arr.length; i++) {
-          const curr: Peoples = arr.slice()
-          const next: Peoples = curr.splice(i, 1)
-          permute(curr.slice(), m.concat(next))
-        }
-      }
-    }
-    permute(inputArr)
-    return result
-  }
-
-  const getHighScore = (permutes: Array<Peoples>, scores: Scores): number => {
-    let highScore = 0
-    permutes.forEach((permute) => {
-      let score = 0
-      for (let i = 0; i < permute.length; i++) {
-        const pers1 = i
-        const pers2 = i + 1 === permute.length ? 0 : i + 1
-        score += scores[permute[pers1]][permute[pers2]] + scores[permute[pers2]][permute[pers1]]
-      }
-      if (score > highScore) {
-        highScore = score
-      }
-    })
-    return highScore
-  }
-
   let part1: number = 0
   let part2: number = 0
+
   const scores1: Scores = {}
   const people1: Peoples = []
   const people2: Peoples = []
@@ -64,6 +33,22 @@ export default async (lineReader: any, params: Params) => {
     scores1[subj1][subj2] = value * (oper === 'lose' ? -1 : 1)
   }
 
+  const getHighScore = (permutes: Array<Peoples>, scores: Scores): number => {
+    let highScore = 0
+    permutes.forEach((permute) => {
+      let score = 0
+      for (let i = 0; i < permute.length; i++) {
+        const pers1 = i
+        const pers2 = i + 1 === permute.length ? 0 : i + 1
+        score += scores[permute[pers1]][permute[pers2]] + scores[permute[pers2]][permute[pers1]]
+      }
+      if (score > highScore) {
+        highScore = score
+      }
+    })
+    return highScore
+  }
+
   people2.push(params.name)
   const scores2: Scores = _.cloneDeep(scores1)
 
@@ -74,16 +59,14 @@ export default async (lineReader: any, params: Params) => {
   })
 
   if (params.part1?.skip !== true) {
-    const permutes1 = permutator(people1)
+    const permutes1 = permutation(people1)
     part1 = getHighScore(permutes1, scores1)
   }
+
   if (params.part2?.skip !== true) {
-    const permutes2 = permutator(people2)
+    const permutes2 = permutation(people2)
     part2 = getHighScore(permutes2, scores2)
   }
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }
