@@ -1,7 +1,7 @@
 import fs from 'fs'
 import clc from 'cli-color'
 import _ from 'lodash'
-import { Config, Test, Prod, Params } from './aoc.d'
+import { Config, Test, Prod } from './aoc.d'
 
 const defaultConfig = {
   logLevel: 'info',
@@ -21,24 +21,16 @@ export default async (config: Partial<Config> = {}) => {
     './' + _config.year + '/' + _config.day + '/index' + (_config.mode ? '.' + _config.mode : '')
   ).default
 
-  const doRun = async (run: Test | Prod, isTest: boolean, params: Params) => {
+  const doRun = async (run: Test | Prod, isTest: boolean) => {
     const targetFile = isTest ? (run as Test).id : 'input'
 
-    let _params: Params = {
-      ...(params ?? {}),
-      ...(run.params ?? {}),
+    const runConfig = {
+      ...(_config.params ?? {}),
       isTest: isTest,
       logLevel: _config.logLevel,
-      ui: _config.ui
+      ui: _config.ui,
+      ...run
     }
-
-    _params = {
-      ..._params,
-      ...(isTest ? _params.test ?? {} : _params.prod ?? {})
-    }
-
-    delete _params.test
-    delete _params.prod
 
     let lineReader: any
     if (fs.existsSync(_config.day + '/' + targetFile + '.txt')) {
@@ -52,11 +44,12 @@ export default async (config: Partial<Config> = {}) => {
     if (_config.mode) {
       console.log('Running ' + (_config.mode ?? 'normal'))
     }
-    const answer = await app(lineReader, _params)
+
+    const answer = await app(lineReader, runConfig)
     if (_config.time) {
       console.timeEnd('Answer time ' + targetFile)
     }
-    if (_params.part1?.skip === true) {
+    if (runConfig.part1?.skip === true) {
       console.log('Year', _config.year, 'Day', _config.day, 'Part 1', isTest ? 'test' : 'prod', '- skipped')
     } else {
       if (run?.part1) {
@@ -73,7 +66,7 @@ export default async (config: Partial<Config> = {}) => {
         )
       }
     }
-    if (_params.part2?.skip === true) {
+    if (runConfig.part2?.skip === true) {
       console.log('Year', _config.year, 'Day', _config.day, 'Part 2', isTest ? 'test' : 'prod', '- skipped')
     } else {
       if (run?.part2) {
@@ -92,9 +85,9 @@ export default async (config: Partial<Config> = {}) => {
     }
   }
 
-  const handleTest = (t: Test, params: Params) => {
+  const handleTest = (t: Test) => {
     if (t.skip !== true) {
-      doRun(t, true, params)
+      doRun(t, true)
     } else {
       console.log('Test run', t.id, 'skipped')
     }
@@ -102,14 +95,14 @@ export default async (config: Partial<Config> = {}) => {
 
   if (_.get(_config, 'test')) {
     if (Array.isArray(_config.test)) {
-      _config.test.forEach((t: Test) => handleTest(t, _config.params ?? {}))
+      _config.test.forEach((t: Test) => handleTest(t))
     } else {
-      handleTest(_config.test as Test, _config.params ?? {})
+      handleTest(_config.test as Test)
     }
   }
 
   if (!!_.get(_config, 'prod') && _.get(_config, 'prod.skip') !== true) {
-    doRun(_config.prod!, false, _config.params ?? {})
+    doRun(_config.prod!, false)
   } else {
     console.log('Prod run skipped')
   }
