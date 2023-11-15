@@ -15,7 +15,7 @@ that will look into `{year}/{day}.ts` as the config file.
 * time: boolean => console logs time to produce answers. default: true
 * test ?: Test | Array<Test> => runs tests
 * prod ?: Prod => runs final.  
-[index.ts](2022%2F05%2Findex.ts)
+* params: generic
 
 ### Test
 
@@ -30,5 +30,4 @@ part 2: test part 2
 skip ?: boolean
 part 1: Prod => prod part 1  
 part 2: Prod => prod part 2 
-
-Prod: can have answer, for prods with known answer
+ß

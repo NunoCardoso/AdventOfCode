@@ -2,12 +2,11 @@
   "name": "advent",
   "version": "1.0.0",
   "description": "",
-  "main": "template.js",
   "scripts": {
-    "lint": "standardx \"**/*.{ts,tsx}\"",
-    "lint:fix": "standardx \"**/*.{ts,tsx}\" --fix",
-    "prettier": "prettier --config .prettierrc -c \"./**/*.{ts,tsx}\"",
-    "prettier:fix": "prettier --config .prettierrc -w \"./**/*.{ts,tsx}\"",
+    "lint": "standardx \"src/**/*.{ts,tsx}\"",
+    "lint:fix": "standardx \"src/**/*.{ts,tsx}\" --fix",
+    "prettier": "prettier --config .prettierrc -c \"src/**/*.{ts,tsx}\"",
+    "prettier:fix": "prettier --config .prettierrc -w \"src/**/*.{ts,tsx}\"",
     "typecheck": "tsc",
     "tidy": "npm run lint:fix && npm run prettier:fix && npm run typecheck",
     "checktidy": "npm run lint && npm run prettier && npm run typecheck && npm run test:ci",
@@ -24,11 +23,12 @@
   "devDependencies": {
     "@types/cli-color": "^2.0.5",
     "@types/lodash": "^4.14.201",
-    "@typescript-eslint/eslint-plugin": "^6.10.0",
-    "@typescript-eslint/parser": "^6.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
     "eslint-config-prettier": "^9.0.0",
-    "prettier": "^3.0.3",
-    "standardx": "^7.0.0"
+    "prettier": "^3.1.0",
+    "standardx": "^7.0.0",
+    "tsconfig-paths": "^4.2.0"
   },
   "standardx": {
     "parser": "@typescript-eslint/parser",

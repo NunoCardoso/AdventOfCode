@@ -1,11 +1,8 @@
 .idea
-
 node_modules
-
 *~
-
 scratch
-
 x
-
 .DS_Store
+# no JS allowed
+*.js
