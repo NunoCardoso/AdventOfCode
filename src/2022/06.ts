@@ -4,46 +4,52 @@ aoc({
   year: '2022',
   day: '06',
   params: {
-    part1: {
-      length: 4
-    },
-    part2: {
-      length: 14
+    size: {
+      part1: 4,
+      part2: 14
     }
   },
   test: [
     {
       id: 'test1',
-      part1: { answer: 7 },
-      part2: { answer: 19 }
+      answers: {
+        part1: 7,
+        part2: 19
+      }
     },
     {
       id: 'test2',
-      part1: { answer: 5 },
-      part2: { answer: 23 }
+      answers: {
+        part1: 5,
+        part2: 23
+      }
     },
     {
       id: 'test3',
-      part1: { answer: 6 },
-      part2: { answer: 23 }
+      answers: {
+        part1: 6,
+        part2: 23
+      }
     },
     {
       id: 'test4',
-      part1: { answer: 10 },
-      part2: { answer: 29 }
+      answers: {
+        part1: 10,
+        part2: 29
+      }
     },
     {
       id: 'test5',
-      part1: { answer: 11 },
-      part2: { answer: 26 }
+      answers: {
+        part1: 11,
+        part2: 26
+      }
     }
   ],
   prod: {
-    part1: {
-      answer: 1953
-    },
-    part2: {
-      answer: 2301
+    answers: {
+      part1: 1953,
+      part2: 2301
     }
   }
 })

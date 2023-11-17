@@ -12,22 +12,16 @@ aoc({
   },
   logLevel: 'info',
   test: {
-    skip: true,
     id: 'test',
-    part1: {
-      answer: 31
-    },
-    part2: {
-      answer: 29
+    answers: {
+      part1: 31,
+      part2: 29
     }
   },
   prod: {
-    skip: false,
-    part1: {
-      answer: 412
-    },
-    part2: {
-      answer: 402
+    answers: {
+      part1: 412,
+      part2: 402
     }
   }
 })

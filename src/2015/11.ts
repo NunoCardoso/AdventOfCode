@@ -7,11 +7,9 @@ aoc({
     password: 'hepxcrrq'
   },
   prod: {
-    part1: {
-      answer: 'hepxxyzz'
-    },
-    part2: {
-      answer: 'heqaabcc'
+    answers: {
+      part1: 'hepxxyzz',
+      part2: 'heqaabcc'
     }
   }
 })

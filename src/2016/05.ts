@@ -5,16 +5,13 @@ aoc({
   day: '05',
   logLevel: 'info',
   test: {
-    skip: true,
     id: 'test',
     params: {
       secretKey: 'abc'
     },
-    part1: {
-      answer: '18f47a30'
-    },
-    part2: {
-      answer: '05ace8e3'
+    answers: {
+      part1: '18f47a30',
+      part2: '05ace8e3'
     }
   },
   prod: {
@@ -22,11 +19,9 @@ aoc({
     params: {
       secretKey: 'ugkcyxxp'
     },
-    part1: {
-      answer: 'd4cd2ee1'
-    },
-    part2: {
-      answer: 'f2c730e5'
+    answers: {
+      part1: 'd4cd2ee1',
+      part2: 'f2c730e5'
     }
   }
 })

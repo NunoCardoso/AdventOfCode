@@ -6,20 +6,15 @@ aoc({
   logLevel: 'info',
   test: {
     id: 'test',
-    part1: {
-      answer: '1985'
-    },
-    part2: {
-      answer: '5DB3'
+    answers: {
+      part1: '1985',
+      part2: '5DB3'
     }
   },
   prod: {
-    skip: false,
-    part1: {
-      answer: '24862'
-    },
-    part2: {
-      answer: '46C91'
+    answers: {
+      part1: '24862',
+      part2: '46C91'
     }
   }
 })

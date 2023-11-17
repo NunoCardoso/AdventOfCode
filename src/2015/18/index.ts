@@ -75,16 +75,18 @@ export default async (lineReader: any, params: Params) => {
     return _grid
   }
 
+  const limit = params.limit
+
   if (params.part1?.skip !== true) {
     let grid1 = _.cloneDeep(grid)
-    grid1 = flipIt(grid1, params.limit, false)
+    grid1 = flipIt(grid1, limit, false)
     part1 = _.reduce(grid1, (memo, row) => memo + _.filter(row, (cell) => cell === '#').length, 0)
   }
 
   if (params.part2?.skip !== true) {
     let grid2 = _.cloneDeep(grid)
     makeCornersOn(grid2)
-    grid2 = flipIt(grid2, params.limit, true)
+    grid2 = flipIt(grid2, limit, true)
     part2 = _.reduce(grid2, (memo, row) => memo + _.filter(row, (cell) => cell === '#').length, 0)
   }
 

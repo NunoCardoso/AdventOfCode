@@ -4,33 +4,29 @@ aoc({
   year: '2022',
   day: '09',
   params: {
-    part1: {
-      ropeLength: 2
-    },
-    part2: {
-      ropeLength: 10
+    ropeLength: {
+      part1: 2,
+      part2: 10
     }
   },
   test: [
     {
       id: 'test1',
-      part1: {
-        answer: 13
+      answers: {
+        part1: 13
       }
     },
     {
       id: 'test2',
-      part2: {
-        answer: 36
+      answers: {
+        part2: 36
       }
     }
   ],
   prod: {
-    part1: {
-      answer: 6367
-    },
-    part2: {
-      answer: 2536
+    answers: {
+      part1: 6367,
+      part2: 2536
     }
   }
 })

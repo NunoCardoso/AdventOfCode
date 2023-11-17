@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { permutation } from 'src/utils'
+import { permutation } from 'utils'
 
 type Distances = Record<string, Record<string, number>>
 export default async (lineReader: any, params: Params) => {

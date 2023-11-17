@@ -276,10 +276,10 @@ export default async (lineReader: any, params: Params) => {
     windData = line.split('')
   }
   if (params.part1?.skip !== true) {
-    part1 = doTetris(well1, params!.part1.rocks)
+    part1 = doTetris(well1, params!.rocks.part1)
   }
   if (params.part2?.skip !== true) {
-    part2 = doTetris(well2, params!.part2.rocks)
+    part2 = doTetris(well2, params!.rocks.part2)
   }
 
   return {

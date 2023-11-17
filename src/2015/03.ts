@@ -4,11 +4,9 @@ aoc({
   year: '2015',
   day: '03',
   prod: {
-    part1: {
-      answer: 2565
-    },
-    part2: {
-      answer: 2639
+    answers: {
+      part1: 2565,
+      part2: 2639
     }
   }
 })

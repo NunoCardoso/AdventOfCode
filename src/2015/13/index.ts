@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import _ from 'lodash'
-import { permutation } from 'src/utils'
+import { permutation } from 'utils'
 
 type Peoples = Array<string>
 type Scores = Record<string, any>

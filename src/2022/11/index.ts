@@ -86,13 +86,13 @@ export default async (lineReader: any, params: Params) => {
 
   if (params.part1?.skip !== true) {
     const monkeys1 = _.cloneDeep(monkeys)
-    generateMonkeyBusiness(params!.part1.iterations, monkeys1, 'part1')
+    generateMonkeyBusiness(params!.iterations.part1, monkeys1, 'part1')
     const vals1 = monkeys1.map((m: Monkey) => m.inspections).sort((a: number, b: number) => b - a)
     part1 = vals1[0] * vals1[1]
   }
   if (params.part2?.skip !== true) {
     const monkeys2 = _.cloneDeep(monkeys)
-    generateMonkeyBusiness(params!.part2.iterations, monkeys2, 'part2')
+    generateMonkeyBusiness(params!.iterations.part2, monkeys2, 'part2')
     const vals2 = monkeys2.map((m: Monkey) => m.inspections).sort((a: number, b: number) => b - a)
     part2 = vals2[0] * vals2[1]
   }

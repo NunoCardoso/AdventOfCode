@@ -286,7 +286,7 @@ export default async (lineReader: any, params: Params) => {
   if (params.part2?.skip !== true) {
     blueprints.slice(0, 3).forEach((blueprint) => {
       finished = getThemGeodes({
-        maxMinutes: params.part2.limit,
+        maxMinutes: params.limit.part2,
         blueprint,
         path: _.cloneDeep(initialPath),
         finished: {

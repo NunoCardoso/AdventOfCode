@@ -11,12 +11,12 @@ aoc({
   },
   test: [
     {
-      id: 'test',
+      id: 'test1',
       params: {
         limit: 4
       },
-      part1: {
-        answer: 4
+      answers: {
+        part1: 4
       }
     },
     {
@@ -24,8 +24,8 @@ aoc({
       params: {
         limit: 5
       },
-      part2: {
-        answer: 17
+      answers: {
+        part2: 17
       }
     }
   ],
@@ -33,12 +33,9 @@ aoc({
     params: {
       limit: 100
     },
-    skip: false,
-    part1: {
-      answer: 768
-    },
-    part2: {
-      answer: 781
+    answers: {
+      part1: 768,
+      part2: 781
     }
   }
 })

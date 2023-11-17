@@ -8,19 +8,15 @@ aoc({
   },
   test: {
     id: 'test',
-    part1: {
-      answer: 3
-    },
-    part2: {
-      answer: 1623178306
+    answers: {
+      part1: 3,
+      part2: 1623178306
     }
   },
   prod: {
-    part1: {
-      answer: 7584
-    },
-    part2: {
-      answer: 4907679608191
+    answers: {
+      part1: 7584,
+      part2: 4907679608191
     }
   }
 })

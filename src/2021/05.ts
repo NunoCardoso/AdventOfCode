@@ -5,19 +5,15 @@ aoc({
   day: '05',
   test: {
     id: 'test',
-    part1: {
-      answer: 5
-    },
-    part2: {
-      answer: 12
+    answers: {
+      part1: 5,
+      part2: 12
     }
   },
   prod: {
-    part1: {
-      answer: 5294
-    },
-    part2: {
-      answer: 21698
+    answers: {
+      part1: 5294,
+      part2: 21698
     }
   }
 })

@@ -8,7 +8,7 @@ export default async (lineReader: any, params: Params) => {
 
   const rules: Record<string, string> = {}
   let mainCounter: Record<string, number> = {}
-  let seed: string
+  let seed: string = ''
 
   for await (const line of lineReader) {
     const m = line.match(/(.+) -> (.+)/)

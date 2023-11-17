@@ -210,10 +210,10 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
   if (params.part1?.skip !== true) {
-    part1 = runSimulation(params!.part1.iterations, _.cloneDeep(originalElves), 'emptySpaces')
+    part1 = runSimulation(params!.iterations.part1, _.cloneDeep(originalElves), 'emptySpaces')
   }
   if (params.part2?.skip !== true) {
-    part2 = runSimulation(params!.part2.iterations, _.cloneDeep(originalElves), 'rounds')
+    part2 = runSimulation(params!.iterations.part2, _.cloneDeep(originalElves), 'rounds')
   }
   return {
     part1,

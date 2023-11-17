@@ -7,7 +7,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let data: string
+  let data: string = ''
   for await (const line of lineReader) {
     data = line
   }
@@ -34,8 +34,8 @@ export default async (lineReader: any, params: Params) => {
         // line is free of the operation
 
         const m = chunk.match(/\((\d+)x(\d+)\)/)
-        const length = parseInt(m[1])
-        const repeat = parseInt(m[2])
+        const length = parseInt(m![1])
+        const repeat = parseInt(m![2])
 
         if (collectAfterExpand) {
           line = line.substring(length, line.length)

@@ -15,7 +15,7 @@ export default async (lineReader: any, params: Params) => {
   let dots: Array<Point> = []
   const rules: Array<Rule> = []
 
-  const printGrid = (dots) => {
+  const printGrid = (dots: Array<Point>) => {
     for (let y = 0; y < dimension[1]; y++) {
       let line = clc.blue(y.toString().padStart(3, '0')) + ' '
       for (let x = 0; x < dimension[0]; x++) {
@@ -32,7 +32,7 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     if (!line.startsWith('fold') && line.length > 0) {
-      const dot = line.split(',').map((s) => parseInt(s))
+      const dot = line.split(',').map((s: string) => parseInt(s))
       dots.push(dot)
       if (dot[0] > dimension[0]) {
         dimension[0] = dot[0]

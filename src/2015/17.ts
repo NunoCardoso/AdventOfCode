@@ -5,28 +5,22 @@ aoc({
   day: '17',
   logLevel: 'info',
   test: {
-    skip: false,
     id: 'test',
     params: {
       limit: 25
     },
-    part1: {
-      answer: 4
-    },
-    part2: {
-      answer: 3
+    answers: {
+      part1: 4,
+      part2: 3
     }
   },
   prod: {
-    skip: false,
     params: {
       limit: 150
     },
-    part1: {
-      answer: 4372
-    },
-    part2: {
-      answer: 4
+    answers: {
+      part1: 4372,
+      part2: 4
     }
   }
 })

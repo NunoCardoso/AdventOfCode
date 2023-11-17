@@ -6,19 +6,15 @@ aoc({
   ui: { show: false, during: true },
   test: {
     id: 'test',
-    part1: {
-      answer: 1656
-    },
-    part2: {
-      answer: 195
+    answers: {
+      part1: 1656,
+      part2: 195
     }
   },
   prod: {
-    part1: {
-      answer: 1719
-    },
-    part2: {
-      answer: 232
+    answers: {
+      part1: 1719,
+      part2: 232
     }
   }
 })

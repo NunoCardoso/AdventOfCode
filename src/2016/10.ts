@@ -4,29 +4,23 @@ aoc({
   year: '2016',
   day: '10',
   logLevel: 'info',
-  params: {
-    test: {
-      botValues: [2, 5]
-    },
-    prod: {
-      botValues: [17, 61]
-    }
-  },
   test: {
     id: 'test',
-    part1: {
-      answer: 2
+    params: {
+      botValues: [2, 5]
     },
-    part2: {
-      answer: 5 * 3 * 2
+    answers: {
+      part1: 2,
+      part2: 5 * 3 * 2
     }
   },
   prod: {
-    part1: {
-      answer: 147
+    params: {
+      botValues: [17, 61]
     },
-    part2: {
-      answer: 55637
+    answers: {
+      part1: 147,
+      part2: 55637
     }
   }
 })

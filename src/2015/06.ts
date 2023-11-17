@@ -7,11 +7,9 @@ aoc({
     dimension: 1000
   },
   prod: {
-    part1: {
-      answer: 377891
-    },
-    part2: {
-      answer: 14110788
+    answers: {
+      part1: 377891,
+      part2: 14110788
     }
   }
 })

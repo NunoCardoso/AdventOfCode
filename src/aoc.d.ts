@@ -1,9 +1,8 @@
 export type Params = Record<string, any>
 
-export type Part = {
-  skip?: boolean
-  params?: Params
-  answer?: string | number
+export type Answers = {
+  part1?: string | number
+  part2?: string | number
 }
 
 export type UI = {
@@ -14,10 +13,9 @@ export type UI = {
 }
 
 export type Prod = {
-  skip?: boolean
+  skip?: boolean | string
   params?: Params
-  part1?: Part
-  part2?: Part
+  answers?: Answers
 }
 
 export type Test = Prod & {
@@ -28,10 +26,10 @@ export type Config = {
   year: string
   day: string
   mode?: string
-  params?: Params
   logLevel?: string
   ui?: UI
   time: boolean
   test?: Test | Array<Test>
   prod?: Prod
+  params?: Params
 }

@@ -5,12 +5,9 @@ aoc({
   day: '03',
   logLevel: 'info',
   prod: {
-    skip: false,
-    part1: {
-      answer: 1050
-    },
-    part2: {
-      answer: 1921
+    answers: {
+      part1: 1050,
+      part2: 1921
     }
   }
 })

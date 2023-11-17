@@ -36,7 +36,7 @@ export default async (lineReader: any, params: Params) => {
     bingoCards.push(tempBingo)
   }
 
-  console.log('Bingo numbers', bingoNumbers.length, 'Bingo cards', bingoCards.length)
+  log.debug('Bingo numbers', bingoNumbers.length, 'Bingo cards', bingoCards.length)
 
   const hasBingo = (number: number, bingoCard: BingoCard): boolean => {
     for (let i = 0; i < bingoCard.length; i++) {
@@ -50,7 +50,7 @@ export default async (lineReader: any, params: Params) => {
               isThereANumberInColumn = true
             }
           }
-          if (isThereANumberInColumn === false) {
+          if (!isThereANumberInColumn) {
             return true
           }
           for (let m = 0; m < bingoCard[j].length; m++) {
@@ -58,7 +58,7 @@ export default async (lineReader: any, params: Params) => {
               isThereANumberInRow = true
             }
           }
-          if (isThereANumberInRow === false) {
+          if (!isThereANumberInRow) {
             return true
           }
         }
@@ -82,17 +82,14 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
   let ball: number = 0
-  let iterations: number = 0
 
   while (bingoCards.length > 0) {
-    iterations++
     ball = bingoNumbers.shift()!
 
     // go from length to 0 so I can splice without messing up indexes
     for (let i = bingoCards.length - 1; i >= 0; i--) {
       if (hasBingo(ball, bingoCards[i])) {
         if (part1 === 0) {
-          log.info(iterations, 'part1', part1, 'bingo card', bingoCards[i], 'ball', ball)
           part1 = sumOfBingo(bingoCards[i], ball)
         }
         part2 = sumOfBingo(bingoCards[i], ball)

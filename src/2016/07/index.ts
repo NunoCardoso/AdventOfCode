@@ -9,19 +9,19 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     const val = line.split(/[[\]]/)
-    const oddsPart1 = []
-    const evensPart1 = []
-    const oddsPart2 = []
-    const evensPart2 = []
+    const oddsPart1: Array<string> = []
+    const evensPart1: Array<string> = []
+    const oddsPart2: Array<string> = []
+    const evensPart2: Array<string> = []
 
     // inside brackets will be always on odd index numbers (1,3,5,...)
-    val.forEach((v, i) => {
+    val.forEach((v: string, i: number) => {
       const m = v.match(/(.)(.)\2\1/g)
       if (m?.[0][0] !== m?.[0][1]) {
         if (i % 2 === 0) {
-          evensPart1.push(m[0])
+          evensPart1.push(m![0])
         } else {
-          oddsPart1.push(m[0])
+          oddsPart1.push(m![0])
         }
       }
       for (let j = 0; j < v.length - 2; j++) {

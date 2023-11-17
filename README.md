@@ -15,7 +15,7 @@ that will look into `{year}/{day}.ts` as the config file.
 * time: boolean => console logs time to produce answers. default: true
 * test ?: Test | Array<Test> => runs tests
 * prod ?: Prod => runs final.  
-* params: generic
+
 
 ### Test
 
@@ -30,4 +30,6 @@ part 2: test part 2
 skip ?: boolean
 part 1: Prod => prod part 1  
 part 2: Prod => prod part 2 
-ß
+
+skip === true => skip both parts
+skip === 'part1' => skip only part1

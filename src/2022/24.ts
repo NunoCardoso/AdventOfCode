@@ -13,20 +13,15 @@ aoc({
   test: {
     skip: false,
     id: 'test',
-    part1: {
-      answer: 18
-    },
-    part2: {
-      answer: 54
+    answers: {
+      part1: 18,
+      part2: 54
     }
   },
   prod: {
-    skip: false,
-    part1: {
-      answer: 305
-    },
-    part2: {
-      answer: 905
+    answers: {
+      part1: 305,
+      part2: 905
     }
   }
 })

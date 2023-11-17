@@ -8,22 +8,18 @@ aoc({
     params: {
       cutoff: 1000
     },
-    part1: {
-      answer: 1120
-    },
-    part2: {
-      answer: 689
+    answers: {
+      part1: 1120,
+      part2: 689
     }
   },
   prod: {
     params: {
       cutoff: 2503
     },
-    part1: {
-      answer: 2696
-    },
-    part2: {
-      answer: 1084
+    answers: {
+      part1: 2696,
+      part2: 1084
     }
   }
 })

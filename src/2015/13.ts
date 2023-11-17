@@ -3,21 +3,19 @@ import aoc from 'aoc'
 aoc({
   year: '2015',
   day: '13',
-  test: {
-    id: 'test',
-    part1: {
-      answer: 330
-    }
-  },
   params: {
     name: 'Nuno'
   },
+  test: {
+    id: 'test',
+    answers: {
+      part1: 330
+    }
+  },
   prod: {
-    part1: {
-      answer: 664
-    },
-    part2: {
-      answer: 640
+    answers: {
+      part1: 664,
+      part2: 640
     }
   }
 })

@@ -84,7 +84,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   return {
-    part1: params.part2.skip !== true ? part1() : 0,
-    part2: params.part2.skip !== true ? part2() : 0
+    part1: params.part2?.skip !== true ? part1() : 0,
+    part2: params.part2?.skip !== true ? part2() : 0
   }
 }

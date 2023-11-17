@@ -38,18 +38,19 @@ export default async (lineReader: any, params: Params) => {
   ) => {
     botIndex[bot] = undefined // reset
     ;['low', 'high'].forEach((key: string) => {
-      if (rule[key].type === 'bot') {
-        const botNumber = rule[key].number.toString()
+      const ruleDecision = _.get(rule, key)
+      if (ruleDecision.type === 'bot') {
+        const botNumber = ruleDecision.number.toString()
         // update
         if (!Object.prototype.hasOwnProperty.call(botIndex, botNumber) || botIndex[botNumber].length === 0) {
           botIndex[botNumber] = [botValues[key === 'low' ? 0 : 1]]
         } else {
           botIndex[botNumber].push(botValues[key === 'low' ? 0 : 1])
-          botIndexWithTwo.push({ bot: rule[key].number, processed: false })
+          botIndexWithTwo.push({ bot: ruleDecision.number, processed: false })
         }
       }
-      if (rule[key].type === 'output') {
-        outputs[rule[key].number] = botValues[key === 'low' ? 0 : 1]
+      if (ruleDecision.type === 'output') {
+        outputs[ruleDecision.number] = botValues[key === 'low' ? 0 : 1]
       }
     })
   }
@@ -85,13 +86,13 @@ export default async (lineReader: any, params: Params) => {
       for (let i = botIndexWithTwo.length - 1; i >= 0; i--) {
         const { bot, processed } = botIndexWithTwo[i]
 
-        if (processed === false) {
+        if (!processed) {
           const rule = rules[bot.toString()]
           if (!_.isUndefined(rule)) {
             const botValues: Array<number> = botIndex[bot.toString()].sort((a, b) => (a - b > 0 ? 1 : -1))
             log.debug('Found rule, bot', bot, 'will decide between', botValues)
 
-            const compareBotValues = params.isTest ? params.test.botValues : params.prod.botValues
+            const compareBotValues = params.botValues
             if (_.intersection(botValues, compareBotValues).length === compareBotValues.length) {
               part1 = bot
             }

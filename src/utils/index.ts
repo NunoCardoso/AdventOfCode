@@ -1,1 +1,1 @@
-export * from 'src/utils/permutation'
+export * from 'utils/permutation'

@@ -69,8 +69,8 @@ export default async (lineReader: any, params: Params) => {
     return res
   }
 
-  part1 = getThemRecipes(params.part1.calories)
-  part2 = getThemRecipes(params.part2.calories)
+  part1 = getThemRecipes(params.calories.part1)
+  part2 = getThemRecipes(params.calories.part2)
 
   return { part1, part2 }
 }

@@ -7,35 +7,33 @@ aoc({
   test: [
     {
       id: 'test1',
-      part1: {
-        answer: 5
+      answers: {
+        part1: 5
       }
     },
     {
       id: 'test2',
-      part1: {
-        answer: 2
+      answers: {
+        part1: 2
       }
     },
     {
       id: 'test3',
-      part1: {
-        answer: 12
+      answers: {
+        part1: 12
       }
     },
     {
       id: 'test4',
-      part2: {
-        answer: 4
+      answers: {
+        part2: 4
       }
     }
   ],
   prod: {
-    part1: {
-      answer: 279
-    },
-    part2: {
-      answer: 163
+    answers: {
+      part1: 279,
+      part2: 163
     }
   }
 })

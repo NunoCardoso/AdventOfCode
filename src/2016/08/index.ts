@@ -8,13 +8,8 @@ export default async (lineReader: any, params: Params) => {
 
   let part1: number = 0
 
-  let dimensions: any
+  const dimensions: any = params.screenSize
 
-  if (params.isTest) {
-    dimensions = params.screenSize.test
-  } else {
-    dimensions = params.screenSize.prod
-  }
   const screen: Matrix<string> = Array(dimensions.height)
     .fill(null)
     .map(() => Array(dimensions.width).fill('.'))

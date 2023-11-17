@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { permutation } from 'src/utils'
+import { permutation } from 'utils'
 
 type Digit = {
   source: string

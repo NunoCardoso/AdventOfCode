@@ -739,7 +739,7 @@ export default async (lineReader: any, params: Params) => {
         tail: []
       }
     ]
-    timeLimit = params!.part1.limit
+    timeLimit = params!.limit.part1
 
     while (!_.isEmpty(opened)) {
       const _finished: Path | undefined = await searchAlgorithm({
@@ -780,7 +780,7 @@ export default async (lineReader: any, params: Params) => {
         tail: []
       }
     ]
-    timeLimit = params!.part2.limit
+    timeLimit = params!.limit.part2
 
     let iteration: number = 0
     while (!_.isEmpty(opened)) {

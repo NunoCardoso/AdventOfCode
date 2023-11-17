@@ -6,30 +6,22 @@ aoc({
   logLevel: 'warn',
   mode: 'fastest',
   params: {
-    part1: {
-      limit: 24
-    },
-    part2: {
-      limit: 32
+    limit: {
+      part1: 24,
+      part2: 32
     }
   },
   test: {
     id: 'test',
-    skip: false,
-    part1: {
-      answer: 33
-    },
-    part2: {
-      answer: 3472
+    answers: {
+      part1: 33,
+      part2: 3472
     }
   },
   prod: {
-    skip: false,
-    part1: {
-      answer: 1624
-    },
-    part2: {
-      answer: 12628
+    answers: {
+      part1: 1624,
+      part2: 12628
     }
   }
 })

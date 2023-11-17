@@ -32,7 +32,7 @@ export default async (lineReader: any, params: Params) => {
 
   const isLowerCase = (a: string) => a.toLowerCase() === a
 
-  const isApprovedPath = (currentPath: Path, head: string, numberOfVisitsForSmallCaves): boolean => {
+  const isApprovedPath = (currentPath: Path, head: string, numberOfVisitsForSmallCaves: string): boolean => {
     if (head === 'start') {
       return false
     }
@@ -72,7 +72,11 @@ export default async (lineReader: any, params: Params) => {
     return true
   }
 
-  const findMorePaths = (steps: Steps, currentPath: Path, numberOfVisitsForSmallCaves): Array<Path> => {
+  const findMorePaths = (
+    steps: Steps,
+    currentPath: Path,
+    numberOfVisitsForSmallCaves: string
+  ): Array<Path> => {
     const morePaths: Array<Path> = []
     const pathHead = currentPath[currentPath.length - 1]
     const nextHeads: Array<string> = steps[pathHead]
@@ -105,7 +109,7 @@ export default async (lineReader: any, params: Params) => {
     })
   }
 
-  const getThem = (steps: Steps, currentPath: Path, numberOfVisitsForSmallCaves): number => {
+  const getThem = (steps: Steps, currentPath: Path, numberOfVisitsForSmallCaves: string): number => {
     const finishedPaths: Array<Path> = []
     searchAlgorithm(finishedPaths, steps, currentPath, numberOfVisitsForSmallCaves)
     log.debug(finishedPaths.map((p) => p.join(',')).sort())

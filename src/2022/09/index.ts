@@ -40,8 +40,8 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const rope1: Rope = new Array(params!.part1.ropeLength).fill([0, 0])
-  const rope2: Rope = new Array(params!.part2.ropeLength).fill([0, 0])
+  const rope1: Rope = new Array(params!.ropeLength.part1).fill([0, 0])
+  const rope2: Rope = new Array(params!.ropeLength.part2).fill([0, 0])
   const allTailPos1: RopePosition = {}
   const allTailPos2: RopePosition = {}
 

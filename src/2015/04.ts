@@ -12,19 +12,17 @@ aoc({
     params: {
       secretKey: 'abcdef'
     },
-    part1: {
-      answer: 609043
+    answers: {
+      part1: 609043
     }
   },
   prod: {
     params: {
       secretKey: 'ckczppom'
     },
-    part1: {
-      answer: 117946
-    },
-    part2: {
-      answer: 3938038
+    answers: {
+      part1: 117946,
+      part2: 3938038
     }
   }
 })

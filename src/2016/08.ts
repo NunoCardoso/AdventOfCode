@@ -5,33 +5,28 @@ aoc({
   day: '08',
   logLevel: 'info',
   ui: { show: true, during: true },
-  params: {
-    screenSize: {
-      test: {
-        height: 3,
-        width: 7
-      },
-      prod: {
-        height: 6,
-        width: 50
-      }
-    }
-  },
   test: {
     id: 'test',
-    part1: {
-      answer: 6
+    params: {
+      screenSize: {
+        height: 3,
+        width: 7
+      }
     },
-    part2: {
-      answer: 2
+    answers: {
+      part1: 6
     }
   },
   prod: {
-    part1: {
-      answer: 119
+    params: {
+      screenSize: {
+        height: 6,
+        width: 50
+      }
     },
-    part2: {
-      answer: 'ZFHFSFOGPO'
+    answers: {
+      part1: 119,
+      part2: 'ZFHFSFOGPO'
     }
   }
 })

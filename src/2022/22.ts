@@ -11,25 +11,19 @@ aoc({
     params: {
       cubeSize: 4
     },
-    skip: false,
     id: 'test',
-    part1: {
-      answer: 6032
-    },
-    part2: {
-      answer: 5031
+    answers: {
+      part1: 6032,
+      part2: 5031
     }
   },
   prod: {
     params: {
       cubeSize: 50
     },
-    skip: false,
-    part1: {
-      answer: 149138
-    },
-    part2: {
-      answer: 153203
+    answers: {
+      part1: 149138,
+      part2: 153203
     }
   }
 })

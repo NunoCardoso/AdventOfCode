@@ -235,7 +235,7 @@ export default async (lineReader: any, params: Params) => {
         { ore: 0, clay: 0, obsidian: 0, geode: 0 },
         { ore: 1, clay: 0, obsidian: 0, geode: 0 },
         0,
-        params.part1.limit
+        params.limit.part1
       )
       log.warn('Blueprint', blueprint.id, 'path', 'geodes', finished)
 
@@ -250,7 +250,7 @@ export default async (lineReader: any, params: Params) => {
         { ore: 0, clay: 0, obsidian: 0, geode: 0 },
         { ore: 1, clay: 0, obsidian: 0, geode: 0 },
         0,
-        params.part2.limit
+        params.limit.part2
       )
       log.warn('Blueprint', blueprint.id, 'geodes', finished)
       part2 *= finished

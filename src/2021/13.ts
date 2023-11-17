@@ -7,20 +7,14 @@ aoc({
   ui: { show: false, during: true },
   test: {
     id: 'test',
-    skip: false,
-    part1: {
-      answer: 17
-    },
-    part2: {
-      skip: true
+    answers: {
+      part1: 17
     }
   },
   prod: {
-    part1: {
-      answer: 802
-    },
-    part2: {
-      answer: 'RKHFZGUB'
+    answers: {
+      part1: 802,
+      part2: 'RKHFZGUB'
     }
   }
 })

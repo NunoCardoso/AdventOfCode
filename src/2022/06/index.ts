@@ -18,7 +18,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   return {
-    part1: solveFor(char, params!.part1.length),
-    part2: solveFor(char, params!.part2.length)
+    part1: solveFor(char, params!.size.part1),
+    part2: solveFor(char, params!.size.part2)
   }
 }

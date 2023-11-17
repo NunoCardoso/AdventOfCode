@@ -222,7 +222,7 @@ export default async (lineReader: any, params: Params) => {
 
   if (params.part1?.skip !== true) {
     blueprints.forEach((blueprint) => {
-      const finished = getThemGeodes(blueprint, 0, 0, 0, 0, 1, 0, 0, 0, 0, params.part1.limit)
+      const finished = getThemGeodes(blueprint, 0, 0, 0, 0, 1, 0, 0, 0, 0, params.limit.part1)
       log.info('Blueprint', blueprint[0], 'path', 'geodes', finished)
 
       part1 += blueprint[0] * finished
@@ -231,7 +231,7 @@ export default async (lineReader: any, params: Params) => {
 
   if (params.part2?.skip !== true) {
     blueprints.slice(0, 3).forEach((blueprint) => {
-      const finished = getThemGeodes(blueprint, 0, 0, 0, 0, 1, 0, 0, 0, 0, params.part2.limit)
+      const finished = getThemGeodes(blueprint, 0, 0, 0, 0, 1, 0, 0, 0, 0, params.limit.part2)
       log.info('Blueprint', blueprint[0], 'geodes', finished)
       part2 *= finished
     })
