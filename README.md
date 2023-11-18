@@ -33,3 +33,5 @@ part 2: Prod => prod part 2
 
 skip === true => skip both parts
 skip === 'part1' => skip only part1
+
+ts-node makePuzzle 2017 01
