@@ -15,4 +15,8 @@ const permutation = <T>(array: Array<T>): Array<Array<T>> => {
   return result
 }
 
-export { permutation }
+const permutationForLength = (number: number): Array<Array<number>> => {
+  return permutation([...Array(number).keys()])
+}
+
+export { permutation, permutationForLength }

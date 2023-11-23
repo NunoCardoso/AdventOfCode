@@ -26,10 +26,9 @@ aoc({
     }
   ],
   prod: {
-    skip: true,
     answers: {
       part1: 576,
-      part2: 0
+      part2: 207
     }
   }
 })
