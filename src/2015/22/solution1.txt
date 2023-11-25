@@ -1,0 +1,74 @@
+[
+  {
+    hero: { mana: 500, hitPoints: 50 },
+    boss: { hitPoints: 51, damage: 9 },
+    manaSpent: 0,
+    path: 's',
+    description: 'start',
+    effects: []
+  },
+  {
+    hero: { mana: 372, hitPoints: 41 },
+    boss: { hitPoints: 51, damage: 9 },
+    manaSpent: 229,
+    path: 's-R',
+    description: 'Player casts Recharge',
+    effects: [ [Object] ]
+  },
+  {
+    hero: { mana: 401, hitPoints: 32 },
+    boss: { hitPoints: 48, damage: 9 },
+    manaSpent: 402,
+    path: 's-R-P',
+    description: 'Player casts Poison',
+    effects: [ [Object], [Object] ]
+  },
+  {
+    hero: { mana: 490, hitPoints: 30 },
+    boss: { hitPoints: 42, damage: 9 },
+    manaSpent: 515,
+    path: 's-R-P-S',
+    description: 'Player casts Shield',
+    effects: [ [Object], [Object] ]
+  },
+  {
+    hero: { mana: 437, hitPoints: 28 },
+    boss: { hitPoints: 32, damage: 9 },
+    manaSpent: 568,
+    path: 's-R-P-S-M',
+    description: 'Player casts Magic Missile',
+    effects: [ [Object], [Object] ]
+  },
+  {
+    hero: { mana: 264, hitPoints: 26 },
+    boss: { hitPoints: 26, damage: 9 },
+    manaSpent: 741,
+    path: 's-R-P-S-M-P',
+    description: 'Player casts Poison',
+    effects: [ [Object], [Object] ]
+  },
+  {
+    hero: { mana: 211, hitPoints: 17 },
+    boss: { hitPoints: 16, damage: 9 },
+    manaSpent: 794,
+    path: 's-R-P-S-M-P-M',
+    description: 'Player casts Magic Missile',
+    effects: [ [Object] ]
+  },
+  {
+    hero: { mana: 158, hitPoints: 8 },
+    boss: { hitPoints: 6, damage: 9 },
+    manaSpent: 847,
+    path: 's-R-P-S-M-P-M-M',
+    description: 'Player casts Magic Missile',
+    effects: [ [Object] ]
+  },
+  {
+    hero: { mana: 105, hitPoints: 8 },
+    boss: { hitPoints: -1, damage: 9 },
+    manaSpent: 900,
+    path: 's-R-P-S-M-P-M-M-M',
+    description: 'Player casts Magic Missile',
+    effects: []
+  }
+]

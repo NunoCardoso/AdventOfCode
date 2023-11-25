@@ -1,14 +1,18 @@
 
 2015:
 04: md5, > 2 s, nothing I can do to make it faster
-20: free to start
+22: if I let Nothing to be an action, then I get a lower value for part 2 (987) than the answer (1216)
+23: free to start
 
 2016:
 05: md5, > 1m, nothing I can do to make it faster
 11: free to start
 
+2017:
+03: tree to start
+
 2021:
-13: free to start
+14: free to start
 
 2022:
 15: on 16 seconds. rotate -45 deg
