@@ -1,8 +1,9 @@
 
-2015:
+2015: DONE
+= = = = =
 04: md5, > 2 s, nothing I can do to make it faster
 22: if I let Nothing to be an action, then I get a lower value for part 2 (987) than the answer (1216)
-23: free to start
+24: 6/7 seconds, not sure if I can do it better
 
 2016:
 05: md5, > 1m, nothing I can do to make it faster
@@ -14,7 +15,8 @@
 2021:
 14: free to start
 
-2022:
+2022: DONE
+= = = = =
 15: on 16 seconds. rotate -45 deg
 16: over 1 min
     - errors on test part2

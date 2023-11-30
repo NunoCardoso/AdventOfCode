@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import _ from 'lodash'
-import { permutation } from 'utils'
+import { Permutation } from 'js-combinatorics'
 
 type Peoples = Array<string>
 type Scores = Record<string, any>
@@ -59,12 +59,12 @@ export default async (lineReader: any, params: Params) => {
   })
 
   if (params.part1?.skip !== true) {
-    const permutes1 = permutation(people1)
+    const permutes1 = new Permutation(people1).toArray()
     part1 = getHighScore(permutes1, scores1)
   }
 
   if (params.part2?.skip !== true) {
-    const permutes2 = permutation(people2)
+    const permutes2 = new Permutation(people2).toArray()
     part2 = getHighScore(permutes2, scores2)
   }
 

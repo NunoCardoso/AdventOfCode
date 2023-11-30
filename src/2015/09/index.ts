@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { permutation } from 'utils'
+import { Permutation } from 'js-combinatorics'
 
 type Distances = Record<string, Record<string, number>>
 export default async (lineReader: any, params: Params) => {
@@ -25,7 +25,7 @@ export default async (lineReader: any, params: Params) => {
 
   const combinations: Record<string, number> = {}
 
-  permutation(permutes).forEach((permute: Array<number>) => {
+  new Permutation(permutes).toArray().forEach((permute: Array<number>) => {
     let res = 0
     const key: string = permute.map((i: number) => i.toString()).join('')
     for (let j = 0; j < permute.length - 1; j++) {

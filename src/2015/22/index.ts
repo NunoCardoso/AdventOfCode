@@ -268,8 +268,7 @@ export default async (lineReader: any, params: Params) => {
       opened.sort((a, b) => {
         return a[a.length - 1].manaSpent - b[b.length - 1].manaSpent > 0
           ? 1
-          : // lowest boss hit points goes to the end
-            a[a.length - 1].boss.hitPoints - b[b.length - 1].boss.hitPoints > 0
+          : a[a.length - 1].boss.hitPoints - b[b.length - 1].boss.hitPoints > 0
             ? 1
             : -1
       })
