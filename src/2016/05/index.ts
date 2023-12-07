@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-const MD5 = require('md5.js')
+const SparkMD5 = require('spark-md5')
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -12,11 +12,11 @@ export default async (lineReader: any, params: Params) => {
   const solutionPart2: Array<string> = []
   let i: number = 0
 
-  log.info('Slow as this puzzle includes MD5')
+  log.info('This will take some time, MD5 puzzle')
 
   while (solutionPart2Index.length < 8) {
     const hash: string = params.secretKey + i
-    const res: string = new MD5().update('' + hash).digest('hex')
+    const res: string = SparkMD5.hash('' + hash)
     if (res.startsWith('00000')) {
       const sol = res.substring(5, 6)
       const sol2 = res.substring(6, 7)
