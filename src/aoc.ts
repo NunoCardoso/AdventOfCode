@@ -62,7 +62,7 @@ export default async (config: Partial<Config> = {}) => {
     } else {
       if (!_.isUndefined(run?.answers?.part1)) {
         console.log(
-          line + 'Part 1 - got',
+          line + 'Part 1 -',
           answer.part1,
           run.answers?.part1 === answer.part1 ? '✅ ' : '❌ (Expected ' + run.answers?.part1 + ')'
         )
@@ -73,7 +73,7 @@ export default async (config: Partial<Config> = {}) => {
     } else {
       if (!_.isUndefined(run?.answers?.part2)) {
         console.log(
-          line + 'Part 2 - got',
+          line + 'Part 2 -',
           answer.part2,
           run.answers?.part2 === answer.part2 ? '✅ ' : '❌ (Expected ' + run.answers?.part2 + ')'
         )
