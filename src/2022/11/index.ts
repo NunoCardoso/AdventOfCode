@@ -25,7 +25,7 @@ export default async (lineReader: any, params: Params) => {
     }
     m = line.match(/Starting items: (.*)$/)
     if (m) {
-      tempMonkey.items = m[1].split(', ').map((s: string) => parseInt(s))
+      tempMonkey.items = m[1].split(', ').map(Number)
     }
     m = line.match(/Operation: new = old (.+) (.+)$/)
     if (m) {

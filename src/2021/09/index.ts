@@ -19,7 +19,7 @@ export default async (lineReader: any, params: Params) => {
   let worldDimension: Dimension = [0, 0]
 
   for await (const line of lineReader) {
-    world.push(line.split('').map((s: string) => parseInt(s)))
+    world.push(line.split('').map(Number))
   }
   worldDimension = [world.length, world[0].length]
 

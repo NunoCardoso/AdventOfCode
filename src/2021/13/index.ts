@@ -32,7 +32,7 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     if (!line.startsWith('fold') && line.length > 0) {
-      const dot = line.split(',').map((s: string) => parseInt(s))
+      const dot = line.split(',').map(Number)
       dots.push(dot)
       if (dot[0] > dimension[0]) {
         dimension[0] = dot[0]

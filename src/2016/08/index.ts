@@ -1,7 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
 import { Matrix } from 'declarations'
-import { parseInt } from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })

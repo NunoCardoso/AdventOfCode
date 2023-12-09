@@ -110,8 +110,8 @@ export default async (lineReader: any, params: Params) => {
   for await (const line of lineReader) {
     const vals = line.split(' -> ')
     for (let i = 0; i < vals.length - 1; i++) {
-      const from: Point = vals[i].split(',').map((x: string) => parseInt(x)) as Point
-      const to: Point = vals[i + 1].split(',').map((x: string) => parseInt(x)) as Point
+      const from: Point = vals[i].split(',').map(Number) as Point
+      const to: Point = vals[i + 1].split(',').map(Number) as Point
       const jDir: number = to[0] - from[0] < 0 ? -1 : 1
       const kDir: number = to[1] - from[1] < 0 ? -1 : 1
       for (let j = from[0]; jDir === -1 ? j >= to[0] : j <= to[0]; j = j + jDir) {

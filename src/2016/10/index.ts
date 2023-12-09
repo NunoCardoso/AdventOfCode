@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import _, { parseInt } from 'lodash'
+import _ from 'lodash'
 
 type RuleDecision = {
   type: string

@@ -36,7 +36,7 @@ export default async (lineReader: any, params: Params) => {
     } else if (line.endsWith('map:')) {
       mode = line.split(/\s+/)[0].trim().split('-to-').join('2')
     } else if (line !== '') {
-      const c: Convert = line.split(/\s+/).map((x: string) => parseInt(x))
+      const c: Convert = line.split(/\s+/).map(Number)
       db[mode].push(c)
     }
   }

@@ -12,16 +12,29 @@ export default async (lineReader: any, params: Params) => {
     part2 = values.length
   }
 
-  const solveFor = (): number => {
-    return 0
+  const solveFor = (elvesNumber: number): number => {
+
+    let elves = Array.from({length: elvesNumber}, (_, index) => ({
+      elf: index + 1,
+      presents: 1
+    }))
+
+    let it = 0
+    while (elves.length > 1) {
+      nextIndex = (it + 1 % elvesNumber)
+      elves[it].presents += elves[ (it + 1 % elvesNumber) ].presents
+      elves.splice(it+1[]
+            }
+    for (var i = 0; i < )
   }
 
   if (params.skip !== true && params.skip !== 'part1') {
-    part1 = solveFor()
+    part1 = solveFor(params.elves)
   }
   if (params.skip !== true && params.skip !== 'part2') {
     part2 = solveFor()
   }
+
 
   return { part1, part2 }
 }

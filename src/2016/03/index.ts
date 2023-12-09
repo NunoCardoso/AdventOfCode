@@ -17,10 +17,7 @@ export default async (lineReader: any, params: Params) => {
     triangle[1] + triangle[2] > triangle[0]
 
   for await (const line of lineReader) {
-    const values = line
-      .trim()
-      .split(/\s+/)
-      .map((s: string) => parseInt(s))
+    const values = line.trim().split(/\s+/).map(Number)
     dataForPart1.push([values[0], values[1], values[2]])
     auxRows[0].push(values[0])
     auxRows[1].push(values[1])

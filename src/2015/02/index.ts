@@ -6,7 +6,7 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   for await (const line of lineReader) {
-    const values: Array<number> = line.split('x').map((s: string) => parseInt(s))
+    const values: Array<number> = line.split('x').map(Number)
     const w: number = values[0] * values[1]
     const h: number = values[0] * values[2]
     const d: number = values[1] * values[2]

@@ -11,7 +11,7 @@ export default async (lineReader: any, params: Params) => {
   const world: Matrix = []
 
   for await (const line of lineReader) {
-    world.push(line.split('').map((s: string) => parseInt(s)))
+    world.push(line.split('').map(Number))
   }
 
   let iterations = 0

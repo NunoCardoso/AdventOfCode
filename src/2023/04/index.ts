@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import _, { parseInt } from 'lodash'
+import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -12,16 +12,7 @@ export default async (lineReader: any, params: Params) => {
   for await (const line of lineReader) {
     const m = line.match(/^Card\s+\d+: (.+)$/)[1].split('|')
     cardWins.push(
-      _.intersection(
-        m[0]
-          .trim()
-          .split(/\s+/)
-          .map((x: string) => parseInt(x)),
-        m[1]
-          .trim()
-          .split(/\s+/)
-          .map((x: string) => parseInt(x))
-      ).length
+      _.intersection(m[0].trim().split(/\s+/).map(Number), m[1].trim().split(/\s+/).map(Number)).length
     )
   }
 

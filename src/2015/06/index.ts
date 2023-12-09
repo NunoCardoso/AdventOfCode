@@ -14,8 +14,8 @@ export default async (lineReader: any, params: Params) => {
   for await (const line of lineReader) {
     const values = line.split(' ')
     if (values[0] === 'toggle') {
-      const fromValues: Point = values[1].split(',').map((s: string) => parseInt(s))
-      const toValues: Point = values[3].split(',').map((s: string) => parseInt(s))
+      const fromValues: Point = values[1].split(',').map(Number)
+      const toValues: Point = values[3].split(',').map(Number)
       for (let i = fromValues[0]; i <= toValues[0]; i++) {
         for (let j = fromValues[1]; j <= toValues[1]; j++) {
           matrix1[i][j] = matrix1[i][j] === 0 ? 1 : 0
@@ -24,8 +24,8 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     if (values[0] === 'turn') {
-      const fromValues: Point = values[2].split(',').map((s: string) => parseInt(s))
-      const toValues: Point = values[4].split(',').map((s: string) => parseInt(s))
+      const fromValues: Point = values[2].split(',').map(Number)
+      const toValues: Point = values[4].split(',').map(Number)
       for (let i = fromValues[0]; i <= toValues[0]; i++) {
         for (let j = fromValues[1]; j <= toValues[1]; j++) {
           if (values[1] === 'off') {

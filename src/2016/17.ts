@@ -3,7 +3,7 @@ import aoc from 'aoc'
 aoc({
   year: '2016',
   day: '17',
-  logLevel: 'debug',
+  logLevel: 'info',
   params: {
     input: 'rrrbmfta'
   },
@@ -15,37 +15,34 @@ aoc({
       },
       answers: {
         part1: 'DDRRRD',
-        part2: 0
+        part2: 370
       }
     },
     {
-      skip: true,
       id: 'test2',
       params: {
         input: 'kglvqrro'
       },
       answers: {
         part1: 'DDUDRLRRUDRD',
-        part2: 0
+        part2: 492
       }
     },
     {
-      skip: true,
       id: 'test3',
       params: {
         input: 'ulqzkmiv'
       },
       answers: {
         part1: 'DRURDRUDDLLDLUURRDULRLDUUDDDRR',
-        part2: 0
+        part2: 830
       }
     }
   ],
   prod: {
-    skip: true,
     answers: {
-      part1: 0,
-      part2: 0
+      part1: 'RLRDRDUDDR',
+      part2: 420
     }
   }
 })

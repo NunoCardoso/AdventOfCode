@@ -12,13 +12,10 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     if (_.isEmpty(bingoNumbers)) {
-      bingoNumbers = line.split(',').map((val: string) => parseInt(val))
+      bingoNumbers = line.split(',').map(Number)
       continue
     }
-    let row: Array<number> = line
-      .trim()
-      .split(/\s+/)
-      .map((val: string) => parseInt(val))
+    let row: Array<number> = line.trim().split(/\s+/).map(Number)
 
     row = row.filter((val) => !_.isNaN(val))
 

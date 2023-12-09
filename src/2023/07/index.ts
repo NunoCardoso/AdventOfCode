@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import { parseInt } from 'lodash'
 
 type Hands = {
   cards: string

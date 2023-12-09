@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import { parseInt } from 'lodash'
 
 // Time, Distance
 type Race = { time?: number; distance?: number }
