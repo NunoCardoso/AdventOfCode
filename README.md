@@ -35,3 +35,9 @@ skip === true => skip both parts
 skip === 'part1' => skip only part1
 
 ts-node makePuzzle 2017 01
+ts-node runPuzzle 2017 01
+
+### Others
+
+functions: solveFor, depthFirst, breadthFirst
+types: use World

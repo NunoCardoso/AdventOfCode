@@ -17,18 +17,18 @@ export default async (lineReader: any, params: Params) => {
 
     sequences.forEach((sequence, index: number) => {
       log.debug('#', index, 'sequence', sequence)
-      let _sequence = sequence
+
       const lastNumbers = []
       const firstNumbers = []
 
-      while (_.some(_sequence, (x: number) => x !== 0)) {
+      while (_.some(sequence, (x: number) => x !== 0)) {
         const newSequence: Array<number> = []
-        lastNumbers.push(_sequence[_sequence.length - 1])
-        firstNumbers.push(_sequence[0])
-        for (let i = 0; i < _sequence.length - 1; i++) {
-          newSequence.push(_sequence[i + 1] - _sequence[i])
+        lastNumbers.push(sequence[sequence.length - 1])
+        firstNumbers.push(sequence[0])
+        for (let i = 0; i < sequence.length - 1; i++) {
+          newSequence.push(sequence[i + 1] - sequence[i])
         }
-        _sequence = newSequence
+        sequence = newSequence
       }
       if (mode === 'part1') {
         sum += lastNumbers.reduce((a, b) => a + b, 0)
