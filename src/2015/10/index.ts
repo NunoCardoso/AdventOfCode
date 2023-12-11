@@ -1,16 +1,16 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
   let input = params.input
+  const limit = Math.max(params.limit.part1, params.limit.part2)
 
-  for (let i = 1; i <= Math.max(params.limit.part1, params.limit.part2); i++) {
+  for (let i = 1; i <= limit; i++) {
     // matches a char, plus a 0-n number of same char, g repeats to all
     const seq: Array<string> = input.match(/(.)\1*/g)
-    const res: string = _.reduce(seq, (memo, val) => memo + val.length + val[0], '')
+    const res: string = seq.reduce((acc, val) => acc + val.length + val[0], '')
     if (i % params.limit.part1 === 0) {
       part1 = res.length
     }

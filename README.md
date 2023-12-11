@@ -1,43 +1,60 @@
 # How to run
 
-    cd {year}
-    ts-node {day}
+## makePuzzle
 
-that will look into `{year}/{day}.ts` as the config file.
+    ts-node makePuzzle {year} {day}
 
-## options: 
+## runPuzzle
+
+    ts-node runPuzzle {year} {day}
+
+or 
+
+    ts-node src/{year}/{day}
+
+# Puzzle options options: 
 
 * year: string, mandatory => chooses the year 
 * day: string, mandatory => chooses the day 
 * logLevel ?: string => sets log level (info, debug, etc) default: info
 * mode => if there is another solution (fastest, easiest, etc) default: normal 
 * ui ?: boolean => turns on UI. default: { show: false }
-* time: boolean => console logs time to produce answers. default: true
+** show?: boolean => how or not the UI
+** end?: boolean
+** during?: boolean
+** wait:?: number
 * test ?: Test | Array<Test> => runs tests
 * prod ?: Prod => runs final.  
 
 
-### Test
+## Test
 
 id: test id, tied to the test input file name
-skip ?: boolean 
-options: options for the test
-part 1: test part 1  
-part 2: test part 2 
+skip ?: boolean | 'part1' | 'part2'
+params ?: any => additional params
+answers ?: any => object with part1 and/or part2 answers
 
-### Prod
+## Prod
 
-skip ?: boolean
-part 1: Prod => prod part 1  
-part 2: Prod => prod part 2 
+skip ?: boolean | 'part1' | 'part2'
+params ?: any => additional params
+answers ?: any => object with part1 and/or part2 answers
+
+## skip
 
 skip === true => skip both parts
 skip === 'part1' => skip only part1
+skip === 'part2' => skip only part2
 
-ts-node makePuzzle 2017 01
-ts-node runPuzzle 2017 01
+# Recommendations
 
-### Others
+functions: solveFor, DFS, BFS
+types: use World: World
+Avoid lodash
+use  global.structuredClone instead of deepClone, or {...obj} / arr.slice() for shallows
 
-functions: solveFor, depthFirst, breadthFirst
-types: use World
+prefer match with /g than matchAll, as in 
+
+"abcabfgabsefd".match(/ab/) => ['ab', index: 0, input: 'abcabfgabsefd', groups: undefined]
+"abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']
+"123123123".match(/ab/) => null

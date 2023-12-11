@@ -15,7 +15,7 @@ export default async (lineReader: any, params: Params) => {
   const calculateEntanglement = (packages: Array<number>) =>
     packages.reduce((x: number, y: number) => x * y, 1)
 
-  const goGet = (packages: Array<number>, compartments: number) => {
+  const solveFor = (packages: Array<number>, compartments: number) => {
     const totalWeight = packages.reduce((a, b) => a + b)
     const targetWeight = totalWeight / compartments
 
@@ -33,8 +33,8 @@ export default async (lineReader: any, params: Params) => {
 
     return solutions.map(calculateEntanglement).sort((a, b) => a - b)[0]
   }
-  part1 = goGet(packages.slice(), 3)
-  part2 = goGet(packages.slice(), 4)
+  part1 = solveFor(packages.slice(), 3)
+  part2 = solveFor(packages.slice(), 4)
 
   return { part1, part2 }
 }

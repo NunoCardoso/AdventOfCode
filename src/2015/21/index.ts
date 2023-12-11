@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 type Stat = {
   name: string
@@ -99,74 +98,67 @@ export default async (lineReader: any, params: Params) => {
     return -9999
   }
 
-  let combinations: Array<Setup> = []
+  const getHeroWithSetup = (setup: Setup) => {
+    return {
+      hitPoints: params.hitPoints,
+      cost: setup.weapon.cost + setup.armor.cost + setup.ring1.cost + setup.ring2.cost,
+      damage: setup.weapon.damage + setup.armor.damage + setup.ring1.damage + setup.ring2.damage,
+      armor: setup.weapon.armor + setup.armor.armor + setup.ring1.armor + setup.ring2.armor
+    }
+  }
 
-  for (let w = 0; w < weapons.length; w++) {
-    for (let a = 0; a < armors.length; a++) {
-      for (let r1 = 0; r1 < rings.length - 1; r1++) {
-        // no need to do another iteration with only one ring
-        if (r1 !== 1) {
-          for (let r2 = r1 + 1; r2 < rings.length; r2++) {
-            combinations.push({ weapon: weapons[w], armor: armors[a], ring1: rings[r1], ring2: rings[r2] })
+  const getCombinations = () => {
+    let combinations: Array<Setup> = []
+    for (let w = 0; w < weapons.length; w++) {
+      for (let a = 0; a < armors.length; a++) {
+        for (let r1 = 0; r1 < rings.length - 1; r1++) {
+          // no need to do another iteration with only one ring
+          if (r1 !== 1) {
+            for (let r2 = r1 + 1; r2 < rings.length; r2++) {
+              combinations.push({ weapon: weapons[w], armor: armors[a], ring1: rings[r1], ring2: rings[r2] })
+            }
           }
         }
       }
     }
+
+    combinations = combinations.sort((a, b) => {
+      return a.weapon.cost +
+        a.armor.cost +
+        a.ring1.cost +
+        a.ring2.cost -
+        (b.weapon.cost + b.armor.cost + b.ring1.cost + b.ring2.cost) <
+        0
+        ? -1
+        : 1
+    })
+    return combinations
   }
 
-  combinations = combinations.sort((a, b) => {
-    return a.weapon.cost +
-      a.armor.cost +
-      a.ring1.cost +
-      a.ring2.cost -
-      (b.weapon.cost + b.armor.cost + b.ring1.cost + b.ring2.cost) <
-      0
-      ? -1
-      : 1
-  })
+  const combinations: Array<Setup> = getCombinations()
 
   log.debug('I have', combinations.length, 'combinations')
 
   let it = 0
 
-  while (part1 === 0) {
-    const setup = combinations[it]
-
-    const hero: Char = {
-      hitPoints: params.hitPoints,
-      cost: setup.weapon.cost + setup.armor.cost + setup.ring1.cost + setup.ring2.cost,
-      damage: setup.weapon.damage + setup.armor.damage + setup.ring1.damage + setup.ring2.damage,
-      armor: setup.weapon.armor + setup.armor.armor + setup.ring1.armor + setup.ring2.armor
+  while (part1 === 0 || part2 === 0) {
+    if (part1 === 0) {
+      const setup1 = combinations[it]
+      const hero1: Char = getHeroWithSetup(setup1)
+      const score1 = goToBattle(hero1, { ...boss })
+      if (score1 > 0 && part1 === 0) {
+        part1 = hero1.cost!
+      }
     }
-
-    log.debug('Going to battle with setup', setup)
-    const score = goToBattle(hero, _.cloneDeep(boss))
-    log.debug('Battle score', score, 'hero cost', hero.cost!)
-    if (score > 0 && part1 === 0) {
-      part1 = hero.cost!
+    if (part2 === 0) {
+      const setup2 = combinations[combinations.length - 1 - it]
+      const hero2: Char = getHeroWithSetup(setup2)
+      const score2 = goToBattle(hero2, { ...boss })
+      if (score2 < 0 && part2 === 0) {
+        part2 = hero2.cost!
+      }
     }
     it++
-  }
-
-  it = combinations.length - 1
-
-  while (part2 === 0) {
-    const setup = combinations[it]
-
-    const hero: Char = {
-      hitPoints: params.hitPoints,
-      cost: setup.weapon.cost + setup.armor.cost + setup.ring1.cost + setup.ring2.cost,
-      damage: setup.weapon.damage + setup.armor.damage + setup.ring1.damage + setup.ring2.damage,
-      armor: setup.weapon.armor + setup.armor.armor + setup.ring1.armor + setup.ring2.armor
-    }
-
-    log.debug('Going to battle with setup', setup)
-    const score = goToBattle(hero, _.cloneDeep(boss))
-    log.debug('Battle score', score, 'hero cost', hero.cost!)
-    if (score < 0 && part2 === 0) {
-      part2 = hero.cost!
-    }
-    it--
   }
 
   return { part1, part2 }

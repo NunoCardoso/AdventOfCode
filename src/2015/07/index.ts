@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 type Wire1 = { op: string; src: string | number }
 type Wire2 = { op: string; src1: string | number; src2: string | number }
@@ -63,37 +62,40 @@ export default async (lineReader: any, params: Params) => {
     return parseInt(resbin.join(''), 2)
   }
 
-  const resolve = (wires: Wires, key: string | number): number => {
+  const solveFor = (wires: Wires, key: string | number): number => {
     log.debug('start for ', key, wires[key])
     let res: number = 0
     if (!Object.prototype.hasOwnProperty.call(wires, key)) {
       console.error('wires has no', key)
       throw new Error()
     }
-    if (_.isString(wires[key])) {
-      res = resolve(wires, wires[key] as string)
+    if (typeof wires[key] === 'string') {
+      res = solveFor(wires, wires[key] as string)
       wires[key] = res
       log.debug('resolved string', key, wires[key])
       return res
     }
-    if (_.isNumber(wires[key])) {
+    if (typeof wires[key] === 'number') {
       return wires[key] as number
     }
     if ((wires[key] as Wire1).op === 'NOT') {
-      const src: number = _.isNumber((wires[key] as Wire1).src)
-        ? ((wires[key] as Wire1).src as number)
-        : resolve(wires, (wires[key] as Wire1).src)
+      const src: number =
+        typeof (wires[key] as Wire1).src === 'number'
+          ? ((wires[key] as Wire1).src as number)
+          : solveFor(wires, (wires[key] as Wire1).src)
       res = _16bitNot(src)
       wires[key] = res
       log.debug('resolved not', key, wires[key])
       return res
     }
-    const src1: number = _.isNumber((wires[key] as Wire2).src1)
-      ? ((wires[key] as Wire2).src1 as number)
-      : resolve(wires, (wires[key] as Wire2).src1)
-    const src2: number = _.isNumber((wires[key] as Wire2).src2)
-      ? ((wires[key] as Wire2).src2 as number)
-      : resolve(wires, (wires[key] as Wire2).src2)
+    const src1: number =
+      typeof (wires[key] as Wire2).src1 === 'number'
+        ? ((wires[key] as Wire2).src1 as number)
+        : solveFor(wires, (wires[key] as Wire2).src1)
+    const src2: number =
+      typeof (wires[key] as Wire2).src2 === 'number'
+        ? ((wires[key] as Wire2).src2 as number)
+        : solveFor(wires, (wires[key] as Wire2).src2)
     if ((wires[key] as Wire2).op === 'OR') {
       res = _16bitOr(src1, src2)
     }
@@ -138,15 +140,15 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const wires2: Wires = _.cloneDeep(wires1)
+  const wires2: Wires = global.structuredClone(wires1)
 
   if (params.part1?.skip !== true) {
-    part1 = resolve(wires1, 'a')
+    part1 = solveFor(wires1, 'a')
   }
 
   if (params.part2?.skip !== true) {
     wires2.b = part1
-    part2 = resolve(wires2, 'a')
+    part2 = solveFor(wires2, 'a')
   }
   return { part1, part2 }
 }

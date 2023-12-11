@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 type Container = { id: number; value: number }
 type Containers = Array<Container>
@@ -17,7 +16,7 @@ export default async (lineReader: any, params: Params) => {
     for (let i = 0; i < arr.length; i++) {
       const next: Containers = [...temp, arr[i]]
       // if we overshoot or match, do not permute more, skip to next. If not, keep digging
-      const sum: number = _.reduce(next, (memo, val) => memo + val.value, 0)
+      const sum: number = next.reduce((acc, val) => acc + val.value, 0)
       if (sum >= target) {
         if (sum === target) {
           const key = next

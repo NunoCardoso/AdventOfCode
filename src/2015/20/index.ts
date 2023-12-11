@@ -6,10 +6,8 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  /* an approximation is that the middle divisors are wrapping
-    the square root value.
-     so, with 30, Math.sqrt(30) is between 5 and 6, which are the
-     middle divisors
+  /* an approximation is that the middle divisors are wrapping the square root value.
+     so, with 30, Math.sqrt(30) is between 5 and 6, which are the middle divisors
    */
   const divisors = (n: number): Array<number> => {
     const result = [1, n]
@@ -47,6 +45,7 @@ export default async (lineReader: any, params: Params) => {
     }, 0)
 
     log.debug('i', i, 'medResult', medResultPart1, 'Misses', threshold - medResultPart1)
+
     if (medResultPart1 * 10 >= threshold) {
       if (part1 === 0) {
         part1 = i

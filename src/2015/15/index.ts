@@ -1,10 +1,13 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 type Recipe = [number, number, number, number, number]
 type Portions = Array<number>
 type Recipes = Array<Recipe>
 type Result = Array<number>
+type Data = {
+  score: number
+  calories: number | undefined
+}
 
 export default async (lineReader: any, params: Params) => {
   let part1: number = 0
@@ -17,9 +20,7 @@ export default async (lineReader: any, params: Params) => {
     recipes.push([parseInt(m[2]), parseInt(m[3]), parseInt(m[4]), parseInt(m[5]), parseInt(m[6])])
   }
 
-  const calculateIngredient = (amount: number, pleasureness: number) => {
-    return amount * pleasureness
-  }
+  const calculateIngredient = (amount: number, pleasureness: number) => amount * pleasureness
 
   const calculateBalance = (portions: Portions, recipes: Recipes, calorieTarget: undefined | number) => {
     const res: Result = [0, 0, 0, 0, 0]
@@ -39,38 +40,32 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     res.pop() // remove calories from final equation
-    return _.reduce(res, (memo: number, val: number) => memo * (val < 0 ? 0 : val), 1)
+    return res.reduce((acc: number, val: number) => acc * (val < 0 ? 0 : val), 1)
   }
 
-  const getThemRecipes = (calories: number) => {
-    const iterators: Array<number> = new Array(recipes.length).fill(0)
-    let res = 0
-
-    const doIterations = (
-      iterators: Array<number>,
-      remaining: number,
-      portions: Array<number>,
-      calorieTarget: undefined | number
-    ) => {
-      if (iterators.length > 1) {
-        for (let i = iterators[0]; i <= remaining; i++) {
-          doIterations(iterators.slice(1, iterators.length), remaining - i, portions.concat(i), calorieTarget)
-        }
-      } else {
-        portions.push(100 - _.sum(portions))
-        const val = calculateBalance(portions, recipes, calorieTarget)
-        if (val > res) {
-          res = val
-        }
+  const doIterations = (iterators: Array<number>, remaining: number, portions: Array<number>, data: Data) => {
+    if (iterators.length > 1) {
+      for (let i = iterators[0]; i <= remaining; i++) {
+        doIterations(iterators.slice(1, iterators.length), remaining - i, portions.concat(i), data)
+      }
+    } else {
+      portions.push(100 - portions.reduce((a, b) => a + b))
+      const val = calculateBalance(portions, recipes, data.calories)
+      if (val > data.score) {
+        data.score = val
       }
     }
-
-    doIterations(iterators, 100, [], calories)
-    return res
   }
 
-  part1 = getThemRecipes(params.calories.part1)
-  part2 = getThemRecipes(params.calories.part2)
+  const solveFor = (calories: number) => {
+    const iterators: Array<number> = new Array(recipes.length).fill(0)
+    const data: Data = { score: 0, calories: calories }
+    doIterations(iterators, 100, [], data)
+    return data.score
+  }
+
+  part1 = solveFor(params.calories.part1)
+  part2 = solveFor(params.calories.part2)
 
   return { part1, part2 }
 }

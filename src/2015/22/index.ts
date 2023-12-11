@@ -34,7 +34,7 @@ type Move = {
   effects: Array<Effect>
 }
 
-type Finished = {
+type Data = {
   path: Array<Move>
   score: number
 }
@@ -122,7 +122,7 @@ export default async (lineReader: any, params: Params) => {
 
     return { heroArmor, heroDamage, recharge }
   }
-  const doNextMoves = (finished: Finished, moves: Array<Move>, mode: string): Array<Array<Move>> => {
+  const getNextMoves = (data: Data, moves: Array<Move>, mode: string): Array<Array<Move>> => {
     const nextMove = _.cloneDeep(moves[moves.length - 1])
     const nextMoves: Array<Array<Move>> = []
 
@@ -239,7 +239,7 @@ export default async (lineReader: any, params: Params) => {
       }
 
       // do not add next move if it can't beat high score
-      if (finished.score > _nextMove.manaSpent) {
+      if (data.score > _nextMove.manaSpent) {
         nextMoves.push(moves.concat(_nextMove))
       }
     })
@@ -247,23 +247,22 @@ export default async (lineReader: any, params: Params) => {
     return nextMoves
   }
 
-  const goToBattle = (finished: Finished, opened: Array<Array<Move>>, mode: string) => {
+  const goToBattle = (opened: Array<Array<Move>>, data: Data, mode: string) => {
     const move: Array<Move> = opened.splice(-1)[0]
     const latestMove = move[move.length - 1]
 
     if (isFinished(latestMove)) {
       if (heroWon(latestMove)) {
-        log.info('Player won with', latestMove.manaSpent)
-        if (latestMove.manaSpent < finished.score) {
-          log.info('Movie has a high score', latestMove.manaSpent, 'old score', finished.score)
-          finished.score = latestMove.manaSpent
-          finished.path = move
+        log.debug('Player won with', latestMove.manaSpent)
+        if (latestMove.manaSpent < data.score) {
+          log.debug('Movie has a high score', latestMove.manaSpent, 'old score', data.score)
+          data.score = latestMove.manaSpent
+          data.path = move
         }
       }
     } else {
-      const newMoves: Array<Array<Move>> = doNextMoves(finished, move, mode)
+      const newMoves: Array<Array<Move>> = getNextMoves(data, move, mode)
       log.debug('Got', newMoves.length, 'moves')
-
       opened.push(...newMoves)
       opened.sort((a, b) => {
         return a[a.length - 1].manaSpent - b[b.length - 1].manaSpent > 0
@@ -275,8 +274,8 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const doFight = (mode: string) => {
-    const finished = {
+  const solveFor = (mode: string) => {
+    const data = {
       score: 9999,
       path: []
     }
@@ -299,20 +298,18 @@ export default async (lineReader: any, params: Params) => {
 
     let it = 0
     while (opened.length > 0) {
-      goToBattle(finished, opened, mode)
-      it++
+      goToBattle(opened, data, mode)
       if (it % 100000 === 0) {
-        console.log('it', it, 'opened', opened.length, 'current high score', finished.score)
+        log.debug('it', it, 'opened', opened.length, 'current high score', data.score)
       }
+      it++
     }
-    log.info(finished.path)
-    return finished.score
+    log.info('Final path', data.path)
+    return data.score
   }
 
-  part1 = doFight('part1')
-  part2 = doFight('part2')
-
-  // part2 not 987
+  part1 = solveFor('part1')
+  part2 = solveFor('part2')
 
   return { part1, part2 }
 }

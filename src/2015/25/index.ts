@@ -9,12 +9,10 @@ export default async (lineReader: any, params: Params) => {
   let data: Array<number> = []
 
   for await (const line of lineReader) {
-    data = [...line.matchAll(/\d+/g)].map((x: any) => parseInt(x[0]))
+    data = line.match(/\d+/g).map(Number)
   }
 
-  const generateNewCode = (code: number): number => {
-    return (code * 252533) % 33554393
-  }
+  const generateNewCode = (code: number): number => (code * 252533) % 33554393
 
   let row = 1
   let column = 1

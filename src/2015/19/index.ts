@@ -3,7 +3,7 @@ import { Params } from 'aoc.d'
 type Replacements = Record<string, Array<string>>
 
 export default async (lineReader: any, params: Params) => {
-  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
@@ -23,7 +23,6 @@ export default async (lineReader: any, params: Params) => {
       !Object.prototype.hasOwnProperty.call(replacements, vals[0])
         ? (replacements[vals[0]] = [vals[1]])
         : replacements[vals[0]].push(vals[1])
-
       !Object.prototype.hasOwnProperty.call(reverseReplacements, vals[1])
         ? (reverseReplacements[vals[1]] = [vals[0]])
         : reverseReplacements[vals[1]].push(vals[0])
@@ -35,7 +34,7 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const getThemMolecules = (molecule: string) => {
+  const solveFor = (molecule: string) => {
     let normalMolecules = 0
     let commaMolecules = 0
     let parenthesisMolecules = 0
@@ -45,7 +44,6 @@ export default async (lineReader: any, params: Params) => {
         case 'Ar':
           parenthesisMolecules++
           break
-
         case 'Y':
           commaMolecules++
           break
@@ -53,25 +51,16 @@ export default async (lineReader: any, params: Params) => {
           normalMolecules++
       }
     })
-    console.log(
-      'normalMolecules',
-      normalMolecules,
-      'commaMolecules',
-      commaMolecules,
-      'parenthesisMolecules',
-      parenthesisMolecules
-    )
-
+    log.debug('normal', normalMolecules, 'comma', commaMolecules, 'parenthesis', parenthesisMolecules)
     // in test, we have e => H or e => O
     // in prod we have e => HF or e => AB, which requires one less step to go to e
     return normalMolecules - commaMolecules - (params.isTest ? 0 : 1)
   }
 
   const doReact = (moleculeBits: Array<string>): Array<string> => {
-    const molecules: any = {}
+    const molecules: Record<string, number> = {}
     for (let i = 0; i < moleculeBits.length; i++) {
-      const reactions: Array<string> = replacements[moleculeBits[i]]
-      reactions?.forEach((reaction: string) => {
+      replacements[moleculeBits[i]]?.forEach((reaction: string) => {
         molecules[
           '' +
             moleculeBits.slice(0, i).join('') +
@@ -83,16 +72,13 @@ export default async (lineReader: any, params: Params) => {
     return Object.keys(molecules)
   }
 
-  if (params.part1?.skip !== true) {
+  if (params.skip !== true && params.skip !== 'part1') {
     part1 = doReact(moleculeBits).length
   }
 
-  if (params.part2?.skip !== true) {
-    part2 = getThemMolecules(molecule)
+  if (params.skip !== true && params.skip !== 'part2') {
+    part2 = solveFor(molecule)
   }
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

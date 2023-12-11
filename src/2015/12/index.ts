@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   let map: Record<string, any> = {}
@@ -10,28 +9,28 @@ export default async (lineReader: any, params: Params) => {
     map = JSON.parse(line)
   }
 
-  const recurse = (el: number | Array<number> | Record<string, any>, mode: string) => {
+  const solveFor = (el: number | Array<number> | Record<string, any>, mode: string) => {
     let score: number = 0
-    if (_.isNumber(el)) {
+    if (typeof el === 'number') {
       score = el as number
     }
-    if (_.isArray(el)) {
-      score = _.reduce(el, (memo: number, el: any) => memo + recurse(el, mode), 0)
+    if (Array.isArray(el)) {
+      score = (el as Array<any>).reduce((acc: number, el: any) => acc + solveFor(el, mode), 0)
     }
     if (typeof el === 'object' && !(el instanceof Array)) {
-      if (mode === 'part2' && _.find(Object.values(el), (v: string) => v === 'red')) {
+      if (mode === 'part2' && Object.values(el).find((v: string) => v === 'red')) {
         return 0
       }
-      score = _.reduce(Object.keys(el), (memo: number, _el: any) => memo + recurse(el[_el], mode), 0)
+      score = Object.keys(el).reduce((acc: number, _el: any) => acc + solveFor(el[_el], mode), 0)
     }
     return score
   }
 
-  if (params.part1?.skip !== true) {
-    part1 = recurse(map, 'part1')
+  if (params.skip !== true && params.skip !== 'part1') {
+    part1 = solveFor(map, 'part1')
   }
-  if (params.part2?.skip !== true) {
-    part2 = recurse(map, 'part2')
+  if (params.skip !== true && params.skip !== 'part1') {
+    part2 = solveFor(map, 'part2')
   }
 
   return { part1, part2 }

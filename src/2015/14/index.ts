@@ -30,30 +30,31 @@ export default async (lineReader: any, params: Params) => {
       distance: 0
     }
   }
-
-  Object.values(reindeers).forEach((reindeer) => {
-    let time = 0
-    let distance = 0
-    let mode = 'running'
-    while (time < timeCutoff) {
-      let amount: number
-      if (mode === 'running') {
-        amount = Math.min(reindeer.duration, timeCutoff - time)
-        distance += reindeer.speed * amount
-        mode = 'resting'
-      } else {
-        amount = Math.min(reindeer.rest, timeCutoff - time)
-        mode = 'running'
+  if (params.skip !== true && params.skip !== 'part1') {
+    Object.values(reindeers).forEach((reindeer) => {
+      let time = 0
+      let distance = 0
+      let mode = 'running'
+      while (time < timeCutoff) {
+        let amount: number
+        if (mode === 'running') {
+          amount = Math.min(reindeer.duration, timeCutoff - time)
+          distance += reindeer.speed * amount
+          mode = 'resting'
+        } else {
+          amount = Math.min(reindeer.rest, timeCutoff - time)
+          mode = 'running'
+        }
+        time += amount
       }
-      time += amount
-    }
-    if (distance > part1) {
-      part1 = distance
-    }
-    log.debug('reindeer', reindeer.name, 'distance', distance)
-  })
+      if (distance > part1) {
+        part1 = distance
+      }
+      log.debug('reindeer', reindeer.name, 'distance', distance)
+    })
+  }
 
-  if (params.part2?.skip !== true) {
+  if (params.skip !== true && params.skip !== 'part2') {
     let time = 0
     const reindeerNames: Array<string> = Object.keys(reindeers)
     let distanceInLead: number = 0
@@ -77,7 +78,6 @@ export default async (lineReader: any, params: Params) => {
       })
       time++
     }
-
     const rankedReindeers = Object.keys(reindeers).sort((a, b) => reindeers[b].score - reindeers[a].score)
     part2 = reindeers[rankedReindeers[0]].score
   }

@@ -26,7 +26,7 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const doIt = (
+  const solveFor = (
     registers: Record<string, number>,
     instructions: Array<any>,
     returnRegister: String
@@ -92,7 +92,7 @@ export default async (lineReader: any, params: Params) => {
     return registers[returnRegister as any]
   }
 
-  part1 = doIt(
+  part1 = solveFor(
     {
       a: 0,
       b: 0
@@ -100,7 +100,7 @@ export default async (lineReader: any, params: Params) => {
     instructions,
     params.isTest ? 'a' : 'b'
   )
-  part2 = doIt(
+  part2 = solveFor(
     {
       a: 1,
       b: 0

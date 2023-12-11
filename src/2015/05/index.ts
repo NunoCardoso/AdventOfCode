@@ -5,7 +5,7 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   for await (const line of lineReader) {
-    if (params.part1?.skip !== true) {
+    if (params.skip !== true && params.skip !== 'part1') {
       const vowelsNumber = line.match(/[aeiou]/g)?.length ?? 0
       const duplicates = line.match(/(.)\1/g)?.length ?? 0
       const forbiddenStrings = line.match(/(ab|cd|pq|xy)/)?.length ?? 0
@@ -13,7 +13,7 @@ export default async (lineReader: any, params: Params) => {
         part1++
       }
     }
-    if (params.part2?.skip !== true) {
+    if (params.skip !== true && params.skip !== 'part2') {
       const duplicates2 = line.match(/(..).*\1/g)?.length ?? 0
       const letterWith1distance = line.match(/(.).\1/g)?.length ?? 0
       if (duplicates2 > 0 && letterWith1distance > 0) {

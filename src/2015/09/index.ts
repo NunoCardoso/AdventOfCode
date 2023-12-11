@@ -18,18 +18,13 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const places: Array<string> = Object.keys(distances)
-  const permutes: Array<number> = new Array(places.length)
-  for (let i = 0; i < permutes.length; i++) {
-    permutes[i] = i
-  }
-
   const combinations: Record<string, number> = {}
 
-  new Permutation(permutes).toArray().forEach((permute: Array<number>) => {
+  new Permutation(places).toArray().forEach((permute: Array<string>) => {
     let res = 0
-    const key: string = permute.map((i: number) => i.toString()).join('')
+    const key: string = permute.join('')
     for (let j = 0; j < permute.length - 1; j++) {
-      res += distances[places[permute[j]]][places[permute[j + 1]]]
+      res += distances[permute[j]][permute[j + 1]]
     }
     combinations[key] = res
   })

@@ -17,15 +17,14 @@ export default async (lineReader: any, params: Params) => {
   }
 
   for await (const line of lineReader) {
-    const vals = line.split('')
-    for (let i = 0; i < vals.length; i++) {
-      move(vals[i], currentPositionPart1, matrixOfPositionsPart1)
+    line.split('').forEach((val: string, i: number) => {
+      move(val, currentPositionPart1, matrixOfPositionsPart1)
       if (i % 2 === 1) {
-        move(vals[i], currentPositionRobotSantaPart2, matrixOfPositionsPart2)
+        move(val, currentPositionRobotSantaPart2, matrixOfPositionsPart2)
       } else {
-        move(vals[i], currentPositionSantaPart2, matrixOfPositionsPart2)
+        move(val, currentPositionSantaPart2, matrixOfPositionsPart2)
       }
-    }
+    })
   }
 
   return {
