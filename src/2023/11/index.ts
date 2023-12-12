@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { Matrix, Point } from 'declarations'
+import { World, Point } from 'declarations'
 import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
@@ -8,7 +8,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const world: Matrix<string> = []
+  const world: World<string> = []
   const galaxies: Array<Point> = []
   let it = 0
   const rowsWithoutGalaxies: Array<number> = []

@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 type RuleDecision = {
   type: string
@@ -37,8 +36,9 @@ export default async (lineReader: any, params: Params) => {
     botIndexWithTwo: Array<Process>
   ) => {
     botIndex[bot] = undefined // reset
-    ;['low', 'high'].forEach((key: string) => {
-      const ruleDecision = _.get(rule, key)
+
+    ;(['low', 'high'] as Array<keyof Rule>).forEach((key: string) => {
+      const ruleDecision = rule[key]
       if (ruleDecision.type === 'bot') {
         const botNumber = ruleDecision.number.toString()
         // update

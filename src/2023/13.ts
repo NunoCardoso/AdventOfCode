@@ -1,20 +1,20 @@
 import aoc from 'aoc'
 
 aoc({
-  year: '2015',
-  day: '23',
+  year: '2023',
+  day: '13',
   logLevel: 'info',
   test: {
     id: 'test',
     answers: {
-      part1: 2,
-      part2: 0
+      part1: 405,
+      part2: 400
     }
   },
   prod: {
     answers: {
-      part1: 170,
-      part2: 247
+      part1: 27300,
+      part2: 29276
     }
   }
 })

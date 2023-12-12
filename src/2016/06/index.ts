@@ -11,18 +11,11 @@ export default async (lineReader: any, params: Params) => {
   for await (const line of lineReader) {
     const val = line.split('')
     if (data.length === 0) {
-      data = new Array(val.length)
+      data = new Array(val.length).fill(null).map(() => ({}))
     }
-    for (let i = 0; i < val.length; i++) {
-      if (data[i] === undefined) {
-        data[i] = {}
-      }
-      if (!Object.prototype.hasOwnProperty.call(data[i], val[i])) {
-        data[i][val[i]] = 1
-      } else {
-        data[i][val[i]]++
-      }
-    }
+    val.forEach((v: string, i: number) => {
+      data[i][v] === undefined ? (data[i][v] = 1) : data[i][v]++
+    })
   }
 
   data.forEach((col, i) => {
@@ -31,8 +24,5 @@ export default async (lineReader: any, params: Params) => {
     part2 += sorted[sorted.length - 1]
   })
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

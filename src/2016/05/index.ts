@@ -15,11 +15,10 @@ export default async (lineReader: any, params: Params) => {
   log.info('This will take some time, MD5 puzzle')
 
   while (solutionPart2Index.length < 8) {
-    const hash: string = params.secretKey + i
-    const res: string = SparkMD5.hash('' + hash)
-    if (res.startsWith('00000')) {
-      const sol = res.substring(5, 6)
-      const sol2 = res.substring(6, 7)
+    const hash: string = SparkMD5.hash(params.secretKey + i)
+    if (hash.startsWith('00000')) {
+      const sol = hash.substring(5, 6)
+      const sol2 = hash.substring(6, 7)
       if (solutionPart1.length < 8) {
         log.debug('part1: adding sol', sol, 'to', solutionPart1)
         solutionPart1.push(sol)
@@ -44,8 +43,5 @@ export default async (lineReader: any, params: Params) => {
     part2 += solutionPart2[solutionPart2Index.indexOf(i.toString())]
   }
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

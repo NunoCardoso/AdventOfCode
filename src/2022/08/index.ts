@@ -14,7 +14,7 @@ export default async (lineReader: any, params: Params) => {
     trees.push(line.split(''))
   }
 
-  log.info('Matrix of', trees.length, trees[0].length)
+  log.info('World of', trees.length, trees[0].length)
 
   // PART 1
   if (params.part1?.skip !== true) {

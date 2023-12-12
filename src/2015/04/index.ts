@@ -9,15 +9,16 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
   let i: number = 0
+  let hash: string
 
-  while (part2 === 0) {
-    const res: string = SparkMD5.hash(params.secretKey + i)
-    if (res.startsWith(params.secondCutoff)) {
+  while (part1 === 0 || part2 === 0) {
+    hash = SparkMD5.hash(params.secretKey + i)
+    if (hash.startsWith(params.secondCutoff)) {
       if (part2 === 0) {
         part2 = i
       }
     }
-    if (res.startsWith(params.firstCutoff)) {
+    if (hash.startsWith(params.firstCutoff)) {
       if (part1 === 0) {
         part1 = i
       }

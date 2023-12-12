@@ -6,13 +6,13 @@ export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   type Coord = 'N' | 'NW' | 'NE' | 'W' | 'E' | 'SW' | 'S' | 'SE'
-  type Matrix = { rows: number; columns: number }
+  type World = { rows: number; columns: number }
   type Elf = { x: number; y: number; id: number; wants?: { x: number; y: number; d: Coord } }
   type ElfAround = { x: number; y: number; d: Coord }
   type ElfsAround = Array<ElfAround>
   type Elves = Array<Elf>
 
-  const matrix: Matrix = { rows: 0, columns: 0 }
+  const matrix: World = { rows: 0, columns: 0 }
   const originalElves: Elves = []
   let rowNumber: number = 0
 
@@ -29,7 +29,7 @@ export default async (lineReader: any, params: Params) => {
   }
   matrix.rows = rowNumber
 
-  const elfsAround = (elf: Elf, matrix: Matrix, elvesKeys: Record<string, Elf>): ElfsAround => {
+  const elfsAround = (elf: Elf, matrix: World, elvesKeys: Record<string, Elf>): ElfsAround => {
     const candidates: Array<[number, number, string]> = [
       [elf.x - 1, elf.y - 1, 'NW'],
       [elf.x - 1, elf.y, 'N'],
@@ -57,7 +57,7 @@ export default async (lineReader: any, params: Params) => {
     return foundElfBlocking ? '' : direction
   }
 
-  const printMatrix = (matrix: Matrix, elves: Elves) => {
+  const printWorld = (matrix: World, elves: Elves) => {
     const m: Array<Array<string>> = []
     for (let i = 0; i < matrix.rows; i++) {
       m.push(new Array(matrix.columns).fill('.'))
@@ -182,7 +182,7 @@ export default async (lineReader: any, params: Params) => {
 
       if (params.ui?.show && params.ui?.during) {
         console.log('round', round, 'All spaced', allSpaced)
-        printMatrix(matrix, elves)
+        printWorld(matrix, elves)
       }
     }
 

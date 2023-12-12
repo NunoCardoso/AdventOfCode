@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Dimension, Matrix, Point } from 'declarations'
+import { Dimension, World, Point } from 'declarations'
 import _, { isEmpty } from 'lodash'
 
 type Finished = {
@@ -14,7 +14,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const world: Matrix<string> = []
+  const world: World<string> = []
   let start: Point | undefined
 
   const getKey = (p: Point) => '' + p[0] + '-' + p[1]
@@ -32,7 +32,7 @@ export default async (lineReader: any, params: Params) => {
   const worldDimensions: Dimension = [world.length, world[0].length]
   log.info('world', worldDimensions)
 
-  const printGrid = (world: Matrix<string>, situationWorld: Matrix<string>) => {
+  const printGrid = (world: World<string>, situationWorld: World<string>) => {
     for (let i = 0; i < world.length; i++) {
       let l = ''
       for (let j = 0; j < world[i].length; j++) {
@@ -224,7 +224,7 @@ export default async (lineReader: any, params: Params) => {
     return ''
   }
 
-  const makeSituationWorld = (world: Matrix<string>, finished: Finished) => {
+  const makeSituationWorld = (world: World<string>, finished: Finished) => {
     const _world = _.cloneDeep(world)
     let inners = 0
     for (let i = 0; i < world.length; i++) {

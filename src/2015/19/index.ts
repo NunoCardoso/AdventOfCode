@@ -57,23 +57,22 @@ export default async (lineReader: any, params: Params) => {
     return normalMolecules - commaMolecules - (params.isTest ? 0 : 1)
   }
 
-  const doReact = (moleculeBits: Array<string>): Array<string> => {
-    const molecules: Record<string, number> = {}
-    for (let i = 0; i < moleculeBits.length; i++) {
-      replacements[moleculeBits[i]]?.forEach((reaction: string) => {
-        molecules[
-          '' +
-            moleculeBits.slice(0, i).join('') +
+  const doReact = (moleculeBits: Array<string>): number => {
+    const molecules = new Set<string>()
+    moleculeBits.forEach((molecule, i) => {
+      replacements[molecule]?.forEach((reaction: string) =>
+        molecules.add(
+          moleculeBits.slice(0, i).join('') +
             reaction +
             moleculeBits.slice(i + 1, moleculeBits.length).join('')
-        ] = 1
-      })
-    }
-    return Object.keys(molecules)
+        )
+      )
+    })
+    return molecules.size
   }
 
   if (params.skip !== true && params.skip !== 'part1') {
-    part1 = doReact(moleculeBits).length
+    part1 = doReact(moleculeBits)
   }
 
   if (params.skip !== true && params.skip !== 'part2') {

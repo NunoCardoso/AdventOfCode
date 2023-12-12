@@ -1,12 +1,18 @@
 import { Params } from 'aoc.d'
 
+type Instruction = {
+  instruction: string
+  register?: string
+  amount?: number
+}
+
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
 
-  const instructions = []
+  const instructions: Array<Instruction> = []
 
   for await (const line of lineReader) {
     const values = line.split(/\s+/)
@@ -28,36 +34,36 @@ export default async (lineReader: any, params: Params) => {
 
   const solveFor = (
     registers: Record<string, number>,
-    instructions: Array<any>,
+    instructions: Array<Instruction>,
     returnRegister: String
   ): number => {
     for (let i = 0; i < instructions.length; i++) {
       switch (instructions[i].instruction) {
         case 'hlf':
-          registers[instructions[i].register] = registers[instructions[i].register] / 2
+          registers[instructions[i].register!] = registers[instructions[i].register!] / 2
           log.debug(
             i,
             instructions[i].instruction,
             instructions[i].register,
-            registers[instructions[i].register]
+            registers[instructions[i].register!]
           )
           break
         case 'tpl':
-          registers[instructions[i].register] = registers[instructions[i].register] * 3
+          registers[instructions[i].register!] = registers[instructions[i].register!] * 3
           log.debug(
             i,
             instructions[i].instruction,
             instructions[i].register,
-            registers[instructions[i].register]
+            registers[instructions[i].register!]
           )
           break
         case 'inc':
-          registers[instructions[i].register] = registers[instructions[i].register] + 1
+          registers[instructions[i].register!] = registers[instructions[i].register!] + 1
           log.debug(
             i,
             instructions[i].instruction,
             instructions[i].register,
-            registers[instructions[i].register]
+            registers[instructions[i].register!]
           )
 
           break
@@ -66,25 +72,25 @@ export default async (lineReader: any, params: Params) => {
           log.debug(i, instructions[i].instruction)
           break
         case 'jie':
-          if (registers[instructions[i].register] % 2 === 0) {
+          if (registers[instructions[i].register!] % 2 === 0) {
             i += instructions[i].amount! - 1
           }
           log.debug(
             i,
             instructions[i].instruction,
             instructions[i].register,
-            registers[instructions[i].register]
+            registers[instructions[i].register!]
           )
           break
         case 'jio':
-          if (registers[instructions[i].register] === 1) {
+          if (registers[instructions[i].register!] === 1) {
             i += instructions[i].amount! - 1
           }
           log.debug(
             i,
             instructions[i].instruction,
             instructions[i].register,
-            registers[instructions[i].register]
+            registers[instructions[i].register!]
           )
           break
       }

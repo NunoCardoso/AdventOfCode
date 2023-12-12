@@ -5,7 +5,7 @@ import clc from 'cli-color'
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  type Matrix = Array<Array<string>>
+  type World = Array<Array<string>>
   type Point = [number, number]
   type Instruction = number | string
   type Step = { direction: string; point: Point }
@@ -14,7 +14,7 @@ export default async (lineReader: any, params: Params) => {
   type SideAndIndex = { side: string; index: number }
   type WhereTo = [number, string, string, boolean]
   const directions = ['>', 'v', '<', '^']
-  const matrix: Matrix = []
+  const matrix: World = []
   const instructions: Instructions = []
   const cubeSide: number = params.cubeSize
 
@@ -89,7 +89,7 @@ export default async (lineReader: any, params: Params) => {
   log.info('rows', numberRows, 'columns', numberColumns)
   log.info('start', start)
 
-  const getColumn = (matrix: Matrix, column: number) => matrix.map((row) => row[column])
+  const getColumn = (matrix: World, column: number) => matrix.map((row) => row[column])
 
   const getDirection = (direction: string, instruction: Instruction): string => {
     let newIndex: number = 0
@@ -641,7 +641,7 @@ export default async (lineReader: any, params: Params) => {
   |6|
   +-+
   */
-  const doJump = (currentCursor: Step, nextCursor: Step, matrix: Matrix, asCube: boolean) => {
+  const doJump = (currentCursor: Step, nextCursor: Step, matrix: World, asCube: boolean) => {
     if (!asCube) {
       if (currentCursor.direction === '>') {
         nextCursor.point[1] = _.findIndex(matrix[nextCursor.point[0]], (val: string) => val !== ' ')
@@ -677,7 +677,7 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const moveCursor = (matrix: Matrix, duration: Instruction, cursor: Step, asCube: boolean): Array<Step> => {
+  const moveCursor = (matrix: World, duration: Instruction, cursor: Step, asCube: boolean): Array<Step> => {
     const steps: Array<Step> = []
     let currentCursor: Step = { point: [cursor.point[0], cursor.point[1]], direction: cursor.direction }
     const nextCursor: Step = { point: [cursor.point[0], cursor.point[1]], direction: cursor.direction }
@@ -724,8 +724,8 @@ export default async (lineReader: any, params: Params) => {
     return steps
   }
 
-  const renderMatrix = async (
-    matrix: Matrix,
+  const renderWorld = async (
+    matrix: World,
     instructions: Instructions,
     path: Path,
     start: Point,
@@ -744,14 +744,14 @@ export default async (lineReader: any, params: Params) => {
         path[path.length - 1].direction = getDirection(path[path.length - 1].direction, instructions[i])
       }
       if (params.ui?.show && params.ui?.during) {
-        printMatrix(matrix, path, start)
+        printWorld(matrix, path, start)
         await new Promise((resolve) => setTimeout(resolve, 100))
       }
     }
     return path
   }
 
-  const printMatrix = (matrix: Matrix, path: Path, start: Point) => {
+  const printWorld = (matrix: World, path: Path, start: Point) => {
     const _start = clc.red('O')
 
     const _matrix = _.cloneDeep(matrix)
@@ -768,7 +768,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
   if (params.part1?.skip !== true) {
-    const path1 = await renderMatrix(matrix, instructions, [], start, false)
+    const path1 = await renderWorld(matrix, instructions, [], start, false)
     const endPathRow1 = path1[path1.length - 1].point[0] + 1
     const endPathColumn1 = path1[path1.length - 1].point[1] + 1
     const direction1 = path1[path1.length - 1].direction
@@ -777,7 +777,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   if (params.part2?.skip !== true) {
-    const path2 = await renderMatrix(matrix, instructions, [], start, true)
+    const path2 = await renderWorld(matrix, instructions, [], start, true)
     const endPathRow2 = path2[path2.length - 1].point[0] + 1
     const endPathColumn2 = path2[path2.length - 1].point[1] + 1
     const direction2 = path2[path2.length - 1].direction

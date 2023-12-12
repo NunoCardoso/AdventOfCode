@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Matrix, Point } from 'declarations'
+import { World, Point } from 'declarations'
 import _ from 'lodash'
 
 // x, y, distance, cost
@@ -12,8 +12,8 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const world1: Matrix = []
-  const world2: Matrix = []
+  const world1: World = []
+  const world2: World = []
 
   for await (const line of lineReader) {
     world1.push(line.split('').map(Number))
@@ -49,7 +49,7 @@ export default async (lineReader: any, params: Params) => {
   const getDistanceToFinish = (x: number, y: number, end: Point): number => end[0] - x + (end[1] - y)
 
   const printWorld = (
-    world: Matrix<string | number>,
+    world: World<string | number>,
     opened: Array<Step>,
     visited: Record<string, number>,
     finished: Record<string, number>
@@ -69,7 +69,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const searchAlgorithm = async (
-    world: Matrix,
+    world: World,
     opened: Array<Step>,
     visited: Record<string, number>,
     finished: Record<string, any>
@@ -161,7 +161,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const getThemPath = async (
-    world: Matrix,
+    world: World,
     opened: Array<Step>,
     visited: Record<string, number>,
     finished: Record<string, any>

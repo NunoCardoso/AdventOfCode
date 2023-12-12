@@ -1,6 +1,5 @@
 import { Params } from 'aoc.d'
 import { Point } from 'declarations'
-import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -39,8 +38,7 @@ export default async (lineReader: any, params: Params) => {
       for (let i = 0; i < instruction[1]; i++) {
         point[0] += directionsMap[currentDirection][0]
         point[1] += directionsMap[currentDirection][1]
-        const isVisited: number = _.findIndex(
-          visitedPoints,
+        const isVisited: number = visitedPoints.findIndex(
           (v: Point) => v[0] === point[0] && v[1] === point[1]
         )
         if (isVisited >= 0 && visitedPoint === undefined) {

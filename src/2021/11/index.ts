@@ -1,6 +1,6 @@
 import clc from 'cli-color'
 import { Params } from 'aoc.d'
-import { Matrix } from 'declarations'
+import { World } from 'declarations'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -8,7 +8,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const world: Matrix = []
+  const world: World = []
 
   for await (const line of lineReader) {
     world.push(line.split('').map(Number))

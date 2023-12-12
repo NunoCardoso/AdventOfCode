@@ -49,12 +49,19 @@ skip === 'part2' => skip only part2
 # Recommendations
 
 functions: solveFor, DFS, BFS
-types: use World: World
+Make a rulAllPuzzles, dumps times (< 1 s), disables UI
+
+types: use World: World instead of Matrix
 Avoid lodash
-use  global.structuredClone instead of deepClone, or {...obj} / arr.slice() for shallows
+remove Any
+replace Record with Sets, Maps
+
+use global.structuredClone instead of deepClone, or {...obj} / arr.slice() for shallows
+check when I can use shallows 
 
 prefer match with /g than matchAll, as in 
 
 "abcabfgabsefd".match(/ab/) => ['ab', index: 0, input: 'abcabfgabsefd', groups: undefined]
 "abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']
 "123123123".match(/ab/) => null
+

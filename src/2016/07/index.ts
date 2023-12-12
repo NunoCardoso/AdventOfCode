@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
+import { intersect } from 'util/arr'
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -18,12 +18,9 @@ export default async (lineReader: any, params: Params) => {
     val.forEach((v: string, i: number) => {
       const m = v.match(/(.)(.)\2\1/g)
       if (m?.[0][0] !== m?.[0][1]) {
-        if (i % 2 === 0) {
-          evensPart1.push(m![0])
-        } else {
-          oddsPart1.push(m![0])
-        }
+        i % 2 === 0 ? evensPart1.push(m![0]) : oddsPart1.push(m![0])
       }
+
       for (let j = 0; j < v.length - 2; j++) {
         if (v[j] === v[j + 2] && v[j] !== v[j + 1]) {
           if (i % 2 === 0) {
@@ -40,7 +37,7 @@ export default async (lineReader: any, params: Params) => {
     if (evensPart1.length > 0 && oddsPart1.length === 0) {
       part1++
     }
-    const intersection = _.intersection(oddsPart2, evensPart2)
+    const intersection = intersect(oddsPart2, evensPart2)
     if (intersection.length > 0) {
       part2++
     }

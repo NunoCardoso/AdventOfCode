@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 type Triangle = [number, number, number]
 
@@ -9,7 +8,7 @@ export default async (lineReader: any, params: Params) => {
 
   const dataForPart1: Array<Triangle> = []
   const dataForPart2: Array<Triangle> = []
-  const auxRows: any = [[], [], []]
+  const auxRows: Array<Array<number>> = [[], [], []]
 
   const checkTriangle = (triangle: Triangle): boolean =>
     triangle[0] + triangle[1] > triangle[2] &&
@@ -23,7 +22,7 @@ export default async (lineReader: any, params: Params) => {
     auxRows[1].push(values[1])
     auxRows[2].push(values[2])
   }
-  const bigRow: Array<number> = _.flatten(auxRows)
+  const bigRow: Array<number> = auxRows.flat()
   for (let i = 0; i < bigRow.length; i += 3) {
     dataForPart2.push([bigRow[i], bigRow[i + 1], bigRow[i + 2]])
   }

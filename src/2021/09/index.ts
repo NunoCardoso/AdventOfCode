@@ -1,5 +1,5 @@
 import clc from 'cli-color'
-import { Matrix, Dimension } from 'declarations'
+import { World, Dimension } from 'declarations'
 import _ from 'lodash'
 import { Params } from 'aoc.d'
 
@@ -15,7 +15,7 @@ type Coord = {
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  const world: Matrix = []
+  const world: World = []
   let worldDimension: Dimension = [0, 0]
 
   for await (const line of lineReader) {
@@ -28,7 +28,7 @@ export default async (lineReader: any, params: Params) => {
   const isCoordSeen = (coords: Array<Coord>, c: Coord) =>
     _.findIndex(coords, (_c: Coord) => _c.point.x === c.point.x && _c.point.y === c.point.y) >= 0
 
-  const printGrid = (world: Matrix, holes: Array<Coord>, basins: Array<Coord>) => {
+  const printGrid = (world: World, holes: Array<Coord>, basins: Array<Coord>) => {
     world.forEach((row, i) => {
       let line = ''
       row.forEach((cell, j) => {

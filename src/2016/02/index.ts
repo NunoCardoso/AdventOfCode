@@ -24,8 +24,6 @@ export default async (lineReader: any, params: Params) => {
       case 'D':
         point[1] = point[1] === 2 ? 2 : point[1] + 1
         break
-      default:
-        break
     }
   }
 
@@ -43,8 +41,6 @@ export default async (lineReader: any, params: Params) => {
         break
       case 'D':
         point[1] = length === 2 && point[1] >= 0 ? point[1] : point[1] + 1
-        break
-      default:
         break
     }
   }
@@ -67,28 +63,25 @@ export default async (lineReader: any, params: Params) => {
       '1,1': 'C',
       '0,2': 'D'
     }
-
-    return values[point.map((x) => x.toString()).join(',')]
+    return values[point.map(String).join(',')]
   }
 
-  const runKeypad = (
+  const solveFor = (
     codes: Array<string>,
-    pos: Point,
+    position: Point,
     keypad: (point: Point, instruction: string) => void,
-    getvalue: (point: Point) => string
+    getValue: (point: Point) => string
   ): string => {
     const finalCode: Array<string> = []
-    const position: Point = pos
     codes.forEach((code: string) => {
-      const instructions = code.split('')
-      instructions.forEach((instruction: string) => keypad(position, instruction))
-      finalCode.push(getvalue(position))
+      code.split('').forEach((instruction: string) => keypad(position, instruction))
+      finalCode.push(getValue(position))
     })
     return finalCode.join('')
   }
 
-  part1 = runKeypad(codes, [1, 1], squareKeypad, valueFromSquareKeypad)
-  part2 = runKeypad(codes, [-2, 0], losangeKeypad, valueFromLosangeKeypad)
+  part1 = solveFor(codes, [1, 1], squareKeypad, valueFromSquareKeypad)
+  part2 = solveFor(codes, [-2, 0], losangeKeypad, valueFromLosangeKeypad)
 
   return { part1, part2 }
 }

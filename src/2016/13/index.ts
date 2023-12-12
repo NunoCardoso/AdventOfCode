@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { Matrix, Point } from 'declarations'
+import { World, Point } from 'declarations'
 import _ from 'lodash'
 
 type Step = {
@@ -20,9 +20,9 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const world: Matrix<string> = []
+  const world: World<string> = []
 
-  const getSpaceOrWall = (world: Matrix<string>, row: number, column: number): string => {
+  const getSpaceOrWall = (world: World<string>, row: number, column: number): string => {
     if (!Object.prototype.hasOwnProperty.call(world, row)) {
       world[row] = []
     }
@@ -52,7 +52,7 @@ export default async (lineReader: any, params: Params) => {
   const outOfBounds = (p: Point) => p[0] < 0 || p[1] < 0
 
   const searchAlgorithm = async (
-    world: Matrix<string>,
+    world: World<string>,
     opened: Array<Step>,
     visitedIndex: Record<string, number>,
     finished: Finished,
@@ -157,7 +157,7 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const doIt = (world: Matrix<string>, target: Point, type: string): number => {
+  const doIt = (world: World<string>, target: Point, type: string): number => {
     const visitedIndex: any = {}
     const finished: Finished = { lowestCost: 1000, end: target, step: undefined }
     const opened: Array<Step> = [{ path: [[1, 1]], cost: 0, distance: 1000 }]

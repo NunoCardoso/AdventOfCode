@@ -7,7 +7,7 @@ export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   const containers: Containers = []
-  const fills: Record<string, number> = {}
+  const fills = new Set<string>()
   let minimumFill: number = 0
   let numberOfMinimumFills: number = 0
   const target = params.limit
@@ -23,7 +23,7 @@ export default async (lineReader: any, params: Params) => {
             .map((_c) => '[' + _c.id + ']')
             .sort()
             .join('')
-          fills[key] = 1
+          fills.add(key)
           if (next.length < minimumFill) {
             minimumFill = next.length
             numberOfMinimumFills = 1
@@ -48,7 +48,7 @@ export default async (lineReader: any, params: Params) => {
   log.debug(fills)
 
   return {
-    part1: Object.keys(fills).length,
+    part1: fills.size,
     part2: numberOfMinimumFills
   }
 }

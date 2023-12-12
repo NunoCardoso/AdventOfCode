@@ -2,7 +2,7 @@ import { Params } from 'aoc.d'
 import { Permutation } from 'js-combinatorics'
 
 type People = Array<string>
-type Scores = Record<string, any>
+type Scores = Record<string, Record<string, number>>
 
 export default async (lineReader: any, params: Params) => {
   let part1: number = 0

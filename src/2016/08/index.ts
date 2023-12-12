@@ -1,15 +1,16 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Matrix } from 'declarations'
+import { World } from 'declarations'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
+  let part2: string = '\n'
 
   const dimensions: any = params.screenSize
 
-  const screen: Matrix<string> = Array(dimensions.height)
+  const screen: World<string> = Array(dimensions.height)
     .fill(null)
     .map(() => Array(dimensions.width).fill('.'))
 
@@ -17,14 +18,7 @@ export default async (lineReader: any, params: Params) => {
 
   const printGrid = () => {
     screen.forEach((row, i) => {
-      let line = ''
-      row.forEach((cell, j) => {
-        if (screen[i][j] === '#') {
-          line += clc.blue(screen[i][j])
-        } else {
-          line += screen[i][j]
-        }
-      })
+      const line = row.map((cell, j) => (screen[i][j] === '#' ? clc.blue(screen[i][j]) : screen[i][j]))
       console.log(line)
     })
     console.log('\n')
@@ -77,6 +71,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   for (let row = 0; row < screen.length; row++) {
+    part2 += screen[row].join('') + '\n'
     for (let column = 0; column < screen[row].length; column++) {
       if (screen[row][column] === '#') {
         part1++
@@ -84,5 +79,5 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  return { part1, part2: 'ZFHFSFOGPO' }
+  return { part1, part2 }
 }

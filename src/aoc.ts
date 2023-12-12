@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import clc from 'cli-color'
-import _ from 'lodash'
 import { Config, Test, Prod } from 'aoc.d'
+const readline = require('readline')
 
 const defaultConfig = {
   logLevel: 'info',
@@ -29,7 +29,9 @@ export default async (config: Partial<Config> = {}) => {
       ui: _config.ui,
       time: _config.time,
       isTest: isTest,
-      skip: run.skip
+      skip: run.skip,
+      skipPart1: run.skip === true || run.skip === 'part1',
+      skipPart2: run.skip === true || run.skip === 'part2'
     }
 
     if (run.skip === true) {
@@ -40,7 +42,7 @@ export default async (config: Partial<Config> = {}) => {
     let lineReader: any
     const file = path.join(__dirname, '/', _config.year!, '/', _config.day!, '/', targetFile + '.txt')
     if (fs.existsSync(file)) {
-      lineReader = require('readline').createInterface({
+      lineReader = readline.createInterface({
         input: fs.createReadStream(file)
       })
     }
@@ -60,7 +62,7 @@ export default async (config: Partial<Config> = {}) => {
     if (runConfig.skip === 'part1') {
       console.log(line + clc.red('- Part 1 - skipped'))
     } else {
-      if (!_.isUndefined(run?.answers?.part1)) {
+      if (run?.answers?.part1 !== undefined) {
         console.log(
           line + 'Part 1 -',
           answer.part1,
@@ -71,7 +73,7 @@ export default async (config: Partial<Config> = {}) => {
     if (runConfig.skip === 'part2') {
       console.log(line + clc.red('- Part 2 - skipped'))
     } else {
-      if (!_.isUndefined(run?.answers?.part2)) {
+      if (run?.answers?.part2 !== undefined) {
         console.log(
           line + 'Part 2 -',
           answer.part2,
@@ -81,15 +83,15 @@ export default async (config: Partial<Config> = {}) => {
     }
   }
 
-  if (_.get(_config, 'test')) {
+  if (Object.prototype.hasOwnProperty.call(_config, 'test')) {
     if (Array.isArray(_config.test)) {
       _config.test.forEach((t: Test) => doRun(t, true))
     } else {
-      doRun(_config.test as Test, true)
+      await doRun(_config.test as Test, true)
     }
   }
 
-  if (_.get(_config, 'prod')) {
-    doRun(_config.prod!, false)
+  if (Object.prototype.hasOwnProperty.call(_config, 'prod')) {
+    await doRun(_config.prod!, false)
   }
 }
