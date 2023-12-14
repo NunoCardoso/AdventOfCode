@@ -1,9 +1,6 @@
 import { Params } from 'aoc.d'
 
-type Puzzle = {
-  input: string
-  values: Array<number>
-}
+type Puzzle = [string, Array<number>]
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -15,18 +12,16 @@ export default async (lineReader: any, params: Params) => {
   const puzzlePart2: Array<Puzzle> = []
 
   for await (const line of lineReader) {
-    const values = line.split(/\s/)
-    puzzlePart1.push({
-      input: values[0],
-      values: values[1].split(',').map(Number)
-    })
-    puzzlePart2.push({
-      input: Array(5).fill(values[0]).join('?'),
-      values: Array(5).fill(values[1]).join(',').split(',').map(Number)
-    })
+    const [spring, values] = line.split(/\s/)
+    puzzlePart1.push([spring, values.split(',').map(Number)])
+    puzzlePart2.push([
+      Array(5).fill(spring).join('?'),
+      Array(5).fill(values).join(',').split(',').map(Number)
+    ])
   }
 
   const getKey = (spring: string, values: Array<number>): string => spring + ';' + values.join(',')
+
   const deepFirst = (
     spring: string,
     values: Array<number>,
@@ -95,18 +90,14 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const solveFor = (puzzles: Array<Puzzle>): number => {
-    let sum = 0
     const cache = new Map<string, number>()
-    puzzles.forEach((puzzle: Puzzle) => {
-      sum += deepFirst(puzzle.input, puzzle.values, cache, 0)
-    })
-    return sum
+    return puzzles.reduce((acc, puzzle) => acc + deepFirst(puzzle[0], puzzle[1], cache, 0), 0)
   }
 
-  if (params.skip !== true && params.skip !== 'part1') {
+  if (!params.skipPart1) {
     part1 = solveFor(puzzlePart1)
   }
-  if (params.skip !== true && params.skip !== 'part2') {
+  if (!params.skipPart2) {
     part2 = solveFor(puzzlePart2)
   }
 

@@ -4,7 +4,6 @@ export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
-  const part2: number = 0
 
   let data: Array<number> = []
 
@@ -33,5 +32,5 @@ export default async (lineReader: any, params: Params) => {
     log.debug('code', code, 'column', column, 'row', row)
   }
 
-  return { part1, part2 }
+  return { part1 }
 }

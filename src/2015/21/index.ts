@@ -28,31 +28,20 @@ export default async (lineReader: any, params: Params) => {
 
   const boss: Char = { hitPoints: 0, damage: 0, armor: 0 }
 
-  let weapons: Array<Stat> = []
-  let armors: Array<Stat> = []
-  let rings: Array<Stat> = []
-
   for await (const line of lineReader) {
-    if (line.match(/Hit Points/)) {
-      boss.hitPoints = parseInt(line.match(/Hit Points: (\d+)/)[1])
-    }
-    if (line.match(/Damage/)) {
-      boss.damage = parseInt(line.match(/Damage: (\d+)/)[1])
-    }
-    if (line.match(/Armor/)) {
-      boss.armor = parseInt(line.match(/Armor: (\d+)/)[1])
-    }
+    if (line.match(/Hit Points/)) boss.hitPoints = +line.match(/Hit Points: (\d+)/)[1]
+    if (line.match(/Damage/)) boss.damage = +line.match(/Damage: (\d+)/)[1]
+    if (line.match(/Armor/)) boss.armor = +line.match(/Armor: (\d+)/)[1]
   }
 
-  weapons = [
+  const weapons: Array<Stat> = [
     { name: 'Dagger', cost: 8, damage: 4, armor: 0 },
     { name: 'Shortsword', cost: 10, damage: 5, armor: 0 },
     { name: 'Warhammer', cost: 25, damage: 6, armor: 0 },
     { name: 'Longsword', cost: 40, damage: 7, armor: 0 },
     { name: 'Greataxe', cost: 74, damage: 8, armor: 0 }
   ]
-
-  armors = [
+  const armors: Array<Stat> = [
     { name: 'None', cost: 0, damage: 0, armor: 0 },
     { name: 'Leather', cost: 13, damage: 0, armor: 1 },
     { name: 'Chainmail', cost: 31, damage: 0, armor: 2 },
@@ -60,8 +49,7 @@ export default async (lineReader: any, params: Params) => {
     { name: 'Bandedmail', cost: 75, damage: 0, armor: 4 },
     { name: 'Platemail', cost: 102, damage: 0, armor: 5 }
   ]
-
-  rings = [
+  const rings: Array<Stat> = [
     { name: 'None+1', cost: 0, damage: 0, armor: 0 },
     { name: 'None+2', cost: 0, damage: 0, armor: 0 },
     { name: 'Damage+1', cost: 25, damage: 1, armor: 0 },
@@ -98,17 +86,15 @@ export default async (lineReader: any, params: Params) => {
     return -9999
   }
 
-  const getHeroWithSetup = (setup: Setup) => {
-    return {
-      hitPoints: params.hitPoints,
-      cost: setup.weapon.cost + setup.armor.cost + setup.ring1.cost + setup.ring2.cost,
-      damage: setup.weapon.damage + setup.armor.damage + setup.ring1.damage + setup.ring2.damage,
-      armor: setup.weapon.armor + setup.armor.armor + setup.ring1.armor + setup.ring2.armor
-    }
-  }
+  const getHeroWithSetup = (setup: Setup) => ({
+    hitPoints: params.hitPoints,
+    cost: setup.weapon.cost + setup.armor.cost + setup.ring1.cost + setup.ring2.cost,
+    damage: setup.weapon.damage + setup.armor.damage + setup.ring1.damage + setup.ring2.damage,
+    armor: setup.weapon.armor + setup.armor.armor + setup.ring1.armor + setup.ring2.armor
+  })
 
   const getCombinations = () => {
-    let combinations: Array<Setup> = []
+    const combinations: Array<Setup> = []
     for (let w = 0; w < weapons.length; w++) {
       for (let a = 0; a < armors.length; a++) {
         for (let r1 = 0; r1 < rings.length - 1; r1++) {
@@ -122,7 +108,7 @@ export default async (lineReader: any, params: Params) => {
       }
     }
 
-    combinations = combinations.sort((a, b) => {
+    return combinations.sort((a, b) => {
       return a.weapon.cost +
         a.armor.cost +
         a.ring1.cost +
@@ -132,30 +118,26 @@ export default async (lineReader: any, params: Params) => {
         ? -1
         : 1
     })
-    return combinations
   }
 
-  const combinations: Array<Setup> = getCombinations()
+  const setupCombinations: Array<Setup> = getCombinations()
 
-  log.debug('I have', combinations.length, 'combinations')
+  log.debug('I have', setupCombinations.length, 'combinations')
 
   let it = 0
-
   while (part1 === 0 || part2 === 0) {
     if (part1 === 0) {
-      const setup1 = combinations[it]
-      const hero1: Char = getHeroWithSetup(setup1)
-      const score1 = goToBattle(hero1, { ...boss })
-      if (score1 > 0 && part1 === 0) {
-        part1 = hero1.cost!
+      const hero = getHeroWithSetup(setupCombinations[it])
+      const score = goToBattle(hero, { ...boss })
+      if (score > 0 && part1 === 0) {
+        part1 = hero.cost!
       }
     }
     if (part2 === 0) {
-      const setup2 = combinations[combinations.length - 1 - it]
-      const hero2: Char = getHeroWithSetup(setup2)
-      const score2 = goToBattle(hero2, { ...boss })
-      if (score2 < 0 && part2 === 0) {
-        part2 = hero2.cost!
+      const hero = getHeroWithSetup(setupCombinations[setupCombinations.length - 1 - it])
+      const score = goToBattle(hero, { ...boss })
+      if (score < 0 && part2 === 0) {
+        part2 = hero.cost!
       }
     }
     it++

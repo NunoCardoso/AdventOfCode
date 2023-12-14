@@ -15,23 +15,24 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
   const timeCutoff = params.cutoff
-  const reindeers: Record<string, Reindeer> = {}
+  const reindeers: Array<Reindeer> = []
 
   for await (const line of lineReader) {
-    const m = line.match(
+    const [, name, speed, duration, rest] = line.match(
       /^(.+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+) seconds.$/
     )
-    reindeers[m[1]] = {
-      name: m[1],
-      speed: parseInt(m[2]),
-      duration: parseInt(m[3]),
-      rest: parseInt(m[4]),
+    reindeers.push({
+      name,
+      speed: +speed,
+      duration: +duration,
+      rest: +rest,
       score: 0,
       distance: 0
-    }
+    })
   }
-  if (params.skip !== true && params.skip !== 'part1') {
-    Object.values(reindeers).forEach((reindeer) => {
+
+  if (!params.skipPart1) {
+    reindeers.forEach((reindeer) => {
       let time = 0
       let distance = 0
       let mode = 'running'
@@ -47,39 +48,33 @@ export default async (lineReader: any, params: Params) => {
         }
         time += amount
       }
-      if (distance > part1) {
-        part1 = distance
-      }
+      if (distance > part1) part1 = distance
       log.debug('reindeer', reindeer.name, 'distance', distance)
     })
   }
 
-  if (params.skip !== true && params.skip !== 'part2') {
+  if (!params.skipPart2) {
     let time = 0
-    const reindeerNames: Array<string> = Object.keys(reindeers)
     let distanceInLead: number = 0
-    let reindeerInLead: Array<string> = []
+    let reindeerInLead: Array<Reindeer> = [] // can be more than one in the lead at same time
     while (time < timeCutoff) {
-      reindeerNames.forEach((name: string) => {
-        const moddedTime = time % (reindeers[name].duration + reindeers[name].rest)
-        if (moddedTime < reindeers[name].duration) {
-          reindeers[name].distance += reindeers[name].speed
-          if (reindeers[name].distance > distanceInLead) {
-            distanceInLead = reindeers[name].distance
-            reindeerInLead = [reindeers[name].name]
-          } else if (reindeers[name].distance === distanceInLead) {
-            reindeerInLead.push(reindeers[name].name)
+      reindeers.forEach((reindeer, i) => {
+        const moddedTime = time % (reindeer.duration + reindeer.rest)
+        if (moddedTime < reindeer.duration) {
+          reindeer.distance += reindeer.speed
+          if (reindeer.distance > distanceInLead) {
+            distanceInLead = reindeer.distance
+            reindeerInLead = [reindeer]
+          } else if (reindeer.distance === distanceInLead) {
+            reindeerInLead.push(reindeer)
           }
         }
       })
       log.debug(time, distanceInLead, reindeerInLead)
-      reindeerInLead.forEach((name: string) => {
-        reindeers[name].score = reindeers[name].score + 1
-      })
+      reindeerInLead.forEach((reindeer: Reindeer) => reindeer.score++)
       time++
     }
-    const rankedReindeers = Object.keys(reindeers).sort((a, b) => reindeers[b].score - reindeers[a].score)
-    part2 = reindeers[rankedReindeers[0]].score
+    part2 = reindeers.sort((a, b) => b.score - a.score)[0].score
   }
 
   return { part1, part2 }

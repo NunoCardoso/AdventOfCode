@@ -46,18 +46,26 @@ skip === true => skip both parts
 skip === 'part1' => skip only part1
 skip === 'part2' => skip only part2
 
-# Recommendations
+# Guidelines
 
-functions: solveFor, DFS, BFS
-Make a rulAllPuzzles, dumps times (< 1 s), disables UI
+. Functions names: solveFor, deepFirst, breathFirst
+. Be as declarative as possible
 
-types: use World: World instead of Matrix
-Avoid lodash
-remove Any
-replace Record with Sets, Maps
+## TO DO
 
-use global.structuredClone instead of deepClone, or {...obj} / arr.slice() for shallows
-check when I can use shallows 
+. Make a runAllPuzzles, saves dumps times (< 1 s), disables UI
+
+## Typing
+. use Point, Dimension, World
+. remove any
+.replace Record with Sets, Maps
+
+## Dependencies
+
+. Avoid lodash
+
+. use global.structuredClone instead of deepClone, or {...obj} / arr.slice() for shallows
+. check when I can use shallows instead of those deepClones
 
 prefer match with /g than matchAll, as in 
 

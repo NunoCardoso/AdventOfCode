@@ -1,29 +1,24 @@
 import { Params } from 'aoc.d'
 
 // Time, Distance
-type Race = { time?: number; distance?: number }
+type Race = [number?, number?]
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
 
-  const races1: Array<Race> = []
-  const races2: Array<Race> = []
+  let races1: Array<Race>, races2: Array<Race>
 
   for await (const line of lineReader) {
-    const values = line.split(/\s+/)
-    if (values[0] === 'Time:') {
-      values.shift()
-      values.forEach((x: string) => races1.push({ time: parseInt(x) }))
-      races2.push({ time: parseInt(values.join('')) })
+    const values = line.match(/\d+/g)
+    if (line.startsWith('Time:')) {
+      races1 = values.map((val: string) => [+val, undefined])
+      races2 = [[+values.join(''), undefined]]
     }
-    if (values[0] === 'Distance:') {
-      values.shift()
-      values.forEach((x: string, i: number) => {
-        races1[i].distance = parseInt(x)
-      })
-      races2[0].distance = parseInt(values.join(''))
+    if (line.startsWith('Distance:')) {
+      values.forEach((val: string, i: number) => (races1[i][1] = +val))
+      races2![0][1] = +values.join('')
     }
   }
 
@@ -34,23 +29,20 @@ export default async (lineReader: any, params: Params) => {
       // 9 = (x)(7-x) =>  x*x - 7x + 9 = 0
       // x = (7 +- sqrt(49 - 4*1*9)) / 2*1 = (7 +- 3.6)/2 = 5.3 and 1.7
       // so, races 2, 3, 4 and 5 are the ones with distance > 9
-
-      const firstTimeForWinningDistance =
-        (race.time! - Math.sqrt(race.time! * race.time! - 4.0 * race.distance!)) / 2.0
-      const secondTimeForWinningDistance =
-        (race.time! + Math.sqrt(race.time! * race.time! - 4.0 * race.distance!)) / 2.0
+      const firstTimeForWinningDistance = (race[0]! - Math.sqrt(race[0]! * race[0]! - 4.0 * race[1]!)) / 2.0
+      const secondTimeForWinningDistance = (race[0]! + Math.sqrt(race[0]! * race[0]! - 4.0 * race[1]!)) / 2.0
       const firstTime = Math.ceil(firstTimeForWinningDistance + 0.01) // 0.01 to make sure there are no matching distances
       const secondTime = Math.floor(secondTimeForWinningDistance - 0.01) // 0.01 to make sure there are no matching distances
       return 1 + secondTime - firstTime
     })
   }
 
-  if (params.skip !== true && params.skip !== 'part1') {
-    part1 = doRaces(races1).reduce((a, b) => a * b, 1)
+  if (!params.skipPart1) {
+    part1 = doRaces(races1!).reduce((a, b) => a * b, 1)
   }
 
-  if (params.skip !== true && params.skip !== 'part1') {
-    part2 = doRaces(races2)[0]
+  if (!params.skipPart2) {
+    part2 = doRaces(races2!)[0]
   }
   return { part1, part2 }
 }

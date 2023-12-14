@@ -5,7 +5,7 @@ aoc({
   day: '01',
   test: [
     {
-      id: 'test',
+      id: 'test1',
       answers: {
         part1: 142
       }

@@ -1,7 +1,10 @@
 import { Params } from 'aoc.d'
 
+type Node = number | string | Array<number> | Record<string, any>
+interface RecordNode extends Record<string, Node> {}
+
 export default async (lineReader: any, params: Params) => {
-  let map: Record<string, any> = {}
+  let map: RecordNode = {}
   let part1: number = 0
   let part2: number = 0
 
@@ -9,28 +12,27 @@ export default async (lineReader: any, params: Params) => {
     map = JSON.parse(line)
   }
 
-  const solveFor = (el: number | Array<number> | Record<string, any>, mode: string) => {
-    let score: number = 0
-    if (typeof el === 'number') {
-      score = el as number
+  const solveFor = (node: Node, ignoreRed: boolean): number => {
+    if (typeof node === 'number') {
+      return node
     }
-    if (Array.isArray(el)) {
-      score = (el as Array<any>).reduce((acc: number, el: any) => acc + solveFor(el, mode), 0)
+    if (Array.isArray(node)) {
+      return (node as Array<Node>).reduce((acc: number, _node: Node) => acc + solveFor(_node, ignoreRed), 0)
     }
-    if (typeof el === 'object' && !(el instanceof Array)) {
-      if (mode === 'part2' && Object.values(el).find((v: string) => v === 'red')) {
+    if (typeof node === 'object' && !(node instanceof Array)) {
+      if (ignoreRed && Object.values(node).find((v: Node) => v === 'red')) {
         return 0
       }
-      score = Object.keys(el).reduce((acc: number, _el: any) => acc + solveFor(el[_el], mode), 0)
+      return Object.keys(node).reduce((acc: number, _el: any) => acc + solveFor(node[_el], ignoreRed), 0)
     }
-    return score
+    return 0
   }
 
-  if (params.skip !== true && params.skip !== 'part1') {
-    part1 = solveFor(map, 'part1')
+  if (!params.skipPart1) {
+    part1 = solveFor(map, false)
   }
-  if (params.skip !== true && params.skip !== 'part1') {
-    part2 = solveFor(map, 'part2')
+  if (!params.skipPart2) {
+    part2 = solveFor(map, true)
   }
 
   return { part1, part2 }

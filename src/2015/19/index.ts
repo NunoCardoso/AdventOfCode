@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 
-type Replacements = Record<string, Array<string>>
+type Replacements = Map<string, Array<string>>
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -8,10 +8,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const replacements: Replacements = {}
-  const reverseReplacements: Replacements = {}
-
-  let molecule: string = ''
+  const replacements: Replacements = new Map()
   let moleculeBits: Array<string> = []
 
   const breakIntoAtoms = (mol: string): Array<string> =>
@@ -19,27 +16,21 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     if (line.match('=>')) {
-      const vals = line.split(' => ')
-      !Object.prototype.hasOwnProperty.call(replacements, vals[0])
-        ? (replacements[vals[0]] = [vals[1]])
-        : replacements[vals[0]].push(vals[1])
-      !Object.prototype.hasOwnProperty.call(reverseReplacements, vals[1])
-        ? (reverseReplacements[vals[1]] = [vals[0]])
-        : reverseReplacements[vals[1]].push(vals[0])
+      const [left, right] = line.split(' => ')
+      replacements.set(left, (replacements.get(left) ?? []).concat(right))
     } else {
-      if (line !== '') {
-        molecule = line
-        moleculeBits = breakIntoAtoms(molecule)
+      if (line) {
+        moleculeBits = breakIntoAtoms(line)
       }
     }
   }
 
-  const solveFor = (molecule: string) => {
+  const solveFor = (moleculeBits: Array<string>) => {
     let normalMolecules = 0
     let commaMolecules = 0
     let parenthesisMolecules = 0
-    breakIntoAtoms(molecule).forEach((m) => {
-      switch (m) {
+    moleculeBits.forEach((bit) => {
+      switch (bit) {
         case 'Rn':
         case 'Ar':
           parenthesisMolecules++
@@ -60,23 +51,25 @@ export default async (lineReader: any, params: Params) => {
   const doReact = (moleculeBits: Array<string>): number => {
     const molecules = new Set<string>()
     moleculeBits.forEach((molecule, i) => {
-      replacements[molecule]?.forEach((reaction: string) =>
-        molecules.add(
-          moleculeBits.slice(0, i).join('') +
-            reaction +
-            moleculeBits.slice(i + 1, moleculeBits.length).join('')
+      replacements
+        .get(molecule)
+        ?.forEach((reaction: string) =>
+          molecules.add(
+            moleculeBits.slice(0, i).join('') +
+              reaction +
+              moleculeBits.slice(i + 1, moleculeBits.length).join('')
+          )
         )
-      )
     })
     return molecules.size
   }
 
-  if (params.skip !== true && params.skip !== 'part1') {
+  if (!params.skipPart1) {
     part1 = doReact(moleculeBits)
   }
 
-  if (params.skip !== true && params.skip !== 'part2') {
-    part2 = solveFor(molecule)
+  if (!params.skipPart2) {
+    part2 = solveFor(moleculeBits)
   }
 
   return { part1, part2 }

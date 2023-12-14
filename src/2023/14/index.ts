@@ -6,13 +6,11 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let columns: Array<string> | undefined = undefined
+  let columns: Array<string> | undefined
 
   for await (const line of lineReader) {
-    if (columns === undefined) {
-      columns = new Array(line.length).fill('')
-    }
-    line.split('').forEach((v: string, i: number) => columns![i] += v)
+    if (!columns) columns = new Array(line.length).fill('')
+    line.split('').forEach((char: string, i: number) => (columns![i] += char))
   }
 
   const printColumns = (columns: Array<string>) => {
@@ -27,59 +25,56 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const score = (column: string): number =>
-    column.split('').map((c: string, i: number) =>
-      (c === 'O') ? column.length - i : 0
-    ).reduce((a, b) => a + b, 0)
+    column
+      .split('')
+      .map((c: string, i: number) => (c === 'O' ? column.length - i : 0))
+      .reduce((a, b) => a + b, 0)
 
   const rotate90 = (columns: Array<string>): Array<string> => {
-    const c: Array<string> = Array(columns[0].length).fill('')
+    const newColumns: Array<string> = Array(columns[0].length).fill('')
     for (let i = 0; i < columns.length; i++) {
       for (let j = 0; j < columns[0].length; j++) {
-        c[c.length - 1 - j] += columns[i][j]
+        newColumns[newColumns.length - 1 - j] += columns[i][j]
       }
     }
-    return c
+    return newColumns
   }
 
   const tiltColumn = (column: string): string =>
-    column.split("#").map((split: string) => {
-      let numberOfOs = split.match(/O/g)?.length ?? 0
-      return 'O'.repeat(numberOfOs) + '.'.repeat(split.length - numberOfOs)
-    }).join('#')
+    column
+      .split('#')
+      .map((split: string) => {
+        const numberOfOs = split.match(/O/g)?.length ?? 0
+        return 'O'.repeat(numberOfOs) + '.'.repeat(split.length - numberOfOs)
+      })
+      .join('#')
 
   if (!params.skipPart1) {
-    part1 = columns!.map((column: string) =>
-      score(tiltColumn(column))
-    ).reduce((a, b) => a + b)
+    if (params.ui.show) {
+      printColumns(columns!)
+    }
+    part1 = columns!.map((column: string) => score(tiltColumn(column))).reduce((a, b) => a + b)
   }
 
   if (!params.skipPart2) {
     let i = 0
-    let cache: Map<string, [number, number]> = new Map()
-    let cacheHit: [number, [number, number]] | undefined = undefined
+    const cache: Map<string, [number, number]> = new Map()
+    let cacheHit: [number, [number, number]] | undefined
 
-    while (cacheHit === undefined) {
-
-      ['north','west','south','east'].forEach((dir: string) => {
+    while (!cacheHit) {
+      ;['north', 'west', 'south', 'east'].forEach((dir: string) => {
         log.debug('tilting and rotating on', dir)
         columns = rotate90(columns!.map(tiltColumn))
       })
 
       // let's make a snapshot of this world
-      let columnSnapshot = columns!.reduce((a, b) => a + b, '')
-      let columnScore =  columns!.map(score).reduce((a, b) => a + b)
+      const columnSnapshot = columns!.reduce((a, b) => a + b, '')
+      const columnScore = columns!.map(score).reduce((a, b) => a + b)
 
-      if (!cache.has(columnSnapshot)) {
-        cache.set(columnSnapshot, [i, columnScore])
-      } else {
-        if (!cacheHit) {
-          cacheHit = [i, cache.get(columnSnapshot)!]
-          log.debug('Setting cacheHitOnce',cacheHit)
-        }
-      }
+      if (!cache.has(columnSnapshot)) cache.set(columnSnapshot, [i, columnScore])
+      else if (!cacheHit) cacheHit = [i, cache.get(columnSnapshot)!]
       i++
     }
-
     /* so, in test, I get cacheHit at [ 9, [ 2, 69 ] ]
     Meaning that I did 3 cycles (iteration 0-2), and then there was a repeat on 7 cycles (iteration 3-9)
 
@@ -88,11 +83,13 @@ export default async (lineReader: any, params: Params) => {
     I need the score of the 3rd repeat cycle, so, first repeat cycle index (2) + 3 = cycle 5 from cache.
     scores are already computed in the cache as [1][1]
     */
-    let firstRepeatedCycle = cacheHit[1][0]
-    let delta = cacheHit[0] - firstRepeatedCycle
-    let repeatedCycleIndex = ((params.cycles - 1 - firstRepeatedCycle) % delta) + firstRepeatedCycle
-    let cachedCycle: [string, Array<number>] | undefined =[...cache].find((([key, val]) => val[0] === repeatedCycleIndex))
-    part2 = cachedCycle![1][1]
+    const firstRepeatedCycle = cacheHit[1][0]
+    const delta = cacheHit[0] - firstRepeatedCycle
+    const repeatedCycleIndex = ((params.cycles - 1 - firstRepeatedCycle) % delta) + firstRepeatedCycle
+    const cachedCycle: Array<number> | undefined = Array.from(cache.values()).find(
+      (val) => val[0] === repeatedCycleIndex
+    )
+    part2 = cachedCycle![1]
   }
 
   return { part1, part2 }

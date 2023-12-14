@@ -8,40 +8,35 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const getDifferences = (s1: Array<string>, s2: Array<string>): number =>
+  const getNumberOfDifferences = (s1: Array<string>, s2: Array<string>): number =>
     s1.map((s, i) => (s === s2[i] ? 0 : 1)).reduce((a: number, b: number) => a + b, 0)
 
-  const transpose = (world: World<string>): World<string> => {
-    const _w: World<string> = Array(world[0].length)
+  const rotate90 = (world: World<string>): World<string> => {
+    const newWorld: World<string> = Array(world[0].length)
       .fill(null)
       .map(() => [])
-    for (let i = 0; i < world.length; i++) {
+    for (let i = world.length - 1; i >= 0; i--) {
       for (let j = 0; j < world[0].length; j++) {
-        _w[j].push(world[i][j])
+        newWorld[j].push(world[i][j])
       }
     }
-    return _w.map((x) => x.reverse())
+    return newWorld
   }
 
-  const getIt = (world: World<string>, errors: number): number => {
+  const getMirrorScore = (world: World<string>, numberOfSmudges: number): number => {
     for (let i = 1; i < world.length; i++) {
-      // log.debug('trying',i)
       const oneHalf = world.slice(0, i).reverse()
       const otherHalf = world.slice(i, world.length)
-
-      let numberOfDifferences = 0
       const smallestSide = Math.min(oneHalf.length, otherHalf.length)
+      let numberOfDifferences = 0
       for (let j = 0; j < smallestSide; j++) {
-        numberOfDifferences += getDifferences(oneHalf[j], otherHalf[j])
+        numberOfDifferences += getNumberOfDifferences(oneHalf[j], otherHalf[j])
       }
-      if (numberOfDifferences === errors) {
-        // console.log('smallestSide', smallestSide,'i',i)
+      if (numberOfDifferences === numberOfSmudges) {
         if (params.ui.show) {
           world.forEach((x: Array<string>, index) => {
             const inOneHalf = i - smallestSide <= index && index < i
             const inOtherHalf = i <= index && index < i + smallestSide
-            // console.log('index', index,'inOneHalf', inOneHalf,'inOtherHalf',inOtherHalf)
-
             if (inOneHalf) {
               console.log(clc.yellow(x.join('')))
             } else if (inOtherHalf) {
@@ -58,35 +53,34 @@ export default async (lineReader: any, params: Params) => {
     return 0
   }
 
-  const solveFor = (worlds: Array<World<string>>, errors: number): number => {
-    let sum = 0
-    worlds.forEach((world, index) => {
-      const sumRows = getIt(world, errors) * 100
-      sum += sumRows
-      if (sumRows === 0) {
-        const sumColumns = getIt(transpose(world), errors)
-        sum += sumColumns
-      }
-    })
-    return sum
-  }
-
   const worlds: Array<World<string>> = []
   let currentWorld: World<string> = []
   for await (const line of lineReader) {
-    if (line !== '') {
-      currentWorld.push(line.split(''))
-    } else {
-      worlds.push(global.structuredClone(currentWorld))
+    if (line !== '') currentWorld.push(line.split(''))
+    else {
+      worlds.push(currentWorld)
       currentWorld = []
     }
   }
+  // the leftover world
+  worlds.push(currentWorld)
 
-  if (params.skip !== true && params.skip !== 'part1') {
-    part1 = solveFor(worlds, 0)
+  if (!params.skipPart1) {
+    part1 = worlds.reduce((acc, world, index) => {
+      const sumRows = getMirrorScore(world, 0)
+      let sumColumns = 0
+      if (sumRows === 0) sumColumns = getMirrorScore(rotate90(world), 0)
+      return acc + sumRows * 100 + sumColumns
+    }, 0)
   }
-  if (params.skip !== true && params.skip !== 'part2') {
-    part2 = solveFor(worlds, 1)
+
+  if (!params.skipPart2) {
+    part2 = worlds.reduce((acc, world, index) => {
+      const sumRows = getMirrorScore(world, 1)
+      let sumColumns = 0
+      if (sumRows === 0) sumColumns = getMirrorScore(rotate90(world), 1)
+      return acc + sumRows * 100 + sumColumns
+    }, 0)
   }
 
   return { part1, part2 }

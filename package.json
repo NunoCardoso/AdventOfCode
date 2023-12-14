@@ -40,6 +40,7 @@
   "eslintConfig": {
     "root": true,
     "rules": {
+      "newline-per-chained-call": 0,
       "no-labels": [
         "error",
         {

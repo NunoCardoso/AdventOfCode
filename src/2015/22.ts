@@ -7,7 +7,6 @@ aoc({
   test: [
     {
       id: 'test1',
-      skip: true,
       params: {
         hitPoints: 10,
         mana: 250,
@@ -19,7 +18,6 @@ aoc({
     },
     {
       id: 'test2',
-      skip: true,
       params: {
         hitPoints: 10,
         mana: 250,
@@ -31,7 +29,6 @@ aoc({
     }
   ],
   prod: {
-    skip: false,
     params: {
       hitPoints: 50,
       mana: 500

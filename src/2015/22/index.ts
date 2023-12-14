@@ -123,14 +123,12 @@ export default async (lineReader: any, params: Params) => {
     return { heroArmor, heroDamage, recharge }
   }
   const getNextMoves = (data: Data, moves: Array<Move>, mode: string): Array<Array<Move>> => {
-    const nextMove = _.cloneDeep(moves[moves.length - 1])
+    const nextMove = { ...moves[moves.length - 1] }
     const nextMoves: Array<Array<Move>> = []
 
     if (mode === 'part2') {
       nextMove.hero.hitPoints = nextMove.hero.hitPoints - 1
-      if (nextMove.hero.hitPoints <= 0) {
-        return nextMoves
-      }
+      if (nextMove.hero.hitPoints <= 0) return nextMoves
     }
 
     // player turn: apply effects before casting a spell
@@ -181,7 +179,7 @@ export default async (lineReader: any, params: Params) => {
 
     spellsToCast.forEach((spell: Stat) => {
       // If I have mana and spell is not casted already and for the "nothing", do it after step 5
-      const _nextMove = _.cloneDeep(nextMove)
+      const _nextMove = global.structuredClone(nextMove)
 
       if (_.isNumber(spell.duration)) {
         _nextMove.effects.push({
@@ -287,7 +285,7 @@ export default async (lineReader: any, params: Params) => {
             mana: params.mana,
             hitPoints: params.hitPoints
           },
-          boss: _.cloneDeep(boss),
+          boss: { ...boss },
           manaSpent: 0,
           path: 's',
           description: 'start',
@@ -295,16 +293,10 @@ export default async (lineReader: any, params: Params) => {
         }
       ]
     ]
-
-    let it = 0
     while (opened.length > 0) {
       goToBattle(opened, data, mode)
-      if (it % 100000 === 0) {
-        log.debug('it', it, 'opened', opened.length, 'current high score', data.score)
-      }
-      it++
     }
-    log.info('Final path', data.path)
+    log.debug('Final path', data.path)
     return data.score
   }
 

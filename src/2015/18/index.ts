@@ -38,51 +38,42 @@ export default async (lineReader: any, params: Params) => {
     world[world.length - 1][world[0].length - 1] = '#'
   }
 
-  const flipIt = (world: World<string>, limit: number, cornerStuck: boolean) => {
+  const solveFor = (world: World<string>, limit: number, cornerStuck: boolean) => {
+    if (cornerStuck) makeCornersOn(world)
     let iteration: number = 0
     while (iteration < limit) {
-      const _newWorld: World<string> = []
-      for (let x = 0; x < world.length; x++) {
-        const newRow: Array<string> = []
-        for (let y = 0; y < world[x].length; y++) {
-          const numberOfLights = calculateNumberOfLights(world, x, y)
-          if (world[x][y] === '#') {
-            newRow.push(numberOfLights === 2 || numberOfLights === 3 ? '#' : '.')
-          } else {
-            newRow.push(numberOfLights === 3 ? '#' : '.')
-          }
-        }
-        _newWorld.push(newRow)
-      }
-      world = _newWorld
-      if (cornerStuck) {
-        makeCornersOn(world)
-      }
-      if (params.ui?.show && params.ui?.during) {
-        printWorld(world, iteration)
-      }
+      world = world.map((row, rowIndex) =>
+        row.map((cell, columnIndex) => {
+          const numberOfLights = calculateNumberOfLights(world, rowIndex, columnIndex)
+          return world[rowIndex][columnIndex] === '#'
+            ? numberOfLights === 2 || numberOfLights === 3
+              ? '#'
+              : '.'
+            : numberOfLights === 3
+              ? '#'
+              : '.'
+        })
+      )
+      if (cornerStuck) makeCornersOn(world)
+      if (params.ui?.show && params.ui?.during) printWorld(world, iteration)
       iteration++
     }
-
-    if (params.ui?.show && params.ui?.end) {
-      printWorld(world, 'end')
-    }
+    if (params.ui?.show && params.ui?.end) printWorld(world, 'end')
     return world
   }
 
-  const limit = params.limit
-
-  if (params.skip !== true && params.skip !== 'part1') {
-    let world1 = global.structuredClone(world)
-    world1 = flipIt(world1, limit, false)
-    part1 = world1.reduce((acc, row) => acc + row.filter((cell) => cell === '#').length, 0)
+  if (!params.skipPart1) {
+    part1 = solveFor(global.structuredClone(world), params.limit, false).reduce(
+      (acc, row) => acc + row.filter((cell) => cell === '#').length,
+      0
+    )
   }
 
-  if (params.skip !== true && params.skip !== 'part2') {
-    let world2 = global.structuredClone(world)
-    makeCornersOn(world2)
-    world2 = flipIt(world2, limit, true)
-    part2 = world2.reduce((acc, row) => acc + row.filter((cell) => cell === '#').length, 0)
+  if (!params.skipPart2) {
+    part2 = solveFor(global.structuredClone(world), params.limit, true).reduce(
+      (acc, row) => acc + row.filter((cell) => cell === '#').length,
+      0
+    )
   }
 
   return { part1, part2 }

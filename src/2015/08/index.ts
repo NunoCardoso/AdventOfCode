@@ -1,8 +1,4 @@
-import { Params } from 'aoc.d'
-
-export default async (lineReader: any, params: Params) => {
-  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
-
+export default async (lineReader: any) => {
   let rawCount = 0
   let processedCount1 = 0
   let processedCount2 = 0
@@ -15,7 +11,6 @@ export default async (lineReader: any, params: Params) => {
       .replaceAll(/\\\\/g, '\\')
     processedLine = processedLine.match(/^"(.*)"$/)[1]
     processedCount1 += processedLine.length
-
     processedCount2 += JSON.stringify(line).length
   }
 

@@ -1,6 +1,4 @@
-import { Params } from 'aoc.d'
-
-export default async (lineReader: any, params: Params) => {
+export default async (lineReader: any) => {
   let part1: number = 0
   let part2: number = 0
 

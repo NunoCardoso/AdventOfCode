@@ -9,7 +9,7 @@ export default async (lineReader: any, params: Params) => {
 
   const packages: Array<number> = []
   for await (const line of lineReader) {
-    packages.push(parseInt(line))
+    packages.push(+line)
   }
 
   const calculateEntanglement = (packages: Array<number>) =>
@@ -19,7 +19,7 @@ export default async (lineReader: any, params: Params) => {
     const totalWeight = packages.reduce((a, b) => a + b)
     const targetWeight = totalWeight / compartments
 
-    log.info('Total Weight', totalWeight, 'Target Weight', targetWeight)
+    log.debug('Total Weight', totalWeight, 'Target Weight', targetWeight)
 
     let solutions: Array<Array<number>> = []
     let numberOfPackages = 1
@@ -33,8 +33,8 @@ export default async (lineReader: any, params: Params) => {
 
     return solutions.map(calculateEntanglement).sort((a, b) => a - b)[0]
   }
-  part1 = solveFor(packages.slice(), 3)
-  part2 = solveFor(packages.slice(), 4)
+  part1 = solveFor(packages, params.compartments.part1)
+  part2 = solveFor(packages, params.compartments.part2)
 
   return { part1, part2 }
 }

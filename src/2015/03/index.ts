@@ -1,7 +1,6 @@
-import { Params } from 'aoc.d'
 import { Point } from 'declarations'
 
-export default async (lineReader: any, params: Params) => {
+export default async (lineReader: any) => {
   const positionsPart1 = new Set<string>()
   const currentPositionPart1: Point = [0, 0]
   const positionsPart2 = new Set<string>()
@@ -17,13 +16,11 @@ export default async (lineReader: any, params: Params) => {
   }
 
   for await (const line of lineReader) {
-    line.split('').forEach((val: string, i: number) => {
-      move(val, currentPositionPart1, positionsPart1)
-      if (i % 2 === 1) {
-        move(val, currentPositionRobotSantaPart2, positionsPart2)
-      } else {
-        move(val, currentPositionSantaPart2, positionsPart2)
-      }
+    line.split('').forEach((direction: string, i: number) => {
+      move(direction, currentPositionPart1, positionsPart1)
+      i % 2 === 1
+        ? move(direction, currentPositionRobotSantaPart2, positionsPart2)
+        : move(direction, currentPositionSantaPart2, positionsPart2)
     })
   }
 

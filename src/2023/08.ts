@@ -3,25 +3,22 @@ import aoc from 'aoc'
 aoc({
   year: '2023',
   day: '08',
-  logLevel: 'debug',
+  logLevel: 'info',
   test: [
     {
       id: 'test1',
-      skip: true,
       answers: {
         part1: 2
       }
     },
     {
       id: 'test2',
-      skip: true,
       answers: {
         part1: 6
       }
     },
     {
       id: 'test3',
-      skip: true,
       answers: {
         part2: 6
       }

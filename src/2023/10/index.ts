@@ -1,11 +1,10 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
 import { Dimension, World, Point } from 'declarations'
-import _, { isEmpty } from 'lodash'
 
-type Finished = {
+type Data = {
   path: Array<Point>
-  inners: number
+  numberOfInnerPoints: number
 }
 
 export default async (lineReader: any, params: Params) => {
@@ -19,36 +18,41 @@ export default async (lineReader: any, params: Params) => {
 
   const getKey = (p: Point) => '' + p[0] + '-' + p[1]
 
-  let it = 0
+  let it: number = 0
   for await (const line of lineReader) {
     world.push(line.split(''))
     const index = line.indexOf('S')
-    if (index >= 0) {
-      start = [it, index]
-    }
+    if (index >= 0) start = [it, index]
     it++
   }
 
   const worldDimensions: Dimension = [world.length, world[0].length]
-  log.info('world', worldDimensions)
+  log.debug('world', worldDimensions)
+
+  const boxChars: any = { '|': '│', 7: '╮', J: '╯', F: '╭', L: '╰', '-': '─' }
+
+  const convert = (s: string): string => boxChars[s] ?? s
 
   const printGrid = (world: World<string>, situationWorld: World<string>) => {
-    for (let i = 0; i < world.length; i++) {
-      let l = ''
-      for (let j = 0; j < world[i].length; j++) {
-        const type = situationWorld[i][j]
-        if (type === 'P') {
-          l += clc.red(world[i][j])
-        } else if (type === 'I') {
-          l += clc.blue(world[i][j])
-        } else if (type === 'O') {
-          l += clc.yellow(world[i][j])
-        } else {
-          l += world[i][j]
-        }
-      }
-      console.log(l)
-    }
+    world.forEach((row, i) => {
+      console.log(
+        row
+          .map((cell, j) => {
+            const type = situationWorld[i][j]
+            switch (type) {
+              case 'P':
+                return clc.red(convert(cell))
+              case 'I':
+                return clc.blue(convert(cell))
+              case 'O':
+                return clc.yellow(convert(cell))
+              default:
+                return world[i][j]
+            }
+          })
+          .join('')
+      )
+    })
     console.log('')
   }
 
@@ -62,126 +66,99 @@ export default async (lineReader: any, params: Params) => {
 
   const getValue = (p: Point) => world[p[0]][p[1]]
 
-  const getNextPoints = (point: Point, visited: Record<string, number>) => {
-    return _.filter(
+  const getNextPoints = (point: Point, visited: Map<string, number>) =>
+    (
       [
         [point[0] - 1, point[1]],
         [point[0] + 1, point[1]],
         [point[0], point[1] - 1],
         [point[0], point[1] + 1]
-      ],
-      (newPoint: Point) => {
-        if (outOfBounds(newPoint)) {
-          return false
-        }
-        const newKey = getKey(newPoint)
-        if (_.isNumber(visited[newKey])) {
-          return false
-        }
-        const pointValue = getValue(point)
-        const newPointValue = getValue(newPoint)
-
-        const isTop = (newPointValue: string, point: Point, newPoint: Point): boolean =>
-          (newPointValue === 'S' ||
-            newPointValue === '7' ||
-            newPointValue === '|' ||
-            newPointValue === 'F') &&
-          newPoint[0] === point[0] - 1
-
-        const isBottom = (newPointValue: string, point: Point, newPoint: Point): boolean =>
-          (newPointValue === 'S' ||
-            newPointValue === 'J' ||
-            newPointValue === '|' ||
-            newPointValue === 'L') &&
-          newPoint[0] === point[0] + 1
-
-        const isLeft = (newPointValue: string, point: Point, newPoint: Point): boolean =>
-          (newPointValue === 'S' ||
-            newPointValue === 'L' ||
-            newPointValue === '-' ||
-            newPointValue === 'F') &&
-          newPoint[1] === point[1] - 1
-
-        const isRight = (newPointValue: string, point: Point, newPoint: Point): boolean =>
-          (newPointValue === 'S' ||
-            newPointValue === 'J' ||
-            newPointValue === '-' ||
-            newPointValue === '7') &&
-          newPoint[1] === point[1] + 1
-
-        if (
-          pointValue === '|' &&
-          (isTop(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))
-        ) {
-          return true
-        }
-        if (
-          pointValue === '-' &&
-          (isLeft(newPointValue, point, newPoint) || isRight(newPointValue, point, newPoint))
-        ) {
-          return true
-        }
-        if (
-          pointValue === 'L' &&
-          (isTop(newPointValue, point, newPoint) || isRight(newPointValue, point, newPoint))
-        ) {
-          return true
-        }
-        if (
-          pointValue === 'J' &&
-          (isTop(newPointValue, point, newPoint) || isLeft(newPointValue, point, newPoint))
-        ) {
-          return true
-        }
-        if (
-          pointValue === '7' &&
-          (isLeft(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))
-        ) {
-          return true
-        }
-        if (
-          pointValue === 'F' &&
-          (isRight(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))
-        ) {
-          return true
-        }
-        if (
-          pointValue === 'S' &&
-          (((newPointValue === '7' || newPointValue === '|' || newPointValue === 'F') &&
-            newPoint[0] === point[0] - 1) ||
-            ((newPointValue === 'J' || newPointValue === '|' || newPointValue === 'L') &&
-              newPoint[0] === point[0] + 1) ||
-            ((newPointValue === 'J' || newPointValue === '-' || newPointValue === '7') &&
-              newPoint[1] === point[1] + 1) ||
-            ((newPointValue === 'L' || newPointValue === '-' || newPointValue === 'F') &&
-              newPoint[1] === point[1] - 1))
-        ) {
-          // top
-          return true
-        }
+      ] as Array<Point>
+    ).filter((newPoint: Point) => {
+      if (outOfBounds(newPoint)) {
         return false
       }
-    )
-  }
+      const newKey = getKey(newPoint)
+      if (visited.has(newKey)) {
+        return false
+      }
+      const pointValue = getValue(point)
+      const newPointValue = getValue(newPoint)
 
-  const breathFirst = (
-    opened: Array<Point>,
-    visited: Record<string, number>,
-    finished: Finished,
-    distance: number
-  ) => {
+      const isTop = (newPointValue: string, point: Point, newPoint: Point): boolean =>
+        ['S', '7', '|', 'F'].includes(newPointValue) && newPoint[0] === point[0] - 1
+
+      const isBottom = (newPointValue: string, point: Point, newPoint: Point): boolean =>
+        ['S', 'J', '|', 'L'].includes(newPointValue) && newPoint[0] === point[0] + 1
+
+      const isLeft = (newPointValue: string, point: Point, newPoint: Point): boolean =>
+        ['S', 'L', '-', 'F'].includes(newPointValue) && newPoint[1] === point[1] - 1
+
+      const isRight = (newPointValue: string, point: Point, newPoint: Point): boolean =>
+        ['S', 'J', '-', '7'].includes(newPointValue) && newPoint[1] === point[1] + 1
+
+      if (
+        pointValue === '|' &&
+        (isTop(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))
+      ) {
+        return true
+      }
+      if (
+        pointValue === '-' &&
+        (isLeft(newPointValue, point, newPoint) || isRight(newPointValue, point, newPoint))
+      ) {
+        return true
+      }
+      if (
+        pointValue === 'L' &&
+        (isTop(newPointValue, point, newPoint) || isRight(newPointValue, point, newPoint))
+      ) {
+        return true
+      }
+      if (
+        pointValue === 'J' &&
+        (isTop(newPointValue, point, newPoint) || isLeft(newPointValue, point, newPoint))
+      ) {
+        return true
+      }
+      if (
+        pointValue === '7' &&
+        (isLeft(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))
+      ) {
+        return true
+      }
+      if (
+        pointValue === 'F' &&
+        (isRight(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))
+      ) {
+        return true
+      }
+      if (
+        pointValue === 'S' &&
+        ((['7', '|', 'F'].includes(newPointValue) && newPoint[0] === point[0] - 1) ||
+          (['J', '|', 'L'].includes(newPointValue) && newPoint[0] === point[0] + 1) ||
+          (['J', '-', '7'].includes(newPointValue) && newPoint[1] === point[1] + 1) ||
+          (['L', '-', 'F'].includes(newPointValue) && newPoint[1] === point[1] - 1))
+      ) {
+        // top
+        return true
+      }
+      return false
+    })
+
+  const breathFirst = (opened: Array<Point>, visited: Map<string, number>, data: Data, distance: number) => {
     const point = opened.splice(-1)[0]
-    const firstKey = getKey(point)
-    visited[firstKey] = distance + 1
+    const key = getKey(point)
+    visited.set(key, distance + 1)
     const nextPoints = getNextPoints(point, visited)
-    if (isEmpty(nextPoints)) {
+    if (nextPoints.length === 0) {
       // cleanup
       opened.splice(0, opened.length)
       return
     }
-    finished.path.push(nextPoints[0])
+    // no sort, so it's a depth first. Also, search only one pipe edge
+    data.path.push(nextPoints[0])
     opened.push(nextPoints[0])
-    // no sort, so it's a dephth first
   }
 
   const guessPipeValue = (p: Point, pipeBefore: Point, pipeAfter: Point): string => {
@@ -224,63 +201,46 @@ export default async (lineReader: any, params: Params) => {
     return ''
   }
 
-  const makeSituationWorld = (world: World<string>, finished: Finished) => {
-    const _world = _.cloneDeep(world)
-    let inners = 0
-    for (let i = 0; i < world.length; i++) {
-      const points = _.filter(finished.path, (point: Point) => point[0] === i)
-      const pointsIndex: any = {}
+  const labelPipesAndSpaces = (world: World<string>, data: Data) =>
+    world.map((row, i) => {
+      const pipePointKeysInRow: Set<string> = new Set(
+        data.path.filter((point: Point) => point[0] === i).map(getKey)
+      )
       let inner: boolean = false
-      points.forEach((point: Point) => {
-        pointsIndex[getKey(point)] = ''
-      })
-      for (let j = 0; j < world[i].length; j++) {
-        if (Object.prototype.hasOwnProperty.call(pointsIndex, getKey([i, j]))) {
-          _world[i][j] = 'P'
-          let val = getValue([i, j])
-          if (val === 'S') {
-            // S point is always the finished.path[0], the one in front and back are [1] and the [length -1]
-            val = guessPipeValue([i, j], finished.path[finished.path.length - 1], finished.path[1])
-            log.debug('Guessed', val)
+      return row.map((cell, j) => {
+        let val: string
+        if (pipePointKeysInRow.has(getKey([i, j]))) {
+          val = 'P'
+          if (getValue([i, j]) === 'S') {
+            // S point is always the data.path[0], use the point in front and back ([1] and [length -1]) to guess value
+            cell = guessPipeValue([i, j], data.path[data.path.length - 1], data.path[1])
           }
-          if (['|', 'L', 'J'].indexOf(val) >= 0) {
-            inner = !inner
-          }
+          if (['|', 'L', 'J'].includes(cell)) inner = !inner
         } else {
-          _world[i][j] = inner ? 'I' : 'O'
-          if (inner) {
-            inners++
-          }
+          val = inner ? 'I' : 'O'
+          if (inner) data.numberOfInnerPoints++
         }
-      }
-    }
-    finished.inners = inners
-    return _world
-  }
-  const solveFor = (start: Point): Finished => {
-    const visited: Record<string, number> = { [getKey(start)]: 0 }
-    const finished: Finished = { path: [start], inners: 0 }
-    const opened = [start]
+        return val
+      })
+    })
+
+  if (!params.skipPart1) {
+    const visited: Map<string, number> = new Map().set(getKey(start!), 0)
+    const data: Data = { path: [start!], numberOfInnerPoints: 0 }
+    const opened = [start!]
     let it = 0
 
     while (opened.length > 0) {
-      breathFirst(opened, visited, finished, it)
+      breathFirst(opened, visited, data, it)
       it++
     }
+    const situationWorld = labelPipesAndSpaces(world, data)
+    if (params.ui.show) {
+      printGrid(world, situationWorld)
+    }
 
-    const situationWorld = makeSituationWorld(world, finished)
-    printGrid(world, situationWorld)
-    return finished
-  }
-
-  let finished: Finished | undefined
-  if (params.skip !== true) {
-    finished = solveFor(start!)
-    part1 = finished.path.length / 2
-  }
-
-  if (params.skip !== true && params.skip !== 'part2') {
-    part2 = finished?.inners ?? 0
+    part1 = data.path.length / 2
+    if (!params.skipPart2) part2 = data.numberOfInnerPoints
   }
 
   return { part1, part2 }

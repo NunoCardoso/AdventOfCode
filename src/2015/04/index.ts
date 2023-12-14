@@ -13,11 +13,8 @@ export default async (lineReader: any, params: Params) => {
 
   while (part1 === 0 || part2 === 0) {
     hash = SparkMD5.hash(params.secretKey + i)
-    if (hash.startsWith(params.secondCutoff) && (part2 === 0)) part2 = i
-    }
-    if (hash.startsWith(params.firstCutoff)) {
-      if (part1 === 0) part1 = i
-    }
+    if (hash.startsWith(params.secondCutoff) && part2 === 0) part2 = i
+    if (hash.startsWith(params.firstCutoff) && part1 === 0) part1 = i
     i++
   }
 

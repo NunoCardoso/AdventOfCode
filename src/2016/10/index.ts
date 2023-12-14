@@ -36,7 +36,6 @@ export default async (lineReader: any, params: Params) => {
     botIndexWithTwo: Array<Process>
   ) => {
     botIndex[bot] = undefined // reset
-
     ;(['low', 'high'] as Array<keyof Rule>).forEach((key: string) => {
       const ruleDecision = rule[key]
       if (ruleDecision.type === 'bot') {

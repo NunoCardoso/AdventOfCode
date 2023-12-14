@@ -1,40 +1,33 @@
-import { Params } from 'aoc.d'
 import { Permutation } from 'js-combinatorics'
 
-type Distances = Record<string, Record<string, number>>
-export default async (lineReader: any, params: Params) => {
-  const distances: Distances = {}
+type Distances = Map<string, Map<string, number>>
+export default async (lineReader: any) => {
+  const distances: Distances = new Map()
+  let part1: number = 1000000
+  let part2: number = 0
 
   for await (const line of lineReader) {
-    const values = line.split(' ')
-    if (!Object.prototype.hasOwnProperty.call(distances, values[0])) {
-      distances[values[0]] = {}
+    const [, city1, city2, distance] = line.match(/(.+) to (.+) = (\d+)/)
+    if (!distances.has(city1)) {
+      distances.set(city1, new Map())
     }
-    if (!Object.prototype.hasOwnProperty.call(distances, values[2])) {
-      distances[values[2]] = {}
+    if (!distances.has(city2)) {
+      distances.set(city2, new Map())
     }
-    distances[values[0]][values[2]] = parseInt(values[4])
-    distances[values[2]][values[0]] = parseInt(values[4])
+    distances.get(city1)!.set(city2, +distance)
+    distances.get(city2)!.set(city1, +distance)
   }
 
-  const places: Array<string> = Object.keys(distances)
-  const combinations: Record<string, number> = {}
+  const places = Array.from(distances.keys())
 
   new Permutation(places).toArray().forEach((permute: Array<string>) => {
     let res = 0
-    const key: string = permute.join('')
     for (let j = 0; j < permute.length - 1; j++) {
-      res += distances[permute[j]][permute[j + 1]]
+      res += distances.get(permute[j])!.get(permute[j + 1])!
     }
-    combinations[key] = res
+    if (res < part1) part1 = res
+    if (res > part2) part2 = res
   })
 
-  const sortedKeys: Array<string> = Object.keys(combinations).sort(
-    (a, b) => combinations[a] - combinations[b]
-  )
-
-  return {
-    part1: combinations[sortedKeys[0]],
-    part2: combinations[sortedKeys[sortedKeys.length - 1]]
-  }
+  return { part1, part2 }
 }

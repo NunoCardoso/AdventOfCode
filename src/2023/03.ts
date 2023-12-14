@@ -3,7 +3,10 @@ import aoc from 'aoc'
 aoc({
   year: '2023',
   day: '03',
-  logLevel: 'debug',
+  logLevel: 'info',
+  ui: {
+    show: true
+  },
   test: {
     id: 'test',
     answers: {

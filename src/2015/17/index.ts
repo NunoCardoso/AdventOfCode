@@ -8,42 +8,43 @@ export default async (lineReader: any, params: Params) => {
 
   const containers: Containers = []
   const fills = new Set<string>()
-  let minimumFill: number = 0
   let numberOfMinimumFills: number = 0
   const target = params.limit
 
-  const permute = (arr: Containers, temp: Containers = []) => {
-    for (let i = 0; i < arr.length; i++) {
-      const next: Containers = [...temp, arr[i]]
+  let i: number = 0
+  for await (const line of lineReader) {
+    containers.push({ id: i, value: +line })
+    i++
+  }
+
+  let minimumFill: number = containers.length
+  containers.sort((a, b) => b.value - a.value)
+
+  const permute = (containers: Containers, temp: Containers = []) => {
+    for (let i = 0; i < containers.length; i++) {
+      const currentContainer: Containers = [...temp, containers[i]]
       // if we overshoot or match, do not permute more, skip to next. If not, keep digging
-      const sum: number = next.reduce((acc, val) => acc + val.value, 0)
+      const sum: number = currentContainer.reduce((acc, val) => acc + val.value, 0)
       if (sum >= target) {
         if (sum === target) {
-          const key = next
+          const key = currentContainer
             .map((_c) => '[' + _c.id + ']')
             .sort()
             .join('')
           fills.add(key)
-          if (next.length < minimumFill) {
-            minimumFill = next.length
+          if (currentContainer.length < minimumFill) {
+            minimumFill = currentContainer.length
             numberOfMinimumFills = 1
-          } else if (next.length === minimumFill) {
+          } else if (currentContainer.length === minimumFill) {
             numberOfMinimumFills++
           }
         }
         continue
       }
-      permute(arr.slice(i + 1), next)
+      permute(containers.slice(i + 1), currentContainer)
     }
   }
 
-  let i: number = 0
-  for await (const line of lineReader) {
-    containers.push({ id: i, value: parseInt(line) })
-    i++
-  }
-  minimumFill = containers.length
-  containers.sort((a, b) => b.value - a.value)
   permute(containers, [])
   log.debug(fills)
 

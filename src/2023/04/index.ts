@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
+import { intersect } from 'util/arr'
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -10,9 +10,9 @@ export default async (lineReader: any, params: Params) => {
   const cardWins: Array<number> = []
 
   for await (const line of lineReader) {
-    const m = line.match(/^Card\s+\d+: (.+)$/)[1].split('|')
+    const [left, right] = line.match(/^Card\s+\d+: (.+)$/)[1].split('|')
     cardWins.push(
-      _.intersection(m[0].trim().split(/\s+/).map(Number), m[1].trim().split(/\s+/).map(Number)).length
+      intersect(left.trim().split(/\s+/).map(Number), right.trim().split(/\s+/).map(Number)).length
     )
   }
 
@@ -24,7 +24,7 @@ export default async (lineReader: any, params: Params) => {
       part1 += Math.pow(2, cardWin - 1)
     }
     for (let j = 0; j < cardWin!; j++) {
-      cardCollect[i + (j + 1)] = cardCollect[i + (j + 1)] + cardCollect[i]
+      cardCollect[i + (j + 1)] += cardCollect[i]
     }
   })
 
