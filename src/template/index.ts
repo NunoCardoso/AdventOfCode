@@ -16,10 +16,10 @@ export default async (lineReader: any, params: Params) => {
     return 0
   }
 
-  if (params.skip !== true && params.skip !== 'part1') {
+  if (!params.skipPart1) {
     part1 = solveFor()
   }
-  if (params.skip !== true && params.skip !== 'part2') {
+  if (!params.skipPart2) {
     part2 = solveFor()
   }
 

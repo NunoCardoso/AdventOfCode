@@ -1,26 +1,98 @@
 import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
-  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
 
+  let columns: Array<string> | undefined = undefined
+
   for await (const line of lineReader) {
-    const values = line.split('')
-    part1 = values.length
-    part2 = values.length
+    if (columns === undefined) {
+      columns = new Array(line.length).fill('')
+    }
+    line.split('').forEach((v: string, i: number) => columns![i] += v)
   }
 
-  const solveFor = (): number => {
-    return 0
+  const printColumns = (columns: Array<string>) => {
+    for (let i = 0; i < columns[0].length; i++) {
+      let l = ''
+      for (let j = 0; j < columns.length; j++) {
+        l += columns[j][i]
+      }
+      console.log(l)
+    }
+    console.log('\n')
   }
 
-  if (params.skip !== true && params.skip !== 'part1') {
-    part1 = solveFor()
+  const score = (column: string): number =>
+    column.split('').map((c: string, i: number) =>
+      (c === 'O') ? column.length - i : 0
+    ).reduce((a, b) => a + b, 0)
+
+  const rotate90 = (columns: Array<string>): Array<string> => {
+    const c: Array<string> = Array(columns[0].length).fill('')
+    for (let i = 0; i < columns.length; i++) {
+      for (let j = 0; j < columns[0].length; j++) {
+        c[c.length - 1 - j] += columns[i][j]
+      }
+    }
+    return c
   }
-  if (params.skip !== true && params.skip !== 'part2') {
-    part2 = solveFor()
+
+  const tiltColumn = (column: string): string =>
+    column.split("#").map((split: string) => {
+      let numberOfOs = split.match(/O/g)?.length ?? 0
+      return 'O'.repeat(numberOfOs) + '.'.repeat(split.length - numberOfOs)
+    }).join('#')
+
+  if (!params.skipPart1) {
+    part1 = columns!.map((column: string) =>
+      score(tiltColumn(column))
+    ).reduce((a, b) => a + b)
+  }
+
+  if (!params.skipPart2) {
+    let i = 0
+    let cache: Map<string, [number, number]> = new Map()
+    let cacheHit: [number, [number, number]] | undefined = undefined
+
+    while (cacheHit === undefined) {
+
+      ['north','west','south','east'].forEach((dir: string) => {
+        log.debug('tilting and rotating on', dir)
+        columns = rotate90(columns!.map(tiltColumn))
+      })
+
+      // let's make a snapshot of this world
+      let columnSnapshot = columns!.reduce((a, b) => a + b, '')
+      let columnScore =  columns!.map(score).reduce((a, b) => a + b)
+
+      if (!cache.has(columnSnapshot)) {
+        cache.set(columnSnapshot, [i, columnScore])
+      } else {
+        if (!cacheHit) {
+          cacheHit = [i, cache.get(columnSnapshot)!]
+          log.debug('Setting cacheHitOnce',cacheHit)
+        }
+      }
+      i++
+    }
+
+    /* so, in test, I get cacheHit at [ 9, [ 2, 69 ] ]
+    Meaning that I did 3 cycles (iteration 0-2), and then there was a repeat on 7 cycles (iteration 3-9)
+
+    To know the repeated cycle index that matches the (1000000000 - 1) cycle,
+    subtract 2 (first repeat cycle index) => 999999997, then mod it to the delta (999999997 % 7 = 3)
+    I need the score of the 3rd repeat cycle, so, first repeat cycle index (2) + 3 = cycle 5 from cache.
+    scores are already computed in the cache as [1][1]
+    */
+    let firstRepeatedCycle = cacheHit[1][0]
+    let delta = cacheHit[0] - firstRepeatedCycle
+    let repeatedCycleIndex = ((params.cycles - 1 - firstRepeatedCycle) % delta) + firstRepeatedCycle
+    let cachedCycle: [string, Array<number>] | undefined =[...cache].find((([key, val]) => val[0] === repeatedCycleIndex))
+    part2 = cachedCycle![1][1]
   }
 
   return { part1, part2 }
