@@ -18,10 +18,9 @@ export default async (lineReader: any, params: Params) => {
   for await (const line of lineReader) {
     const values = line.trim().split(/\s+/).map(Number)
     dataForPart1.push([values[0], values[1], values[2]])
-    auxRows[0].push(values[0])
-    auxRows[1].push(values[1])
-    auxRows[2].push(values[2])
+    ;([0, 1, 2] as Array<number>).forEach((i: number) => auxRows[i].push(values[i]))
   }
+
   const bigRow: Array<number> = auxRows.flat()
   for (let i = 0; i < bigRow.length; i += 3) {
     dataForPart2.push([bigRow[i], bigRow[i + 1], bigRow[i + 2]])

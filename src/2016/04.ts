@@ -6,7 +6,7 @@ aoc({
   logLevel: 'info',
   test: [
     {
-      id: 'test',
+      id: 'test1',
       params: {
         needle: 'very encrypted name'
       },

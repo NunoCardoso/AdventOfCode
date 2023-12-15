@@ -1,4 +1,5 @@
 import { Params } from 'aoc.d'
+import { intersect } from 'util/arr'
 
 type RuleDecision = {
   type: string
@@ -10,12 +11,7 @@ type Rule = {
   high: RuleDecision
 }
 
-type RobotIndex = Record<string, Array<number>>
-
-type Process = {
-  bot: number
-  processed: boolean
-}
+type RobotIndex = Map<number, Array<number> | undefined>
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -23,29 +19,32 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const rules: Record<string, Rule> = {}
+  const rules: Map<number, Rule> = new Map()
   const outputs: Record<string, number> = {}
-  const botIndex: RobotIndex = {}
-  let botIndexWithTwo: Array<Process> = []
+  const botIndex: RobotIndex = new Map()
 
   const processRule = (
-    bot: string,
+    bot: number,
     rule: Rule,
     botValues: Array<number>,
-    botIndex: any,
-    botIndexWithTwo: Array<Process>
+    botIndex: RobotIndex,
+    botIndexWithTwo: Array<number>
   ) => {
-    botIndex[bot] = undefined // reset
+    botIndex.set(bot, undefined) // reset
     ;(['low', 'high'] as Array<keyof Rule>).forEach((key: string) => {
+      // @ts-ignore
       const ruleDecision = rule[key]
       if (ruleDecision.type === 'bot') {
         const botNumber = ruleDecision.number.toString()
         // update
-        if (!Object.prototype.hasOwnProperty.call(botIndex, botNumber) || botIndex[botNumber].length === 0) {
-          botIndex[botNumber] = [botValues[key === 'low' ? 0 : 1]]
+        if (
+          !Object.prototype.hasOwnProperty.call(botIndex, botNumber) ||
+          (botIndex.get(botNumber) ?? []).length === 0
+        ) {
+          botIndex.set(botNumber, [botValues[key === 'low' ? 0 : 1]])
         } else {
-          botIndex[botNumber].push(botValues[key === 'low' ? 0 : 1])
-          botIndexWithTwo.push({ bot: ruleDecision.number, processed: false })
+          botIndex.get(botNumber)!.push(botValues[key === 'low' ? 0 : 1])
+          botIndexWithTwo.push([ruleDecision.number, false])
         }
       }
       if (ruleDecision.type === 'output') {
@@ -55,53 +54,46 @@ export default async (lineReader: any, params: Params) => {
   }
 
   for await (const line of lineReader) {
+    const botIndexWithTwo: Array<number> = []
     if (line.startsWith('value')) {
-      const m = line.match(/value (\d+) goes to bot (\d+)/)
-      const value = parseInt(m[1])
-      const bot = parseInt(m[2])
-      if (!Object.prototype.hasOwnProperty.call(botIndex, bot)) {
-        botIndex[bot.toString()] = [value]
-      } else {
-        botIndex[bot.toString()].push(value)
-        botIndexWithTwo.push({ bot: bot, processed: false })
+      const [value, bot] = line.match(/\d+/g).map(Number)
+      if (!botIndex.has(bot)) botIndex.set(bot, [value])
+      else {
+        botIndex.get(bot)!.push(value)
+        botIndexWithTwo.push(bot)
       }
     }
-
     if (line.startsWith('bot')) {
-      const m = line.match(/bot (\d+) gives low to (.+) (\d+) and high to (.+) (\d+)/)
-      rules[m[1]] = {
-        low: { type: m[2], number: parseInt(m[3]) },
-        high: { type: m[4], number: parseInt(m[5]) }
-      }
+      const [, bot, lowType, lowNumber, highType, highHumber] = line.match(
+        /bot (\d+) gives low to (.+) (\d+) and high to (.+) (\d+)/
+      )
+      rules.set(+bot, {
+        low: { type: lowType, number: +lowNumber },
+        high: { type: highType, number: +highHumber }
+      })
     }
 
-    // reset for the next rule loaded
-    botIndexWithTwo = botIndexWithTwo.map((b) => ({
-      ...b,
-      processed: false
-    }))
-
-    while (_.filter(botIndexWithTwo, { processed: false }).length > 0) {
+    while (botIndexWithTwo.length > 0) {
       for (let i = botIndexWithTwo.length - 1; i >= 0; i--) {
-        const { bot, processed } = botIndexWithTwo[i]
+        const [bot, processed] = botIndexWithTwo[i]
 
         if (!processed) {
-          const rule = rules[bot.toString()]
-          if (!_.isUndefined(rule)) {
-            const botValues: Array<number> = botIndex[bot.toString()].sort((a, b) => (a - b > 0 ? 1 : -1))
+          const rule = rules.get(bot)
+          if (rule !== undefined) {
+            const botValues: Array<number> = botIndex.get(bot)!.sort((a, b) => (a - b > 0 ? 1 : -1))
             log.debug('Found rule, bot', bot, 'will decide between', botValues)
 
             const compareBotValues = params.botValues
-            if (_.intersection(botValues, compareBotValues).length === compareBotValues.length) {
+            if (intersect(botValues, compareBotValues).length === compareBotValues.length) {
               part1 = bot
             }
 
-            processRule(bot.toString(), rule, botValues, botIndex, botIndexWithTwo)
+            processRule(bot, rule, botValues, botIndex, botIndexWithTwo)
             // processed and finished, so remove it
             botIndexWithTwo.splice(i, 1)
           } else {
             // processed but not finished, still waiting for a rule
-            botIndexWithTwo[i].processed = true
+            botIndexWithTwo[i][1] = true
           }
         }
       }

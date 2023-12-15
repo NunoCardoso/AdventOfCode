@@ -71,14 +71,13 @@ export default async (lineReader: any, params: Params) => {
     position: Point,
     keypad: (point: Point, instruction: string) => void,
     getValue: (point: Point) => string
-  ): string => {
-    const finalCode: Array<string> = []
-    codes.forEach((code: string) => {
-      code.split('').forEach((instruction: string) => keypad(position, instruction))
-      finalCode.push(getValue(position))
-    })
-    return finalCode.join('')
-  }
+  ): string =>
+    codes
+      .map((code: string) => {
+        code.split('').forEach((instruction: string) => keypad(position, instruction))
+        return getValue(position)
+      })
+      .join('')
 
   part1 = solveFor(codes, [1, 1], squareKeypad, valueFromSquareKeypad)
   part2 = solveFor(codes, [-2, 0], losangeKeypad, valueFromLosangeKeypad)

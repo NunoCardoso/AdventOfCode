@@ -17,18 +17,16 @@ export default async (lineReader: any, params: Params) => {
   log.info('Setting screen width ' + dimensions.width + ' height ' + dimensions.height)
 
   const printGrid = () => {
-    screen.forEach((row, i) => {
-      const line = row.map((cell, j) => (screen[i][j] === '#' ? clc.blue(screen[i][j]) : screen[i][j]))
-      console.log(line)
-    })
-    console.log('\n')
+    screen.forEach((row, i) =>
+      console.log(
+        row.map((cell, j) => (screen[i][j] === '#' ? clc.blue(screen[i][j]) : screen[i][j])).join('')
+      )
+    )
   }
 
   for await (const line of lineReader) {
     if (line.startsWith('rect')) {
-      const m = line.match(/rect (\d+)x(\d+)/)
-      const width = parseInt(m[1])
-      const height = parseInt(m[2])
+      const [width, height] = line.match(/\d+/g).map(Number)
       for (let row = 0; row < height; row++) {
         for (let column = 0; column < width; column++) {
           screen[row][column] = '#'
@@ -36,47 +34,35 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     if (line.startsWith('rotate')) {
-      const m = line.match(/rotate (.+) (.)=(\d+) by (\d+)/)
-      if (m[1] === 'row') {
-        const rowIndex = parseInt(m[3])
-        const increment = parseInt(m[4])
+      const [, axis, index, amount] = line.match(/rotate .+ (.)=(\d+) by (\d+)/)
+      if (axis === 'y') {
         const newRow = []
-        for (let column = 0; column < screen[rowIndex].length; column++) {
-          const newColumnIndex = (column + increment) % screen[rowIndex].length
-          newRow[newColumnIndex] = screen[rowIndex][column]
+        for (let column = 0; column < screen[+index].length; column++) {
+          const newColumnIndex = (column + +amount) % screen[+index].length
+          newRow[newColumnIndex] = screen[+index][column]
         }
-        screen[rowIndex] = newRow
+        screen[+index] = newRow
       }
-      if (m[1] === 'column') {
-        const columnIndex = parseInt(m[3])
-        const increment = parseInt(m[4])
+      if (axis === 'x') {
         const newColumn = []
         for (let row = 0; row < screen.length; row++) {
-          const newRowIndex = (row + increment) % screen.length
-          newColumn[newRowIndex] = screen[row][columnIndex]
+          const newRowIndex = (row + +amount) % screen.length
+          newColumn[newRowIndex] = screen[row][+index]
         }
         for (let row = 0; row < screen.length; row++) {
-          screen[row][columnIndex] = newColumn[row]
+          screen[row][+index] = newColumn[row]
         }
       }
     }
 
-    if (params.ui.show && params.ui.during) {
-      printGrid()
-    }
+    if (params.ui.show && params.ui.during) printGrid()
   }
 
-  if (params.ui.show && params.ui.end) {
-    printGrid()
-  }
+  if (params.ui.show && params.ui.end) printGrid()
 
   for (let row = 0; row < screen.length; row++) {
+    part1 += screen[row].filter((pixel) => pixel === '#').length
     part2 += screen[row].join('') + '\n'
-    for (let column = 0; column < screen[row].length; column++) {
-      if (screen[row][column] === '#') {
-        part1++
-      }
-    }
   }
 
   return { part1, part2 }

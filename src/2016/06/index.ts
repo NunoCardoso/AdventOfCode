@@ -1,25 +1,18 @@
-import { Params } from 'aoc.d'
-
-export default async (lineReader: any, params: Params) => {
-  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
-
+export default async (lineReader: any) => {
   let part1: string = ''
   let part2: string = ''
 
   let data: Array<Record<string, number>> = []
 
   for await (const line of lineReader) {
-    const val = line.split('')
-    if (data.length === 0) {
-      data = new Array(val.length).fill(null).map(() => ({}))
-    }
-    val.forEach((v: string, i: number) => {
-      data[i][v] === undefined ? (data[i][v] = 1) : data[i][v]++
-    })
+    if (data.length === 0) data = new Array(line.length).fill(null).map(() => ({}))
+    line
+      .split('')
+      .forEach((v: string, i: number) => (data[i][v] === undefined ? (data[i][v] = 1) : data[i][v]++))
   }
 
-  data.forEach((col, i) => {
-    const sorted = Object.keys(data[i]).sort((a, b) => data[i][b] - data[i][a])
+  data.forEach((col) => {
+    const sorted = Object.keys(col).sort((a, b) => col[b] - col[a])
     part1 += sorted[0]
     part2 += sorted[sorted.length - 1]
   })

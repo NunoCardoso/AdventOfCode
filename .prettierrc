@@ -1,5 +1,4 @@
 {
-  "tslintIntegration": true,
   "printWidth": 110,
   "tabWidth": 2,
   "arrowParens": "always",

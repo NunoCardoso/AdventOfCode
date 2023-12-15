@@ -11,10 +11,8 @@ export default async (lineReader: any, params: Params) => {
     data = line
   }
 
-  const solveFor = (data: string, collectAfterExpand: boolean): number => {
-    let line = data
+  const solveFor = (line: string, collectAfterExpand: boolean): number => {
     let size = 0
-
     while (line.length > 0) {
       if (!line.startsWith('(')) {
         const index = line.indexOf('(')
@@ -31,29 +29,24 @@ export default async (lineReader: any, params: Params) => {
         const chunk = line.substring(0, index + 1)
         line = line.substring(index + 1, line.length)
         // line is free of the operation
-
-        const m = chunk.match(/\((\d+)x(\d+)\)/)
-        const length = parseInt(m![1])
-        const repeat = parseInt(m![2])
-
+        const [length, repeat] = chunk.match(/\d+/g)!.map(Number)
         if (collectAfterExpand) {
-          line = line.substring(length, line.length)
           size += length * repeat
         } else {
           const pattern = line.substring(0, length)
           const number = solveFor(pattern, collectAfterExpand)
           size += number * repeat
-          line = line.substring(length, line.length)
         }
+        line = line.substring(length, line.length)
       }
     }
     return size
   }
 
-  if (params.part1?.skip !== true) {
+  if (!params.skipPart1) {
     part1 = solveFor(data, true)
   }
-  if (params.part2?.skip !== true) {
+  if (!params.skipPart2) {
     part2 = solveFor(data, false)
   }
 

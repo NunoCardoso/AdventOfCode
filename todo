@@ -26,5 +26,13 @@
 23: on 6 seconds
 24: too long, but it finishes with right solution
 
+2023:
+16: 37s without cache, cache goes memory busted
+17: slow, 3 min, try depth first?
+
 Notes:
 2016/13 is the simplest searchAlgorithm implementation
+
+Remake:
+2015: check for bfs => dfs, reduces for max/min
+2016: stuck on 10
