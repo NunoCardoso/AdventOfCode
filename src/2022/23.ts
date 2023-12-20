@@ -1,8 +1,9 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2022',
-  day: '23',
+export default {
+  config: {
+    year: '2022',
+    day: '23',
+    comment: 'on 6 seconds'
+  },
   logLevel: 'info',
   ui: {
     show: true,
@@ -36,4 +37,4 @@ aoc({
       part2: 980
     }
   }
-})
+}

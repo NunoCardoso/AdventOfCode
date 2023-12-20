@@ -1,14 +1,4 @@
-
-2015: DONE
-= = = = =
-04: md5, > 2 s, nothing I can do to make it faster
-22: if I let Nothing to be an action, then I get a lower value for part 2 (987) than the answer (1216)
-24: 6/7 seconds, not sure if I can do it better
-
 2016: ONGOING
-05: md5, 18s, nothing I can do to make it faster
-11: 18s, maybe it can be done better
-14: md5, 27s, nothing I can do to make it faster
 
 2017:
 03: tree to start
@@ -18,17 +8,6 @@
 
 2022: DONE
 = = = = =
-15: on 16 seconds. rotate -45 deg
-16: over 1 min
-    - errors on test part2
-    - error on part 2 value (execution is fine)
-22: test does not work, have to reshape cube for test
-23: on 6 seconds
-24: too long, but it finishes with right solution
-
-2023:
-16: 37s without cache, cache goes memory busted
-17: slow, 3 min, try depth first?
 
 Notes:
 2016/13 is the simplest searchAlgorithm implementation

@@ -25,11 +25,31 @@ export type Test = Prod & {
 export type Config = {
   year: string
   day: string
+  title?: string
+  comment?: string
+  tags?: string
+}
+
+export type Puzzle = {
+  config: Config
   mode?: string
   logLevel?: string
   ui?: UI
-  time: boolean
   test?: Test | Array<Test>
   prod?: Prod
   params?: Params
+}
+
+export type Result = {
+  config: Config
+  time: number
+  mode: string
+  part1: {
+    skip?: boolean
+    status: string
+  }
+  part2: {
+    skip?: boolean
+    status: string
+  }
 }

@@ -1,8 +1,9 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2022',
-  day: '16',
+export default {
+  config: {
+    year: '2022',
+    day: '16',
+    comment: 'over 1 min, errors on test part2, error on part 2 value (execution is fine)'
+  },
   logLevel: 'info',
   params: {
     limit: {
@@ -23,4 +24,4 @@ aoc({
       part2: 2775
     }
   }
-})
+}

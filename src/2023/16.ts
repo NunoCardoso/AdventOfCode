@@ -1,22 +1,21 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2023',
-  day: '16',
+export default {
+  config: {
+    year: '2023',
+    day: '16',
+    comment: '37s without cache, cache goes memory busted'
+  },
   logLevel: 'info',
   test: {
     id: 'test',
-    skip: true,
     answers: {
       part1: 46,
       part2: 51
     }
   },
   prod: {
-    skip: 'part1',
     answers: {
       part1: 7060,
       part2: 7493
     }
   }
-})
+}

@@ -1,8 +1,9 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2023',
-  day: '17',
+export default {
+  config: {
+    year: '2023',
+    day: '17',
+    comment: 'slow, 3 min, try depth first?'
+  },
   logLevel: 'info',
   test: [
     {
@@ -25,4 +26,4 @@ aoc({
       part2: 734
     }
   }
-})
+}

@@ -1,8 +1,8 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2022',
-  day: '07',
+export default {
+  config: {
+    year: '2022',
+    day: '07'
+  },
   logLevel: 'error',
   params: {
     cutoffDirSize: 100000,
@@ -22,4 +22,4 @@ aoc({
       part2: 5974547
     }
   }
-})
+}

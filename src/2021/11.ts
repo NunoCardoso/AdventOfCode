@@ -1,8 +1,8 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2021',
-  day: '11',
+export default {
+  config: {
+    year: '2021',
+    day: '11'
+  },
   ui: { show: false, during: true },
   test: {
     id: 'test',
@@ -17,4 +17,4 @@ aoc({
       part2: 232
     }
   }
-})
+}

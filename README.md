@@ -1,19 +1,27 @@
 # How to run
 
-## makePuzzle
+## makeDay
 
-    ts-node makePuzzle {year} {day}
+to create a puzzle template 
 
-## runPuzzle
+    npm run makeDay {year} {day}
 
-    ts-node runPuzzle {year} {day}
+## runDay
 
-or 
+to run a puzzle
 
-    ts-node src/{year}/{day}
+    npm run runDay {year} {day}
+
+## runYear
+
+to run a batch of puzzles
+
+    npm run runYear {year}
 
 # Puzzle options options: 
-
+* title: string, optional => puzzle title
+* comment: string, optional => puzzle comments
+* tags: string, optional => puzzle tags (recursive, pathfinding, md5, etc)
 * year: string, mandatory => chooses the year 
 * day: string, mandatory => chooses the day 
 * logLevel ?: string => sets log level (info, debug, etc) default: info
@@ -24,21 +32,14 @@ or
 ** during?: boolean
 ** wait:?: number
 * test ?: Test | Array<Test> => runs tests
+** id: test id, tied to the test input file name
+** skip ?: boolean | 'part1' | 'part2'
+** params ?: any => additional params
+** answers ?: any => object with part1 and/or part2 answers
 * prod ?: Prod => runs final.  
-
-
-## Test
-
-id: test id, tied to the test input file name
-skip ?: boolean | 'part1' | 'part2'
-params ?: any => additional params
-answers ?: any => object with part1 and/or part2 answers
-
-## Prod
-
-skip ?: boolean | 'part1' | 'part2'
-params ?: any => additional params
-answers ?: any => object with part1 and/or part2 answers
+** skip ?: boolean | 'part1' | 'part2'
+** params ?: any => additional params
+** answers ?: any => object with part1 and/or part2 answers
 
 ## skip
 

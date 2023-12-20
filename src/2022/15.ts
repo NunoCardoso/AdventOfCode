@@ -1,11 +1,11 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2022',
-  day: '15',
+export default {
+  config: {
+    year: '2022',
+    day: '15',
+    comment: 'on 16 seconds. rotate -45 deg'
+  },
   logLevel: 'error',
   test: {
-    skip: false,
     id: 'test',
     params: {
       y: 10,
@@ -26,4 +26,4 @@ aoc({
       part2: 10291582906626
     }
   }
-})
+}

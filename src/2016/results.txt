@@ -1,0 +1,10 @@
+Day |  Time  | P1 | P2 | Title, comment
+ 01 | 0.002s | ✅ | ✅ | No title - No comment
+ 02 | 0.002s | ✅ | ✅ | No title - No comment
+ 03 | 0.003s | ✅ | ✅ | No title - No comment
+ 04 | 0.023s | ✅ | ✅ | No title - No comment
+ 05 | 18.006s | ✅ | ✅ | No title - md5, 18s, nothing I can do to make it faster
+ 06 | 0.004s | ✅ | ✅ | No title - No comment
+ 07 | 0.013s | ✅ | ✅ | No title - No comment
+ 08 | 0.002s | ✅ | ✅ | No title - No comment
+ 09 | 0.001s | ✅ | ✅ | No title - No comment

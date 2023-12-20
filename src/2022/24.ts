@@ -1,8 +1,9 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2022',
-  day: '24',
+export default {
+  config: {
+    year: '2022',
+    day: '24',
+    comment: 'too long, but it finishes with right solution'
+  },
   logLevel: 'info',
   ui: {
     show: true,
@@ -11,7 +12,6 @@ aoc({
     wait: 10
   },
   test: {
-    skip: false,
     id: 'test',
     answers: {
       part1: 18,
@@ -24,4 +24,4 @@ aoc({
       part2: 905
     }
   }
-})
+}

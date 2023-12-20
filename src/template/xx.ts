@@ -1,8 +1,8 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '{{year}}',
-  day: '{{day}}',
+export default {
+  config: {
+    year: '{{year}}',
+    day: '{{day}}'
+  },
   logLevel: 'debug',
   test: {
     id: 'test',
@@ -18,4 +18,4 @@ aoc({
       part2: 0
     }
   }
-})
+}

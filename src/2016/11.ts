@@ -1,12 +1,12 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2016',
-  day: '11',
+export default {
+  config: {
+    year: '2016',
+    day: '11',
+    comment: '18s, maybe it can be done better'
+  },
   logLevel: 'info',
   test: {
     id: 'test',
-    skip: true,
     answers: {
       part1: 11
     }
@@ -17,4 +17,4 @@ aoc({
       part2: 61
     }
   }
-})
+}

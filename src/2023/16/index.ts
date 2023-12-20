@@ -139,7 +139,6 @@ export default async (lineReader: any, params: Params) => {
 
     while (opened.length > 0) {
       let beam = opened.splice(-1)[0]
-      console.log('doing', beam)
       beam = depthFirst(beam, beam.slice(), new Map())
       const partSum2 = new Set(beam.map((pad) => pad[0] + ';' + pad[1])).size
       if (partSum2 > part2) part2 = partSum2

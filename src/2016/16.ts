@@ -1,10 +1,10 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2016',
-  day: '16',
-  logLevel: 'debug',
-
+export default {
+  config: {
+    year: '2016',
+    day: '16',
+    comment: 'md5, 27s, nothing I can do to make it faster'
+  },
+  logLevel: 'info',
   test: {
     id: 'test',
     params: {
@@ -30,4 +30,4 @@ aoc({
       part2: '01001101001000101'
     }
   }
-})
+}

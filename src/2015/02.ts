@@ -1,8 +1,9 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2015',
-  day: '02',
+export default {
+  config: {
+    year: '2015',
+    day: '02',
+    title: 'I Was Told There Would Be No Math'
+  },
   test: [
     {
       id: 'test1',
@@ -25,4 +26,4 @@ aoc({
       part2: 3737498
     }
   }
-})
+}

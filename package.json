@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "makeDay": "ts-node makeDay.ts",
+    "runDay": "NODE_OPTIONS=--max-old-space-size=8192 ts-node runDay.ts",
+    "runYear": "NODE_OPTIONS=--max-old-space-size=8192 ts-node runYear.ts",
     "lint": "standardx \"src/**/*.{ts,tsx}\"",
     "lint:fix": "standardx \"src/**/*.{ts,tsx}\" --fix",
     "prettier": "prettier --config .prettierrc -c \"src/**/*.{ts,tsx}\"",

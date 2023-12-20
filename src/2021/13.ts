@@ -1,8 +1,8 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2021',
-  day: '13',
+export default {
+  config: {
+    year: '2021',
+    day: '13'
+  },
   logLevel: 'info',
   ui: { show: false, during: true },
   test: {
@@ -17,4 +17,4 @@ aoc({
       part2: 'RKHFZGUB'
     }
   }
-})
+}

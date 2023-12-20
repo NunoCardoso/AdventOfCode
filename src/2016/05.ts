@@ -1,8 +1,9 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2016',
-  day: '05',
+export default {
+  config: {
+    year: '2016',
+    day: '05',
+    comment: 'md5, 18s, nothing I can do to make it faster'
+  },
   logLevel: 'info',
   test: {
     id: 'test',
@@ -15,7 +16,6 @@ aoc({
     }
   },
   prod: {
-    skip: false,
     params: {
       secretKey: 'ugkcyxxp'
     },
@@ -24,4 +24,4 @@ aoc({
       part2: 'f2c730e5'
     }
   }
-})
+}

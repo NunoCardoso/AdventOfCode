@@ -1,0 +1,26 @@
+Day |  Time  | P1 | P2 | Title, comment
+ 01 | 0.001s | ✅ | ✅ | Not Quite Lisp - No comment
+ 02 | 0.004s | ✅ | ✅ | I Was Told There Would Be No Math - No comment
+ 03 | 0.002s | ✅ | ✅ | Perfectly Spherical Houses in a Vacuum - No comment
+ 04 | 2.802s | ✅ | ✅ | No title - md5, > 2 s, nothing I can do to make it faster
+ 05 | 0.003s | ✅ | ✅ | No title - No comment
+ 06 | 0.635s | ✅ | ✅ | No title - No comment
+ 07 | 0.002s | ✅ | ✅ | No title - No comment
+ 08 | 0.001s | ✅ | ✅ | No title - No comment
+ 09 | 0.058s | ✅ | ✅ | No title - No comment
+ 10 | 1.593s | ✅ | ✅ | No title - No comment
+ 11 | 0.472s | ✅ | ✅ | No title - No comment
+ 12 | 0.001s | ✅ | ✅ | No title - No comment
+ 13 | 0.632s | ✅ | ✅ | No title - No comment
+ 14 | 0.001s | ✅ | ✅ | No title - No comment
+ 15 | 0.074s | ✅ | ✅ | No title - No comment
+ 16 | 0.001s | ✅ | ✅ | No title - No comment
+ 17 | 0.019s | ✅ | ✅ | No title - No comment
+ 18 | 0.063s | ✅ | ✅ | No title - No comment
+ 19 | 0.004s | ✅ | ✅ | No title - No comment
+ 20 | 1.511s | ✅ | ✅ | No title - No comment
+ 21 | 0.002s | ✅ | ✅ | No title - No comment
+ 22 | 0.808s | ✅ | ✅ | No title - if I let Nothing to be an action, then I get a lower value for part 2 (987) than the answer (1216)
+ 23 | 0.001s | ✅ | ✅ | No title - No comment
+ 24 | 6.942s | ✅ | ✅ | No title - 6/7 seconds, not sure if I can do it better
+ 25 | 0.777s | ✅ |    | No title - No comment

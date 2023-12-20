@@ -1,8 +1,8 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2015',
-  day: '15',
+export default {
+  config: {
+    year: '2015',
+    day: '15'
+  },
   logLevel: 'info',
   params: {
     calories: {
@@ -23,4 +23,4 @@ aoc({
       part2: 15862900
     }
   }
-})
+}

@@ -1,8 +1,9 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2015',
-  day: '04',
+export default {
+  config: {
+    year: '2015',
+    day: '04',
+    comment: 'md5, > 2 s, nothing I can do to make it faster'
+  },
   params: {
     firstCutoff: '00000',
     secondCutoff: '000000'
@@ -25,4 +26,4 @@ aoc({
       part2: 3938038
     }
   }
-})
+}

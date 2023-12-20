@@ -1,8 +1,8 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2016',
-  day: '17',
+export default {
+  config: {
+    year: '2016',
+    day: '17'
+  },
   logLevel: 'info',
   params: {
     input: 'rrrbmfta'
@@ -45,4 +45,4 @@ aoc({
       part2: 420
     }
   }
-})
+}

@@ -1,8 +1,8 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2022',
-  day: '20',
+export default {
+  config: {
+    year: '2022',
+    day: '20'
+  },
   params: {
     decriptionKey: 811589153
   },
@@ -19,4 +19,4 @@ aoc({
       part2: 4907679608191
     }
   }
-})
+}

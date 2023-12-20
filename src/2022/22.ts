@@ -1,8 +1,9 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2022',
-  day: '22',
+export default {
+  config: {
+    year: '2022',
+    day: '22',
+    comment: 'test does not work, have to reshape cube for test'
+  },
   logLevel: 'info',
   ui: {
     show: false
@@ -26,4 +27,4 @@ aoc({
       part2: 153203
     }
   }
-})
+}

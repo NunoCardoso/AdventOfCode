@@ -1,8 +1,8 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2015',
-  day: '11',
+export default {
+  config: {
+    year: '2015',
+    day: '11'
+  },
   params: {
     password: 'hepxcrrq'
   },
@@ -12,4 +12,4 @@ aoc({
       part2: 'heqaabcc'
     }
   }
-})
+}

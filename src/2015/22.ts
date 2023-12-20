@@ -1,8 +1,10 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2015',
-  day: '22',
+export default {
+  config: {
+    year: '2015',
+    day: '22',
+    comment:
+      'if I let Nothing to be an action, then I get a lower value for part 2 (987) than the answer (1216)'
+  },
   logLevel: 'info',
   test: [
     {
@@ -38,4 +40,4 @@ aoc({
       part2: 1216
     }
   }
-})
+}

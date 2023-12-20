@@ -1,8 +1,9 @@
-import aoc from 'aoc'
-
-aoc({
-  year: '2015',
-  day: '24',
+export default {
+  config: {
+    year: '2015',
+    day: '24',
+    comment: '6/7 seconds, not sure if I can do it better'
+  },
   params: {
     compartments: {
       part1: 3,
@@ -22,4 +23,4 @@ aoc({
       part2: 72050269
     }
   }
-})
+}
