@@ -1,6 +1,5 @@
 import { Params } from 'aoc.d'
 import { World, Point } from 'declarations'
-import _ from 'lodash'
 
 type Step = {
   path: Array<Point>
@@ -8,7 +7,7 @@ type Step = {
   distance: number
 }
 
-type Finished = {
+type Data = {
   lowestCost: number
   end: Point
   step: Step | undefined
@@ -23,9 +22,7 @@ export default async (lineReader: any, params: Params) => {
   const world: World<string> = []
 
   const getSpaceOrWall = (world: World<string>, row: number, column: number): string => {
-    if (!Object.prototype.hasOwnProperty.call(world, row)) {
-      world[row] = []
-    }
+    if (!world[row]) world[row] = []
     if (!world[row][column]) {
       const val: number =
         row * row + 3 * row + 2 * row * column + column + column * column + params.designerNumber
@@ -51,11 +48,11 @@ export default async (lineReader: any, params: Params) => {
 
   const outOfBounds = (p: Point) => p[0] < 0 || p[1] < 0
 
-  const searchAlgorithm = async (
+  const breathFirst = async (
     world: World<string>,
     opened: Array<Step>,
-    visitedIndex: Record<string, number>,
-    finished: Finished,
+    visitedIndex: Map<string, number>,
+    data: Data,
     type: string
   ) => {
     const currentStep: Step = opened.splice(-1)[0]
@@ -63,16 +60,16 @@ export default async (lineReader: any, params: Params) => {
     const key: string = getKey(head)
     log.debug('=== Starting ===')
     log.debug('head', key, 'opened', opened.length)
-    log.debug('finished', finished)
+    log.debug('data', data)
 
-    if (type === 'part1' && isSame(head, finished.end)) {
-      if (finished.lowestCost > currentStep.cost) {
-        log.info('Got lowest cost with', currentStep.cost, 'path', currentStep.path)
-        finished.lowestCost = currentStep.cost
-        finished.step = currentStep
+    if (type === 'part1' && isSame(head, data.end)) {
+      if (data.lowestCost > currentStep.cost) {
+        log.debug('Got lowest cost with', currentStep.cost, 'path', currentStep.path)
+        data.lowestCost = currentStep.cost
+        data.step = currentStep
         // remove opened values that have higher cost than current cost
         for (let i = opened.length - 1; i >= 0; i--) {
-          if (opened[i].cost > finished.lowestCost) {
+          if (opened[i].cost > data.lowestCost) {
             opened.splice(i, 1)
           }
         }
@@ -80,106 +77,75 @@ export default async (lineReader: any, params: Params) => {
       return
     }
 
-    if (type === 'part2' && currentStep.cost > 50) {
+    if (type === 'part2' && currentStep.cost > params.cutoff) {
       return
     }
 
-    if (!Object.prototype.hasOwnProperty.call(visitedIndex, key)) {
-      visitedIndex[key] = currentStep.cost
-    } else {
-      if (visitedIndex[key] > currentStep.cost) {
-        visitedIndex[key] = currentStep.cost
-      }
-    }
-    const newHeads: Array<Point> = _.reject(
+    if (!visitedIndex.has(key)) visitedIndex.set(key, currentStep.cost)
+    else if (visitedIndex.get(key)! > currentStep.cost) visitedIndex.set(key, currentStep.cost)
+
+    const newHeads: Array<Point> = (
       [
         [head[0] - 1, head[1]],
         [head[0] + 1, head[1]],
         [head[0], head[1] - 1],
         [head[0], head[1] + 1]
-      ],
-      (newHead: Point) => {
-        // reject if out of bounds
-        if (outOfBounds(newHead)) {
-          return true
-        }
-        // reject if cost will never be better than what we have
-        if (currentStep.cost + 1 + getDistanceToFinish(newHead, finished.end) > finished.lowestCost) {
-          return true
-        }
+      ] as Array<Point>
+    ).filter((newHead: Point) => {
+      // reject if out of bounds
+      if (outOfBounds(newHead)) return false
 
-        // ok, let's unravel this new point, reject if it's wall
-        const value = getSpaceOrWall(world, newHead[0], newHead[1])
-        if (value === '#') {
-          return true
-        }
-
-        const newKey = getKey(newHead)
-
-        // reject if it's in the visited list, and it has a worse cost; otherwise, keep it
-        if (
-          Object.prototype.hasOwnProperty.call(visitedIndex, newKey) &&
-          visitedIndex[newKey] <= currentStep.cost + 1
-        ) {
-          return true
-        }
-
-        // same reject, but with opened
-        const matchOpenedPathIndex = _.findIndex(opened, (s: Step) =>
-          isSame(s.path[s.path.length - 1], newHead)
-        )
-        if (matchOpenedPathIndex >= 0) {
-          // worse cost
-          if (opened[matchOpenedPathIndex].cost <= currentStep.cost + 1) {
-            return true
-          } else {
-            opened.splice(matchOpenedPathIndex, 1)
-          }
-        }
-
+      // reject if cost will never be better than what we have
+      if (currentStep.cost + 1 + getDistanceToFinish(newHead, data.end) > data.lowestCost) {
         return false
       }
-    )
+
+      // ok, let's unravel this new point, reject if it's wall
+      if (getSpaceOrWall(world, newHead[0], newHead[1]) === '#') return false
+
+      const newKey = getKey(newHead)
+
+      // reject if it's in the visited list, and it has a worse cost; otherwise, keep it
+      if (visitedIndex.has(newKey) && visitedIndex.get(newKey)! <= currentStep.cost + 1) {
+        return false
+      }
+
+      // same reject, but with opened
+      const matchOpenedPathIndex = opened.findIndex((s: Step) => isSame(s.path[s.path.length - 1], newHead))
+      if (matchOpenedPathIndex >= 0) {
+        // worse cost
+        if (opened[matchOpenedPathIndex].cost <= currentStep.cost + 1) return false
+        else opened.splice(matchOpenedPathIndex, 1)
+      }
+      return true
+    })
 
     if (newHeads.length > 0) {
       newHeads.forEach((newHead) => {
-        const newStep = _.cloneDeep(currentStep)
+        const newStep = global.structuredClone(currentStep)
         newStep.cost++
-        newStep.distance = getDistanceToFinish(newHead, finished.end)
+        newStep.distance = getDistanceToFinish(newHead, data.end)
         newStep.path.push(newHead)
         opened.push(newStep)
       })
-      opened.sort((a, b) => {
-        // lowest cost first.
-        // for same cost, lowest distance first
-        return b.cost - a.cost > 0 ? 1 : b.cost - a.cost < 0 ? -1 : b.distance - a.distance
-      })
+      opened.sort((a, b) => b.cost - a.cost)
     }
   }
 
-  const doIt = (world: World<string>, target: Point, type: string): number => {
-    const visitedIndex: any = {}
-    const finished: Finished = { lowestCost: 1000, end: target, step: undefined }
+  const solveFor = (world: World<string>, target: Point, type: string): number => {
+    const visitedIndex: Map<string, number> = new Map()
+    const data: Data = { lowestCost: 1000, end: target, step: undefined }
     const opened: Array<Step> = [{ path: [[1, 1]], cost: 0, distance: 1000 }]
-    let it = 0
     while (opened.length > 0) {
-      searchAlgorithm(world, opened, visitedIndex, finished, type)
-      if (it % 100 === 0) {
-        log.debug('it', it, 'opened', opened.length, 'finished', finished)
-      }
-      it++
+      breathFirst(world, opened, visitedIndex, data, type)
     }
-    if (type === 'part1') {
-      return finished.lowestCost
-    }
-    if (type === 'part2') {
-      return Object.keys(visitedIndex).length
-    }
+    if (type === 'part1') return data.lowestCost
+    if (type === 'part2') return visitedIndex.size
     return 0
   }
 
-  part1 = doIt(world.slice(), params.target, 'part1')
-  part2 = doIt(world.slice(), params.target, 'part2')
+  part1 = solveFor(world.slice(), params.target, 'part1')
+  part2 = solveFor(world.slice(), params.target, 'part2')
 
   return { part1, part2 }
 }

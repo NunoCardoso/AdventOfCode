@@ -7,9 +7,7 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   let data: string = ''
-  for await (const line of lineReader) {
-    data = line
-  }
+  for await (const line of lineReader) data = line
 
   const solveFor = (line: string, collectAfterExpand: boolean): number => {
     let size = 0

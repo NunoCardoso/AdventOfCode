@@ -6,9 +6,7 @@ export default async (lineReader: any, params: Params) => {
   let part2: string = ''
 
   const codes: Array<string> = []
-  for await (const line of lineReader) {
-    codes.push(line)
-  }
+  for await (const line of lineReader) codes.push(line)
 
   const squareKeypad = (point: Point, instruction: string) => {
     switch (instruction) {

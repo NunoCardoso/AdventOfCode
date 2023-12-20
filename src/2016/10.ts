@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '10'
+    day: '10',
+    title: 'Balance Bots'
   },
   logLevel: 'info',
   test: {

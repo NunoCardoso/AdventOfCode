@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '04'
+    day: '04',
+    title: 'Security Through Obscurity'
   },
   logLevel: 'info',
   test: [

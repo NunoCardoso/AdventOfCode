@@ -1,14 +1,11 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 const SparkMD5 = require('spark-md5')
 
 export default async (lineReader: any, params: Params) => {
-  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  //const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
-
-  log.info('This will take some time, MD5 puzzle')
 
   const generateMd5Part1 = (hash: string): string => SparkMD5.hash(hash)
 
@@ -24,38 +21,38 @@ export default async (lineReader: any, params: Params) => {
 
   const keyHas5repetitions = (key: string) => [...key.matchAll(/(.)\1\1\1\1/g)].map((x: any) => x[1])
 
-  const doIt = (md5Generator: (s: string) => string) => {
+  const solveFor = (md5Generator: (s: string) => string) => {
     const keys: Array<number> = []
     let it = 0
-    const memory: Record<string, Array<number>> = {}
+    const memory: Map<string, Array<number>> = new Map()
 
     while (keys.length < params.cutoff) {
       const key = md5Generator(params.salt + it)
 
-      const reps: Array<number> = keyHas5repetitions(key)
-      if (reps.length > 0) {
-        reps.forEach((rep) => {
-          memory[rep] = _.filter(memory[rep], (n: number) => it - n < params.viewAhead).sort((a, b) => a - b)
-          keys.push(...memory[rep])
-          keys.sort((a, b) => a - b)
-        })
-      }
-      const m = keyHas3repetitions(key)
-      if (m) {
-        if (!memory[m]) {
-          memory[m] = []
-        }
-        memory[m].push(it)
+      keyHas5repetitions(key)?.forEach((rep) => {
+        memory.set(
+          rep,
+          (memory.get(rep) ?? []).filter((n: number) => it - n < params.viewAhead).sort((a, b) => a - b)
+        )
+        keys.push(...memory.get(rep)!)
+        keys.sort((a, b) => a - b)
+      })
+
+      const match = keyHas3repetitions(key)
+      if (match) {
+        if (!memory.has(match)) memory.set(match, [])
+        memory.get(match)!.push(it)
       }
       it++
     }
     return keys
   }
-  if (params.skip !== true && params.skip !== 'part1') {
-    part1 = doIt(generateMd5Part1)[params.cutoff - 1]
+  if (!params.skipPart1) {
+    part1 = solveFor(generateMd5Part1)[params.cutoff - 1]
   }
-  if (params.skip !== true && params.skip !== 'part2') {
-    part2 = doIt(generateMd5Part2)[params.cutoff - 1]
+
+  if (!params.skipPart2) {
+    part2 = solveFor(generateMd5Part2)[params.cutoff - 1]
   }
 
   return { part1, part2 }

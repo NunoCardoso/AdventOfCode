@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 type Instruction = {
   op: string
@@ -15,33 +14,29 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const instructions: Array<any> = []
+  const instructions: Array<Instruction> = []
   for await (const line of lineReader) {
-    const values = line.split(/\s+/)
-    const instruction: Instruction = {
-      op: values[0],
-      x: values[1].match(/\d+/) ? parseInt(values[1]) : values[1]
-    }
-    if (values.length === 3) {
-      instruction.y = values[2].match(/\d+/) ? parseInt(values[2]) : values[2]
-    }
-    instructions.push(instruction)
+    const [op, x, y] = line.split(/\s+/)
+    instructions.push({
+      op,
+      x: x.match(/\d+/) ? +x : x,
+      y: y ? (y.match(/\d+/) ? +y : y) : null
+    })
   }
 
   const runRegister = (registers: Registers) => {
     let it = 0
     while (true) {
-      if (it >= instructions.length) {
-        break
-      }
+      if (it >= instructions.length) break
       log.debug('it', it, 'registers', registers, 'instruction', instructions[it])
-      const value: number = _.isNumber(instructions[it].x)
-        ? instructions[it].x
-        : registers[instructions[it].x]
+      const value: number =
+        typeof instructions[it].x === 'number'
+          ? (instructions[it].x as number)
+          : (registers[instructions[it].x] as number)
 
       switch (instructions[it].op) {
         case 'cpy':
-          registers[instructions[it].y] = value
+          registers[instructions[it].y!] = value
           it++
           break
         case 'inc':
@@ -53,11 +48,8 @@ export default async (lineReader: any, params: Params) => {
           it++
           break
         case 'jnz':
-          if (value !== 0) {
-            it += instructions[it].y
-          } else {
-            it++
-          }
+          if (value !== 0) it += instructions[it].y as number
+          else it++
           break
       }
     }

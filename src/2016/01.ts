@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '01'
+    day: '01',
+    title: 'No Time for a Taxicab'
   },
   logLevel: 'info',
   test: [

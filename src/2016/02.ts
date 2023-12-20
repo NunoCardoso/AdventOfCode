@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '02'
+    day: '02',
+    title: 'Bathroom Security'
   },
   logLevel: 'info',
   test: {

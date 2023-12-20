@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '07'
+    day: '07',
+    title: 'Internet Protocol Version 7'
   },
   logLevel: 'info',
   test: [

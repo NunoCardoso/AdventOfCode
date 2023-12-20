@@ -6,9 +6,9 @@ export default async (lineReader: any) => {
 
   for await (const line of lineReader) {
     if (data.length === 0) data = new Array(line.length).fill(null).map(() => ({}))
-    line
-      .split('')
-      .forEach((v: string, i: number) => (data[i][v] === undefined ? (data[i][v] = 1) : data[i][v]++))
+    line.split('').forEach((v: string, i: number) => {
+      !data[i][v] ? (data[i][v] = 1) : data[i][v]++
+    })
   }
 
   data.forEach((col) => {

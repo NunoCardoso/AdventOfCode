@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '06'
+    day: '06',
+    title: 'Signals and Noise'
   },
   logLevel: 'info',
   test: {

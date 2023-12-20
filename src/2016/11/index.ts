@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 import clc from 'cli-color'
 import { Combination } from 'js-combinatorics'
 
@@ -113,7 +112,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const getElevatorFloor = (head: Point): number =>
-    _.findIndex(head.floors, (floor: Floor) => floor.includes('E'))
+    head.floors.findIndex((floor: Floor) => floor.includes('E'))
 
   const isValidFloor = (floor: Floor): boolean => {
     const objectsByElement: Record<string, Array<string>> = {}
@@ -138,7 +137,7 @@ export default async (lineReader: any, params: Params) => {
       }
     })
 
-    const floorHasAGenerator = _.find(floor, (el) => el.endsWith('G')) !== undefined
+    const floorHasAGenerator = floor.find((el) => el.endsWith('G')) !== undefined
 
     // If I have an unpaired microchip XM in a floor where there is a YG, then it is invalid
     if (unpairedMicrochips.length > 0 && floorHasAGenerator) {
@@ -247,7 +246,7 @@ export default async (lineReader: any, params: Params) => {
         newFloorObjects.push(oldFloorObjects.splice(objectsToMoveIndex, 1)[0])
         newFloorObjects = newFloorObjects.sort()
 
-        const newPoint: Point = _.cloneDeep(point)
+        const newPoint: Point = global.structuredClone(point)
         newPoint.floors[currentElevatorFloor] = oldFloorObjects
         newPoint.floors[candidateFloor] = newFloorObjects
         newPoint.step = newPoint.step + 1
@@ -274,11 +273,11 @@ export default async (lineReader: any, params: Params) => {
         newFloorObjects.push('E')
         // start with the rightmost index, which is always higher
         const objectsToMove: Array<string> = combinationOfPairsOfElements[objectPairIndex]
-        oldFloorObjects = _.filter(oldFloorObjects, (o: string) => !objectsToMove.includes(o))
+        oldFloorObjects = oldFloorObjects.filter((o: string) => !objectsToMove.includes(o))
         newFloorObjects.push(...objectsToMove)
         newFloorObjects = newFloorObjects.sort()
 
-        const newPoint = _.cloneDeep(point)
+        const newPoint = global.structuredClone(point)
         newPoint.floors[currentElevatorFloor] = oldFloorObjects
         newPoint.floors[candidateFloor] = newFloorObjects
         newPoint.step = newPoint.step + 1
@@ -336,14 +335,7 @@ export default async (lineReader: any, params: Params) => {
       const newPoints: Array<Point> = getNewPoints(point, openedIndex, visitedIndex, lowestPoint.step)
       if (newPoints.length > 0) {
         opened.push(...newPoints)
-        // TODO improve this
-        opened.sort((a, b) =>
-          b.distance - a.distance > 0
-            ? 1
-            : b.distance - a.distance < 0
-              ? -1
-              : b.floors[b.floors.length - 1].length - a.floors[a.floors.length - 1].length
-        )
+        opened.sort((a, b) => b.distance - a.distance)
       }
     }
 
@@ -355,32 +347,23 @@ export default async (lineReader: any, params: Params) => {
         console.log('it', it, 'opened', opened.length, 'lowestSteps', lowestPoint.step)
       }
     }
-    return lowestPoint
+    return lowestPoint.step
   }
 
-  indexOfObjects = indexOfObjects.sort()
+  indexOfObjects.sort()
   data.distance = calculateDistance(data.floors!)
 
-  if (params.skip !== true && params.skip !== 'part1') {
-    log.info('Doing part 1')
-    const openedIndex = { [generateKey(data)]: 0 }
-    const point = solveFor([data], openedIndex, {})
-    // printFloors(point)
-    part1 = point?.step
+  if (!params.skipPart1) {
+    part1 = solveFor([data], { [generateKey(data)]: 0 }, {})
   }
 
-  if (params.skip !== true && params.skip !== 'part2') {
-    log.info('Doing part 2')
-    const data2 = _.cloneDeep(data)
-    indexOfObjects = indexOfObjects.concat(['XG', 'XM', 'YG', 'YM'])
-    indexOfObjects = indexOfObjects.sort()
-    data2.floors[0] = data2.floors[0].concat(['XG', 'XM', 'YG', 'YM'])
+  if (!params.skipPart2) {
+    const data2 = global.structuredClone(data)
+    indexOfObjects = indexOfObjects.concat(['XG', 'XM', 'YG', 'YM']).sort()
+    data2.floors[0].push('XG', 'XM', 'YG', 'YM')
     data2.distance = calculateDistance(data2.floors!)
     printFloors(data2)
-    const openedIndex = { [generateKey(data2)]: 0 }
-    const point = solveFor([data2], openedIndex, {})
-    // printFloors(point)
-    part2 = point?.step
+    part2 = solveFor([data2], { [generateKey(data2)]: 0 }, {})
   }
 
   return { part1, part2 }

@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '03'
+    day: '03',
+    title: 'Squares With Three Sides'
   },
   logLevel: 'info',
   prod: {

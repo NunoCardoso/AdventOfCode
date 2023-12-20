@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '09'
+    day: '09',
+    title: 'Explosives in Cyberspace'
   },
   logLevel: 'info',
   test: [

@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '08'
+    day: '08',
+    title: 'Two-Factor Authentication'
   },
   logLevel: 'info',
   ui: { show: true, end: true },

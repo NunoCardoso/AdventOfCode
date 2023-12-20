@@ -38,7 +38,9 @@ export default async (lineReader: any, params: Params) => {
         if (visitedPoints.has(point[0] + ',' + point[1]) && !visitedPoint) {
           visitedPoint = [point[0], point[1]]
         }
-        if (!visitedPoint) visitedPoints.add(point[0] + ',' + point[1])
+        if (!visitedPoint) {
+          visitedPoints.add(point[0] + ',' + point[1])
+        }
       }
     } else {
       point[0] += directionsMap[currentDirection][0] * instruction[1]

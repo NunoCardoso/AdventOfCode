@@ -26,12 +26,8 @@ export default async (lineReader: any, params: Params) => {
     dataForPart2.push([bigRow[i], bigRow[i + 1], bigRow[i + 2]])
   }
 
-  dataForPart1.forEach((d) => {
-    if (checkTriangle(d)) part1++
-  })
-  dataForPart2.forEach((d) => {
-    if (checkTriangle(d)) part2++
-  })
+  part1 = dataForPart1.filter(checkTriangle).length
+  part2 = dataForPart2.filter(checkTriangle).length
 
   return { part1, part2 }
 }

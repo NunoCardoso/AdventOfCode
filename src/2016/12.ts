@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '12'
+    day: '12',
+    title: "Leonardo's Monorail"
   },
   test: {
     id: 'test',
