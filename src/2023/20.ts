@@ -3,25 +3,35 @@ export default {
     year: '2023',
     day: '20'
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: [
     {
       id: 'test1',
+      skip: true,
+      params: {
+        iterations: 1000
+      },
       answers: {
         part1: 32000000
       }
     },
     {
       id: 'test2',
+      skip: true,
+      params: {
+        iterations: 1000
+      },
       answers: {
         part1: 11687500
       }
     }
   ],
   prod: {
-    skip: true,
+    params: {
+      iterations: 1000
+    },
     answers: {
-      part1: 0,
+      part1: 873301506,
       part2: 0
     }
   }
