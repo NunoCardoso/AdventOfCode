@@ -11,21 +11,20 @@ if (process.argv[3]?.length !== 2) {
   process.exit()
 }
 
+let newFileDirPath = path.join(__dirname , '/src/', process.argv[2] + '/')
 let newFilePath = path.join(__dirname , '/src/', process.argv[2] + '/' + process.argv[3] + '.ts')
-let newDirPath = path.join(__dirname , '/src/', process.argv[2], '/', process.argv[3])
-if (fs.existsSync(newDirPath)) {
-  console.error("Error: " + newDirPath + " exists")
+let newInputDirPath = path.join(__dirname , '/input/', process.argv[2], '/')
+if (fs.existsSync(newFilePath)) {
+  console.error("Error: " + newFilePath + " exists")
   process.exit()
 } else {
-  // mkdir dir
-  fs.mkdirSync(newDirPath)
   // cp index.ts
-  fs.copyFileSync(__dirname  + '/src/template/index.ts', newDirPath + '/index.ts')
+  fs.copyFileSync(__dirname  + '/src/template/index.ts', newFileDirPath + process.argv[3] + '.solution.ts')
   // make input.txt
-  let file = fs.openSync(newDirPath + '/input.txt', 'a')
+  let file = fs.openSync(newInputDirPath + process.argv[3] + '.input.txt', 'a')
   fs.closeSync(file)
   // make test.txt
-  file = fs.openSync(newDirPath + '/test.txt', 'a')
+  file = fs.openSync(newInputDirPath + process.argv[3] + '.test.txt', 'a')
   fs.closeSync(file)
 
   let content = fs.readFileSync(__dirname  + '/src/template/xx.ts','utf8')

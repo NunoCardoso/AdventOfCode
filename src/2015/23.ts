@@ -1,9 +1,12 @@
 export default {
   config: {
     year: '2015',
-    day: '23'
+    day: '23',
+    title: 'Opening the Turing Lock',
+    status: 'done',
+    comment: 'Another instruction list puzzle, not requiring anything special',
+    difficulty: 2
   },
-  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

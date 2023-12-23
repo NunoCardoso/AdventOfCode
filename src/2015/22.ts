@@ -2,10 +2,12 @@ export default {
   config: {
     year: '2015',
     day: '22',
+    title: 'Wizard Simulator 20XX',
+    status: 'done',
     comment:
-      'if I let Nothing to be an action, then I get a lower value for part 2 (987) than the answer (1216)'
+      'if I let Nothing to be an action, then I get a lower value for part 2 (987) than the answer (1216)',
+    difficulty: 3
   },
-  logLevel: 'info',
   test: [
     {
       id: 'test1',

@@ -3,7 +3,6 @@ export default {
     year: '2022',
     day: '21'
   },
-  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

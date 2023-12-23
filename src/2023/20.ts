@@ -32,7 +32,7 @@ export default {
     },
     answers: {
       part1: 873301506,
-      part2: 0
+      part2: 241823802412393
     }
   }
 }

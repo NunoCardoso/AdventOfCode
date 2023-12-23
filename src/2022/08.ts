@@ -1,9 +1,11 @@
 export default {
   config: {
     year: '2022',
-    day: '08'
+    day: '08',
+    title: 'Treetop Tree House',
+    comment: 'Very simple solution iterating on all 4 directions while computing partial scores',
+    status: 'done'
   },
-  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

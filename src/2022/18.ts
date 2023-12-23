@@ -3,7 +3,6 @@ export default {
     year: '2022',
     day: '18'
   },
-  logLevel: 'info',
   ui: {
     show: false,
     wait: 100

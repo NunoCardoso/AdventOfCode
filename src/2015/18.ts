@@ -1,9 +1,12 @@
 export default {
   config: {
     year: '2015',
-    day: '18'
+    day: '18',
+    title: 'Like a GIF For Your Yard',
+    status: 'done',
+    comment: 'Mapping changes in a grid and iterating until the final state exists',
+    difficulty: 3
   },
-  logLevel: 'info',
   ui: {
     show: true,
     during: false,

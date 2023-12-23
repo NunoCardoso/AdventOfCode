@@ -1,7 +1,11 @@
 export default {
   config: {
     year: '2017',
-    day: '02'
+    day: '02',
+    title: 'Corruption Checksum',
+    status: 'done',
+    comment: 'Making sums while parsing input',
+    difficulty: 1
   },
   test: [
     {

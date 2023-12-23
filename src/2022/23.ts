@@ -4,7 +4,6 @@ export default {
     day: '23',
     comment: 'on 6 seconds'
   },
-  logLevel: 'info',
   ui: {
     show: true,
     during: false,

@@ -4,7 +4,6 @@ export default {
     day: '22',
     comment: 'test does not work, have to reshape cube for test'
   },
-  logLevel: 'info',
   ui: {
     show: false
   },

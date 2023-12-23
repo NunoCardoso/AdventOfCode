@@ -2,9 +2,10 @@ export default {
   config: {
     year: '2022',
     day: '15',
-    comment: 'on 16 seconds. rotate -45 deg'
+    comment:
+      'This is a great puzzle, as it is way easier to rotate 45 degrees and use square areas instead of diamond' +
+      'areas. also, finding the sole beacon for part 2 requires some brainstorming explained on readme'
   },
-  logLevel: 'error',
   test: {
     id: 'test',
     params: {

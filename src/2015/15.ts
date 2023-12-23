@@ -1,9 +1,12 @@
 export default {
   config: {
     year: '2015',
-    day: '15'
+    day: '15',
+    title: 'Science for Hungry People',
+    status: 'done',
+    comment: 'not happy with the code for portion calculation but it works',
+    difficulty: 3
   },
-  logLevel: 'info',
   params: {
     calories: {
       part1: undefined,

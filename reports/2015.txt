@@ -1,0 +1,154 @@
+[36mDay 01: Not Quite Lisp[39m
+Status: done
+Difficulty: 1
+Comment: Basic functional puzzle, parsing input and counting
+Part 1 ✅  part 2 ✅  in [32m0.001s[39m
+
+[36mDay 02: I Was Told There Would Be No Math[39m
+Status: done
+Difficulty: 1
+Comment: Basic functional puzzle, parsing input and doing basic math sums
+Part 1 ✅  part 2 ✅  in [32m0.002s[39m
+
+[36mDay 03: Perfectly Spherical Houses in a Vacuum[39m
+Status: done
+Difficulty: 1
+Comment: Good solution in the sense that a set is passed as function arg and changed by reference
+Part 1 ✅  part 2 ✅  in [32m0.003s[39m
+
+[36mDay 04: The Ideal Stocking Stuffer[39m
+Status: done
+Difficulty: 1
+Tags: md5
+Comment: Nothing I can do to make it faster, running MD5 hashes until they meet criteria
+Part 1 ✅  part 2 ✅  in [33m2.743s[39m
+
+[36mDay 05: Doesn't He Have Intern-Elves For This?[39m
+Status: done
+Difficulty: 1
+Comment: Just text regex checking
+Part 1 ✅  part 2 ✅  in [32m0.002s[39m
+
+[36mDay 06: Probably a Fire Hazard[39m
+Status: done
+Difficulty: 2
+Part 1 ✅  part 2 ✅  in [32m0.644s[39m
+
+[36mDay 07: Some Assembly Required[39m
+Status: done
+Difficulty: 2
+Tags: recursive
+Comment: First recursive puzzle, works as intended
+Part 1 ✅  part 2 ✅  in [32m0.002s[39m
+
+[36mDay 08: Matchsticks[39m
+Status: done
+Difficulty: 2
+Comment: Using JSON.stringify helps a lot
+Part 1 ✅  part 2 ✅  in [32m0.001s[39m
+
+[36mDay 09: All in a Single Night[39m
+Status: done
+Difficulty: 2
+Tags: permutation
+Comment: City path travelling, shortest / longest routes, done easily with permutations
+Part 1 ✅  part 2 ✅  in [32m0.054s[39m
+
+[36mDay 10: Elves Look, Elves Say[39m
+Status: done
+Difficulty: 2
+Comment: look-and-say sequence, I do not think it can be faster, but one can try. The regex pattern is the key here
+Part 1 ✅  part 2 ✅  in [33m1.603s[39m
+
+[36mDay 11: Corporate Policy[39m
+Status: done
+Difficulty: 1
+Part 1 ✅  part 2 ✅  in [32m0.468s[39m
+
+[36mDay 12: JSAbacusFramework.io[39m
+Status: done
+Difficulty: 2
+Tags: recursive
+Part 1 ✅  part 2 ✅  in [32m0.002s[39m
+
+[36mDay 13: Knights of the Dinner Table[39m
+Status: done
+Difficulty: 2
+Tags: permutation
+Comment: I like the simple way to change the setup for part 2
+Part 1 ✅  part 2 ✅  in [32m0.573s[39m
+
+[36mDay 14: Reindeer Olympics[39m
+Status: done
+Difficulty: 2
+Comment: The trick is to accept that multiple reindeers can be in the lead at the same time
+Part 1 ✅  part 2 ✅  in [32m0.002s[39m
+
+[36mDay 15: Science for Hungry People[39m
+Status: done
+Difficulty: 3
+Comment: not happy with the code for portion calculation but it works
+Part 1 ✅  part 2 ✅  in [32m0.072s[39m
+
+[36mDay 16: Aunt Sue[39m
+Status: done
+Difficulty: 1
+Comment: Simple and functional puzzle
+Part 1 ✅  part 2 ✅  in [32m0.002s[39m
+
+[36mDay 17: No Such Thing as Too Much[39m
+Status: done
+Difficulty: 3
+Tags: permutation
+Part 1 ✅  part 2 ✅  in [32m0.021s[39m
+
+[36mDay 18: Like a GIF For Your Yard[39m
+Status: done
+Difficulty: 3
+Comment: Mapping changes in a grid and iterating until the final state exists
+Part 1 ✅  part 2 ✅  in [32m0.065s[39m
+
+[36mDay 19: Medicine for Rudolph[39m
+Status: done
+Difficulty: 4
+Comment: Check the readme for the reason of the formula used, it is quite clever puzzle to avoid path finding
+Part 1 ✅  part 2 ✅  in [32m0.005s[39m
+
+[36mDay 20: Infinite Elves and Infinite Houses[39m
+Status: done
+Difficulty: 3
+Comment: Not sure if I can optimize this, I have to generate until I find something first above threshold that I believe I can't reliably forecast
+Part 1 ✅  part 2 ✅  in [33m1.408s[39m
+
+[36mDay 21: RPG Simulator 20XX[39m
+Status: done
+Difficulty: 3
+Comment: really funny puzzle, hard to get the day sequence right, but surprisingly quick to get optimal solution
+Part 1 ✅  part 2 ✅  in [32m0.002s[39m
+
+[36mDay 22: Wizard Simulator 20XX[39m
+Status: done
+Difficulty: 3
+Comment: if I let Nothing to be an action, then I get a lower value for part 2 (987) than the answer (1216)
+Part 1 ✅  part 2 ✅  in [32m0.753s[39m
+
+[36mDay 23: Opening the Turing Lock[39m
+Status: done
+Difficulty: 2
+Comment: Another instruction list puzzle, not requiring anything special
+Part 1 ✅  part 2 ✅  in [32m0.001s[39m
+
+[36mDay 24: It Hangs in the Balance[39m
+Status: done
+Difficulty: 5
+Tags: combination
+Comment: Runs in 6/7 seconds, not sure if I can do it better as it does a lot of combinations
+Part 1 ✅  part 2 ✅  in [31m6.921s[39m
+
+[36mDay 25: Let It Snow[39m
+Status: done
+Difficulty: 1
+Comment: Simple solution, happy to get it done quick
+Part 1 ✅  part 2   in [32m0.764s[39m
+
+Total: 16.114s

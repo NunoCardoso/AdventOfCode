@@ -7,15 +7,14 @@ export default {
   test: {
     id: 'test',
     answers: {
-      part1: 0,
-      part2: 0
+      part1: 5,
+      part2: 7
     }
   },
   prod: {
-    skip: true,
     answers: {
-      part1: 0,
-      part2: 0
+      part1: 395,
+      part2: 64714
     }
   }
 }

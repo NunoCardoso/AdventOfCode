@@ -1,9 +1,12 @@
 export default {
   config: {
     year: '2022',
-    day: '07'
+    day: '07',
+    title: 'No Space Left On Device',
+    status: 'done',
+    tags: [],
+    comment: 'Properly optimized script with no need for recursion, to compute directory sizes'
   },
-  logLevel: 'error',
   params: {
     cutoffDirSize: 100000,
     totalDiskSize: 70000000,

@@ -1,7 +1,11 @@
 export default {
   config: {
     year: '2017',
-    day: '01'
+    day: '01',
+    title: 'Inverse Captcha',
+    status: 'done',
+    comment: 'Making sums while parsing input',
+    difficulty: 1
   },
   test: [
     {

@@ -1,9 +1,12 @@
 export default {
   config: {
     year: '2022',
-    day: '13'
+    day: '13',
+    title: 'Distress Signal',
+    status: 'done',
+    comment: 'Somehow I managed to not mess up the recursion, which is quite interesting',
+    tags: ['recursion']
   },
-  logLevel: 'warn',
   test: {
     id: 'test',
     answers: {

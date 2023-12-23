@@ -2,7 +2,11 @@ export default {
   config: {
     year: '2015',
     day: '24',
-    comment: '6/7 seconds, not sure if I can do it better'
+    title: 'It Hangs in the Balance',
+    status: 'done',
+    tags: ['combination'],
+    comment: 'Runs in 6/7 seconds, not sure if I can do it better as it does a lot of combinations',
+    difficulty: 5
   },
   params: {
     compartments: {

@@ -1,9 +1,14 @@
 export default {
   config: {
     year: '2022',
-    day: '19'
+    day: '19',
+    comment:
+      'Look at index.fastest.ts and index.notsofastest.ts.\n' +
+      '\n' +
+      'Just adding an object to group resources and robots, makes the code 10x slower.\n' +
+      '\n' +
+      'it is the same algorithm.'
   },
-  logLevel: 'warn',
   mode: 'fastest',
   params: {
     limit: {

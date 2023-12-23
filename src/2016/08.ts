@@ -2,7 +2,10 @@ export default {
   config: {
     year: '2016',
     day: '08',
-    title: 'Two-Factor Authentication'
+    title: 'Two-Factor Authentication',
+    status: 'done',
+    comment: 'Shifts on row and column grid are boring but doable',
+    difficulty: 2
   },
   logLevel: 'info',
   ui: { show: true, end: true },

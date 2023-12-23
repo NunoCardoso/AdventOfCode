@@ -1,7 +1,12 @@
 export default {
   config: {
     year: '2015',
-    day: '10'
+    day: '10',
+    title: 'Elves Look, Elves Say',
+    status: 'done',
+    comment:
+      'look-and-say sequence, I do not think it can be faster, but one can try. The regex pattern is the key here',
+    difficulty: 2
   },
   params: {
     input: '1113122113',

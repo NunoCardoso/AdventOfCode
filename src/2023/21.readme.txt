@@ -1,0 +1,81 @@
+The part 2 of this puzzle requires a program that works only for the input given.
+The approach is not even applicable to the tests, as the steps number require a repetition that does't pattern in the tests samples.
+
+so, considering that:
+ - the start is right in the middle of a square of 131x131 (point 65,65)
+ - there are no stones in the horizontal / vertical paths, so it will grow as fast as it can over 65 (leave first garden)
+  and each garden (131 steps)
+ - look, 26501365 = 202300 * 131 + 65, which means that it will be a diamond shaped garden with 202300 "radius"
+ - the steps mean that they will always have the same pattern when even and odd. therefore,path finding is not necessary,
+   the squares will all have the same pattern
+
+The diamond will look like this:
+
+                  LS-N-LS
+               LS-BS-B-BS-LS
+             LS-BS-B-C-B-BS-LS
+           LS-BS-B-C-B-C-B-BS-LS
+         LS-BS-B-C-B-C-B-C-B-BS-LS
+       LS-BS-B-C-B-C-B-C-B-C-B-BS-LS
+     LS-BS-B-C-B-C-B-C-B-C-B-C-B-BS-LS
+   LS-BS-B-C-B-C-B-C-B-C-B-C-B-C-B-BS-LS
+     W-B-C-B-C-B-C-B-O-B-C-B-C-B-C-B-E
+   LS-BS-B-C-B-C-B-C-B-C-B-C-B-C-B-BS-LS
+     LS-BS-B-C-B-C-B-C-B-C-B-C-B-BS-LS
+       LS-BS-B-C-B-C-B-C-B-C-B-BS-LS
+         LS-BS-B-C-B-C-B-C-B-BS-LS
+           LS-BS-B-C-B-C-B-BS-LS
+             LS-BS-B-C-B-BS-LS
+                LS-BS-B-BS-LS
+                  LS-S-LS
+
+
+Where:
+
+  O is      B is      C is       N is      W is      S is       E is
+like this like this like this  like this like this like this  like this
+                                                                
+ O.O.O.O   .O.O.O.   O.O.O.O    .......   ....O.O   O.O.O.O   O.O....
+ .O.O.O.   O.O.O.O   .O.O.O.    ...O...   ...O.O.   .O.O.O.   .O.O...
+ O.O.O.O   .O.O.O.   O.O.O.O    ..O.O..   ..O.O.O   O.O.O.O   O.O.O..
+ .O.S.O.   O.O.O.O   .O.O.O.    .O.O.O.   .O.O.O.   .O.O.O.   .O.O.O.
+ O.O.O.O   .O.O.O.   O.O.O.O    O.O.O.O   ..O.O.O   ..O.O..   O.O.O..
+ .O.O.O.   O.O.O.O   .O.O.O.    .O.O.O.   ...O.O.   ...O...   .O.O...
+ O.O.O.O   .O.O.O.   O.O.O.O    O.O.O.O   ....O.O   .......   O.O....
+
+LS,NE is  LS,NW is  LS,SW is  LS,SE is
+like this like this like this like this
+ .......   .......   ...O.O.   .O.O...
+ .......   .......   ....O.O   O.O....
+ .......   .......   .....O.   .O.....
+ O......   ......O   ......O   O......
+ .O.....   .....O.   .......   .......
+ O.O....   ....O.O   .......   .......
+ .O.O...   ...O.O.   .......   .......
+
+ BS,NE is  BS,NW is  BS,NE is  BS,NW is
+like this like this like this like this
+ O.O....   ....O.O   O.O.O.O   O.O.O.O
+ .O.O...   ...O.O.   .O.O.O.   .O.O.O.
+ O.O.O..   ..O.O.O   O.O.O.O   O.O.O.O
+ .O.O.O.   .O.O.O.   .O.O.O.   .O.O.O.
+ O.O.O.O   O.O.O.O   ..O.O.O   O.O.O..
+ .O.O.O.   .O.O.O.   ...O.O.   .O.O...
+ O.O.O.O   O.O.O.O   ....O.O   O.O....
+
+let's see the span on east: = will be one O with 65, 202300 / 2 will be B, 202300 / 2 - 1 will be C, 1 will be E
+
+In the above example: 202300 is 8. B: there are 8 + (7 + 6 + 5 + 4 + 3 + 2 + 1) * 2 = 64,
+or 8 + (8 * 7)/2 * 2 = 8 + 8 * 7 = 8 * 8
+C:  there are 7 + (6 + 5 + 4 + 3 + 2 + 1) * 2 - 1 (for O) = 36,
+or  7 + (6 * 5) - 1, or 6 * 6
+LS: 8 * 4 = 32,
+BS: (8 - 1) * 4 = 28
+
+ So, in total:
+
+O: 1, N: 1, W: 1, E: 1, S: 1
+B: 202300 * 202300 = 40 925 290 000
+C: 202298 * 202298 = 40 924 480 804
+LS: 202300 * 4 = 101 150 * 4 = 809200
+BS: (202300 - 1) * 4 = 101 149 * 4 = 809196

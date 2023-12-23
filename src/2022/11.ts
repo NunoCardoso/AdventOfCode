@@ -1,9 +1,11 @@
 export default {
   config: {
     year: '2022',
-    day: '11'
+    day: '11',
+    title: 'Monkey in the Middle',
+    status: 'done',
+    comment: 'First puzzle using the multiple common denominator to extrapolate results'
   },
-  logLevel: 'info',
   params: {
     iterations: {
       part1: 20,

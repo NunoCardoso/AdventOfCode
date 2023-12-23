@@ -1,7 +1,10 @@
 export default {
   config: {
     year: '2022',
-    day: '06'
+    day: '06',
+    title: 'Tuning Trouble',
+    status: 'done',
+    comment: 'Simple text regex puzzle, compact solution script, easy with the use of Set'
   },
   params: {
     size: {

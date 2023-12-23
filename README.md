@@ -1,3 +1,13 @@
+# Setup
+
+all inputs and tests should be in a input directory, as in:
+
+    ./input/2015/01.input.txt
+    ./input/2015/02.input.txt
+    ./input/2015/02.test1.txt
+
+This is because adventofcode author asks people to not commit puzzle inputs. 
+
 # How to run
 
 ## makeDay
@@ -32,7 +42,7 @@ to run a batch of puzzles
 ** during?: boolean
 ** wait:?: number
 * test ?: Test | Array<Test> => runs tests
-** id: test id, tied to the test input file name
+** id: test id, tied to the test input fil[todo](todo)e name
 ** skip ?: boolean | 'part1' | 'part2'
 ** params ?: any => additional params
 ** answers ?: any => object with part1 and/or part2 answers
@@ -49,26 +59,20 @@ skip === 'part2' => skip only part2
 
 # Guidelines
 
-. Functions names: solveFor, deepFirst, breathFirst
-. Be as declarative as possible
-
-## TO DO
-
-. Make a runAllPuzzles, saves dumps times (< 1 s), disables UI
+. Functions names: solveFor, deepFirst, breathFirst, dijkstra
+. Be as declarative as possible, use function names to describe the steps
 
 ## Typing
-. use Point, Dimension, World
-. remove any
-.replace Record with Sets, Maps
+. use Point, Dimension, World 
+. avoid the any type[aoc.d.ts](src%2Faoc.d.ts)
+. replace Record with Sets, Maps
 
 ## Dependencies
 
-. Avoid lodash
+. Avoid lodash, use native JS 
+. libraries allowed: js-combinatronics 
 
-. use global.structuredClone instead of deepClone, or {...obj} / arr.slice() for shallows
-. check when I can use shallows instead of those deepClones
-
-prefer match with /g than matchAll, as in 
+. prefer match with /g than matchAll, as in
 
 "abcabfgabsefd".match(/ab/) => ['ab', index: 0, input: 'abcabfgabsefd', groups: undefined]
 "abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']

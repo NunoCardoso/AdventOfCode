@@ -2,7 +2,10 @@ export default {
   config: {
     year: '2016',
     day: '04',
-    title: 'Security Through Obscurity'
+    title: 'Security Through Obscurity',
+    status: 'done',
+    comment: 'checksum generation, parsing input while checking validity',
+    difficulty: 1
   },
   logLevel: 'info',
   test: [

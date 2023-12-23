@@ -1,7 +1,10 @@
 export default {
   config: {
     year: '2022',
-    day: '03'
+    day: '03',
+    title: 'Rucksack Reorganization',
+    status: 'done',
+    comment: 'Functional puzzle, using custom intersect to find common letters while parsing input'
   },
   test: {
     id: 'test',

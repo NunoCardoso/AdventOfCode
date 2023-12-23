@@ -22,12 +22,16 @@ export type Test = Prod & {
   id: string
 }
 
+export type Status = 'inProgress' | 'done' | 'canBeImproved'
+
 export type Config = {
   year: string
   day: string
   title?: string
   comment?: string
   tags?: string
+  status?: Status
+  difficulty: number
 }
 
 export type Puzzle = {

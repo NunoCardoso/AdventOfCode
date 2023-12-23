@@ -3,7 +3,9 @@ export default {
     year: '2016',
     day: '11',
     title: 'Radioisotope Thermoelectric Generators',
-    comment: '18s, maybe it can be done better with a pure dijkstra, needs refactor'
+    status: 'canBeImproved',
+    comment: '18s, maybe it can be done better with a pure dijkstra, needs refactor',
+    difficulty: 4
   },
   logLevel: 'info',
   test: {

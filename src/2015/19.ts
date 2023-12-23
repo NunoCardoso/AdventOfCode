@@ -1,13 +1,12 @@
 export default {
   config: {
     year: '2015',
-    day: '19'
-  },
-  logLevel: 'info',
-  ui: {
-    show: true,
-    during: false,
-    end: true
+    day: '19',
+    title: 'Medicine for Rudolph',
+    status: 'done',
+    comment:
+      'Check the readme for the reason of the formula used, it is quite clever puzzle to avoid path finding',
+    difficulty: 4
   },
   test: [
     {

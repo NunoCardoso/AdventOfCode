@@ -1,7 +1,10 @@
 export default {
   config: {
     year: '2022',
-    day: '09'
+    day: '09',
+    title: 'Rope Bridge',
+    status: 'done',
+    comment: 'Good puzzle solution for any length'
   },
   params: {
     ropeLength: {

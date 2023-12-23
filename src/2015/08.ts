@@ -1,7 +1,11 @@
 export default {
   config: {
     year: '2015',
-    day: '08'
+    day: '08',
+    title: 'Matchsticks',
+    comment: 'Using JSON.stringify helps a lot',
+    status: 'done',
+    difficulty: 2
   },
   test: {
     id: 'test',

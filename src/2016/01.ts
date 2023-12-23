@@ -2,9 +2,11 @@ export default {
   config: {
     year: '2016',
     day: '01',
-    title: 'No Time for a Taxicab'
+    title: 'No Time for a Taxicab',
+    status: 'done',
+    comment: 'Parsing input directions and tracking the movement of a cursor, not complicated',
+    difficulty: 1
   },
-  logLevel: 'info',
   test: [
     {
       id: 'test1',

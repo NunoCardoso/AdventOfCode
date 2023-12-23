@@ -2,7 +2,10 @@ export default {
   config: {
     year: '2016',
     day: '02',
-    title: 'Bathroom Security'
+    title: 'Bathroom Security',
+    status: 'done',
+    comment: 'Follow directions and see where it lands on a keyboard, simple',
+    difficult: 1
   },
   logLevel: 'info',
   test: {

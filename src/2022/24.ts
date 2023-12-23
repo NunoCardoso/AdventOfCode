@@ -4,7 +4,6 @@ export default {
     day: '24',
     comment: 'too long, but it finishes with right solution'
   },
-  logLevel: 'info',
   ui: {
     show: true,
     during: false,

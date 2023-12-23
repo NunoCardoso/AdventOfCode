@@ -1,7 +1,10 @@
 export default {
   config: {
     year: '2022',
-    day: '01'
+    day: '01',
+    title: 'Calorie Counting',
+    status: 'done',
+    comment: 'Functional puzzle, doing counts while parsing input, returning top counts'
   },
   test: {
     id: 'test',

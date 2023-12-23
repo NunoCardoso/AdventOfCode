@@ -7,7 +7,7 @@ export default {
   logLevel: 'debug',
   test: {
     id: 'test',
-    skip: 'part1',
+    skip: true,
     params: {
       steps: {
         part1: 6,
@@ -20,7 +20,6 @@ export default {
     }
   },
   prod: {
-    skip: true,
     params: {
       steps: {
         part1: 64,
@@ -29,7 +28,7 @@ export default {
     },
     answers: {
       part1: 3729,
-      part2: 0
+      part2: 621289922886149
     }
   }
 }

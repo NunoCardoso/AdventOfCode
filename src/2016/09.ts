@@ -2,7 +2,11 @@ export default {
   config: {
     year: '2016',
     day: '09',
-    title: 'Explosives in Cyberspace'
+    title: 'Explosives in Cyberspace',
+    status: 'done',
+    comment: 'a little annoying to get it right',
+    difficulty: 3,
+    tags: ['recursion']
   },
   logLevel: 'info',
   test: [

@@ -1,7 +1,10 @@
 export default {
   config: {
     year: '2022',
-    day: '02'
+    day: '02',
+    title: 'Rock Paper Scissors',
+    status: 'done',
+    comment: 'Functional puzzle, summing answers while parsing input. Rules are hardcoded.'
   },
   test: {
     id: 'test',

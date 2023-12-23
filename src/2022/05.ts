@@ -1,7 +1,13 @@
 export default {
   config: {
     year: '2022',
-    day: '05'
+    day: '05',
+    title: 'Supply Stacks',
+    status: 'done',
+    comment: 'Good puzzle to play with splices.'
+  },
+  ui: {
+    end: true
   },
   test: {
     id: 'test',

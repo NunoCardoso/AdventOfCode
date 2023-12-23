@@ -3,7 +3,9 @@ export default {
     year: '2016',
     day: '05',
     title: 'How About a Nice Game of Chess?',
-    comment: 'md5, 18s, nothing I can do to make it faster'
+    status: 'done',
+    comment: 'md5, 18s, nothing I can do to make it faster',
+    difficulty: 2
   },
   logLevel: 'info',
   test: {

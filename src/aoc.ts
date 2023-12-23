@@ -16,7 +16,7 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
       _puzzle.config.year +
       '/' +
       _puzzle.config.day +
-      '/index' +
+      '.solution' +
       (_puzzle.mode ? '.' + _puzzle.mode : '')
   ).default
 
@@ -59,12 +59,10 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
     let lineReader: any
     const file = path.join(
       __dirname,
-      '/',
+      '../input/',
       _puzzle.config.year!,
       '/',
-      _puzzle.config.day!,
-      '/',
-      targetFile + '.txt'
+      _puzzle.config.day! + '.' + targetFile + '.txt'
     )
     if (fs.existsSync(file)) {
       lineReader = readline.createInterface({

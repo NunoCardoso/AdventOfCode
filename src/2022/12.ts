@@ -1,16 +1,16 @@
 export default {
   config: {
     year: '2022',
-    day: '12'
+    day: '12',
+    title: 'Hill Climbing Algorithm',
+    status: 'done',
+    comment: 'This is the cleanest, simplest Dijkstra algorithm implementation from all puzzles',
+    tags: ['dijkstra']
   },
-  mode: 'fastest',
   ui: {
     show: true,
-    during: false,
-    wait: 10,
     end: true
   },
-  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

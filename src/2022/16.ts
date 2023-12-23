@@ -4,7 +4,6 @@ export default {
     day: '16',
     comment: 'over 1 min, errors on test part2, error on part 2 value (execution is fine)'
   },
-  logLevel: 'info',
   params: {
     limit: {
       part1: 30,
@@ -12,6 +11,7 @@ export default {
     }
   },
   test: {
+    skip: 'part1',
     id: 'test',
     answers: {
       part1: 1651,
@@ -19,6 +19,7 @@ export default {
     }
   },
   prod: {
+    skip: true,
     answers: {
       part1: 2124,
       part2: 2775

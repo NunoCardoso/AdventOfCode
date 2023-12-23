@@ -1,7 +1,11 @@
 export default {
   config: {
     year: '2015',
-    day: '14'
+    day: '14',
+    title: 'Reindeer Olympics',
+    status: 'done',
+    comment: 'The trick is to accept that multiple reindeers can be in the lead at the same time',
+    difficulty: 2
   },
   test: {
     id: 'test',
