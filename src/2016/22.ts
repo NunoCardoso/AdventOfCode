@@ -1,7 +1,8 @@
 export default {
   config: {
     year: '2016',
-    day: '22'
+    day: '22',
+    title: 'Grid Computing'
   },
   logLevel: 'debug',
   test: {
@@ -9,7 +10,7 @@ export default {
     skip: 'part1',
     answers: {
       part1: 0,
-      part2: 0
+      part2: 7
     }
   },
   prod: {

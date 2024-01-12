@@ -53,20 +53,20 @@ export default async (lineReader: any, params: Params) => {
     (haveResourcesForGeodeRobot(blueprint, step)
       ? 0
       : Math.max(
-        Math.ceil(
-          (blueprint.geodeRobot.obsidian - step.resources.obsidian) / Math.max(step.robots.obsidian, 1)
-        ),
-        Math.ceil((blueprint.geodeRobot.ore - step.resources.ore) / Math.max(step.robots.ore, 1))
-      ))
+          Math.ceil(
+            (blueprint.geodeRobot.obsidian - step.resources.obsidian) / Math.max(step.robots.obsidian, 1)
+          ),
+          Math.ceil((blueprint.geodeRobot.ore - step.resources.ore) / Math.max(step.robots.ore, 1))
+        ))
 
   const timeToMakeAnObsidianRobot = (blueprint: Blueprint, step: Step): number =>
     1 +
     (haveResourcesForObsidianRobot(blueprint, step)
       ? 0
       : Math.max(
-        Math.ceil((blueprint.obsidianRobot.clay - step.resources.clay) / Math.max(step.robots.clay, 1)),
-        Math.ceil((blueprint.obsidianRobot.ore - step.resources.ore) / Math.max(step.robots.ore, 1))
-      ))
+          Math.ceil((blueprint.obsidianRobot.clay - step.resources.clay) / Math.max(step.robots.clay, 1)),
+          Math.ceil((blueprint.obsidianRobot.ore - step.resources.ore) / Math.max(step.robots.ore, 1))
+        ))
 
   const timeToMakeAClayRobot = (blueprint: Blueprint, step: Step): number =>
     1 +

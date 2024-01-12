@@ -1,17 +1,9 @@
 import { Params } from 'aoc.d'
-import { World, Point } from 'declarations'
+import { World } from 'declarations'
 
-type Step = {
-  path: Array<Point>
-  cost: number
-  distance: number
-}
-
-type Data = {
-  lowestCost: number
-  end: Point
-  step: Step | undefined
-}
+// x, y, cost, path
+type Point = [number, number, number, Set<string>?]
+type Data = { lowestScore: number; end: Point; path: Set<string> }
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -21,7 +13,7 @@ export default async (lineReader: any, params: Params) => {
 
   const world: World<string> = []
 
-  const getSpaceOrWall = (world: World<string>, row: number, column: number): string => {
+  const getSpaceOrWall = (world: World<string>, [row, column]: [number, number]): string => {
     if (!world[row]) world[row] = []
     if (!world[row][column]) {
       const val: number =
@@ -35,116 +27,94 @@ export default async (lineReader: any, params: Params) => {
 
   for (let row = 0; row < 2; row++) {
     for (let column = 0; column < 2; column++) {
-      getSpaceOrWall(world, row, column)
+      getSpaceOrWall(world, [row, column])
     }
   }
 
-  const getKey = (p: Point): string => '[' + p[0] + ',' + p[1] + ']'
+  const getKey = (p: Point): string => p[0] + ',' + p[1]
 
   const isSame = (p: Point, p2: Point): boolean => p[0] === p2[0] && p[1] === p2[1]
 
-  const getDistanceToFinish = (p: Point, end: Point): number =>
-    Math.abs(end[0] - p[0]) + Math.abs(end[1] - p[1])
-
   const outOfBounds = (p: Point) => p[0] < 0 || p[1] < 0
 
-  const breathFirst = async (
+  const getNewPoints = (point: Point, world: World<string>, visited: Set<string>) =>
+    (
+      [
+        [point[0] - 1, point[1], point[2] + 1],
+        [point[0] + 1, point[1], point[2] + 1],
+        [point[0], point[1] - 1, point[2] + 1],
+        [point[0], point[1] + 1, point[2] + 1]
+      ] as Array<Point>
+    ).filter((newPoint: Point) => {
+      if (outOfBounds(newPoint)) return false
+      if (getSpaceOrWall(world, [newPoint[0], newPoint[1]]) === '#') return false
+      newPoint[3] = new Set(point[3])!.add(getKey(newPoint))
+      return !visited.has(getKey(newPoint))
+    })
+
+  const doDijkstra = async (
     world: World<string>,
-    opened: Array<Step>,
-    visitedIndex: Map<string, number>,
+    opened: Array<Point>,
+    openedIndex: Set<string>,
+    visited: Set<string>,
     data: Data,
     type: string
   ) => {
-    const currentStep: Step = opened.splice(-1)[0]
-    const head: Point = currentStep.path[currentStep.path.length - 1]
-    const key: string = getKey(head)
-    log.debug('=== Starting ===')
-    log.debug('head', key, 'opened', opened.length)
-    log.debug('data', data)
+    const point: Point = opened.splice(-1)[0]
+    const pointKey: string = getKey(point)
+    log.debug('=== Dijkstra ===', point, 'opened', opened.length, 'data', data)
 
-    if (type === 'part1' && isSame(head, data.end)) {
-      if (data.lowestCost > currentStep.cost) {
-        log.debug('Got lowest cost with', currentStep.cost, 'path', currentStep.path)
-        data.lowestCost = currentStep.cost
-        data.step = currentStep
-        // remove opened values that have higher cost than current cost
-        for (let i = opened.length - 1; i >= 0; i--) {
-          if (opened[i].cost > data.lowestCost) {
-            opened.splice(i, 1)
-          }
+    // if part1, we return when getting to the end
+    if (type === 'part1' && isSame(point, data.end)) {
+      if (data.lowestScore > point[2]) {
+        log.debug('Got lowest score with', point)
+        data.lowestScore = point[2]
+        data.path = point[3]!
+      }
+      return
+    }
+
+    // if part2, return when we do X steps
+    if (type === 'part2' && point[2] > params.cutoff) return
+
+    visited.add(pointKey)
+    openedIndex.delete(pointKey)
+
+    const newPoints: Array<Point> = getNewPoints(point, world, visited)
+
+    if (newPoints.length > 0) {
+      newPoints.forEach((newPoint) => {
+        const newPointKey = getKey(newPoint)
+        if (!openedIndex.has(newPointKey)) {
+          opened.push(newPoint)
+          openedIndex.add(newPointKey)
+        } else {
+          const index = opened.findIndex((p: Point) => isSame(p, newPoint))
+          if (opened[index][2] > newPoint[2]) opened[index] = newPoint
         }
-      }
-      return
-    }
-
-    if (type === 'part2' && currentStep.cost > params.cutoff) {
-      return
-    }
-
-    if (!visitedIndex.has(key)) visitedIndex.set(key, currentStep.cost)
-    else if (visitedIndex.get(key)! > currentStep.cost) visitedIndex.set(key, currentStep.cost)
-
-    const newHeads: Array<Point> = (
-      [
-        [head[0] - 1, head[1]],
-        [head[0] + 1, head[1]],
-        [head[0], head[1] - 1],
-        [head[0], head[1] + 1]
-      ] as Array<Point>
-    ).filter((newHead: Point) => {
-      // reject if out of bounds
-      if (outOfBounds(newHead)) return false
-
-      // reject if cost will never be better than what we have
-      if (currentStep.cost + 1 + getDistanceToFinish(newHead, data.end) > data.lowestCost) {
-        return false
-      }
-
-      // ok, let's unravel this new point, reject if it's wall
-      if (getSpaceOrWall(world, newHead[0], newHead[1]) === '#') return false
-
-      const newKey = getKey(newHead)
-
-      // reject if it's in the visited list, and it has a worse cost; otherwise, keep it
-      if (visitedIndex.has(newKey) && visitedIndex.get(newKey)! <= currentStep.cost + 1) {
-        return false
-      }
-
-      // same reject, but with opened
-      const matchOpenedPathIndex = opened.findIndex((s: Step) => isSame(s.path[s.path.length - 1], newHead))
-      if (matchOpenedPathIndex >= 0) {
-        // worse cost
-        if (opened[matchOpenedPathIndex].cost <= currentStep.cost + 1) return false
-        else opened.splice(matchOpenedPathIndex, 1)
-      }
-      return true
-    })
-
-    if (newHeads.length > 0) {
-      newHeads.forEach((newHead) => {
-        const newStep = global.structuredClone(currentStep)
-        newStep.cost++
-        newStep.distance = getDistanceToFinish(newHead, data.end)
-        newStep.path.push(newHead)
-        opened.push(newStep)
       })
-      opened.sort((a, b) => b.cost - a.cost)
+      opened.sort((a, b) => b[2] - a[2])
     }
   }
 
   const solveFor = (world: World<string>, target: Point, type: string): number => {
-    const visitedIndex: Map<string, number> = new Map()
-    const data: Data = { lowestCost: 1000, end: target, step: undefined }
-    const opened: Array<Step> = [{ path: [[1, 1]], cost: 0, distance: 1000 }]
+    const visited: Set<string> = new Set()
+    const data: Data = { lowestScore: Number.POSITIVE_INFINITY, end: target, path: new Set() }
+    const start: Point = [1, 1, 0]
+    const opened: Array<Point> = [start]
+    const openedIndex: Set<string> = new Set()
+    opened.forEach((point) => openedIndex.add(getKey(point)))
     while (opened.length > 0) {
-      breathFirst(world, opened, visitedIndex, data, type)
+      doDijkstra(world, opened, openedIndex, visited, data, type)
     }
-    if (type === 'part1') return data.lowestCost
-    if (type === 'part2') return visitedIndex.size
+    if (type === 'part1') return data.lowestScore
+    if (type === 'part2') return visited.size
     return 0
   }
 
-  part1 = solveFor(world.slice(), params.target, 'part1')
+  if (!params.skipPart1) {
+    part1 = solveFor(world.slice(), params.target, 'part1')
+  }
   part2 = solveFor(world.slice(), params.target, 'part2')
 
   return { part1, part2 }

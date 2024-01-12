@@ -1,7 +1,11 @@
 export default {
   config: {
     year: '2021',
-    day: '05'
+    day: '05',
+    title: 'Hydrothermal Venture',
+    status: 'done',
+    comment: 'I am collecting 2 data sets, one for each part, while input parsing',
+    difficulty: 1
   },
   test: {
     id: 'test',

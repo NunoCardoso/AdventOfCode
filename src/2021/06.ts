@@ -1,7 +1,11 @@
 export default {
   config: {
     year: '2021',
-    day: '06'
+    day: '06',
+    title: 'Lanternfish',
+    comment: 'Compact solution for a simple puzzle',
+    status: 'done',
+    difficulty: 1
   },
   params: {
     days: {

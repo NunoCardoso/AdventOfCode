@@ -2,7 +2,7 @@ export default {
   config: {
     year: '2016',
     day: '12',
-    title: 'Leonardo\'s Monorail',
+    title: "Leonardo's Monorail",
     status: 'done',
     comment: 'Jumping cursor with input commands',
     difficulty: 2

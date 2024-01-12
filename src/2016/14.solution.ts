@@ -1,4 +1,4 @@
-import { Params } from 'aoc'
+import { Params } from 'aoc.d'
 const SparkMD5 = require('spark-md5')
 
 export default async (lineReader: any, params: Params) => {
@@ -11,9 +11,7 @@ export default async (lineReader: any, params: Params) => {
 
   const generateMd5Part2 = (hash: string): string => {
     let _hash = SparkMD5.hash(hash)
-    for (let i = 0; i < params.repetition; i++) {
-      _hash = SparkMD5.hash(_hash)
-    }
+    for (let i = 0; i < params.repetition; i++) _hash = SparkMD5.hash(_hash)
     return _hash
   }
 
@@ -47,13 +45,8 @@ export default async (lineReader: any, params: Params) => {
     }
     return keys
   }
-  if (!params.skipPart1) {
-    part1 = solveFor(generateMd5Part1)[params.cutoff - 1]
-  }
-
-  if (!params.skipPart2) {
-    part2 = solveFor(generateMd5Part2)[params.cutoff - 1]
-  }
+  if (!params.skipPart1) part1 = solveFor(generateMd5Part1)[params.cutoff - 1]
+  if (!params.skipPart2) part2 = solveFor(generateMd5Part2)[params.cutoff - 1]
 
   return { part1, part2 }
 }

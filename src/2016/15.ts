@@ -1,7 +1,11 @@
 export default {
   config: {
     year: '2016',
-    day: '15'
+    day: '15',
+    title: 'Timing is Everything',
+    status: 'done',
+    comment: 'not sure if I can do faster by analysing common multiple, but it is <1s with brute force',
+    difficulty: 2
   },
   logLevel: 'debug',
   test: {

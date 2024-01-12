@@ -1,9 +1,14 @@
 export default {
   config: {
     year: '2016',
-    day: '19'
+    day: '19',
+    title: 'An Elephant Named Joseph',
+    comment: 'Very interesting. run mode: study to see pattern vs brute force',
+    status: 'done',
+    difficulty: 4
   },
   logLevel: 'info',
+  // mode: 'study',
   test: {
     id: 'test',
     params: {

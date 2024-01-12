@@ -2,7 +2,11 @@ export default {
   config: {
     year: '2016',
     day: '16',
-    comment: 'md5, 27s, nothing I can do to make it faster'
+    title: 'Dragon Checksum',
+    status: 'done',
+    comment: 'md5, 3s, nothing I can do to make it faster',
+    tags: ['md5'],
+    difficulty: 1
   },
   logLevel: 'info',
   test: {

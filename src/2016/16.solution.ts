@@ -1,4 +1,4 @@
-import { Params } from 'aoc'
+import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -6,17 +6,12 @@ export default async (lineReader: any, params: Params) => {
   let part1: string = ''
   let part2: string = ''
 
-  const getHash = (h: string): string => {
-    return (
-      h +
-      '0' +
-      h
-        .split('')
-        .reverse()
-        .map((x: string) => (x === '1' ? '0' : '1'))
-        .join('')
-    )
-  }
+  const getHash = (h: string): string =>
+    `${h}0${h
+      .split('')
+      .reverse()
+      .map((x: string) => (x === '1' ? '0' : '1'))
+      .join('')}`
 
   const getChecksum = (h: string): string => {
     let _h = h
@@ -30,21 +25,13 @@ export default async (lineReader: any, params: Params) => {
     return _h
   }
 
-  const doIt = (hash: string, size: number) => {
-    let checksum: string = ''
-    while (hash.length < size) {
-      hash = getHash(hash)
-      checksum = getChecksum(hash.substring(0, size))
-    }
-    return checksum
+  const solveFor = (hash: string, size: number) => {
+    while (hash.length < size) hash = getHash(hash)
+    return getChecksum(hash.substring(0, size))
   }
 
-  if (params.skip !== true && params.skip !== 'part1') {
-    part1 = doIt(params.input, params.size.part1)
-  }
-  if (params.skip !== true && params.skip !== 'part2') {
-    part2 = doIt(params.input, params.size.part2)
-  }
+  if (!params.skipPart1) part1 = solveFor(params.input, params.size.part1)
+  if (!params.skipPart2) part2 = solveFor(params.input, params.size.part2)
 
   return { part1, part2 }
 }

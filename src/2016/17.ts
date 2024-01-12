@@ -1,7 +1,12 @@
 export default {
   config: {
     year: '2016',
-    day: '17'
+    day: '17',
+    title: 'Two Steps Forward',
+    status: 'done',
+    comment: 'Map changes with each step, blind breath first works',
+    tags: ['breath first'],
+    difficulty: 2
   },
   logLevel: 'info',
   params: {

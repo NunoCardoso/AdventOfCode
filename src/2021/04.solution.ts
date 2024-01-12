@@ -1,102 +1,72 @@
 import _ from 'lodash'
 import { Params } from 'aoc.d'
 
-type BingoCard = Array<Array<number | undefined>>
+type BingoCard = { rows: Array<Array<number>>; columns: Array<Array<number>> }
 
 export default async (lineReader: any, params: Params) => {
-  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  //const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  let part1: number = 0
+  let part2: number = 0
 
   let bingoNumbers: Array<number> = []
+  let numberToBingoCardPositionIndex: Map<number, Array<[number, number, number]>> = new Map()
   const bingoCards: Array<BingoCard> = []
-  let tempBingo: BingoCard = []
+  let bingoCardIndex: number = 0
+  let currentRow: number = 0
+  let cardsWithoutBingo: Set<number> = new Set()
 
   for await (const line of lineReader) {
     if (_.isEmpty(bingoNumbers)) {
       bingoNumbers = line.split(',').map(Number)
       continue
     }
-    let row: Array<number> = line.trim().split(/\s+/).map(Number)
-
-    row = row.filter((val) => !_.isNaN(val))
-
-    if (_.isEmpty(row)) {
-      if (!_.isEmpty(tempBingo)) {
-        bingoCards.push(_.cloneDeep(tempBingo))
-        tempBingo = []
+    if (line.length === 0) {
+      if (bingoCards.length > 0) {
+        currentRow = 0
+        bingoCardIndex++
       }
-      continue
+    } else {
+      let numbers: Array<number> = line.match(/\d+/g).map(Number)
+      if (!bingoCards[bingoCardIndex])
+        bingoCards[bingoCardIndex] = { rows: [], columns: [[], [], [], [], []] }
+      cardsWithoutBingo.add(bingoCardIndex)
+      bingoCards[bingoCardIndex].rows[currentRow] = numbers
+      numbers.forEach((number, columnIndex) => {
+        bingoCards[bingoCardIndex].columns[columnIndex].push(number)
+        if (!numberToBingoCardPositionIndex.has(number)) numberToBingoCardPositionIndex.set(number, [])
+        numberToBingoCardPositionIndex.get(number)!.push([bingoCardIndex, currentRow, columnIndex])
+      })
+      currentRow++
     }
-    tempBingo.push(row)
-  }
-
-  if (!_.isEmpty(tempBingo)) {
-    bingoCards.push(tempBingo)
-  }
-
-  log.debug('Bingo numbers', bingoNumbers.length, 'Bingo cards', bingoCards.length)
-
-  const hasBingo = (number: number, bingoCard: BingoCard): boolean => {
-    for (let i = 0; i < bingoCard.length; i++) {
-      for (let j = 0; j < bingoCard[i].length; j++) {
-        if (bingoCard[i][j] === number) {
-          bingoCard[i][j] = undefined
-          let isThereANumberInColumn: boolean = false
-          let isThereANumberInRow: boolean = false
-          for (let m = 0; m < bingoCard.length; m++) {
-            if (_.isNumber(bingoCard[m][j])) {
-              isThereANumberInColumn = true
-            }
-          }
-          if (!isThereANumberInColumn) {
-            return true
-          }
-          for (let m = 0; m < bingoCard[j].length; m++) {
-            if (_.isNumber(bingoCard[i][m])) {
-              isThereANumberInRow = true
-            }
-          }
-          if (!isThereANumberInRow) {
-            return true
-          }
-        }
-      }
-    }
-    return false
   }
 
   const sumOfBingo = (card: BingoCard, number: number) => {
-    let sum = 0
-    for (let i = 0; i < card.length; i++) {
-      for (let j = 0; j < card[i].length; j++) {
-        if (_.isNumber(card[i][j])) {
-          sum += card[i][j]!
-        }
-      }
-    }
+    let sum = card.rows.reduce((acc, row) => acc + row.reduce((a, b) => a + b, 0), 0)
     return sum * number
   }
 
-  let part1: number = 0
-  let part2: number = 0
-  let ball: number = 0
+  let number: number = 0
+  let lastBingoCard: number = -1
 
-  while (bingoCards.length > 0) {
-    ball = bingoNumbers.shift()!
-
-    // go from length to 0 so I can splice without messing up indexes
-    for (let i = bingoCards.length - 1; i >= 0; i--) {
-      if (hasBingo(ball, bingoCards[i])) {
-        if (part1 === 0) {
-          part1 = sumOfBingo(bingoCards[i], ball)
-        }
-        part2 = sumOfBingo(bingoCards[i], ball)
-        bingoCards.splice(i, 1)
+  while (part1 === 0 || part2 === 0) {
+    number = bingoNumbers.shift()!
+    let positionsWithNumber: Array<[number, number, number]> = numberToBingoCardPositionIndex.get(number)!
+    positionsWithNumber?.forEach(([cardIndex, rowIndex, columnIndex]) => {
+      let index = bingoCards[cardIndex].rows[rowIndex].indexOf(number)
+      bingoCards[cardIndex].rows[rowIndex].splice(index, 1)
+      index = bingoCards[cardIndex].columns[columnIndex].indexOf(number)
+      bingoCards[cardIndex].columns[columnIndex].splice(index, 1)
+      if (
+        bingoCards[cardIndex].rows[rowIndex].length === 0 ||
+        bingoCards[cardIndex].columns[columnIndex].length === 0
+      ) {
+        if (part1 === 0) part1 = sumOfBingo(bingoCards[cardIndex], number)
+        cardsWithoutBingo.delete(cardIndex)
+        if (cardsWithoutBingo.size === 1) lastBingoCard = Array.from(cardsWithoutBingo)[0]
+        if (cardsWithoutBingo.size === 0 && part2 === 0) part2 = sumOfBingo(bingoCards[lastBingoCard], number)
       }
-    }
+    })
   }
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

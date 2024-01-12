@@ -3,7 +3,9 @@ export default {
     year: '2016',
     day: '21',
     title: 'Scrambled Letters and Hash',
-    comment: 'Clever that we have to reverse instructions AND the output'
+    status: 'done',
+    comment: 'Clever that we have to reverse instructions AND the output',
+    difficulty: 3
   },
   test: {
     id: 'test',

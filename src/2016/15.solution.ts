@@ -1,59 +1,39 @@
-import { Params } from 'aoc'
-import _ from 'lodash'
+import { Params } from 'aoc.d'
 
-type Disc = {
-  position: number
-  maxPositions: number
-}
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
 
-  const discs: Array<Disc> = []
+  const maxPositions: Array<number> = []
+  const positions: Array<number> = []
 
   for await (const line of lineReader) {
-    const values = line.match(/Disc #\d+ has (\d+) positions; at time=0, it is at position (\d+)./)
-    discs.push({
-      maxPositions: parseInt(values[1]),
-      position: parseInt(values[2])
-    })
+    const [, maxPosition, position] = line
+      .match(/Disc #\d+ has (\d+) positions; at time=0, it is at position (\d+)./)
+      .map(Number)
+    maxPositions.push(maxPosition)
+    positions.push(position)
   }
 
-  const areAligned = (discs: Array<Disc>): boolean => {
-    const position: number = discs[0].position
-    for (let i = 1; i < discs.length; i++) {
-      if (discs[i].position !== position) {
-        return false
-      }
-    }
-    return true
-  }
+  const areAligned = (discs: Array<number>): boolean => discs.every((disc) => disc === 0)
 
-  const doIt = (discs: Array<Disc>): number => {
+  const solveFor = (maxPositions: Array<number>, positions: Array<number>): number => {
     let found = 0
     let it = 0
-    while (true) {
-      const _discs = _.cloneDeep(discs)
-      for (let i = 0; i < _discs.length; i++) {
-        _discs[i].position = (_discs[i].position + i + it) % _discs[i].maxPositions
-      }
-      if (areAligned(_discs)) {
-        found = it
-        break
-      }
-      it++
+    while (found === 0) {
+      const _positions = positions.slice()
+      for (let i = 0; i < _positions.length; i++) _positions[i] = (_positions[i] + i + it) % maxPositions[i]
+      if (areAligned(_positions)) found = it
+      else it++
     }
-    return found - 1
+    return it - 1
   }
 
-  part1 = doIt(discs.slice())
-  const discs2 = discs.slice()
-  discs2.push({
-    position: 0,
-    maxPositions: 11
-  })
-  part2 = doIt(discs2)
+  part1 = solveFor(maxPositions, positions)
+  maxPositions.push(11)
+  positions.push(0)
+  part2 = solveFor(maxPositions, positions)
   return { part1, part2 }
 }

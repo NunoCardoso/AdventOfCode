@@ -1,7 +1,11 @@
 export default {
   config: {
     year: '2021',
-    day: '03'
+    day: '03',
+    title: 'Binary Diagnostic',
+    status: 'done',
+    comment: 'Not sure if it can be more compact, or efficient',
+    difficulty: 2
   },
   test: {
     id: 'test',

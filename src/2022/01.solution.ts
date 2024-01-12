@@ -8,8 +8,8 @@ export default async (lineReader: any, params: Params) => {
     !line
       ? elfIndex++
       : !calorieCount[elfIndex]
-          ? (calorieCount[elfIndex] = +line)
-          : (calorieCount[elfIndex] += +line)
+        ? (calorieCount[elfIndex] = +line)
+        : (calorieCount[elfIndex] += +line)
   }
   calorieCount.sort((a: number, b: number) => b - a)
 

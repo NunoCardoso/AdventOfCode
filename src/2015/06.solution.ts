@@ -22,8 +22,8 @@ export default async (lineReader: any, params: Params) => {
           world1[row][column] = action.endsWith('off') ? 0 : 1
           world2[row][column] = action.endsWith('off')
             ? world2[row][column] === 0
-                ? 0
-                : world2[row][column] - 1
+              ? 0
+              : world2[row][column] - 1
             : world2[row][column] + 1
         }
       }

@@ -47,8 +47,8 @@ export default async (lineReader: any, params: Params) => {
           const numberOfLights = calculateNumberOfLights(world, rowIndex, columnIndex)
           return world[rowIndex][columnIndex] === '#'
             ? numberOfLights === 2 || numberOfLights === 3
-                ? '#'
-                : '.'
+              ? '#'
+              : '.'
             : numberOfLights === 3
               ? '#'
               : '.'

@@ -1,4 +1,4 @@
-import { Params } from 'aoc'
+import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -10,51 +10,32 @@ export default async (lineReader: any, params: Params) => {
 
   const isTrap = (tile: string) => tile === '^'
   const getTile = (left: string, center: string, right: string): string => {
-    if (isTrap(left) && isTrap(center) && !isTrap(right)) {
-      return '^'
-    }
-    if (!isTrap(left) && isTrap(center) && isTrap(right)) {
-      return '^'
-    }
-    if (isTrap(left) && !isTrap(center) && !isTrap(right)) {
-      return '^'
-    }
-    if (!isTrap(left) && !isTrap(center) && isTrap(right)) {
-      return '^'
-    }
+    if (isTrap(left) && isTrap(center) && !isTrap(right)) return '^'
+    if (!isTrap(left) && isTrap(center) && isTrap(right)) return '^'
+    if (isTrap(left) && !isTrap(center) && !isTrap(right)) return '^'
+    if (!isTrap(left) && !isTrap(center) && isTrap(right)) return '^'
     return '.'
   }
 
   let row: string = ''
+  for await (const line of lineReader) row = line
 
-  for await (const line of lineReader) {
-    row = line
-  }
-
-  // 1, because input is already line 0 and counted
-
-  const doIt = (row: string, rowNumber: number) => {
-    console.log('rowNumber:', rowNumber)
+  const solveFor = (row: string, rowNumber: number) => {
     let count = countDots(row)
-
-    let _row = row
-    for (let i = 1; i < rowNumber; i++) {
+    let it = 1
+    while (it++ < rowNumber) {
       let newLine = ''
-      for (let j = 0; j < _row.length; j++) {
-        newLine += getTile(_row[j - 1], _row[j], _row[j + 1])
+      for (let j = 0; j < row.length; j++) {
+        newLine += getTile(row[j - 1], row[j], row[j + 1])
       }
-      _row = newLine
-      count += countDots(_row)
+      row = newLine
+      count += countDots(row)
     }
     return count
   }
 
-  if (params.skip !== true && params.skip !== 'part1') {
-    part1 = doIt(row, params.rows.part1)
-  }
-  if (params.skip !== true && params.skip !== 'part2') {
-    part2 = doIt(row, params.rows.part2)
-  }
+  if (!params.skipPart1) part1 = solveFor(row, params.rows.part1)
+  if (!params.skipPart2) part2 = solveFor(row, params.rows.part2)
 
   return { part1, part2 }
 }

@@ -1,7 +1,12 @@
 export default {
   config: {
     year: '2016',
-    day: '18'
+    day: '18',
+    title: 'Like a Rogue',
+    comment:
+      'I checked if there are patterns on generated rows, there are not so do not believe I can optimize it',
+    status: 'done',
+    difficulty: 1
   },
   logLevel: 'info',
   test: [

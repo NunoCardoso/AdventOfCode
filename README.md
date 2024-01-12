@@ -20,20 +20,22 @@ to create a puzzle template
 
 to run a puzzle
 
-    npm run runDay {year} {day}
+    npm run day {year} {day}
 
 ## runYear
 
 to run a batch of puzzles
 
-    npm run runYear {year}
+    npm run year {year}
 
 # Puzzle options options: 
 * title: string, optional => puzzle title
 * comment: string, optional => puzzle comments
+* status: 'done', 'inprogress'
+* difficulty: 1 to 5
 * tags: string, optional => puzzle tags (recursive, pathfinding, md5, etc)
 * year: string, mandatory => chooses the year 
-* day: string, mandatory => chooses the day 
+* day: string, mandatory => chooses the day
 * logLevel ?: string => sets log level (info, debug, etc) default: info
 * mode => if there is another solution (fastest, easiest, etc) default: normal 
 * ui ?: boolean => turns on UI. default: { show: false }
@@ -70,7 +72,7 @@ skip === 'part2' => skip only part2
 ## Dependencies
 
 . Avoid lodash, use native JS 
-. libraries allowed: js-combinatronics 
+. libraries allowed: js-combinatronics (for permutation / combination), spark-mp5 (md5)
 
 . prefer match with /g than matchAll, as in
 

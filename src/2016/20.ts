@@ -4,9 +4,9 @@ export default {
     day: '20',
     title: 'Firewall Rules',
     status: 'done',
-    comment: 'Quite easy, considering it is day 20, trick is to have a mergeRange function'
+    comment: 'Quite easy, considering it is day 20, trick is to have a mergeRange function',
+    difficulty: 1
   },
-  logLevel: 'debug',
   test: {
     params: {
       limit: 9

@@ -3,22 +3,27 @@ export default {
     year: '2017',
     day: '04',
     title: 'High-Entropy Passphrases',
-    status: 'inprogress'
+    status: 'Simple rearranging words for list size comparison',
+    difficulty: 1
   },
   logLevel: 'debug',
-  test: {
-    id: 'test',
+  test: [{
+    id: 'test1',
     skip: 'part2',
     answers: {
-      part1: 0,
-      part2: 0
+      part1: 2
     }
-  },
-  prod: {
-    skip: true,
+  },{
+    id: 'test2',
+    skip: 'part1',
     answers: {
-      part1: 0,
-      part2: 0
+      part2: 3
+    }
+  }],
+  prod: {
+    answers: {
+      part1: 466,
+      part2: 251
     }
   }
 }

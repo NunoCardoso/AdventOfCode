@@ -1,7 +1,11 @@
 export default {
   config: {
     year: '2021',
-    day: '01'
+    day: '01',
+    title: 'Sonar Sweep',
+    status: 'done',
+    comment: 'Parse numeric input and doing counts',
+    difficulty: 1
   },
   test: {
     id: 'test',

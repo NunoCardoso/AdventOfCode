@@ -2,7 +2,11 @@ export default {
   config: {
     year: '2016',
     day: '13',
-    title: 'A Maze of Twisty Little Cubicles'
+    title: 'A Maze of Twisty Little Cubicles',
+    status: 'done',
+    comment: 'Simple Dijkstra, just disable the end check for part2 to keep visiting',
+    difficulty: 2,
+    tags: ['dijkstra']
   },
   logLevel: 'info',
   test: {

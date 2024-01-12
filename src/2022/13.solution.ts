@@ -40,8 +40,8 @@ export default async (lineReader: any, params: Params) => {
     return (left as NestedArray).length < (right as NestedArray).length
       ? -1
       : (left as any).length > (right as any).length
-          ? 1
-          : 0
+        ? 1
+        : 0
   }
 
   if (!params.skipPart1) {

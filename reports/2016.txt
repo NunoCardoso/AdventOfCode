@@ -1,0 +1,114 @@
+[36mDay 01: No Time for a Taxicab[39m
+Status: done
+Difficulty: 1
+Comment: Parsing input directions and tracking the movement of a cursor, not complicated
+Part 1 ✅  part 2 ✅  in [32m0.003s[39m
+
+[36mDay 02: Bathroom Security[39m
+Status: done
+Difficulty: -
+Comment: Follow directions and see where it lands on a keyboard, simple
+Part 1 ✅  part 2 ✅  in [32m0.001s[39m
+
+[36mDay 03: Squares With Three Sides[39m
+Status: done
+Difficulty: 1
+Comment: Hardest part is to align values for part 2
+Part 1 ✅  part 2 ✅  in [32m0.003s[39m
+
+[36mDay 04: Security Through Obscurity[39m
+Status: done
+Difficulty: 1
+Comment: checksum generation, parsing input while checking validity
+Part 1 ✅  part 2 ✅  in [32m0.013s[39m
+
+[36mDay 05: How About a Nice Game of Chess?[39m
+Status: done
+Difficulty: 2
+Comment: md5, 18s, nothing I can do to make it faster
+Part 1 ✅  part 2 ✅  in [31m17.516s[39m
+
+[36mDay 06: Signals and Noise[39m
+Status: done
+Difficulty: 1
+Comment: counting letter occurences in two directions, not complicated
+Part 1 ✅  part 2 ✅  in [32m0.003s[39m
+
+[36mDay 07: Internet Protocol Version 7[39m
+Status: done
+Difficulty: 2
+Comment: Tricky match regex but just parse input and sums for certain conditions
+Part 1 ✅  part 2 ✅  in [32m0.01s[39m
+
+[36mDay 08: Two-Factor Authentication[39m
+Status: done
+Difficulty: 2
+Comment: Shifts on row and column grid are boring but doable
+Part 1 ✅  part 2 ✅  in [32m0.001s[39m
+
+[36mDay 09: Explosives in Cyberspace[39m
+Status: done
+Difficulty: 3
+Tags: recursion
+Comment: a little annoying to get it right
+Part 1 ✅  part 2 ✅  in [32m0.001s[39m
+
+[36mDay 10: Balance Bots[39m
+Status: done
+Difficulty: 3
+Comment: it assumes that you have all rules loaded before starting chain reaction
+Part 1 ✅  part 2 ✅  in [32m0.001s[39m
+
+[36mDay 11: Radioisotope Thermoelectric Generators[39m
+Status: canBeImproved
+Difficulty: 4
+Tags: path finding
+Comment: 18s, maybe it can be done better with a pure dijkstra, needs refactor
+Part 1 ✅  part 2 ✅  in [31m22.797s[39m
+
+[36mDay 12: Leonardo's Monorail[39m
+Status: done
+Difficulty: 2
+Comment: Jumping cursor with input commands
+Part 1 ✅  part 2 ✅  in [32m0.913s[39m
+
+[36mDay 13: A Maze of Twisty Little Cubicles[39m
+Status: done
+Difficulty: 2
+Tags: dijkstra
+Comment: Simple Dijkstra, just disable the end check for part2 to keep visiting
+Part 1 ✅  part 2 ✅  in [32m0.006s[39m
+
+[36mDay 14: One-Time Pad[39m
+Status: done
+Difficulty: 3
+Tags: md5
+Comment: This will take some time around 30s, MD5 puzzle
+Part 1 ✅  part 2 ✅  in [31m26.898s[39m
+
+[36mDay 15: Timing is Everything[39m
+Status: done
+Difficulty: 2
+Comment: not sure if I can do faster by analysing common multiple, but it is <1s with brute force
+Part 1 ✅  part 2 ✅  in [32m0.957s[39m
+
+[36mDay 16: Dragon Checksum[39m
+Status: done
+Difficulty: 1
+Tags: md5
+Comment: md5, 3s, nothing I can do to make it faster
+Part 1 ✅  part 2 ✅  in [33m2.839s[39m
+
+[36mDay 17: Two Steps Forward[39m
+Status: done
+Difficulty: 2
+Tags: breath first
+Comment: Map changes with each step, blind breath first works
+Part 1 ✅  part 2 ✅  in [32m0.114s[39m
+
+[36mDay 18: Like a Rogue[39m
+Status: done
+Difficulty: 1
+Comment: I checked if there are patterns on generated rows, there are not so do not believe I can optimize it
+Part 1 ✅  part 2 ✅  in [33m1.922s[39m
+
