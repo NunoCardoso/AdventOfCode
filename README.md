@@ -16,6 +16,8 @@ to create a puzzle template
 
     npm run makeDay {year} {day}
 
+(if it is a new year, create year dirs on src and input first)
+
 ## runDay
 
 to run a puzzle
