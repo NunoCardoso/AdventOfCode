@@ -1,5 +1,7 @@
 export type Point = [number, number]
 
+export type PointPlus<T = number> = [number, number, T?]
+
 export type Range = [number, number]
 
 export type Path = Array<Point>
