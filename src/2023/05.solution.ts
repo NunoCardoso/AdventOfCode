@@ -35,7 +35,11 @@ export default async (lineReader: any, params: Params) => {
   for await (const line of lineReader) {
     if (line.startsWith('seeds:')) {
       // prettier-ignore
-      line.split(':')[1].trim().split(/\s+/).forEach((seed: string) => seeds.push(+seed))
+      line
+        .split(':')[1]
+        .trim()
+        .split(/\s+/)
+        .forEach((seed: string) => seeds.push(+seed))
     } else if (line.endsWith('map:')) {
       map = line.split(/\s+/)[0].trim()
     } else if (line !== '') {

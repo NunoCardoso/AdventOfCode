@@ -1,5 +1,5 @@
-import _ from 'lodash'
 import { Params } from 'aoc'
+import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })

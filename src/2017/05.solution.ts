@@ -1,7 +1,6 @@
 import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
-
   let part1: number = 0
   let part2: number = 0
 
@@ -17,9 +16,7 @@ export default async (lineReader: any, params: Params) => {
     while (cursor >= 0 && cursor < data.length) {
       let prevCursor = cursor
       cursor += dataCopy[cursor]
-      let jump =  type === 'part1'
-        ? 1
-        : dataCopy[prevCursor] >= 3 ? -1 : 1
+      let jump = type === 'part1' ? 1 : dataCopy[prevCursor] >= 3 ? -1 : 1
       dataCopy[prevCursor] += jump
       counter++
     }

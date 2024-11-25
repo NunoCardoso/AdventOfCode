@@ -11,7 +11,8 @@ export default async (lineReader: any, params: Params) => {
     polymer = line
   }
 
-  const canReact = (char1: string, char2: string) => char1 !== char2 && char1.toLowerCase() === char2.toLowerCase()
+  const canReact = (char1: string, char2: string) =>
+    char1 !== char2 && char1.toLowerCase() === char2.toLowerCase()
 
   const react = (polymer: string, index: number): [string, number] => {
     if (canReact(polymer[index], polymer[index + 1])) {
@@ -25,7 +26,7 @@ export default async (lineReader: any, params: Params) => {
   const solveFor = (polymer: string): number => {
     let index = 0
     while (index < polymer.length - 1) {
-      [polymer,index] = react(polymer, index)
+      ;[polymer, index] = react(polymer, index)
     }
     return polymer.length
   }
@@ -38,7 +39,7 @@ export default async (lineReader: any, params: Params) => {
     let uniqueUnits = [...new Set(polymer.toLowerCase().split(''))]
     let minPolymerSize = polymer.length
 
-    uniqueUnits.forEach(unit => {
+    uniqueUnits.forEach((unit) => {
       let partialPolymer = polymer.replaceAll(unit.toLowerCase(), '').replaceAll(unit.toUpperCase(), '')
       let thisMin = solveFor(partialPolymer)
       if (thisMin < minPolymerSize) minPolymerSize = thisMin

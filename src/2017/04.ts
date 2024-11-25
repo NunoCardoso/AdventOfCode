@@ -7,19 +7,22 @@ export default {
     difficulty: 1
   },
   logLevel: 'debug',
-  test: [{
-    id: 'test1',
-    skip: 'part2',
-    answers: {
-      part1: 2
+  test: [
+    {
+      id: 'test1',
+      skip: 'part2',
+      answers: {
+        part1: 2
+      }
+    },
+    {
+      id: 'test2',
+      skip: 'part1',
+      answers: {
+        part2: 3
+      }
     }
-  },{
-    id: 'test2',
-    skip: 'part1',
-    answers: {
-      part2: 3
-    }
-  }],
+  ],
   prod: {
     answers: {
       part1: 466,

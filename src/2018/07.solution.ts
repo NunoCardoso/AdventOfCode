@@ -31,7 +31,7 @@ export default async (lineReader: any, params: Params) => {
   let taskList: string[] = []
 
   for await (const line of lineReader) {
-     const [, source, target] = line.match(/Step (.+) must be finished before step (.+) can begin./)
+    const [, source, target] = line.match(/Step (.+) must be finished before step (.+) can begin./)
     if (!taskXisFollowedByTaskY[source]) taskXisFollowedByTaskY[source] = [target]
     else taskXisFollowedByTaskY[source].push(target)
     if (!taskXisPrecededByTaskY[target]) taskXisPrecededByTaskY[target] = [source]
@@ -40,7 +40,7 @@ export default async (lineReader: any, params: Params) => {
     if (!taskList.includes(target)) taskList.push(target)
   }
 
-  const firstTask = taskList.find(task => !taskXisPrecededByTaskY[task])!
+  const firstTask = taskList.find((task) => !taskXisPrecededByTaskY[task])!
 
   const solvePart1 = () => {
     // the first task has no preceding tasks
@@ -50,15 +50,16 @@ export default async (lineReader: any, params: Params) => {
     while (pendingTasks.length > 0) {
       // get more pending tasks that have all preceding tasks done
       // I only need the first one (as they are already in alphabetical order)
-      let doableTask = pendingTasks.find(t =>
-        taskXisPrecededByTaskY[t].every(dependentT => doneTasks.includes(dependentT)))
+      let doableTask = pendingTasks.find((t) =>
+        taskXisPrecededByTaskY[t].every((dependentT) => doneTasks.includes(dependentT))
+      )
 
       if (doableTask) {
         // take it off from pending tasks, put it to done
-        pendingTasks = pendingTasks.filter(t => t !== doableTask)
+        pendingTasks = pendingTasks.filter((t) => t !== doableTask)
         doneTasks.push(doableTask)
         // get more pending tasks (if not there)
-        taskXisFollowedByTaskY[doableTask]?.forEach(newTask => {
+        taskXisFollowedByTaskY[doableTask]?.forEach((newTask) => {
           if (!pendingTasks.includes(newTask)) pendingTasks.push(newTask)
         })
         pendingTasks.sort((a, b) => a.localeCompare(b))
@@ -72,15 +73,14 @@ export default async (lineReader: any, params: Params) => {
   const getNewPaths = (path: Path): Path[] => {
     let lastTask = path.tasks[path.tasks.length - 1]
     log.debug('last task', lastTask)
-    log.debug('taskXisFollowedByTaskY[lastTask]',taskXisFollowedByTaskY[lastTask])
+    log.debug('taskXisFollowedByTaskY[lastTask]', taskXisFollowedByTaskY[lastTask])
     // next doable tasks is all following tasks that have preceding tasks all done
-    let paths = taskXisFollowedByTaskY[lastTask].filter(t =>
-      taskXisPrecededByTaskY[t].every(dependentT => path.tasks.includes(dependentT)))
-    ?.map(t => ({
+    let paths = taskXisFollowedByTaskY[lastTask]
+      .filter((t) => taskXisPrecededByTaskY[t].every((dependentT) => path.tasks.includes(dependentT)))
+      ?.map((t) => ({
         tasks: path.tasks.concat(t),
         score: params.costPerStep + letterIndex.indexOf(t)
-      })
-    )
+      }))
     return paths
   }
 
@@ -100,31 +100,32 @@ export default async (lineReader: any, params: Params) => {
     const newPaths: Path[] = getNewPaths(path)
     if (newPaths.length !== 0) {
       newPaths.forEach((newPath) => {
-       opened.push(newPath)
+        opened.push(newPath)
       })
-     // pendingTasks.sort((a, b) => b[2] - a[2])
+      // pendingTasks.sort((a, b) => b[2] - a[2])
     }
   }
 
   const solvePart2 = () => {
-
     const data: Data = {
       path: undefined,
       end: taskList.length,
       workers: params.workers
     }
 
-    let openedPaths: Path[] = [{
-      score: params.costPerStep + letterIndex.indexOf(firstTask),
-      tasks: [firstTask]
-    }]
+    let openedPaths: Path[] = [
+      {
+        score: params.costPerStep + letterIndex.indexOf(firstTask),
+        tasks: [firstTask]
+      }
+    ]
 
     let iterations = 0
     while (openedPaths.length > 0) {
       doDijkstra(openedPaths, data)
       //if (iterations % 100 === 0) {
-        log.debug('it', iterations, 'opened', openedPaths.length)
-        iterations++
+      log.debug('it', iterations, 'opened', openedPaths.length)
+      iterations++
       //}
     }
     return data.path?.score

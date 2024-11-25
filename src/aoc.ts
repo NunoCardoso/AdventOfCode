@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import clc from 'cli-color'
-import { Puzzle, Test, Prod, Result } from './aoc.d'
+import { Prod, Puzzle, Result, Test } from './aoc.d'
 const readline = require('readline')
 
 const defaultConfig = {

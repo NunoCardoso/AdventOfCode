@@ -1,5 +1,5 @@
-import { Params } from 'aoc.d'
 import * as console from 'console'
+import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -45,8 +45,9 @@ export default async (lineReader: any, params: Params) => {
 
   if (!params.skipPart2) {
     let list: Array<number> = originalLine
-    .split('').map((s: string) => s.charCodeAt(0))
-    .concat(params.suffix)
+      .split('')
+      .map((s: string) => s.charCodeAt(0))
+      .concat(params.suffix)
     list = solveFor(params.size, 64, list)
     let xors: Array<string> = []
     while (list.length > 0) {
@@ -56,6 +57,6 @@ export default async (lineReader: any, params: Params) => {
     }
     part2 = xors.join('')
   }
-   // e146210a34221a7f0906da15c1c979a not that
+  // e146210a34221a7f0906da15c1c979a not that
   return { part1, part2 }
 }

@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { World, Point as Coord } from 'declarations'
+import { Point as Coord, World } from 'declarations'
 
 // x, y, straightsLeft, direction, distance, score
 type Point = {

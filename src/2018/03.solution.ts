@@ -7,9 +7,9 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const world: World<number[]> = new Array(params.size).fill(null)
-    .map(() => new Array(params.size).fill(null)
-    .map(() => []))
+  const world: World<number[]> = new Array(params.size)
+    .fill(null)
+    .map(() => new Array(params.size).fill(null).map(() => []))
 
   const areas: Record<string, number> = {}
 
@@ -24,24 +24,25 @@ export default async (lineReader: any, params: Params) => {
   }
 
   if (!params.skipPart1) {
-    part1 = world.reduce((acc, row) =>
-      acc + row.reduce((acc2, cell) =>
-          acc2 + (cell.length >= 2 ? 1 : 0)
-        , 0
-      ), 0)
+    part1 = world.reduce(
+      (acc, row) => acc + row.reduce((acc2, cell) => acc2 + (cell.length >= 2 ? 1 : 0), 0),
+      0
+    )
   }
 
   if (!params.skipPart2) {
     let dic: Record<string, number> = {}
-    world.forEach(row => row.forEach(cell => {
-      if (cell.length === 1) {
-        let id = cell[0]
-        dic['' + id] ? dic['' + id]++ : dic['' + id] = 1
-      }
-    }))
+    world.forEach((row) =>
+      row.forEach((cell) => {
+        if (cell.length === 1) {
+          let id = cell[0]
+          dic['' + id] ? dic['' + id]++ : (dic['' + id] = 1)
+        }
+      })
+    )
 
     // which id has the whole area covered by cells with 1 element
-    let found = Object.keys(areas).find(id => areas[id] === dic[id])
+    let found = Object.keys(areas).find((id) => areas[id] === dic[id])
     if (found) part2 = +found
   }
 

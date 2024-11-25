@@ -1,4 +1,4 @@
-import { Params } from 'aoc'
+import { Params } from 'aoc.d'
 import { intersect } from 'util/arr'
 
 type Valve = {
@@ -74,7 +74,7 @@ export default async (lineReader: any, params: Params) => {
     '(+' +
     s.pressureIncrease +
     ')][🕗' +
-    s.time +
+    s.timeLeft +
     ']'
 
   const searchAlgorithm = (opened: Array<Array<Step>>, data: Data) => {

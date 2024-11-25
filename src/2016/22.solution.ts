@@ -54,12 +54,13 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const doSearch = (movableNodes: Array<NodeTransfer>, opened: Array<Point>, data: any) => {
-    const point = opened.splice(-1)[0]
-    if (isSame(point, data)) {
+    //TODO
+    /*const point = opened.splice(-1)[0]
+    if (isSame(point, data.end)) {
       if (data.lowestCost > head[3]) {
         data.lowestCost = head[3]
       }
-    }
+    }*/
   }
 
   const movableNodes: Array<NodeTransfer> = []

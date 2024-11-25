@@ -8,17 +8,20 @@ export default {
     difficulty: 2
   },
   logLevel: 'debug',
-  test: [{
-    id: 'test',
-    answers: {
-      part1: 12
+  test: [
+    {
+      id: 'test',
+      answers: {
+        part1: 12
+      }
+    },
+    {
+      id: 'test2',
+      answers: {
+        part2: 'fgij'
+      }
     }
-  },{
-    id: 'test2',
-    answers: {
-      part2: 'fgij'
-    }
-  }],
+  ],
   prod: {
     skip: false,
     answers: {

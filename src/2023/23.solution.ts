@@ -48,21 +48,29 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const getNewHeads = (headPoint: PointPlus, data: Data): Array<string> => {
-    return ([
-      [headPoint[0] - 1, headPoint[1], '^'],
-      [headPoint[0] + 1, headPoint[1], 'v'],
-      [headPoint[0], headPoint[1] - 1, '<'],
-      [headPoint[0], headPoint[1] + 1, '>']
-    ] as Array<PointPlus>).filter((newHead: PointPlus) => {
-      // reject if out of bounds
-      if (newHead[0] < 0 || newHead[1] < 0) return false
-      // reject if it's a wall
-      if (world[newHead[0]][newHead[1]] === '#') return false
-      // reject if it's against a slope
-      if (data.careForSlopes && ['>','<','^','v'].includes(world[newHead[0]][newHead[1]]) &&
-        (world[newHead[0]][newHead[1]] !== newHead[2])) return false
-      return true
-    }).map(getKey)
+    return (
+      [
+        [headPoint[0] - 1, headPoint[1], '^'],
+        [headPoint[0] + 1, headPoint[1], 'v'],
+        [headPoint[0], headPoint[1] - 1, '<'],
+        [headPoint[0], headPoint[1] + 1, '>']
+      ] as Array<PointPlus>
+    )
+      .filter((newHead: PointPlus) => {
+        // reject if out of bounds
+        if (newHead[0] < 0 || newHead[1] < 0) return false
+        // reject if it's a wall
+        if (world[newHead[0]][newHead[1]] === '#') return false
+        // reject if it's against a slope
+        if (
+          data.careForSlopes &&
+          ['>', '<', '^', 'v'].includes(world[newHead[0]][newHead[1]]) &&
+          world[newHead[0]][newHead[1]] !== newHead[2]
+        )
+          return false
+        return true
+      })
+      .map(getKey)
   }
 
   const getNewPaths = (head: PointPlus, data: Data): Array<Path> => {
@@ -83,14 +91,10 @@ export default async (lineReader: any, params: Params) => {
       }
       newHeads = getNewHeads(newHeads[0], data)
     }
-    return newHeads.map(newHead => current.concat([newHead]))
+    return newHeads.map((newHead) => current.concat([newHead]))
   }
 
-  const depthFirst = (
-    step: Step,
-    data: Data
-  ): number => {
-
+  const depthFirst = (step: Step, data: Data): number => {
     const head: string = step.path[step.path.length - 1]
     log.trace('=== Starting ===')
     log.trace('head', head, 'cost', step.cost)
@@ -101,31 +105,36 @@ export default async (lineReader: any, params: Params) => {
         data.highestCost = step.cost
         data.path = step.path
       } else {
-      //  log.debug('finished but cost is', step.cost, 'skipping')
+        //  log.debug('finished but cost is', step.cost, 'skipping')
       }
       return step.cost
     }
 
     let newPaths: Array<Path> = getNewPaths(readKey(head), data)
 
-    newPaths = newPaths.filter(path => {
+    // TODO whatever I was trying here
+    /*newPaths = newPaths.filter(path => {
       // reject if hitting the tail
       let found = path.every(p =>
-        step.path.find(x => x.startsWith(0[0] + ',' + newHead[1] + ','
-      )
+        step.path.find(x => x.startsWith(0[0] + ',' + head[1] + ',')))
 
-      if ())) return false
+      TODO if ())) return false
       return
-    })
-
+    })*/
 
     if (newPaths.length === 0) return 0
-    return Math.max(...newPaths.map(newPath => depthFirst({
-        path: step.path.concat(newPath),
-        cost: step.cost + newPath.length,
-        distance: getDistanceToFinish(newPath[newPath.length - 1], data.end)
-      }, data)
-    ))
+    return Math.max(
+      ...newPaths.map((newPath) =>
+        depthFirst(
+          {
+            path: step.path.concat(newPath),
+            cost: step.cost + newPath.length,
+            distance: getDistanceToFinish(newPath[newPath.length - 1], data.end)
+          },
+          data
+        )
+      )
+    )
   }
 
   const printGrid = (path: Array<string>) => {
@@ -144,14 +153,14 @@ export default async (lineReader: any, params: Params) => {
 
   const solveFor = (careForSlopes: boolean): number => {
     const data: Data = { highestCost: 0, end, path: [], careForSlopes }
-   // const visitedIndex: Map<string, any> = new Map()
+    // const visitedIndex: Map<string, any> = new Map()
     const step: Step = {
       path: [getKey(start)],
       cost: 0,
       distance: getDistanceToFinish(getKey(start), end)
     }
     let answer = depthFirst(step, data)
-    log.info('answer',answer,'data',data)
+    log.info('answer', answer, 'data', data)
     printGrid(data.path)
     return data.highestCost
   }

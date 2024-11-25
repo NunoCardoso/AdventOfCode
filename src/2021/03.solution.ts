@@ -1,5 +1,5 @@
-import _ from 'lodash'
 import { Params } from 'aoc.d'
+import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   let part1: number = 0

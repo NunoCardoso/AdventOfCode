@@ -1,7 +1,6 @@
 import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
-
   let part1: number = 0
   let part2: number = 0
 
@@ -16,7 +15,7 @@ export default async (lineReader: any, params: Params) => {
         return
       }
       // turn on cancel mode on
-      if (char === '!')  {
+      if (char === '!') {
         inCancelMode = true
         return
       }
@@ -27,7 +26,7 @@ export default async (lineReader: any, params: Params) => {
       }
       // open garbage
       if (char === '<') {
-        inGarbage ? part2++ : inGarbage = true
+        inGarbage ? part2++ : (inGarbage = true)
         return
       }
       // ignore stuff inside garbage

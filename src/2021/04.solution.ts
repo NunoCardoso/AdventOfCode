@@ -1,5 +1,5 @@
-import _ from 'lodash'
 import { Params } from 'aoc.d'
+import _ from 'lodash'
 
 type BingoCard = { rows: Array<Array<number>>; columns: Array<Array<number>> }
 

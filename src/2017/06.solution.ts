@@ -27,13 +27,15 @@ export default async (lineReader: any, params: Params) => {
     })
     let amount = Math.floor(value / data.length)
     let reminder = value % data.length
-    let higherIndex= (index + reminder) % data.length
+    let higherIndex = (index + reminder) % data.length
     memoryString = ''
     for (let i = 0; i < data.length; i++) {
       data[i] += amount
       // spread the reminder
-      if ((higherIndex > index && i > index && i <= higherIndex) ||
-        (higherIndex < index && (i > index || i <= higherIndex))) {
+      if (
+        (higherIndex > index && i > index && i <= higherIndex) ||
+        (higherIndex < index && (i > index || i <= higherIndex))
+      ) {
         data[i]++
       }
       // remove the value from the memory slot
@@ -41,7 +43,7 @@ export default async (lineReader: any, params: Params) => {
       // build a string from memory config
       memoryString += data[i]
     }
-    memory.has(memoryString) ? done = true : memory.add(memoryString)
+    memory.has(memoryString) ? (done = true) : memory.add(memoryString)
   } while (!done)
 
   part1 = memory.size + 1

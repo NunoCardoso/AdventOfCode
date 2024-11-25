@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 import clc from 'cli-color'
+import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -98,7 +98,9 @@ export default async (lineReader: any, params: Params) => {
       console.log(
         ' ' +
           //  (i === path.head.point[0] ? clc.red(i.toString().padStart(2, '0')) :
-          i.toString().padStart(2, '0') +
+          i
+            .toString()
+            .padStart(2, '0') +
           ' ' +
           clc.green('#') +
           m

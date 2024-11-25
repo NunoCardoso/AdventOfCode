@@ -100,18 +100,31 @@ export default async (lineReader: any, params: Params) => {
   const areAllValvesWithFlowOpened = (step: Step): boolean =>
     intersect(step.valvesOpened, valvesWithFlow).length === valvesWithFlow.length
 
-
   const printAction = (a: string) =>
     a === 'moving' ? '🚀 ' : a === 'opening' ? '☸️  ' : a === 'stay' ? '🪑 ' : '🚩 '
 
   const printStep = (s: Step) =>
-    '🧍{' + printAction(s.human.action) + s.human.inValve +
+    '🧍{' +
+    printAction(s.human.action) +
+    s.human.inValve +
     (!s.human.remaining ? '' : '(+' + s.human.remaining + ')') +
-    '}' + (s.withElephant ? '🐘 {' + printAction(s.elephant!.action) +
-      s.elephant!.inValve + (!s.elephant!.remaining ? '' : '(+' + s.elephant!.remaining + ')') +
-      '}' : '') + '[💨 ' + s.pressure + '(+' + s.pressureIncrease + ')][🕗' + s.time + ']'
+    '}' +
+    (s.withElephant
+      ? '🐘 {' +
+        printAction(s.elephant!.action) +
+        s.elephant!.inValve +
+        (!s.elephant!.remaining ? '' : '(+' + s.elephant!.remaining + ')') +
+        '}'
+      : '') +
+    '[💨 ' +
+    s.pressure +
+    '(+' +
+    s.pressureIncrease +
+    ')][🕗' +
+    s.time +
+    ']'
 
- /* const generateStep = ({
+  /* const generateStep = ({
     head,
     tail,
     nextValve,
@@ -142,7 +155,7 @@ export default async (lineReader: any, params: Params) => {
   }*/
 
   const makeNewSteps = (path: Array<Step>, data: Data) => {
-    let head = global.structuredClone(path[path.length-1])
+    let head = global.structuredClone(path[path.length - 1])
     if (head.time >= data.timeLimit) return []
     const newSteps: Array<Step> = []
 
@@ -616,9 +629,8 @@ export default async (lineReader: any, params: Params) => {
       return true
     })
   }
-*/
-  const searchAlgorithm = (opened: Array<Array<Step>>, data: Data) => {
 
+  const searchAlgorithm = (opened: Array<Array<Step>>, data: Data) => {
     const path: Array<Step> = opened.splice(-1)[0]
     const head: Step = path[path.length - 1]
     log.debug('=== Starting ===', head)
@@ -669,18 +681,20 @@ export default async (lineReader: any, params: Params) => {
       path: []
     }
     const opened = [
-      [{
-        human: {
-          inValve: 'AA',
-          action: 'start'
-        },
-        time: params!.limit.part1,
-        pressure: 0,
-        pressureIncrease: 0,
-        withElephant: false,
-        valvesVisited: ['AA'],
-        valvesOpened: []
-      }]
+      [
+        {
+          human: {
+            inValve: 'AA',
+            action: 'start'
+          },
+          time: params!.limit.part1,
+          pressure: 0,
+          pressureIncrease: 0,
+          withElephant: false,
+          valvesVisited: ['AA'],
+          valvesOpened: []
+        }
+      ]
     ]
     let iterations = 0
     while (opened.length > 0) {
@@ -689,8 +703,7 @@ export default async (lineReader: any, params: Params) => {
         log.debug('it', iterations, 'opened length', opened.length)
         iterations++
       }
-      if (params.ui?.show && params.ui?.end)
-        data.path.forEach(printStep)
+      if (params.ui?.show && params.ui?.end) data.path.forEach(printStep)
       part1 = data.highestScore
     }
   }

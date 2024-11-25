@@ -1,7 +1,7 @@
-import clc from 'cli-color'
-import { World, Dimension } from 'declarations'
-import _ from 'lodash'
 import { Params } from 'aoc.d'
+import clc from 'cli-color'
+import { Dimension, World } from 'declarations'
+import _ from 'lodash'
 
 type Coord = {
   point: {

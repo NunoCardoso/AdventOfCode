@@ -19,13 +19,13 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const getManhattan = (point1: PointPlus, point2: PointPlus) =>
-     Math.abs(point1[0] - point2[0]) + Math.abs(point1[1] - point2[1])
+    Math.abs(point1[0] - point2[0]) + Math.abs(point1[1] - point2[1])
 
   const getClosestPointIdAndTotalDistance = (thisPoint: PointPlus): [number | null, number] => {
     let closestPointId: number[] = []
     let closestPointDistance = 9999
     let totalDistance = 0
-    points.forEach(point => {
+    points.forEach((point) => {
       let distance = getManhattan(thisPoint, point)
       totalDistance += distance
       if (distance < closestPointDistance) {
@@ -54,9 +54,9 @@ export default async (lineReader: any, params: Params) => {
   }
 
   let sortedPoints = Object.keys(counts)
-    .filter(key => !infinitePointIds.has(+key))
+    .filter((key) => !infinitePointIds.has(+key))
     .sort((a, b) => counts[+b] - counts[+a])
-    part1 =  counts[+sortedPoints[0]]
+  part1 = counts[+sortedPoints[0]]
 
   return { part1, part2 }
 }

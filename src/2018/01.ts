@@ -8,27 +8,32 @@ export default {
     difficulty: 1
   },
   logLevel: 'debug',
-  test: [{
-    id: 'test1',
-    answers: {
-      part2: 0
+  test: [
+    {
+      id: 'test1',
+      answers: {
+        part2: 0
+      }
+    },
+    {
+      id: 'test2',
+      answers: {
+        part2: 10
+      }
+    },
+    {
+      id: 'test3',
+      answers: {
+        part2: 5
+      }
+    },
+    {
+      id: 'test4',
+      answers: {
+        part2: 14
+      }
     }
-  },{
-    id: 'test2',
-    answers: {
-      part2: 10
-    }
-  }, {
-    id: 'test3',
-    answers: {
-      part2: 5
-    }
-  },  {
-    id: 'test4',
-    answers: {
-      part2: 14
-    }
-  }],
+  ],
   prod: {
     skip: false,
     answers: {

@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { World, Point } from 'declarations'
+import { Point, World } from 'declarations'
 import _ from 'lodash'
 
 // x, y, distance, cost

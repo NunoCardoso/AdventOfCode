@@ -4,7 +4,6 @@ type Entry = {
   pos: number
   weight: number
   children?: Array<string>
-
 }
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -16,14 +15,14 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     const [, name, weight, more, others] = line.match(/(.+) \((\d+)\)( -> )?(.*)?/)
-    if (!data[name]) data[name] = {pos: 1, weight: +weight}
-    else data[name] = {...data[name], pos: data[name]!.pos + 1, weight: +weight }
+    if (!data[name]) data[name] = { pos: 1, weight: +weight }
+    else data[name] = { ...data[name], pos: data[name]!.pos + 1, weight: +weight }
     if (more) {
       let children: Array<string> = []
       others.split(', ').forEach((otherName: string) => {
         children.push(otherName)
-        if (!data[otherName]) data[otherName] = {pos: -1, weight: 0}
-        else data[otherName] = {...data[otherName], pos: data[otherName].pos - 1}
+        if (!data[otherName]) data[otherName] = { pos: -1, weight: 0 }
+        else data[otherName] = { ...data[otherName], pos: data[otherName].pos - 1 }
       })
 
       data[name].children = children
@@ -36,7 +35,6 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const findUnstableDisc = (e: Entry, diff: number): number => {
-
     let weights = e.children?.map(getWeight) ?? []
     let minWeight = Math.min(...weights)
     let maxWeight = Math.max(...weights)

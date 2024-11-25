@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 import clc from 'cli-color'
+import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })

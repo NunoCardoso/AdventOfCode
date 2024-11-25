@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Dimension, World, Point } from 'declarations'
+import { Dimension, Point, World } from 'declarations'
 
 type Data = {
   path: Array<Point>
