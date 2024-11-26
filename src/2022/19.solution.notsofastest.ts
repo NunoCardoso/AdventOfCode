@@ -1,4 +1,4 @@
-import { Params } from 'aoc'
+import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })

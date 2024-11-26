@@ -71,6 +71,19 @@ skip === 'part2' => skip only part2
 . avoid the any type[aoc.d.ts](src%2Faoc.d.ts)
 . replace Record with Sets, Maps
 
+## Status
+
+. 2015 DONE, and optimized
+. 2016 IN PROGRESS, stuck on 22 (hard disk move)
+. 2017 IN PROGRESS, free for 11 (node is available)
+- 2018 IN PROGRESS (=> for 2024)
+- 2019 TODO
+- 2020 TODO
+- 2021 IN PROGRESS ([] array thing)
+- 2022 DONE My first
+- 2023 NOT DONE needs clear and optimize
+- 
+
 ## Dependencies
 
 . Avoid lodash, use native JS 

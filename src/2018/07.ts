@@ -3,14 +3,13 @@ export default {
     year: '2018',
     day: '07',
     title: 'The Sum of Its Parts',
-    status: 'inprogress',
-    comment: '',
-    difficulty: 0
+    status: 'done',
+    comment: 'Really challenging but fun, not sure if combinations were useful',
+    difficulty: 4
   },
   logLevel: 'debug',
   test: {
     id: 'test',
-    skip: 'part1',
     answers: {
       part1: 'CABDFE',
       part2: 15
@@ -21,14 +20,13 @@ export default {
     }
   },
   prod: {
-    skip: true,
     params: {
       costPerStep: 60,
       workers: 5
     },
     answers: {
       part1: 'BGJCNLQUYIFMOEZTADKSPVXRHW',
-      part2: 0
+      part2: 1017
     }
   }
 }

@@ -1,16 +1,17 @@
 import { Params } from 'aoc.d'
+import { Combination } from 'js-combinatorics'
 
+type WorkerTask = { time: number; task: string } | null
+type Workers = Record<string, WorkerTask>
 type Step = {
-  time: string
-  worker: number
-  task: string
+  time: number
+  workers: Workers
+  doneTasks: string[]
+  backlogTasks: string[]
+  action: string
 }
 
-type Path = {
-  time: number
-  workers: Worker[]
-  path: Step[]
-}
+type Path = Step[]
 
 type Data = {
   path?: Path
@@ -68,42 +69,166 @@ export default async (lineReader: any, params: Params) => {
     return doneTasks.join('')
   }
 
-  const printPath = (path: Path): string => path.tasks + '(' + path.score + ')'
+  const timeToDoTask = (task: string) => params.costPerStep + letterIndex.indexOf(task)
+
+  const printPath = (path: Path): string =>
+    '\nTime: ' +
+    path[path.length - 1].time +
+    's' +
+    '\nDone: [' +
+    path[path.length - 1].doneTasks.join('') +
+    '] ' +
+    '\nBacklog: ' +
+    path[path.length - 1].backlogTasks.join('') +
+    ' ' +
+    '\nworkers: ' +
+    JSON.stringify(path[path.length - 1].workers) +
+    ' ' +
+    '\nAction: ' +
+    path[path.length - 1].action +
+    ' '
+
+  const getDoableTasks = (
+    recentlyDoneTasks: string[],
+    doneTasks: string[],
+    backlogTasks: string[]
+  ): string[] => {
+    let doableTasks: string[] = [...backlogTasks]
+
+    // next doable tasks is all following tasks that have preceding tasks all done
+    recentlyDoneTasks?.forEach((recentlyDoneTask) => {
+      taskXisFollowedByTaskY[recentlyDoneTask]
+        ?.filter((t) =>
+          taskXisPrecededByTaskY[t].every((precedingTasks) => doneTasks.includes(precedingTasks))
+        )
+        .forEach((t) => {
+          if (!doableTasks.includes(t)) doableTasks.push(t)
+        })
+    })
+    //log.debug('get doable tasks for ', doableTasks)
+    return doableTasks
+  }
 
   const getNewPaths = (path: Path): Path[] => {
-    let lastTask = path.tasks[path.tasks.length - 1]
-    log.debug('last task', lastTask)
-    log.debug('taskXisFollowedByTaskY[lastTask]', taskXisFollowedByTaskY[lastTask])
-    // next doable tasks is all following tasks that have preceding tasks all done
-    let paths = taskXisFollowedByTaskY[lastTask]
-      .filter((t) => taskXisPrecededByTaskY[t].every((dependentT) => path.tasks.includes(dependentT)))
-      ?.map((t) => ({
-        tasks: path.tasks.concat(t),
-        score: params.costPerStep + letterIndex.indexOf(t)
-      }))
-    return paths
+    let currentStep: Step = path[path.length - 1]
+    let nextStep = { ...currentStep }
+
+    let nextTime: number | undefined = undefined // next time event
+    let nextIdleWorkers: string[] = [] // idle workers at next time event
+    let nextDoneTasks: string[] = [] // done tasks at next time event
+
+    // get the next time event where a worker (or workers) will become idle
+    // get also the status of workers and done tasks at that time event
+    Object.keys(currentStep.workers).forEach((key) => {
+      if (currentStep.workers[key] !== null) {
+        if (nextTime === undefined || currentStep.workers[key]!.time < nextTime) {
+          nextTime = currentStep.workers[key]!.time
+          nextDoneTasks = [currentStep.workers[key]!.task]
+          nextIdleWorkers = [key]
+        } else if (currentStep.workers[key]!.time === nextTime) {
+          nextIdleWorkers.push(key)
+          nextDoneTasks.push(currentStep.workers[key]!.task)
+        }
+      }
+    })
+
+    Object.keys(currentStep.workers).forEach((key) => {
+      if (currentStep.workers[key] === null) {
+        // let's join in the workers that were already idle
+        nextIdleWorkers.push(key)
+      }
+    })
+
+    // let's forward time to the next event
+    nextStep.time = nextTime!
+    nextStep.doneTasks = nextStep.doneTasks.concat(nextDoneTasks) // add done tasks
+    nextIdleWorkers.forEach((worker) => (nextStep.workers[worker] = null)) // add idle workers
+
+    // so, let's find more doable tasks for all idling workers (pass the current backlog as well)
+    let doableTasks = getDoableTasks(nextDoneTasks, nextStep.doneTasks, nextStep.backlogTasks)
+    nextStep.action =
+      'Time advanced to ' +
+      nextTime +
+      's, doable tasks: [' +
+      doableTasks.join('') +
+      '] Workers idle: ' +
+      nextIdleWorkers.join(', ')
+
+    // no more tasks to do for now, maybe wait for another task to be finished
+    if (doableTasks.length === 0)
+      return [
+        [
+          ...path,
+          {
+            ...nextStep,
+            action: nextStep.action + ', no doable tasks to do',
+            backlogTasks: doableTasks
+          }
+        ]
+      ]
+
+    // if there are doable tasks, let's assign them to idle workers
+    let combinations: string[][]
+
+    // if less doable tasks than workers, just push all tasks.
+    if (doableTasks.length <= nextIdleWorkers.length) {
+      combinations = [doableTasks.slice(0, nextIdleWorkers.length)]
+    } else {
+      // make combinations if there are more tasks than workers
+      combinations = new Combination(doableTasks.join(''), nextIdleWorkers.length).toArray()
+    }
+    // console.log('\ncombinations', combinations, 'idle workers', nextIdleWorkers)
+    return combinations.map((combination) => {
+      let newWorkers: Workers = {}
+      let assignedTasks: string[] = []
+      // assign idle workers to doable tasks. We may get more idle workers than tasks, so we slice the combination
+      nextIdleWorkers.slice(0, combination.length).forEach((worker, index) => {
+        newWorkers[worker] = {
+          task: combination[index],
+          time: nextStep.time + timeToDoTask(combination[index])
+        }
+        assignedTasks.push(combination[index])
+      })
+
+      // backlog tasks is initial doable tasks minus assigned tasks
+      let newBacklogTasks = doableTasks.filter((task) => !assignedTasks.includes(task))
+
+      return [
+        ...path,
+        {
+          ...nextStep,
+          backlogTasks: newBacklogTasks,
+          //action: nextHead.action + 'New backlog ' + newBacklogTasks.join('') + '\nNew tasks ' + JSON.stringify(newWorkerAndTask) + '\nNew times ' + JSON.stringify(newWorkerAndNextTime),
+          workers: { ...nextStep.workers, ...newWorkers }
+        }
+      ]
+    })
   }
 
   const doDijkstra = (opened: Path[], data: Data) => {
     const path: Path = opened.splice(-1)[0]
 
-    log.debug('=== Dijkstra ===', printPath(path), 'opened', opened.length, 'current low', data.path?.score)
+    log.debug(
+      '=== Dijkstra === opened',
+      opened.length,
+      'current low',
+      data.path ? data.path[data.path?.length - 1].time : '-',
+      printPath(path)
+    )
 
-    if (path.tasks.length === data.end) {
-      if (!data.path || (typeof data.path?.score === 'number' && path.score < data.path?.score)) {
-        log.debug('got lowest', printPath(path))
+    if (path[path.length - 1].doneTasks.length === data.end) {
+      if (
+        !data.path ||
+        (typeof data.path[data.path.length - 1]?.time === 'number' &&
+          path[path.length - 1].time < data.path[data.path.length - 1]?.time)
+      ) {
+        log.info('got lowest', path[path.length - 1].time, printPath(path))
         data.path = path
       }
       return
     }
 
-    const newPaths: Path[] = getNewPaths(path)
-    if (newPaths.length !== 0) {
-      newPaths.forEach((newPath) => {
-        opened.push(newPath)
-      })
-      // pendingTasks.sort((a, b) => b[2] - a[2])
-    }
+    getNewPaths(path)?.forEach((newPath) => opened.push(newPath))
   }
 
   const solvePart2 = () => {
@@ -113,22 +238,32 @@ export default async (lineReader: any, params: Params) => {
       workers: params.workers
     }
 
+    let workers: Workers = {}
+    new Array(params.workers).fill(null).forEach((_, index) => (workers[index.toString()] = null))
+    workers['0'] = { task: firstTask, time: timeToDoTask(firstTask) }
+
     let openedPaths: Path[] = [
-      {
-        score: params.costPerStep + letterIndex.indexOf(firstTask),
-        tasks: [firstTask]
-      }
+      [
+        {
+          time: 0,
+          doneTasks: [],
+          backlogTasks: [],
+          workers,
+          action: 'Worker 0 assigned task ' + firstTask + ' will finish in ' + timeToDoTask(firstTask) + 's'
+        }
+      ]
     ]
 
     let iterations = 0
     while (openedPaths.length > 0) {
       doDijkstra(openedPaths, data)
-      //if (iterations % 100 === 0) {
-      log.debug('it', iterations, 'opened', openedPaths.length)
-      iterations++
-      //}
+      if (iterations % 100 === 0) {
+        log.info('it', iterations, 'opened', openedPaths.length)
+        iterations++
+      }
     }
-    return data.path?.score
+    log.info('Got lowest', data.path![data.path!.length - 1]?.time, printPath(data.path!))
+    return data.path![data.path!.length - 1]?.time
   }
 
   if (!params.skipPart1) {

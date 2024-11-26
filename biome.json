@@ -22,6 +22,7 @@
     }
   },
   "javascript": {
+    "globals": ["expect"],
     "formatter": {
       "jsxQuoteStyle": "single",
       "quoteProperties": "asNeeded",
