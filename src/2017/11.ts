@@ -2,25 +2,46 @@ export default {
   config: {
     year: '2017',
     day: '11',
-    title: '',
-    status: 'inprogress',
-    comment: '',
-    difficulty: 0
+    title: 'Hex Ed',
+    status: 'done',
+    comment: 'I guess step 2 can be optimized, to avoid repeat',
+    difficulty: 2
   },
   logLevel: 'debug',
-  test: {
-    id: 'test',
-    skip: 'part2',
-    answers: {
-      part1: 0,
-      part2: 0
+  test: [
+    {
+      id: 'test1',
+      skip: 'part2',
+      answers: {
+        part1: 3
+      }
+    },
+    {
+      id: 'test2',
+      skip: 'part2',
+      answers: {
+        part1: 0
+      }
+    },
+    {
+      id: 'test3',
+      skip: 'part2',
+      answers: {
+        part1: 2
+      }
+    },
+    {
+      id: 'test4',
+      skip: 'part2',
+      answers: {
+        part1: 3
+      }
     }
-  },
+  ],
   prod: {
-    skip: true,
     answers: {
-      part1: 0,
-      part2: 0
+      part1: 643,
+      part2: 1471
     }
   }
 }
