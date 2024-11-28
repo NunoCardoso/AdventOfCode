@@ -8,4 +8,6 @@ export type Path = Array<Point>
 
 export type Dimension = [number, number]
 
+export type BoundingBox = [Point, Point]
+
 export type World<T = number> = Array<Array<T>>
