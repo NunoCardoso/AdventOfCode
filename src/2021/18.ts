@@ -6,15 +6,14 @@ export default {
   test: {
     id: 'test',
     answers: {
-      part1: 0,
-      part2: 0
+      part1: 4140,
+      part2: 3993
     }
   },
   prod: {
-    skip: true,
     answers: {
-      part1: 0,
-      part2: 0
+      part1: 2907,
+      part2: 4690
     }
   }
 }

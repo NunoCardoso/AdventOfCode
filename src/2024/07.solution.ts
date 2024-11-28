@@ -1,6 +1,5 @@
 import { Params } from 'aoc.d'
-import { CartesianProduct, Combination, Permutation } from 'js-combinatorics'
-import { values } from 'lodash'
+import { CartesianProduct } from 'js-combinatorics'
 
 type Entry = [number, number[]]
 export default async (lineReader: any, params: Params) => {
