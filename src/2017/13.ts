@@ -4,7 +4,7 @@ export default {
     day: '13',
     title: 'Packet Scanners',
     status: 'done',
-    comment: 'Can has some optimization but nice',
+    comment: 'Can has some optimization but nice. had to make test unit.',
     difficulty: 2
   },
   logLevel: 'debug',

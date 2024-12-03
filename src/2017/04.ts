@@ -3,7 +3,8 @@ export default {
     year: '2017',
     day: '04',
     title: 'High-Entropy Passphrases',
-    status: 'Simple rearranging words for list size comparison',
+    status: 'Done',
+    comment: 'Simple rearranging words for list size comparison',
     difficulty: 1
   },
   logLevel: 'debug',

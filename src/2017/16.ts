@@ -3,9 +3,9 @@ export default {
     year: '2017',
     day: '16',
     title: 'Permutation Promenade',
-    status: 'inprogress',
-    comment: '',
-    difficulty: 0
+    status: 'done',
+    comment: 'typical have-to-find-a-delta so I can skip 10000000 iterations. Nice',
+    difficulty: 3
   },
   logLevel: 'debug',
   test: {
