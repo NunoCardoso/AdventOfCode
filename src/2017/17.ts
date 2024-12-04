@@ -11,7 +11,6 @@ export default {
   logLevel: 'debug',
   test: {
     id: 'test',
-    skip: true,
     answers: {
       part1: 638
     }

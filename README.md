@@ -71,11 +71,11 @@ Skip is now being defined with the presence of answer.partX or not.
 
 . 2015 DONE, OPTIMIZED
 . 2016 IN PROGRESS, stuck on 22 (hard disk move)
-. 2017 IN PROGRESS UNSTUCK 
-- 2018 IN PROGRESS UNSTUCK
+. 2017 IN PROGRESS UNSTUCK (programs) 
+- 2018 IN PROGRESS UNSTUCK (carts)
 - 2019 TODO
 - 2020 TODO
-- 2021 IN PROGRESS UNSTUCK
+- 2021 IN PROGRESS UNSTUCK 19 (beacons)
 - 2022 DONE My first, Needs fix after 16
 - 2023 DONE needs clear and optimize
 - 2024 ONGOING
@@ -84,10 +84,8 @@ Skip is now being defined with the presence of answer.partX or not.
 
 . Avoid lodash, use native JS 
 . libraries allowed: js-combinatronics (for permutation / combination), spark-mp5 (md5)
-
 . prefer match with /g than matchAll, as in
 
 "abcabfgabsefd".match(/ab/) => ['ab', index: 0, input: 'abcabfgabsefd', groups: undefined]
 "abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']
 "123123123".match(/ab/) => null
-
