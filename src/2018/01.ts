@@ -35,7 +35,6 @@ export default {
     }
   ],
   prod: {
-    skip: false,
     answers: {
       part1: 445,
       part2: 219

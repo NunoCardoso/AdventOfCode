@@ -11,7 +11,6 @@ export default {
   test: [
     {
       id: 'test1',
-      skip: true,
       params: {
         size: 5
       },

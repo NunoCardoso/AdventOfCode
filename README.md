@@ -47,19 +47,15 @@ to run a batch of puzzles
 ** wait:?: number
 * test ?: Test | Array<Test> => runs tests
 ** id: test id, tied to the test input fil[todo](todo)e name
-** skip ?: boolean | 'part1' | 'part2'
 ** params ?: any => additional params
-** answers ?: any => object with part1 and/or part2 answers
+** answers ?: any => object with part1 and/or part2 answers. It decides if parts should run or be skipped.
 * prod ?: Prod => runs final.  
-** skip ?: boolean | 'part1' | 'part2'
 ** params ?: any => additional params
-** answers ?: any => object with part1 and/or part2 answers
+** answers ?: any => object with part1 and/or part2 answers. It decides if parts should run or be skipped.
 
 ## skip
 
-skip === true => skip both parts
-skip === 'part1' => skip only part1
-skip === 'part2' => skip only part2
+Skip is now being defined with the presence of answer.partX or not.
 
 # Guidelines
 
@@ -75,11 +71,11 @@ skip === 'part2' => skip only part2
 
 . 2015 DONE, OPTIMIZED
 . 2016 IN PROGRESS, stuck on 22 (hard disk move)
-. 2017 IN PROGRESS
-- 2018 IN PROGRESS 
+. 2017 IN PROGRESS UNSTUCK 
+- 2018 IN PROGRESS UNSTUCK
 - 2019 TODO
 - 2020 TODO
-- 2021 IN PROGRESS (stuck on 18 [] array thing)
+- 2021 IN PROGRESS UNSTUCK
 - 2022 DONE My first, Needs fix after 16
 - 2023 DONE needs clear and optimize
 - 2024 ONGOING

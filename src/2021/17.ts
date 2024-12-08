@@ -5,7 +5,6 @@ export default {
   },
   logLevel: 'info',
   test: {
-    skip: true,
     id: 'test',
     answers: {
       part1: 45,

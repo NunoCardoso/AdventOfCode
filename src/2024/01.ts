@@ -4,7 +4,7 @@ export default {
     day: '01',
     title: 'Historian Hysteria',
     status: 'done',
-    comment: 'Simple list sort and reduce',
+    comment: 'Simple list sort and reduce. A little hiccup on unsure if distances can be negative',
     difficulty: 1
   },
   logLevel: 'debug',

@@ -7,7 +7,6 @@ export default {
   test: [
     {
       id: 'test1',
-      skip: true,
       params: {
         iterations: 1000
       },
@@ -17,7 +16,6 @@ export default {
     },
     {
       id: 'test2',
-      skip: true,
       params: {
         iterations: 1000
       },

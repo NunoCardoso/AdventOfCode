@@ -10,7 +10,6 @@ export default {
   logLevel: 'debug',
   test: {
     id: 'test',
-    skip: true,
     answers: {
       part1: 588,
       part2: 309
@@ -31,7 +30,6 @@ export default {
     }
   },
   prod: {
-    skip: 'part1',
     answers: {
       part1: 594,
       part2: 328

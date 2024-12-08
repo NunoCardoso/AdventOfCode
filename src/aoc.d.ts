@@ -13,9 +13,8 @@ export type UI = {
 }
 
 export type Prod = {
-  skip?: boolean | string
   params?: Params
-  answers?: Answers
+  answers: Answers
 }
 
 export type Test = Prod & {

@@ -4,7 +4,7 @@ export default {
     day: '03',
     title: 'Mull It Over',
     status: 'done',
-    comment: 'nice that I still remember OR regexes',
+    comment: 'Nice that I still remember OR regexes, really helps a lot here',
     difficulty: 1
   },
   logLevel: 'debug',
@@ -23,7 +23,6 @@ export default {
     }
   ],
   prod: {
-    skip: 'part1',
     answers: {
       part1: 178538786,
       part2: 102467299

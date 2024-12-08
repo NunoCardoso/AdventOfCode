@@ -23,7 +23,6 @@ export default {
     }
   ],
   prod: {
-    skip: false,
     answers: {
       part1: 6175,
       part2: 'asgwjcmzredihqoutcylvzinx'

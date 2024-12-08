@@ -11,7 +11,6 @@ export default {
   test: [
     {
       id: 'test1',
-      skip: 'part1',
       answers: {
         part1: '33,45',
         part2: '90,269,16'
@@ -19,7 +18,6 @@ export default {
     },
     {
       id: 'test2',
-      skip: 'part1',
       answers: {
         part1: '21,61',
         part2: '232,251,12'
@@ -30,7 +28,6 @@ export default {
     size: 300
   },
   prod: {
-    skip: 'part1',
     answers: {
       part1: '34,72',
       part2: '233,187,13'

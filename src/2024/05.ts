@@ -3,9 +3,10 @@ export default {
     year: '2024',
     day: '05',
     title: 'Print queue',
-    status: 'inprogress',
-    comment: '',
-    difficulty: 0
+    status: 'done',
+    comment:
+      'I think I got lucky in guessing that a simple sort will get me the right order, so I did not overcomplicate',
+    difficulty: 1
   },
   logLevel: 'debug',
   test: {
@@ -16,7 +17,6 @@ export default {
     }
   },
   prod: {
-    skip: 'part1',
     answers: {
       part1: 5713,
       part2: 5180

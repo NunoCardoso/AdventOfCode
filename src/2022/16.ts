@@ -11,7 +11,6 @@ export default {
     }
   },
   test: {
-    skip: 'part1',
     id: 'test',
     answers: {
       part1: 1651,
@@ -19,7 +18,6 @@ export default {
     }
   },
   prod: {
-    skip: true,
     answers: {
       part1: 2124,
       part2: 2775

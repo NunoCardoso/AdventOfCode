@@ -16,7 +16,6 @@ export default {
     }
   },
   prod: {
-    skip: 'part1',
     answers: {
       part1: 9704,
       part2: 6942

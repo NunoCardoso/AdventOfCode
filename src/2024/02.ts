@@ -4,7 +4,7 @@ export default {
     day: '02',
     title: 'Red-Nosed Reports',
     status: 'done',
-    comment: 'Nice, simple check while reading input',
+    comment: 'Nice, simple check of slope while reading input',
     difficulty: 1
   },
   logLevel: 'debug',

@@ -11,28 +11,24 @@ export default {
   test: [
     {
       id: 'test1',
-      skip: 'part2',
       answers: {
         part1: 3
       }
     },
     {
       id: 'test2',
-      skip: 'part2',
       answers: {
         part1: 0
       }
     },
     {
       id: 'test3',
-      skip: 'part2',
       answers: {
         part1: 2
       }
     },
     {
       id: 'test4',
-      skip: 'part2',
       answers: {
         part1: 3
       }

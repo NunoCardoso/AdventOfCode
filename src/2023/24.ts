@@ -6,7 +6,6 @@ export default {
   logLevel: 'debug',
   test: {
     id: 'test',
-    skip: 'part1',
     params: {
       from: 7,
       to: 27
@@ -17,7 +16,6 @@ export default {
     }
   },
   prod: {
-    skip: true,
     params: {
       from: 200000000000000,
       to: 400000000000000

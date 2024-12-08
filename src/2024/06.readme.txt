@@ -1,0 +1,6 @@
+- first, track all positions that the guard did NOT visited on part1. doing the simulation for obstacles in part2 being placed there
+is useless
+- second, keep track at the DIRECTION that the guard used to visit each unique place on part1. This can be used as a way
+to set the obstacle and resume the simulation at that part, so we do NOT have to calculate guard visits before stumbling into the
+obstacle. Make sure it is the DIRECTION of the first VISIT, as the guard can visit that point more than once before stumbling into
+the new obstacle

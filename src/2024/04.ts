@@ -3,9 +3,9 @@ export default {
     year: '2024',
     day: '04',
     title: 'Ceres Search',
-    status: 'inprogress',
-    comment: '',
-    difficulty: 0
+    status: 'done',
+    comment: 'Quite simple check from pivot letters',
+    difficulty: 1
   },
   logLevel: 'debug',
   test: {

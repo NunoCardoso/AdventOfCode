@@ -26,11 +26,9 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
       time: 0,
       mode: '',
       part1: {
-        skip: true,
         status: ''
       },
       part2: {
-        skip: true,
         status: ''
       }
     }
@@ -46,12 +44,11 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
       logLevel: _puzzle.logLevel,
       ui: _puzzle.ui,
       isTest: isTest,
-      skip: run.skip,
-      skipPart1: run.skip === true || run.skip === 'part1',
-      skipPart2: run.skip === true || run.skip === 'part2'
+      skipPart1: run.answers.part1 === undefined,
+      skipPart2: run.answers.part2 === undefined
     }
 
-    if (run.skip === true) {
+    if (runParams.skipPart1 && runParams.skipPart2) {
       if (log) console.log(line + clc.red('- skipped'))
       return result
     }
@@ -81,7 +78,7 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
     if (log) console.timeEnd('Answer time ' + targetFile)
     else result.time = new Date().getTime() - result.time
 
-    if (runParams.skip === 'part1') {
+    if (runParams.skipPart1) {
       if (log) console.log(line + clc.red('- Part 1 - skipped'))
     } else {
       if (run?.answers?.part1 !== undefined) {
@@ -98,7 +95,7 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
         result.part1.status = status
       }
     }
-    if (runParams.skip === 'part2') {
+    if (runParams.skipPart2) {
       if (log) console.log(line + clc.red('- Part 2 - skipped'))
     } else {
       if (run?.answers?.part2 !== undefined) {

@@ -11,42 +11,36 @@ export default {
   test: [
     {
       id: 'test1',
-      skip: 'part2',
       answers: {
         part1: 32
       }
     },
     {
       id: 'test2',
-      skip: 'part2',
       answers: {
         part1: 8317
       }
     },
     {
       id: 'test3',
-      skip: 'part2',
       answers: {
         part1: 146373
       }
     },
     {
       id: 'test4',
-      skip: 'part2',
       answers: {
         part1: 2764
       }
     },
     {
       id: 'test5',
-      skip: 'part2',
       answers: {
         part1: 54718
       }
     },
     {
       id: 'test6',
-      skip: 'part2',
       answers: {
         part1: 37305
       }

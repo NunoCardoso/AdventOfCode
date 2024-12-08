@@ -7,7 +7,6 @@ export default {
   logLevel: 'debug',
   test: {
     id: 'test',
-    skip: true,
     params: {
       steps: {
         part1: 6,

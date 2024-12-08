@@ -10,7 +10,6 @@ export default {
   logLevel: 'debug',
   test: {
     id: 'test',
-    skip: true,
     params: {
       programs: 'abcde'.split('')
     },
@@ -19,7 +18,6 @@ export default {
     }
   },
   prod: {
-    skip: 'part1',
     params: {
       programs: 'abcdefghijklmnop'.split('')
     },
