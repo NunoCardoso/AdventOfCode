@@ -71,7 +71,7 @@ Skip is now being defined with the presence of answer.partX or not.
 
 . 2015 DONE, OPTIMIZED
 . 2016 IN PROGRESS,STUCK   22 (hard disk move)
-. 2017 IN PROGRESS UNSTUCK 19
+. 2017 IN PROGRESS UNSTUCK 20
 - 2018 IN PROGRESS UNSTUCK 14
 - 2019 TODO
 - 2020 TODO
