@@ -70,15 +70,15 @@ Skip is now being defined with the presence of answer.partX or not.
 ## Status
 
 . 2015 DONE, OPTIMIZED
-. 2016 IN PROGRESS, stuck on 22 (hard disk move)
-. 2017 IN PROGRESS UNSTUCK (programs) 
-- 2018 IN PROGRESS UNSTUCK (carts)
+. 2016 IN PROGRESS,STUCK   22 (hard disk move)
+. 2017 IN PROGRESS UNSTUCK 19
+- 2018 IN PROGRESS STUCK   13 (carts)
 - 2019 TODO
 - 2020 TODO
-- 2021 IN PROGRESS UNSTUCK 19 (beacons)
+- 2021 IN PROGRESS UNSTUCK 19
 - 2022 DONE My first, Needs fix after 16
 - 2023 DONE needs clear and optimize
-- 2024 ONGOING
+- 2024 ONGOING 9
 
 ## Dependencies
 

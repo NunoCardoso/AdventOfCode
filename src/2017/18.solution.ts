@@ -1,11 +1,11 @@
-import * as console from 'console'
 import { Params } from 'aoc.d'
 
 type Program = {
+  id: number
   index: number
   values: Record<string, number>
   queue: number[]
-  status: 'processing' | 'waiting' | 'deadlock'
+  status: 'processing' | 'waiting'
 }
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -54,12 +54,14 @@ export default async (lineReader: any, params: Params) => {
     let count = 0
     let programs: [Program, Program] = [
       {
+        id: 0,
         index: 0,
         values: Object.fromEntries([...registers].map((r) => [r, 0])),
         queue: [],
         status: 'processing'
       },
       {
+        id: 1,
         index: 0,
         values: Object.fromEntries([...registers].map((r) => [r, 0])),
         queue: [],
@@ -68,26 +70,23 @@ export default async (lineReader: any, params: Params) => {
     ]
     programs[0].values['p'] = 0
     programs[1].values['p'] = 1
-    let iterations = 0
     while (programs.some((p) => p.status === 'processing')) {
-      iterations++
-      if (iterations % 1000000 === 0) log.info('it', iterations, 'count', count)
-      programs.forEach((p, pIndex) => {
-        let otherProgramIndex = pIndex === 0 ? 1 : 0
-        if (p.index < 0 || p.index >= instructions.length) {
-          p.status = 'deadlock'
-          programs[otherProgramIndex].status = 'deadlock'
-          return
-        }
-        let [command, source, target] = instructions[p.index]
-        log.debug('========')
-        log.debug('start', pIndex, JSON.stringify(p))
-        log.debug('instructions', instructions[p.index])
-        if (p.status !== 'waiting') {
+      programs
+        .filter((p) => p.status === 'processing')
+        .forEach((p) => {
+          let otherProgramIndex = p.id === 0 ? 1 : 0
+          if (p.index < 0 || p.index >= instructions.length) {
+            p.status = 'waiting'
+            programs[otherProgramIndex].status = 'waiting'
+            return
+          }
+          let [command, source, target] = instructions[p.index]
           if (command === 'snd') {
-            p.queue.push(numberOrString(source, p.values))
+            programs[otherProgramIndex].queue.push(numberOrString(source, p.values))
+            if (programs[otherProgramIndex].status === 'waiting')
+              programs[otherProgramIndex].status = 'processing'
             p.index++
-            if (otherProgramIndex === 1) count++
+            if (p.id === 1) count++
           }
           if (command === 'set') {
             p.values[source] = numberOrString(target, p.values)
@@ -107,8 +106,8 @@ export default async (lineReader: any, params: Params) => {
           }
           if (command === 'rcv') {
             // source has to be a string. can't receive a number
-            if (programs[otherProgramIndex].queue.length > 0) {
-              p.values[source] = programs[otherProgramIndex].queue.splice(-1)[0]
+            if (p.queue.length > 0) {
+              p.values[source] = p.queue.shift()!
               p.index++
             } else {
               p.status = 'waiting'
@@ -118,15 +117,7 @@ export default async (lineReader: any, params: Params) => {
             let amount = numberOrString(source, p.values)
             p.index += amount > 0 ? +numberOrString(target, p.values) : 1
           }
-        } else {
-          if (p.queue.length > 0) {
-            p.values[source] = p.queue.pop()!
-            p.status = 'processing'
-            p.index++
-          }
-        }
-        log.debug('end  ', pIndex, JSON.stringify(p))
-      })
+        })
     }
     return count
   }

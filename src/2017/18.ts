@@ -3,31 +3,29 @@ export default {
     year: '2017',
     day: '18',
     title: 'Duet',
-    status: 'inprogress',
-    comment: '',
-    difficulty: 0
+    status: 'done',
+    comment: 'Damn hard to make it right, the receive and send order was hard, so was pop() or shift()',
+    difficulty: 4
   },
   logLevel: 'info',
   test: [
     {
       id: 'test1',
       answers: {
-        // part1: 4
+        part1: 4
       }
     },
     {
       id: 'test2',
       answers: {
-        //  part2: 3
+        part2: 3
       }
     }
   ],
   prod: {
     answers: {
-      //    part1: 8600,
-      part2: 0
-      // 127 too low
-      // 4003476 too high
+      part1: 8600,
+      part2: 7239
     }
   }
 }
