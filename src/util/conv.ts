@@ -1,4 +1,4 @@
-//Useful Functions
+//Utility functions for conversion
 export const checkBin = (n: any) => {
   return /^[01]{1,64}$/.test(n)
 }
@@ -11,11 +11,6 @@ export const checkHex = (n: any) => {
 export const pad = (s: any, z: any): any => {
   s = '' + s
   return s.length < z ? pad('0' + s, z) : s
-}
-
-export const unpad = (s: any) => {
-  s = '' + s
-  return s.replace(/^0+/, '')
 }
 
 //Decimal operations
