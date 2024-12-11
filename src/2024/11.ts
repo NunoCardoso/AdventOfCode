@@ -4,16 +4,17 @@ export default {
     day: '11',
     title: 'Plutonian Pebbles',
     status: 'done',
-    comment: 'Really difficult to see that the best approach is to keep track of duplicate rocks',
+    comment: 'Same but with cache, results are same time',
     difficulty: 4
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {
       part1: 55312
     }
   },
+  mode: 'cache',
   params: {
     iterations: {
       part1: 25,
