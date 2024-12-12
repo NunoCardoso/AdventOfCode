@@ -8,14 +8,14 @@ export default {
   test: {
     id: 'test',
     answers: {
-      part1: 0,
+      //  part1: 0,
       part2: 7
     }
   },
   prod: {
     answers: {
-      part1: 892,
-      part2: 0
+      // part1: 892,
+      // part2: 0
     }
   }
 }

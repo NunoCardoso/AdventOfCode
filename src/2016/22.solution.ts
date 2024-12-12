@@ -3,19 +3,27 @@ import clc from 'cli-color'
 import { Point, World } from 'declarations'
 
 type Node = {
+  id: number
   size: number
   used: number
   avail: number
-  perc: number
 }
+
+type Move = [Point, Point]
 
 type Data = {
   end: Point
+  targetNodeLocation: Point
   bestScore: number
   path: Step[]
 }
 
-type Step = [number, number, number]
+type Step = {
+  score: number
+  targetNode: Point
+  move: Move
+  possibleMoves: Move[]
+}
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -24,6 +32,8 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   const world: World<Node> = []
+
+  let id: number = 0
   for await (const line of lineReader) {
     if (line.startsWith('/dev')) {
       const [, row, column, size, used, avail] = line?.match(
@@ -31,10 +41,10 @@ export default async (lineReader: any, params: Params) => {
       )
       if (!world[+row]) world[+row] = []
       world[+row][+column] = {
+        id: id++,
         size: +size,
         used: +used,
-        avail: +avail,
-        perc: Math.floor((+used * 100) / +size)
+        avail: +avail
       }
     }
   }
@@ -51,7 +61,8 @@ export default async (lineReader: any, params: Params) => {
     world.forEach((row, rowIndex) => {
       let string = rowIndex.toString().padStart(3, ' ') + ' |'
       row.forEach((node, colIndex) => {
-        string += node.perc.toString().padStart(3, ' ')
+        let perc = Math.floor((+node.used * 100) / +node.size)
+        string += perc.toString().padStart(3, ' ')
         let key = rowIndex + ',' + colIndex
         if (movableNodes[key] && movableNodes[key].find((p) => p[0] === rowIndex && p[1] === colIndex + 1)) {
           string += clc.cyan('→')
@@ -87,7 +98,7 @@ export default async (lineReader: any, params: Params) => {
   const isAdjacent = (row1: number, row2: number, col1: number, col2: number) =>
     (Math.abs(row1 - row2) === 1 && col1 === col2) || (Math.abs(col1 - col1) === 1 && row1 === row2)
 
-  const movableNodes: Record<string, Point[]> = {}
+  const initialMoves: Move[] = []
 
   for (let row1 = 0; row1 < world.length; row1++) {
     for (let col1 = 0; col1 < world[0].length; col1++) {
@@ -99,9 +110,10 @@ export default async (lineReader: any, params: Params) => {
                 part1++
                 // for part2
                 if (isAdjacent(row1, row2, col1, col2)) {
-                  let key: string = row1 + ',' + col1
-                  if (!movableNodes[key]) movableNodes[key] = []
-                  movableNodes[key].push([row2, col2])
+                  initialMoves.push([
+                    [row1, col1],
+                    [row2, col2]
+                  ])
                 }
               }
             }
@@ -112,15 +124,14 @@ export default async (lineReader: any, params: Params) => {
   }
 
   if (!params.skipPart2) {
-    const start: Point = [0, world[0].length - 1]
+    const targetNodeLocation: Point = [0, world[0].length - 1]
     const end: Point = [0, 0]
-    const data: Data = { end, path: [], bestScore: Number.MAX_SAFE_INTEGER }
-    const opened = [start]
-    let iterations = 0
+    const data: Data = { end, targetNodeLocation, path: [], bestScore: Number.MAX_SAFE_INTEGER }
 
-    console.log(movableNodes)
+    /* let iterations = 0
+    let initialPaths = [...]
     printData(world, movableNodes)
-    /*while (opened.length > 0) {
+    while (opened.length > 0) {
       doSearch(movableNodes, opened, data)
       if (iterations++ % 100 === 0) {
         log.debug('it', iterations, 'opened length', opened.length)

@@ -2,10 +2,10 @@ export default {
   config: {
     year: '2024',
     day: '09',
-    title: '',
-    status: 'inprogress',
-    comment: '',
-    difficulty: 0
+    title: 'Disk Fragmenter',
+    status: 'done',
+    comment: 'Avoided lists, ended up to use a list anyway.',
+    difficulty: 3
   },
   logLevel: 'debug',
   test: {
