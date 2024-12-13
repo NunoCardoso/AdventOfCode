@@ -21,8 +21,8 @@ type Data = {
 type Step = {
   score: number
   targetNode: Point
-  move: Move
-  possibleMoves: Move[]
+  move?: Move
+  possibleMoves?: Move[]
 }
 
 export default async (lineReader: any, params: Params) => {
@@ -49,7 +49,8 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const printData = (world: World<Node>, movableNodes: Record<string, Point[]>) => {
+  const printData = (world: World<Node>, moves: Move[]) => {
+    console.log(moves)
     console.log(
       '    |' +
         new Array(world[0].length)
@@ -64,39 +65,43 @@ export default async (lineReader: any, params: Params) => {
         let perc = Math.floor((+node.used * 100) / +node.size)
         string += perc.toString().padStart(3, ' ')
         let key = rowIndex + ',' + colIndex
-        if (movableNodes[key] && movableNodes[key].find((p) => p[0] === rowIndex && p[1] === colIndex + 1)) {
-          string += clc.cyan('→')
-        } else {
-          string += ' '
+        let arrowLeft = moves.find(
+          (m) =>
+            m[0][0] === rowIndex && m[0][1] === colIndex && m[1][0] === rowIndex && m[1][1] === colIndex + 1
+        )
+        let arrowRight = moves.find(
+          (m) =>
+            m[1][0] === rowIndex && m[1][1] === colIndex && m[0][0] === rowIndex && m[0][1] === colIndex + 1
+        )
+        if (arrowLeft) {
+          string += arrowRight ? clc.cyan('↔') : clc.cyan('→')
         }
+        if (arrowRight) {
+          string += arrowLeft ? clc.cyan('↔') : clc.cyan('←')
+        }
+        if (!arrowLeft && !arrowRight) string += ' '
       })
       console.log(string)
       string = '    |'
       row.forEach((node, colIndex) => {
         let key = rowIndex + ',' + colIndex
         let otherKey = rowIndex + 1 + ',' + colIndex
-        let arrowDown =
-          movableNodes[key] && movableNodes[key].find((p) => p[0] === rowIndex + 1 && p[1] === colIndex)
-        let arrowUp =
-          movableNodes[otherKey] && movableNodes[otherKey].find((p) => p[0] === rowIndex && p[1] === colIndex)
+        let arrowDown = !!moves.find(
+          (m) =>
+            m[0][0] === rowIndex && m[0][1] === colIndex && m[1][0] === rowIndex + 1 && m[1][1] === colIndex
+        )
+        let arrowUp = moves.find(
+          (m) =>
+            m[1][0] === rowIndex && m[1][1] === colIndex && m[0][0] === rowIndex + 1 && m[0][1] === colIndex
+        )
         string += clc.cyan(' ' + (arrowUp ? '↑' : ' ') + (arrowDown ? '↓' : ' ') + ' ')
       })
       console.log(string)
     })
   }
 
-  const doSearch = (movableNodes: Array<any>, opened: Array<Point>, data: any) => {
-    //TODO
-    /*const point = opened.splice(-1)[0]
-    if (isSame(point, data.end)) {
-      if (data.lowestCost > head[3]) {
-        data.lowestCost = head[3]
-      }
-    }*/
-  }
-
   const isAdjacent = (row1: number, row2: number, col1: number, col2: number) =>
-    (Math.abs(row1 - row2) === 1 && col1 === col2) || (Math.abs(col1 - col1) === 1 && row1 === row2)
+    (Math.abs(row1 - row2) === 1 && col1 === col2) || (Math.abs(col1 - col2) === 1 && row1 === row2)
 
   const initialMoves: Move[] = []
 
@@ -123,20 +128,31 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
+  const doSearch = (opened: Step[], data: Data) => {
+    const head = opened.splice(-1)[0]
+  }
+
   if (!params.skipPart2) {
     const targetNodeLocation: Point = [0, world[0].length - 1]
     const end: Point = [0, 0]
     const data: Data = { end, targetNodeLocation, path: [], bestScore: Number.MAX_SAFE_INTEGER }
 
-    /* let iterations = 0
-    let initialPaths = [...]
-    printData(world, movableNodes)
+    let iterations = 0
+    let opened: Step[] = [
+      {
+        score: 0,
+        targetNode: targetNodeLocation,
+        move: undefined,
+        possibleMoves: initialMoves
+      }
+    ]
+    printData(world, initialMoves)
     while (opened.length > 0) {
-      doSearch(movableNodes, opened, data)
+      doSearch(opened, data)
       if (iterations++ % 100 === 0) {
         log.debug('it', iterations, 'opened length', opened.length)
       }
-    }*/
+    }
     part2 = data.path?.length
   }
 

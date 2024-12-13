@@ -1,91 +1,106 @@
-# Setup
+# Advent of Code puzzle solutions
 
-all inputs and tests should be in a input directory, as in:
+These are my solutions for the amazing [Advent of Code](https://adventofcode.com/) challenge, written in TypeScript. 
+
+Note that you can't run the programs, as the input files are missing. They are missing from this repo because the 
+Advent of Code owner asked that, as they are created by him, and as such, he has a saying on that.
+
+So, if you want to run this, you have to get the files yourself, and put then in the input directory, with this format:
 
     ./input/2015/01.input.txt
     ./input/2015/02.input.txt
     ./input/2015/02.test1.txt
 
-This is because adventofcode author asks people to not commit puzzle inputs. 
+# Setup/install
 
-# How to run
+You should do a simple
 
-## makeDay
+    npm install 
 
-to create a puzzle template 
+after cloning this, and you should be fine.
+
+# Run
+
+## Create a puzzle template
 
     npm run makeDay {year} {day}
 
-(if it is a new year, create year dirs on src and input first)
+Note: if it is a new year, create the year directory under `src` and `input` directories first.
 
-## runDay
-
-to run a puzzle
+## Run a puzzle program
 
     npm run day {year} {day}
 
-## runYear
-
-to run a batch of puzzles
+## run a whole year of puzzles
 
     npm run year {year}
 
+Reports will be pushed into the `report` directory.
+
 # Puzzle options options: 
-* title: string, optional => puzzle title
-* comment: string, optional => puzzle comments
-* status: 'done', 'inprogress'
-* difficulty: 1 to 5
-* tags: string, optional => puzzle tags (recursive, pathfinding, md5, etc)
-* year: string, mandatory => chooses the year 
-* day: string, mandatory => chooses the day
-* logLevel ?: string => sets log level (info, debug, etc) default: info
-* mode => if there is another solution (fastest, easiest, etc) default: normal 
-* ui ?: boolean => turns on UI. default: { show: false }
-** show?: boolean => how or not the UI
-** end?: boolean
-** during?: boolean
-** wait:?: number
-* test ?: Test | Array<Test> => runs tests
-** id: test id, tied to the test input fil[todo](todo)e name
-** params ?: any => additional params
-** answers ?: any => object with part1 and/or part2 answers. It decides if parts should run or be skipped.
-* prod ?: Prod => runs final.  
-** params ?: any => additional params
-** answers ?: any => object with part1 and/or part2 answers. It decides if parts should run or be skipped.
+| key               | type                 | description                                                          |
+|-------------------|----------------------|----------------------------------------------------------------------|
+| config.title      | string, optional     | puzzle title                                                         |
+| config.comment    | string, optional     | puzzle comments                                                      |
+| config.status     | 'done', 'inprogress' | puzzle status                                                        |
+| config.difficulty | 1 to 5               | puzzle difficulty                                                    |
+| config.tags       | string[], optional   | puzzle tags (recursive, pathfinding, md5, etc)                       |
+| config.year       | string, mandatory    | chooses the year                                                     | 
+| config.day        | string, mandatory    | chooses the day                                                      |
+| logLevel          | string               | sets log level (info, debug, etc) default: info                      |
+| mode              | string?              | if there is another solution (fastest, easiest, etc) default: normal |
+| ui                | object               | UI stuff default: { show: false }                                    |
+| ui.show           | boolean              | how or not the UI                                                    |
+| ui.end            | boolean?             |                                                                      |
+| ui.during         | boolean?             |                                                                      |
+| ui.wait:          | number?              |                                                                      |
+| ui.keypress       | boolean?             |                                                                      |
+| test              | Test?, Test[]?       | runs tests |
+| test.id           | string | tied to the test input file name |
+| test.params       | any | additional params |
+| test.answers      | any | object with part1 and/or part2 answers. It decides if parts should run or be skipped. |
+| prod              |  Prod? | runs final |
+| prod.params       | any | additional params |
+| prod.answers      | any | object with part1 and/or part2 answers. It decides if parts should run or be skipped. |
+| params            | any | params |
 
-## skip
+# Status
 
-Skip is now being defined with the presence of answer.partX or not.
+| year | status      | comment |
+|------|-------------|---------|
+| 2015 | DONE        | Optimized, all but a couple under 1 second which can't run faster |
+| 2016 | IN PROGRESS | stuck on 22 (hard disk move)  |
+| 2017 | IN PROGRESS | ongoing on 20 |
+| 2018 | IN PROGRESS | ongoing on 14 |
+| 2019 | TODO        | |
+| 2020 | TODO        | |
+| 2021 | IN PROGRESS | ongoing on 20 |
+| 2022 | DONE        | Unoptimized, Needs fix after 16 |
+| 2023 | ALMOST DONE | Unoptimized, needs cleaning, do last puzzles |
+| 2024 | ONGOING | |
 
 # Guidelines
 
-. Functions names: solveFor, deepFirst, breathFirst, dijkstra
-. Be as declarative as possible, use function names to describe the steps
-
 ## Typing
-. use Point, Dimension, World 
-. avoid the any type[aoc.d.ts](src%2Faoc.d.ts)
-. replace Record with Sets, Maps
+* do type everything. Avoid `any` type. reuse types such as `Point`, `Dimension`, `World`, they help.
+* If possible, avoid `Record` and use `Map`. `Set` are also useful sometimes instead of `Array`
 
-## Status
+## Coding names
+* Be as declarative as possible, use function names to describe the steps
+Some functions names: `solveFor`, `deepFirst`, `breathFirst`, `dijkstra`
 
-. 2015 DONE, OPTIMIZED
-. 2016 IN PROGRESS,STUCK   22 (hard disk move)
-. 2017 IN PROGRESS UNSTUCK 20
-- 2018 IN PROGRESS UNSTUCK 14
-- 2019 TODO
-- 2020 TODO
-- 2021 IN PROGRESS UNSTUCK 19
-- 2022 DONE My first, Needs fix after 16
-- 2023 DONE needs clear and optimize
-- 2024 ONGOING 9
+## Coding style
+* try to separate part1 and part2, while avoiding unnecessary array walks for each part. 
 
 ## Dependencies
+* Avoid lodash, use native JS 
+* libraries allowed: 
+** js-combinatronics (for permutation / combination)
+** spark-mp5 (md5 generation)
 
-. Avoid lodash, use native JS 
-. libraries allowed: js-combinatronics (for permutation / combination), spark-mp5 (md5)
-. prefer match with /g than matchAll, as in
+## Regex
+* Prefer match with /g than matchAll, as in
 
-"abcabfgabsefd".match(/ab/) => ['ab', index: 0, input: 'abcabfgabsefd', groups: undefined]
-"abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']
-"123123123".match(/ab/) => null
+      "abcabfgabsefd".match(/ab/) => ['ab', index: 0, input: 'abcabfgabsefd', groups: undefined]
+      "abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']
+      "123123123".match(/ab/) => null
