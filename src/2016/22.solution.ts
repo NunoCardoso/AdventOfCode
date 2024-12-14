@@ -12,17 +12,18 @@ type Node = {
 type Move = [Point, Point]
 
 type Data = {
-  end: Point
-  targetNodeLocation: Point
+  endLocation: Point
   bestScore: number
   path: Step[]
 }
 
 type Step = {
   score: number
-  targetNode: Point
+  dataNodeLocation: Point
+  emptyNodeLocation: Point
+  distance: number
   move?: Move
-  possibleMoves?: Move[]
+  path: Step[]
 }
 
 export default async (lineReader: any, params: Params) => {
@@ -130,22 +131,34 @@ export default async (lineReader: any, params: Params) => {
 
   const doSearch = (opened: Step[], data: Data) => {
     const head = opened.splice(-1)[0]
+    head.possibleMoves?.forEach(move => {
+      head.score++
+    })
+  }
+
+  const getManhattanDistance = (p1: Point, p2: Point) => Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1])
+  const getDistance = (emptyNodeLocation: Point, dataNodeLocation: Point, endLocation: Point) => {
+    let firstManhattanDistance =
   }
 
   if (!params.skipPart2) {
-    const targetNodeLocation: Point = [0, world[0].length - 1]
-    const end: Point = [0, 0]
-    const data: Data = { end, targetNodeLocation, path: [], bestScore: Number.MAX_SAFE_INTEGER }
+
+    const data: Data = {
+      endLocation: [0, 0],
+      path: [],
+      bestScore: Number.MAX_SAFE_INTEGER
+    }
 
     let iterations = 0
-    let opened: Step[] = [
-      {
+    let opened: Step[] = [{
         score: 0,
-        targetNode: targetNodeLocation,
-        move: undefined,
-        possibleMoves: initialMoves
-      }
-    ]
+        distance: 0,
+        emptyNodeLocation: initialMoves[0][0],
+        dataNodeLocation: [0, world[0].length - 1],
+        path: []
+    }]
+    opened[0].distance = getDistance(opened[0].emptyNodeLocation, opened[0].dataNodeLocation, data.endLocation)
+
     printData(world, initialMoves)
     while (opened.length > 0) {
       doSearch(opened, data)
