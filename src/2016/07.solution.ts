@@ -1,4 +1,4 @@
-import { intersect } from 'util/arr'
+import { intersect } from 'util/array'
 
 export default async (lineReader: any) => {
   let part1: number = 0

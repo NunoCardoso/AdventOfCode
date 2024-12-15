@@ -1,4 +1,5 @@
 import { Params } from 'aoc.d'
+import { leastCommonMultiple } from 'util/commons'
 
 type Cables = any
 type PulseType = 'high' | 'low'
@@ -16,13 +17,6 @@ export default async (lineReader: any, params: Params) => {
   const conjunctionList: Array<string> = []
   const flipFlopList: Array<string> = []
   const conjunctionIndex: Map<string, Array<string>> = new Map()
-
-  const greatestCommonDivisor = (a: number, b: number): number => {
-    if (b === 0) return a
-    return greatestCommonDivisor(b, a % b)
-  }
-
-  const lowestCommonMultiplier = (a: number, b: number) => (a * b) / greatestCommonDivisor(a, b)
 
   for await (const line of lineReader) {
     const [left, right] = line.split(' -> ')
@@ -69,7 +63,7 @@ export default async (lineReader: any, params: Params) => {
           // if all are there
           if (!Object.values(whenConjunctionsForRxAreFirstHigh).some((v) => v === 0)) {
             part2 = Object.values(whenConjunctionsForRxAreFirstHigh).reduce(
-              (a, b) => lowestCommonMultiplier(a, b),
+              (a, b) => leastCommonMultiple(a, b),
               1
             )
           }

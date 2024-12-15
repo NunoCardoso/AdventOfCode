@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { Dec2Bin } from 'util/conv'
+import { dec2bin } from 'util/conversion'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -43,7 +43,7 @@ export default async (lineReader: any, params: Params) => {
         }
         // let newValue = (generatorValues[generator] * params.generator[generator] ) % remainder
         // generatorValues[generator] = newValue
-        tempValues[generator] = Dec2Bin(newValue).toString().split('').reverse()
+        tempValues[generator] = dec2bin(newValue).toString().split('').reverse()
       })
       let commonNumbers = getCommonNumbers(tempValues['A'], tempValues['B'])!
       if (commonNumbers >= 16) count++

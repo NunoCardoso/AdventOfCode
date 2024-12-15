@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { leastCommonMultiple } from 'util/op'
+import { leastCommonMultiple } from 'util/commons'
 
 type Monkey = {
   items: Array<number>

@@ -1,4 +1,5 @@
 import { Params } from 'aoc.d'
+import { bin2dec } from 'util/conversion'
 
 type Packet = {
   version: number
@@ -40,8 +41,6 @@ export default async (lineReader: any, params: Params) => {
     }
     return bin
   }
-
-  const bin2dec = (s: string): number => parseInt(parseInt(s, 2).toString(10))
 
   const processSinglePacket = (message: string): [string, Packet] => {
     let i = 0

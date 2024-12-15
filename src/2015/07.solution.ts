@@ -1,4 +1,5 @@
 import { Params } from 'aoc.d'
+import { dec2bin } from 'util/conversion'
 
 type Wire1 = { op: string; src: string | number }
 type Wire2 = { op: string; src1: string | number; src2: string | number }
@@ -32,8 +33,6 @@ export default async (lineReader: any, params: Params) => {
       })
     }
   }
-
-  const dec2bin = (dec: number): string => (dec >>> 0).toString(2)
 
   const _16bitNot = (number: number): number => {
     const bin = dec2bin(number).padStart(16, '0')

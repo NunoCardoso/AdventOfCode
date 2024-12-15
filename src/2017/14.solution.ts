@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { Hex2Bin } from '../util/conv'
+import { hex2bin } from '../util/conversion'
 import { knotHash } from './10.solution'
 export default async (lineReader: any, params: Params) => {
   let part1: number = 0
@@ -12,7 +12,7 @@ export default async (lineReader: any, params: Params) => {
   for (var y = 0; y < params.size; y++) {
     knotHash(hash + '-' + y)
       .split('')
-      .map((x) => Hex2Bin(x).toString().padStart(4, '0'))
+      .map((x) => hex2bin(x).toString().padStart(4, '0'))
       .join('')
       .split('')
       .forEach((cell, x) => {

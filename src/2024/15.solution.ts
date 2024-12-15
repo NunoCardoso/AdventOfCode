@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Point, PointPlus, World } from 'declarations'
+import { Point, World } from 'declarations'
 import { waitForKey } from 'util/promise'
 
 export default async (lineReader: any, params: Params) => {
@@ -42,14 +42,15 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const calculateScore = (world: World<string>): number =>
-    world.reduce((acc, row, rowIndex) => {
-      return (
+    world.reduce(
+      (acc, row, rowIndex) =>
         acc +
-        row.reduce((acc2, cell, colIndex) => {
-          return acc2 + (['O', '['].includes(cell) ? 100 * rowIndex + colIndex : 0)
-        }, 0)
-      )
-    }, 0)
+        row.reduce(
+          (acc2, cell, colIndex) => acc2 + (['O', '['].includes(cell) ? 100 * rowIndex + colIndex : 0),
+          0
+        ),
+      0
+    )
 
   const printWorld = (world: World<string>, start: Point) => {
     for (var i = 0; i < world.length; i++) {
@@ -68,28 +69,36 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const executePath = (world: World<string>, current: Point, path: PointPlus<string>[] | null): Point => {
-    if (!path) return current
+  const executePath = (
+    world: World<string>,
+    current: Point,
+    instruction: string,
+    _path: Point[] | null
+  ): Point => {
+    if (!_path) return current
     let lastPlace: Point
-    path.reverse().forEach((p) => {
-      if (p[2] === '^') {
-        world[p[0] - 1][p[1]] = world[p[0]][p[1]]
-        lastPlace = [p[0] - 1, p[1]]
-      }
-      if (p[2] === 'v') {
-        world[p[0] + 1][p[1]] = world[p[0]][p[1]]
-        lastPlace = [p[0] + 1, p[1]]
-      }
-      if (p[2] === '<') {
-        world[p[0]][p[1] - 1] = world[p[0]][p[1]]
-        lastPlace = [p[0], p[1] - 1]
-      }
-      if (p[2] === '>') {
-        world[p[0]][p[1] + 1] = world[p[0]][p[1]]
-        lastPlace = [p[0], p[1] + 1]
-      }
-      world[p[0]][p[1]] = '.'
-    })
+    // I have to sort and reverse so I can do the moves from the end to the start
+    sortPath(_path!, instruction)
+      .reverse()
+      .forEach((p) => {
+        if (instruction === '^') {
+          world[p[0] - 1][p[1]] = world[p[0]][p[1]]
+          lastPlace = [p[0] - 1, p[1]]
+        }
+        if (instruction === 'v') {
+          world[p[0] + 1][p[1]] = world[p[0]][p[1]]
+          lastPlace = [p[0] + 1, p[1]]
+        }
+        if (instruction === '<') {
+          world[p[0]][p[1] - 1] = world[p[0]][p[1]]
+          lastPlace = [p[0], p[1] - 1]
+        }
+        if (instruction === '>') {
+          world[p[0]][p[1] + 1] = world[p[0]][p[1]]
+          lastPlace = [p[0], p[1] + 1]
+        }
+        world[p[0]][p[1]] = '.'
+      })
     return lastPlace!
   }
 
@@ -97,101 +106,59 @@ export default async (lineReader: any, params: Params) => {
     world: World<string>,
     current: Point,
     instruction: string,
-    path: PointPlus<string>[]
-  ): PointPlus<string>[] | null => {
+    path: Point[]
+  ): Point[] | null => {
     let targetedPoint: Point = [0, 0]
-
     if (instruction === '^') targetedPoint = [current[0] - 1, current[1]] as Point
     if (instruction === 'v') targetedPoint = [current[0] + 1, current[1]] as Point
     if (instruction === '<') targetedPoint = [current[0], current[1] - 1] as Point
     if (instruction === '>') targetedPoint = [current[0], current[1] + 1] as Point
     let targetWorld = world[targetedPoint[0]][targetedPoint[1]]
-    if (targetWorld === '.') {
-      return path.concat([[...current, instruction]])
+    // if we find a wall, return null to signal that no move is possible
+    if (targetWorld === '#') return null
+    // if we find a space, return path to signal that move is possible
+    if (targetWorld === '.') return path.concat([current])
+    // if we find a box, keep going to see if we find a wall or a space
+    if (targetWorld === 'O')
+      return checkIfRobotCanMove(world, targetedPoint, instruction, path.concat([current]))
+    // we are in [ or ]
+    let otherTarget: Point =
+      targetWorld === '['
+        ? [targetedPoint[0], targetedPoint[1] + 1]
+        : [targetedPoint[0], targetedPoint[1] - 1]
+    if (['^', 'v'].includes(instruction)) {
+      let leftPath = checkIfRobotCanMove(world, targetedPoint, instruction, path.concat([current]))
+      let rightPath = checkIfRobotCanMove(world, otherTarget, instruction, path)
+      if (leftPath === null || rightPath === null) return null
+      return leftPath.concat(rightPath)
     }
-    if (targetWorld === '#') {
-      return null
-    }
-    if (targetWorld === 'O') {
-      return checkIfRobotCanMove(world, targetedPoint, instruction, path.concat([[...current, instruction]]))
-    }
-    if (targetWorld === '[') {
-      let otherTarget = [targetedPoint[0], targetedPoint[1] + 1] as Point
-      if (['^', 'v'].includes(instruction)) {
-        let leftPath = checkIfRobotCanMove(
-          world,
-          targetedPoint,
-          instruction,
-          path.concat([[...current, instruction]])
-        )
-
-        let rightPath = checkIfRobotCanMove(world, otherTarget, instruction, path)
-        if (leftPath === null || rightPath === null) return null
-        return leftPath.concat(rightPath)
-      }
-      // we are in >
-      return checkIfRobotCanMove(
-        world,
-        otherTarget,
-        instruction,
-        path.concat([
-          [...current, instruction],
-          [...targetedPoint, instruction]
-        ])
-      )
-    }
-    if (targetWorld === ']') {
-      let otherTarget = [targetedPoint[0], targetedPoint[1] - 1] as Point
-      if (['^', 'v'].includes(instruction)) {
-        let rightPath = checkIfRobotCanMove(
-          world,
-          targetedPoint,
-          instruction,
-          path.concat([[...current, instruction]])
-        )
-        let leftPath = checkIfRobotCanMove(world, otherTarget, instruction, path)
-        if (!leftPath || !rightPath) return null
-        return rightPath.concat(leftPath)
-      }
-      // we are in <
-      return checkIfRobotCanMove(
-        world,
-        otherTarget,
-        instruction,
-        path.concat([
-          [...current, instruction],
-          [...targetedPoint, instruction]
-        ])
-      )
-    }
-    return null
+    // we are in > or <, add 2 elements to path
+    return checkIfRobotCanMove(world, otherTarget, instruction, path.concat([current, targetedPoint]))
   }
 
-  const sortPath = (path: PointPlus<string>[], instruction: string): PointPlus<string>[] => {
-    let path2: PointPlus<string>[] = []
-    path?.forEach((p) => {
-      if (!path2.find((_p) => _p[0] === p[0] && _p[1] === p[1] && _p[2] === p[2])) path2.push(p)
-    })
+  const sortPath = (_path: Point[], instruction: string): Point[] => {
+    let path = _path!.reduce(
+      (acc, p) => (!!acc.find((_p: Point) => _p[0] === p[0] && _p[1] === p[1]) ? acc : [...acc, p]),
+      [] as Point[]
+    )
     if (instruction === '^')
-      path2 = path2.sort((a, b) => (b[0] - a[0] < 0 ? -1 : b[0] - a[0] > 0 ? 1 : b[1] - a[1]))
+      path = path.sort((a, b) => (b[0] - a[0] < 0 ? -1 : b[0] - a[0] > 0 ? 1 : b[1] - a[1]))
     if (instruction === 'v')
-      path2 = path2.sort((a, b) => (a[0] - b[0] < 0 ? -1 : a[0] - b[0] > 0 ? 1 : a[1] - b[1]))
+      path = path.sort((a, b) => (a[0] - b[0] < 0 ? -1 : a[0] - b[0] > 0 ? 1 : a[1] - b[1]))
     if (instruction === '<')
-      path2 = path2.sort((a, b) => (b[1] - a[1] < 0 ? -1 : b[1] - a[1] > 0 ? 1 : b[0] - a[0]))
+      path = path.sort((a, b) => (b[1] - a[1] < 0 ? -1 : b[1] - a[1] > 0 ? 1 : b[0] - a[0]))
     if (instruction === '>')
-      path2 = path2.sort((a, b) => (a[1] - b[1] < 0 ? -1 : a[1] - b[1] > 0 ? 1 : a[0] - b[0]))
-    return path2
+      path = path.sort((a, b) => (a[1] - b[1] < 0 ? -1 : a[1] - b[1] > 0 ? 1 : a[0] - b[0]))
+    return path
   }
+
   const solveFor = async (world: World<string>, current: Point, instructions: string[]): Promise<number> => {
     while (instructions.length > 0) {
       let instruction = instructions.shift()!
-      let path: PointPlus<string>[] | null = checkIfRobotCanMove(world, current, instruction, [])
-      if (path !== null) {
-        let path2 = sortPath(path, instruction)
-        current = executePath(world, current, path2)
-        if (params.ui?.show) printWorld(world, current)
-        if (params.ui?.keypress) await waitForKey()
-      }
+      let path: Point[] | null = checkIfRobotCanMove(world, current, instruction, [])
+      current = executePath(world, current, instruction, path)
+      if (params.ui?.show) printWorld(world, current)
+      if (params.ui?.keypress) await waitForKey()
     }
     return calculateScore(world)
   }

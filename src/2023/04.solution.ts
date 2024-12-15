@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { intersect } from 'util/arr'
+import { intersect } from 'util/array'
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })

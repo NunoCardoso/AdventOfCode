@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { intersect } from 'util/arr'
+import { intersect } from 'util/array'
 
 export default async (lineReader: any, params: Params) => {
   let part1: number = 0

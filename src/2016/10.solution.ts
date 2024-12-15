@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { intersect } from 'util/arr'
+import { intersect } from 'util/array'
 
 type RuleDecision = {
   type: string

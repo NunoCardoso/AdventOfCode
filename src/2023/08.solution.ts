@@ -1,4 +1,5 @@
 import { Params } from 'aoc.d'
+import { leastCommonMultiple } from 'util/commons'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -8,13 +9,6 @@ export default async (lineReader: any, params: Params) => {
 
   let instructions: Array<string> = []
   const directions: Map<string, Array<string>> = new Map()
-
-  const greatestCommonDivisor = (a: number, b: number): number => {
-    if (b === 0) return a
-    return greatestCommonDivisor(b, a % b)
-  }
-
-  const lowestCommonMultiplier = (a: number, b: number) => (a * b) / greatestCommonDivisor(a, b)
 
   for await (const line of lineReader) {
     if (line.length !== 0) {
@@ -42,7 +36,7 @@ export default async (lineReader: any, params: Params) => {
       it++
     }
     log.debug(listOfEndingIterationNumbers)
-    return listOfEndingIterationNumbers.reduce((a, b) => lowestCommonMultiplier(a, b), 1)
+    return listOfEndingIterationNumbers.reduce((a, b) => leastCommonMultiple(a, b), 1)
   }
 
   if (!params.skipPart1) {

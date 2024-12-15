@@ -131,18 +131,26 @@ export default async (lineReader: any, params: Params) => {
 
   const doSearch = (opened: Step[], data: Data) => {
     const head = opened.splice(-1)[0]
-    head.possibleMoves?.forEach(move => {
+    if (isSame(data.endLocation, head.dataNodeLocation)) {
+    }
+    head.possibleMoves?.forEach((move) => {
       head.score++
     })
   }
 
   const getManhattanDistance = (p1: Point, p2: Point) => Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1])
+
+  // if the empty node is not next to the data node, add *100 to the distance so it is always worse than
+  // distances from the data node to the end node
   const getDistance = (emptyNodeLocation: Point, dataNodeLocation: Point, endLocation: Point) => {
-    let firstManhattanDistance =
+    let firstManhattanDistance = getManhattanDistance(emptyNodeLocation, dataNodeLocation)
+    if (firstManhattanDistance > 1) {
+      return firstManhattanDistance * 100
+    }
+    return getManhattanDistance(dataNodeLocation, endLocation)
   }
 
   if (!params.skipPart2) {
-
     const data: Data = {
       endLocation: [0, 0],
       path: [],
@@ -150,15 +158,20 @@ export default async (lineReader: any, params: Params) => {
     }
 
     let iterations = 0
-    let opened: Step[] = [{
+    let opened: Step[] = [
+      {
         score: 0,
         distance: 0,
         emptyNodeLocation: initialMoves[0][0],
         dataNodeLocation: [0, world[0].length - 1],
         path: []
-    }]
-    opened[0].distance = getDistance(opened[0].emptyNodeLocation, opened[0].dataNodeLocation, data.endLocation)
-
+      }
+    ]
+    opened[0].distance = getDistance(
+      opened[0].emptyNodeLocation,
+      opened[0].dataNodeLocation,
+      data.endLocation
+    )
     printData(world, initialMoves)
     while (opened.length > 0) {
       doSearch(opened, data)
