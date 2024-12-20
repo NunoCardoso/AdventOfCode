@@ -2,12 +2,19 @@ export default {
   config: {
     year: '2024',
     day: '18',
-    title: '',
-    status: 'inprogress',
-    comment: 'In this puzzle, X is horizontal (col) distance, Y is vertical (row) distance',
-    difficulty: 0
+    title: 'RAM Run',
+    status: 'done',
+    comment:
+      'In this puzzle, X is horizontal (col) distance, Y is vertical (row) distance. I am out of ideas to' +
+      'optimize, maybe try bytes / 2, then bytes / 4, etc',
+    tags: ['a*'],
+    difficulty: 4
   },
-  logLevel: 'debug',
+  logLevel: 'info',
+  ui: {
+    show: false,
+    keypress: false
+  },
   test: {
     params: {
       time: 12,
@@ -17,8 +24,8 @@ export default {
     },
     id: 'test',
     answers: {
-      part1: 22
-      //part2: 0
+      part1: 22,
+      part2: '6,1'
     }
   },
   prod: {
@@ -29,8 +36,8 @@ export default {
       end: { x: 70, y: 70 }
     },
     answers: {
-      //part1: 0,
-      //part2: 0
+      part1: 288,
+      part2: ' 52,5'
     }
   }
 }

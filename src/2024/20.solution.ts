@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import clc from 'cli-color'
 import { Point, World } from 'declarations'
 
 export default async (lineReader: any, params: Params) => {
@@ -43,8 +42,7 @@ export default async (lineReader: any, params: Params) => {
       ] as Point[]
     ).filter((point) => {
       if (world[point[0]][point[1]] === '#') return false
-      if (visited.has(getKey(point))) return false // do not go back
-      return true
+      return !visited.has(getKey(point)) // do not go back
     })
 
   const doSearch = (world: World<string>, opened: Point[], visited: Set<string>, end: Point) => {
@@ -77,15 +75,6 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     return points
-  }
-
-  const getPossibleCheatPoints = (world: World<string>, cheatLength: number, head: Point): Point[] => {
-    let newPoints: Point[] = []
-    // to be a cheat, needs at least 2 steps
-    for (var i = 2; i <= cheatLength; i++) {
-      newPoints = newPoints.concat(getAllManhattanDistance(world, head, i))
-    }
-    return newPoints
   }
 
   const countCheats = (
@@ -121,14 +110,14 @@ export default async (lineReader: any, params: Params) => {
     cheatLength: number
   ): number => {
     let opened: Point[] = [start]
-    let visited = new Set<string>()
-    while (opened.length > 0) doSearch(world, opened, visited, end)
-    console.log('Number of steps', visited.size - 1) // start node is not a step
+    let path = new Set<string>()
+    while (opened.length > 0) doSearch(world, opened, path, end)
+    log.info('Number of steps', path.size - 1) // start node is not a step
     return countCheats(
       world,
       threshold,
       cheatLength,
-      [...visited].map((v) => fromKey(v))
+      [...path].map((v) => fromKey(v))
     )
   }
 

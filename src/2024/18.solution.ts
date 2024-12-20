@@ -1,4 +1,6 @@
 import { Params } from 'aoc.d'
+import clc from 'cli-color'
+import { waitForKey } from 'util/promise'
 
 type DimensionObj = {
   width: number
@@ -14,18 +16,20 @@ type Data = {
   end: PointObj
   size: DimensionObj
   bytes: PointObj[]
+  finalStep: Step | undefined
 }
 
 type Step = PointObj & {
   distanceDone: number
   distanceLeft: number
+  path: PointObj[]
 }
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  let part1: number = 0
-  let part2: number = 0
+  let part1: number | undefined = 0
+  let part2: string = ''
 
   let bytes: PointObj[] = []
   for await (const line of lineReader) {
@@ -35,7 +39,7 @@ export default async (lineReader: any, params: Params) => {
 
   const getKey = (p: PointObj) => p.x + ',' + p.y
 
-  const isSame = (s1: PointObj, s2: PointObj): boolean => s1.x === s2.y && s1.y === s2.y
+  const isSame = (s1: PointObj, s2: PointObj): boolean => s1.x === s2.x && s1.y === s2.y
 
   const getManhattanDistance = (s1: PointObj, s2: PointObj) => Math.abs(s1.x - s2.x) + Math.abs(s1.y - s2.y)
 
@@ -57,8 +61,38 @@ export default async (lineReader: any, params: Params) => {
           return true
         })
         // add the remaining distance for the good steps, so they can be sorted
-        .map((s: Step) => ({ ...s, distanceLeft: getManhattanDistance(s, data.end) }))
+        .map((s: Step) => ({
+          ...s,
+          distanceLeft: getManhattanDistance(s, data.end),
+          path: [...s.path, s]
+        }))
     )
+  }
+
+  const printWorld = (
+    opened: Step[],
+    openedIndex: Record<string, number>,
+    visitedIndex: Record<string, number>,
+    data: Data
+  ) => {
+    console.log(data.bytes)
+    for (var row = 0; row < data.size.height; row++) {
+      let s = ''
+      for (var col = 0; col < data.size.width; col++) {
+        let p = { x: col, y: row } as PointObj
+        let key = getKey(p)
+        if (openedIndex[key] !== undefined) {
+          s += clc.blue('O')
+        } else if (visitedIndex[key] !== undefined) {
+          s += clc.red('V')
+        } else if (data.bytes.some((b) => isSame(b, p))) {
+          s += clc.yellow('#')
+        } else {
+          s += '.'
+        }
+      }
+      log.info(s)
+    }
   }
 
   const doAStar = (
@@ -67,87 +101,165 @@ export default async (lineReader: any, params: Params) => {
     visitedIndex: Record<string, number>,
     data: Data
   ) => {
+    log.debug(
+      '=== A* === opened',
+      opened.length,
+      'openedIndex',
+      JSON.stringify(openedIndex),
+      'visited',
+      JSON.stringify(visitedIndex)
+    )
     let head: Step = opened.splice(-1)[0]!
+    log.debug('Picking head', head)
     let headKey = getKey(head)
-    log.debug('=== Search ===', head, 'opened', opened.length)
     if (isSame(head, data.end)) {
-      if (head.distanceDone! < visitedIndex[headKey]) {
-        log.info('got lowest', head.distanceDone)
-        visitedIndex[headKey] = head.distanceDone
+      if (visitedIndex[headKey] === undefined || head.distanceDone! < visitedIndex[headKey]) {
+        log.debug('got lowest', head.distanceDone)
+        data.finalStep = head
       }
       return
     }
+    visitedIndex[headKey] = head.distanceDone
     delete openedIndex[headKey]
 
     const newSteps: Step[] = getNewSteps(head, data)
-    //console.log('new steps for', head, newSteps)
+    log.debug('new steps for', head, newSteps)
     if (newSteps.length !== 0) {
       newSteps.forEach((step) => {
         let stepKey = getKey(step)
         // if it matches an openedIndex
-        if (!!openedIndex[stepKey]) {
+        if (openedIndex[stepKey] !== undefined) {
           // the openedIndex is better, so discard it
           if (openedIndex[stepKey] <= step.distanceDone) {
+            log.trace(
+              'openedindex with step',
+              stepKey,
+              'has distance',
+              openedIndex[stepKey],
+              'better than step.distanceDone',
+              step.distanceDone,
+              ', returning'
+            )
             return
           } else {
             // the openedIndex is worse, remove it
             let index = opened.findIndex((s: Step) => getKey(s) === stepKey)
-            if (index >= 0) opened.splice(index, 1)
+            if (index >= 0) {
+              log.trace(
+                'openedindex with step',
+                step,
+                'has distance',
+                openedIndex[stepKey],
+                'worse than step.distanceDone',
+                step.distanceDone,
+                ', removing from opened'
+              )
+              opened.splice(index, 1)
+              delete openedIndex[stepKey]
+            }
           }
         }
 
         // if it matches an visitedIndex
-        if (!!visitedIndex[stepKey]) {
-          // the visitedIndex is better, so discard it
-          if (visitedIndex[stepKey] <= step.distanceDone) {
-            return
-          } else {
-            // visitedIndex is worse, replace it
-            visitedIndex[stepKey] = step.distanceDone
-          }
-        } else {
-          // visitedIndex is absent, add it
-          visitedIndex[stepKey] = step.distanceDone
+        if (visitedIndex[stepKey] !== undefined && visitedIndex[stepKey] <= step.distanceDone) {
+          log.trace(
+            'visitedIndex with step',
+            stepKey,
+            'has distance',
+            visitedIndex[stepKey],
+            'better than step.distanceDone',
+            step.distanceDone,
+            ', returning'
+          )
+          return
         }
-
         opened.push(step)
+        openedIndex[stepKey] = step.distanceDone
       })
       // the ones with shortest path done and expected shortest path ahead should go first
       opened.sort((a, b) => b.distanceDone + b.distanceLeft - a.distanceDone - a.distanceLeft)
     }
   }
 
-  const solveFor = (startObj: PointObj, endObj: PointObj, bytes: PointObj[]): number => {
+  const solveFor = async (
+    startObj: PointObj,
+    endObj: PointObj,
+    bytes: PointObj[]
+  ): Promise<Step | undefined> => {
     let opened: Step[] = [
       {
         ...startObj,
         distanceDone: 0,
-        distanceLeft: getManhattanDistance(startObj, endObj)
+        distanceLeft: getManhattanDistance(startObj, endObj),
+        path: []
       }
     ]
     let openedIndex: Record<string, number> = {}
     let visitedIndex: Record<string, number> = {}
     openedIndex[getKey(startObj)] = 0
-    visitedIndex[getKey(startObj)] = 0
     let data: Data = {
       end: endObj,
       size: params.size,
-      bytes: bytes.slice(0, params.time)
+      bytes: bytes,
+      finalStep: undefined
     }
     let iteration: number = 0
     while (opened.length > 0) {
       doAStar(opened, openedIndex, visitedIndex, data)
       iteration++
+      if (params.ui?.show) printWorld(opened, openedIndex, visitedIndex, data)
+      if (params.ui?.keypress) await waitForKey()
     }
-    console.log(visitedIndex)
-    return visitedIndex[getKey(endObj)]
+    return data.finalStep
   }
 
   if (!params.skipPart1) {
-    part1 = solveFor(params.start, params.end, bytes)
+    let partialBytes = bytes.slice(0, params.time)
+    let step = await solveFor(params.start, params.end, partialBytes)
+    part1 = step?.distanceDone
   }
+
   if (!params.skipPart2) {
-    // part2 = solveFor()
+    let byteThatClosesPath: string | undefined = undefined
+    while (!byteThatClosesPath) {
+      let time = 1
+      let currentWinningPath: PointObj[] = []
+      while (true) {
+        let partialBytes = bytes.slice(0, time)
+        let lastByte = partialBytes[partialBytes.length - 1]
+        let lastByteKey = getKey(lastByte)
+        // the last byte did not fell on the current path
+        if (currentWinningPath.length > 0 && !currentWinningPath.some((p) => isSame(lastByte, p))) {
+          log.info('time', time, 'byte', lastByteKey, 'strike water, continue')
+          time++
+          continue
+        }
+        log.info('time', time, 'solving ')
+        // the last byte not fell on the current path, or there is no visitedIndex
+        let step = await solveFor(params.start, params.end, partialBytes)
+
+        log.info('time', time, 'distance done', step?.distanceDone)
+        if (step?.distanceDone === undefined) {
+          log.info('time', time, 'byte', lastByteKey, 'hit path, had to recalculate, no end value, OBSTRUCT')
+          byteThatClosesPath = getKey(lastByte)
+          break
+        } else {
+          log.info(
+            'time',
+            time,
+            'byte',
+            lastByteKey,
+            'hit path, had to recalculate, end value',
+            step?.distanceDone,
+            'continue'
+          )
+          // save new path
+          currentWinningPath = step?.path
+        }
+        time++
+      }
+    }
+    part2 = byteThatClosesPath
   }
 
   return { part1, part2 }
