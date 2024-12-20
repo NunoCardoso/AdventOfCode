@@ -4,15 +4,16 @@ export default {
     day: '18',
     title: '',
     status: 'inprogress',
-    comment: '',
+    comment: 'In this puzzle, X is horizontal (col) distance, Y is vertical (row) distance',
     difficulty: 0
   },
   logLevel: 'debug',
   test: {
     params: {
-      size: [7, 7],
-      start: [0, 0],
-      end: [6, 6]
+      time: 12,
+      size: { height: 7, width: 7 },
+      start: { x: 0, y: 0 },
+      end: { x: 6, y: 6 }
     },
     id: 'test',
     answers: {
@@ -22,9 +23,10 @@ export default {
   },
   prod: {
     params: {
-      size: [71, 71],
-      start: [0, 0],
-      end: [70, 70]
+      time: 1024,
+      size: { height: 71, width: 71 },
+      start: { x: 0, y: 0 },
+      end: { x: 70, y: 70 }
     },
     answers: {
       //part1: 0,

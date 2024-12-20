@@ -104,3 +104,95 @@ Some functions names: `solveFor`, `deepFirst`, `breathFirst`, `dijkstra`
       "abcabfgabsefd".match(/ab/) => ['ab', index: 0, input: 'abcabfgabsefd', groups: undefined]
       "abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']
       "123123123".match(/ab/) => null
+
+# Knowledge base
+
+##  X or Y?  Rows and Columns?
+
+row goes vertical, col goes horizontal
+unless it is specified otherwise in the instructions, 
+x and y should be avoided, but if not, x IS ROW, y IS COLUMN, therefore NOT EQUIVALENT to X/Y charts NOT HTML positions.
+
+when printing world, world matrixes are also row and colum
+
+| []()                   |                        |                        |                        |
+|------------------------|------------------------|------------------------|------------------------|
+| row 0, col 0, x 0, y 0 | row 0, col 1, x 0, y 1 | row 0, col 2, x 0, y 2 | row 0, col 3, x 0, y 3 |
+| row 1, col 0, x 1, y 0 | row 1, col 1, x 1, y 1 | row 1, col 2, x 1, y 2 | row 1, col 3, x 1, y 3 |
+| row 2, col 0, x 2, y 0 | row 2, col 1, x 2, y 1 | row 2, col 2, x 2, y 2 | row 2, col 3, x 2, y 3 |
+| row 3, col 0, x 3, y 0 | row 3, col 1, x 3, y 1 | row 3, col 2, x 2, y 2 | row 3, col 3, x 3, y 3 |
+
+## Algorithms
+
+| Name         | weighted graph | visits all paths? | guarantees shortest? | heuristics | comments                                         |
+|--------------|----------------|-------------------|----------------------|------------|--------------------------------------------------|
+| DFS          | no             | no                | no                   | no         | only if you want to find any path                |
+| BFS          | no             | yes               | yes                  | no         | not for weighted graphs                          |
+| Dijkstra     | yes            | yes               | yes                  | no         | can be slow on big graphs                        |
+| A*           | yes            | yes               | yes                  | yes        | can be faster than Dijkstra if heuristic is good |
+| Greedy       | -              | no                | no                   | yes        | not good as shortest is not guaranteed           |
+| Bellman-Ford | yes, negatives | yes               | yes                  | no         | Dijkstra for weights with negative values        |
+| UCS          | yes            | yes               | yes                  | no         | Dijkstra-ish                                     |
+
+Floyd-Warshall
+
+### Dijkstra’s Algorithm
+
+* Dijkstra’s algorithm finds the shortest path from a start node to all other nodes in a weighted graph. 
+* It explores all possible paths systematically, always expanding the least-cost node first, and guarantees the shortest path.
+* It does not use heuristics, so it works on any graph but can be slow for large graphs.
+
+### A* Algorithm
+
+* A* improves upon Dijkstra’s algorithm by using a heuristic function to estimate the distance to the goal.
+* It combines this estimate with the actual cost to the current node, allowing it to focus on promising paths. 
+* This makes A* faster than Dijkstra’s for many problems, but its performance depends on the quality of the heuristic.
+
+### Breadth-First Search (BFS)
+
+* BFS explores all nodes at the current depth before moving to the next level. 
+* It is unweighted and guarantees the shortest path in graphs where all edges have the same weight.
+* It is NOT suitable for weighted graphs.
+
+### Depth-First Search (DFS)
+
+* DFS explores as far as possible along each path before backtracking. 
+* It does not guarantee the shortest path and is not optimal for pathfinding but can be useful for exploring or checking graph connectivity.
+
+### Greedy Best-First Search
+
+* Greedy Best-First Search uses only the heuristic to choose which node to expand next. 
+* It focuses on the direction of the goal but does not guarantee the shortest path and can get stuck in suboptimal routes.
+
+### Bellman-Ford Algorithm
+
+* Bellman-Ford finds the shortest path from a start node to all other nodes, even with negative edge weights.
+* It is slower than Dijkstra’s but works in situations where Dijkstra’s cannot, such as graphs with negative weights.
+
+### Floyd-Warshall Algorithm
+
+* Floyd-Warshall calculates shortest paths between all pairs of nodes in a graph.
+* It is suitable for small, dense graphs but is computationally expensive and not used for single-source pathfinding.
+
+### Uniform-Cost Search (UCS)
+
+* UCS is similar to Dijkstra’s algorithm but focuses only on finding the shortest path to a specific goal node.
+* It expands the least-cost node first and guarantees the shortest path, making it optimal but slower than A* for large graphs.
+
+## IDEAS 
+
+* introduce PointObj, where {x: number, y: number}
+
+* move away from [number, number, number, string] or something, use objects so all is more readable
+*  speed is good, readability is even better
+* rethink renaming Point to Location. Location implies coordinates, Point is something that has location but also extra stuff
+* dimension: to object where I have Height, width to better signal that the first value is for number of rows, other one is for number of colums 
+* Get the terminology ready: 
+* - path: succession of steps. Should it be changed?
+* - head: latest step
+
+* better describe the differences between BFS, DFS, Dijkstra, A* and why each should have: 
+** visited cache
+** sort by distance / heuristic / etc 
+* put ths list of tags here
+* Make list of templates (one template with dijkstra, etc)
