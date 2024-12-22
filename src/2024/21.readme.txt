@@ -23,25 +23,11 @@ NOTE:
 <^A (3) becomes  v<<A  >^A  >A (9)  becomes  <vA<AA>>^A  vA<^A>A  vA^A (21 => 10 + 7 + 4)
 ^<A (3) becomes  <A  v<A  >>^A (9)  becomes  v<<A>>^A  <vA<A>>^A  vAA<^A>A (25 => 8 + 9 + 8)
 
-But really we should match them diagonally
-(v<<A from line 1 corresponds to >>^A accross in line 2, not to the <A below):
+YET, NOTE THAT SOME PATHS like A to 7, you cannot do <<^^^!
+The best way is ^^^<< because there is no key below 1.
 
-<vA<AA>>^A becomes vAA<^A>A
-vA<^A>A becomes <vA<A>>^A
-v<<A>>^A becomes vA^A
+SO, paths from [A, 0] to [1, 4 7], and the reverse paths, do the "suboptimal" way because there is no key.
+the path will always prefer consecutive operations (>>v) instead of alternates (>v>))
 
-For the first one, you can see it's only cheaper (cost 8 vs cost 10) because > is closer to A than <.
-It sounds like that's not interesting, because you'll always press both anyways.
-
-BUT it really matters if we can arrange the sequence to press the more expensive keys multiple times in a row!
-If you're going to be pressing <, you always want to press it multiple times in a row
-(^^<<< is MUCH cheaper on a nested keypad than <^<^<, because the parent keypad has to go press A to confirm each step and < is so far away from A!)
-
-When we do <^A on the human keypad, it turns into v<<A >^A >A.
-You can see there's a pair of << which takes us all the way left in one step, which is very cheap, and then we never
-touch the horrible < key again (it's so damn far!).
-
-But when we do ^<A on the human keypad, we have to do <A then v<A, so we go left in two steps without benefiting from a fast <<.
-More expensive :(
-
-In general since each step left is more expensive, you always want to hit the far left key first (<), and then the middle key (^ or v) and then a right column key (> or A).
+for the part2, there was also some trial and error for the keypads, as some of the <v or ^> variants can make
+a difference. trial and error until I get the lowest value
