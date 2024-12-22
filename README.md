@@ -195,4 +195,4 @@ Floyd-Warshall
 ** visited cache
 ** sort by distance / heuristic / etc 
 * put ths list of tags here
-* Make list of templates (one template with dijkstra, etc)
+* what about pop() instead of splice(-1)[0]

@@ -2,13 +2,22 @@ import { Params } from 'aoc.d'
 import clc from 'cli-color'
 import { Point, World } from 'declarations'
 
-// row, column, direction, score
-type ThisPoint = [number, number, string, number]
+type PointObj = {
+  row: number
+  col: number
+}
+type Step = PointObj & {
+  direction: string
+  distanceDone: number
+  distanceLeft: number
+}
+
+type Path = Step[]
 
 type Data = {
-  end: Point
-  lowestScore: number
-  path: ThisPoint[]
+  end: PointObj
+  path: Path | undefined
+  shortestDistance: number
 }
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -17,163 +26,183 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   let world: World<string> = []
-  let start: Point
-  let end: Point
+  let start: PointObj
+  let end: PointObj
   let rowIndex = 0
   for await (const line of lineReader) {
     const values = line.split('')
     let startIndex = values.findIndex((v: string) => v === 'S')
     let endIndex = values.findIndex((v: string) => v === 'E')
     if (startIndex >= 0) {
-      start = [rowIndex, startIndex]
+      start = { row: rowIndex, col: startIndex }
       values[startIndex] = '.'
     }
     if (endIndex >= 0) {
-      end = [rowIndex, endIndex]
+      end = { row: rowIndex, col: endIndex }
       values[endIndex] = '.'
     }
     world.push(values)
     rowIndex++
   }
 
-  const printWorld = (world: World<string>, paths: ThisPoint[]) => {
-    for (var i = 0; i < world.length; i++) {
-      let s: string = ''
-      for (var j = 0; j < world[i].length; j++) {
-        /*if (i === start[0] && j === start[1]) {
-          s += clc.yellow('@')
-          continue
-        }*/
-        let cell = world[i][j]
-        if (cell === '#') s += clc.red(cell)
-        if (cell === '.') s += cell
+  const printWorld = (world: World<string>, opened: Step[], openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
+    for (var row = 0; row < world.length; row++) {
+      let s = ''
+      for (var col = 0; col < world[row].length; col++) {
+        let val = world[row][col]
+        if (val === '#') {
+          s += clc.yellow('#')
+        } else {
+          let points = [row + ',' + col + ',<', row + ',' + col + ',^', row + ',' + col + ',v', row + ',' + col + ',>']
+          let openedIndexHas = points.some((p) => openedIndex[p] !== undefined)
+          let visitedIndexHas = points.some((p) => visitedIndex[p] !== undefined)
+          if (openedIndexHas) s += clc.blue('O')
+          else if (visitedIndexHas) s += clc.red('V')
+          else s += '.'
+        }
       }
       log.info(s)
     }
   }
 
-  const getKeyWithDirection = (p: ThisPoint): string => p[0] + ',' + p[1] + ',' + p[2]
-  const isSame = (p: ThisPoint, p2: Point | ThisPoint): boolean => p[0] === p2[0] && p[1] === p2[1]
+  const getKeyWithDirection = (s: Step): string => s.row + ',' + s.col + ',' + s.direction
+  const isSame = (p1: PointObj, p2: PointObj): boolean => p1.row === p2.row && p1.col === p2.col
 
-  const inTail = (point: ThisPoint, path: ThisPoint[]): boolean => path.some((p) => isSame(p, point))
+  const inTail = (p1: PointObj, path: PointObj[]): boolean => path.some((p) => isSame(p1, p))
 
-  const isWall = (world: World<string>, head: ThisPoint) => world[head[0]][head[1]] === '#'
-  const getNewPaths = (world: World<string>, path: ThisPoint[], lowestScore: number): ThisPoint[][] => {
+  const getManhattanDistance = (p1: PointObj, p2: PointObj) => Math.abs(p1.row - p2.row) + Math.abs(p1.col - p2.col)
+
+  const isWall = (world: World<string>, head: Step) => world[head.row][head.col] === '#'
+
+  const getNewPaths = (world: World<string>, path: Path, data: Data): Path[] => {
     let head = path[path.length - 1]
-    let nextHeads: ThisPoint[][] = []
-    let newPoint = [...head] as ThisPoint
+    let nextSteps: Step[] = []
+    let newStep = { ...head }
 
     // front
-    if (newPoint[2] === '^') newPoint[0] = newPoint[0] - 1
-    if (newPoint[2] === 'v') newPoint[0] = newPoint[0] + 1
-    if (newPoint[2] === '<') newPoint[1] = newPoint[1] - 1
-    if (newPoint[2] === '>') newPoint[1] = newPoint[1] + 1
-    newPoint[3] = newPoint[3] + 1
-    if (!isWall(world, newPoint) && !inTail(newPoint, path)) nextHeads.push([...path, [...newPoint]])
+    if (newStep.direction === '^') newStep.row = newStep.row - 1
+    if (newStep.direction === 'v') newStep.row = newStep.row + 1
+    if (newStep.direction === '<') newStep.col = newStep.col - 1
+    if (newStep.direction === '>') newStep.col = newStep.col + 1
+    newStep.distanceDone = newStep.distanceDone + 1
+    if (!isWall(world, newStep) && !inTail(newStep, path)) nextSteps.push(newStep)
 
-    newPoint = [...head] as ThisPoint
+    newStep = { ...head }
     // left
     let leftConvertHash: Record<string, string> = { '>': '^', '^': '<', '<': 'v', v: '>' }
-    if (newPoint[2] === '>') newPoint[0] = newPoint[0] - 1
-    if (newPoint[2] === '<') newPoint[0] = newPoint[0] + 1
-    if (newPoint[2] === '^') newPoint[1] = newPoint[1] - 1
-    if (newPoint[2] === 'v') newPoint[1] = newPoint[1] + 1
-    if (!isWall(world, newPoint)) {
-      nextHeads.push([...path, [head[0], head[1], leftConvertHash[head[2]], head[3] + 1000]])
-    }
+    if (newStep.direction === '>') newStep.row = newStep.row - 1
+    if (newStep.direction === '<') newStep.row = newStep.row + 1
+    if (newStep.direction === '^') newStep.col = newStep.col - 1
+    if (newStep.direction === 'v') newStep.col = newStep.col + 1
+    if (!isWall(world, newStep))
+      nextSteps.push({
+        ...head,
+        direction: leftConvertHash[head.direction],
+        distanceDone: head.distanceDone + 1000
+      })
 
-    newPoint = [...head] as ThisPoint
+    newStep = { ...head }
     // right
     let rightConvertHash: Record<string, string> = { '>': 'v', v: '<', '<': '^', '^': '>' }
-    if (newPoint[2] === '<') newPoint[0] = newPoint[0] - 1
-    if (newPoint[2] === '>') newPoint[0] = newPoint[0] + 1
-    if (newPoint[2] === 'v') newPoint[1] = newPoint[1] - 1
-    if (newPoint[2] === '^') newPoint[1] = newPoint[1] + 1
-    if (!isWall(world, newPoint)) {
-      nextHeads.push([...path, [head[0], head[1], rightConvertHash[head[2]], head[3] + 1000]])
-    }
-
-    return nextHeads.filter((n) => n[n.length - 1][3] <= lowestScore)
+    if (newStep.direction === '<') newStep.row = newStep.row - 1
+    if (newStep.direction === '>') newStep.row = newStep.row + 1
+    if (newStep.direction === 'v') newStep.col = newStep.col - 1
+    if (newStep.direction === '^') newStep.col = newStep.col + 1
+    if (!isWall(world, newStep))
+      nextSteps.push({
+        ...head,
+        direction: rightConvertHash[head.direction],
+        distanceDone: head.distanceDone + 1000
+      })
+    return nextSteps.map((step: Step) => [
+      ...path,
+      {
+        ...step,
+        distanceLeft: getManhattanDistance(step, data.end)
+      }
+    ])
   }
-  const doDijkstra = (
-    world: World<string>,
-    opened: ThisPoint[][],
-    bestPositionAndScore: Record<string, number>,
-    uniquePath: Set<string>,
-    data: Data
-  ) => {
-    let path: ThisPoint[] = opened.splice(-1)[0]
+
+  const doAstar = (world: World<string>, opened: Path[], openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
+    log.debug('=== A* === opened', opened.length)
+    let path: Path = opened.splice(-1)[0]
     let head = path[path.length - 1]
+    log.debug('Picking head', head)
     let headKey = getKeyWithDirection(head)
 
-    log.debug('=== Dijkstra ===', headKey, 'opened', opened.length, 'data', data)
-
-    if (isSame(head, end)) {
-      if (head[3] <= data.lowestScore) {
-        log.info('got lowest', head[3])
-        data.lowestScore = head[3]
+    if (isSame(head, data.end)) {
+      if (head.distanceDone! < data.shortestDistance) {
+        log.debug('got lowest', head.distanceDone)
         data.path = path
-        if (head[3] < data.lowestScore) uniquePath.clear() // throw other ones away if we are really lower
-        path.forEach((p) => uniquePath.add(p[0] + ',' + p[1]))
-        bestPositionAndScore[getKeyWithDirection(head)] = head[3]
       }
       return
     }
 
-    const newPaths: ThisPoint[][] = getNewPaths(world, path, data.lowestScore)
-    //console.log('new paths', newPaths)
+    visitedIndex[headKey] = head.distanceDone
+    delete openedIndex[headKey]
+
+    const newPaths: Path[] = getNewPaths(world, path, data)
+    //log.debug('new steps for', head, newPaths.map(p => p[p.length -1]))
     if (newPaths.length !== 0) {
       newPaths.forEach((newPath) => {
         let newHead = newPath[newPath.length - 1]
-        const newPathKey = getKeyWithDirection(newHead)
-        // never seen position/direction, so keep pursuing this path
-        if (bestPositionAndScore[newPathKey] === undefined) {
-          opened.push(newPath)
-          bestPositionAndScore[newPathKey] = newHead[3]
-        } else {
-          // This position/direction was seen. where?
-          // if I find it in uniquePath, with same score, then it will become part of the solution paths
-          // no need to continue, but we will add the extra detour positions
-          newPath.forEach((p) => uniquePath.add(newHead[0] + ',' + newHead[1]))
-
-          /* const index = opened.findIndex((p: ThisPoint[]) => isSame(p[p.length - 1], newHead))
-          // if so, check scores. If better, replace it
-          if (index >= 0 && opened[index][opened[index].length - 1][3] > newHead[3]) opened[index] = path*/
+        const newHeadKey = getKeyWithDirection(newHead)
+        // if it matches an openedIndex
+        if (openedIndex[newHeadKey] !== undefined) {
+          // the openedIndex is better, so discard it
+          if (openedIndex[newHeadKey] <= newHead.distanceDone) {
+            return
+          } else {
+            // the openedIndex is worse, remove it
+            let index = opened.findIndex((p: Path) => getKeyWithDirection(p[p.length - 1]) === newHeadKey)
+            if (index >= 0) {
+              opened.splice(index, 1)
+              delete openedIndex[newHeadKey]
+            }
+          }
         }
+        if (visitedIndex[newHeadKey] !== undefined && visitedIndex[newHeadKey] <= newHead.distanceDone) {
+          return
+        }
+        opened.push(newPath)
+        openedIndex[newHeadKey] = newHead.distanceDone
       })
-      opened.sort((a, b) => b[b.length - 1][3] - a[a.length - 1][3])
+      opened.sort((a, b) => b[b.length - 1].distanceDone + b[b.length - 1].distanceLeft - a[a.length - 1].distanceDone - a[a.length - 1].distanceLeft)
     }
   }
 
-  const solveFor = (world: World<string>, start: Point, end: Point, uniquePath: Set<string>): Data => {
-    let data: Data = { end, lowestScore: Number.MAX_SAFE_INTEGER, path: [] }
+  const solveFor = (world: World<string>, start: PointObj, end: PointObj): Data => {
+    let data: Data = { end, path: [], shortestDistance: Number.MAX_SAFE_INTEGER }
     let iterations = 0
-    let opened: ThisPoint[][] = [[[...start, '>', 0]]]
-    const bestPositionAndScore: Record<string, number> = {}
-    opened.forEach(
-      (step) => (bestPositionAndScore[getKeyWithDirection(step[step.length - 1])] = step[step.length - 1][3])
-    )
+    let opened: Path[] = [
+      [
+        {
+          ...start,
+          direction: '>',
+          distanceDone: 0,
+          distanceLeft: getManhattanDistance(start, end)
+        }
+      ]
+    ]
+    let openedIndex: Record<string, number> = {}
+    let visitedIndex: Record<string, number> = {}
+    openedIndex['0,0,>'] = 0
+    let iteration: number = 0
     while (opened.length > 0) {
-      doDijkstra(world, opened, bestPositionAndScore, uniquePath, data)
+      doAstar(world, opened, openedIndex, visitedIndex, data)
+      iteration++
       if (iterations % 100 === 0) {
-        log.debug(
-          'it',
-          iterations,
-          'opened length',
-          opened.length,
-          'best positions',
-          Object.keys(bestPositionAndScore).length
-        )
+        log.debug('it', iterations, 'opened length', opened.length)
       }
       iterations++
     }
     return data
   }
 
-  const uniquePath: Set<string> = new Set()
-  let data: Data = solveFor(world, start!, end!, uniquePath)
-  part1 = data.lowestScore
-  part2 = uniquePath.size
+  let data = solveFor(world, start!, end!)
+  log.info(data)
+  part1 = data.path![data.path!.length - 1].distanceDone
+  //part2 = uniquePath.size
 
   return { part1, part2 }
 }

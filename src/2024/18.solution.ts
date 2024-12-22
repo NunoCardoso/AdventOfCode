@@ -69,13 +69,7 @@ export default async (lineReader: any, params: Params) => {
     )
   }
 
-  const printWorld = (
-    opened: Step[],
-    openedIndex: Record<string, number>,
-    visitedIndex: Record<string, number>,
-    data: Data
-  ) => {
-    console.log(data.bytes)
+  const printWorld = (opened: Step[], openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
     for (var row = 0; row < data.size.height; row++) {
       let s = ''
       for (var col = 0; col < data.size.width; col++) {
@@ -95,20 +89,8 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const doAStar = (
-    opened: Step[],
-    openedIndex: Record<string, number>,
-    visitedIndex: Record<string, number>,
-    data: Data
-  ) => {
-    log.debug(
-      '=== A* === opened',
-      opened.length,
-      'openedIndex',
-      JSON.stringify(openedIndex),
-      'visited',
-      JSON.stringify(visitedIndex)
-    )
+  const doAStar = (opened: Step[], openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
+    log.debug('=== A* === opened', opened.length)
     let head: Step = opened.splice(-1)[0]!
     log.debug('Picking head', head)
     let headKey = getKey(head)
@@ -125,35 +107,19 @@ export default async (lineReader: any, params: Params) => {
     const newSteps: Step[] = getNewSteps(head, data)
     log.debug('new steps for', head, newSteps)
     if (newSteps.length !== 0) {
-      newSteps.forEach((step) => {
-        let stepKey = getKey(step)
+      newSteps.forEach((newStep) => {
+        let stepKey = getKey(newStep)
         // if it matches an openedIndex
         if (openedIndex[stepKey] !== undefined) {
           // the openedIndex is better, so discard it
-          if (openedIndex[stepKey] <= step.distanceDone) {
-            log.trace(
-              'openedindex with step',
-              stepKey,
-              'has distance',
-              openedIndex[stepKey],
-              'better than step.distanceDone',
-              step.distanceDone,
-              ', returning'
-            )
+          if (openedIndex[stepKey] <= newStep.distanceDone) {
+            log.trace('openedindex with step', stepKey, 'has distance', openedIndex[stepKey], 'better than step.distanceDone', newStep.distanceDone, ', returning')
             return
           } else {
             // the openedIndex is worse, remove it
             let index = opened.findIndex((s: Step) => getKey(s) === stepKey)
             if (index >= 0) {
-              log.trace(
-                'openedindex with step',
-                step,
-                'has distance',
-                openedIndex[stepKey],
-                'worse than step.distanceDone',
-                step.distanceDone,
-                ', removing from opened'
-              )
+              log.trace('openedindex with step', newStep, 'has distance', openedIndex[stepKey], 'worse than step.distanceDone', newStep.distanceDone, ', removing from opened')
               opened.splice(index, 1)
               delete openedIndex[stepKey]
             }
@@ -161,31 +127,25 @@ export default async (lineReader: any, params: Params) => {
         }
 
         // if it matches an visitedIndex
-        if (visitedIndex[stepKey] !== undefined && visitedIndex[stepKey] <= step.distanceDone) {
-          log.trace(
-            'visitedIndex with step',
-            stepKey,
-            'has distance',
-            visitedIndex[stepKey],
-            'better than step.distanceDone',
-            step.distanceDone,
-            ', returning'
-          )
+        if (visitedIndex[stepKey] !== undefined && visitedIndex[stepKey] <= newStep.distanceDone) {
+          log.trace('visitedIndex with step', stepKey, 'has distance', visitedIndex[stepKey], 'better than step.distanceDone', newStep.distanceDone, ', returning')
           return
         }
-        opened.push(step)
-        openedIndex[stepKey] = step.distanceDone
+        opened.push(newStep)
+        openedIndex[stepKey] = newStep.distanceDone
       })
       // the ones with shortest path done and expected shortest path ahead should go first
       opened.sort((a, b) => b.distanceDone + b.distanceLeft - a.distanceDone - a.distanceLeft)
     }
   }
 
-  const solveFor = async (
-    startObj: PointObj,
-    endObj: PointObj,
-    bytes: PointObj[]
-  ): Promise<Step | undefined> => {
+  const solveFor = async (startObj: PointObj, endObj: PointObj, bytes: PointObj[]): Promise<Step | undefined> => {
+    let data: Data = {
+      end: endObj,
+      size: params.size,
+      bytes: bytes,
+      finalStep: undefined
+    }
     let opened: Step[] = [
       {
         ...startObj,
@@ -197,12 +157,6 @@ export default async (lineReader: any, params: Params) => {
     let openedIndex: Record<string, number> = {}
     let visitedIndex: Record<string, number> = {}
     openedIndex[getKey(startObj)] = 0
-    let data: Data = {
-      end: endObj,
-      size: params.size,
-      bytes: bytes,
-      finalStep: undefined
-    }
     let iteration: number = 0
     while (opened.length > 0) {
       doAStar(opened, openedIndex, visitedIndex, data)
@@ -244,15 +198,7 @@ export default async (lineReader: any, params: Params) => {
           byteThatClosesPath = getKey(lastByte)
           break
         } else {
-          log.info(
-            'time',
-            time,
-            'byte',
-            lastByteKey,
-            'hit path, had to recalculate, end value',
-            step?.distanceDone,
-            'continue'
-          )
+          log.info('time', time, 'byte', lastByteKey, 'hit path, had to recalculate, end value', step?.distanceDone, 'continue')
           // save new path
           currentWinningPath = step?.path
         }

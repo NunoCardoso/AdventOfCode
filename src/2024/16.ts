@@ -12,22 +12,22 @@ export default {
     {
       id: 'test1',
       answers: {
-        part1: 7036,
-        part2: 45
+        part1: 7036
+        //part2: 45
       }
     },
     {
       id: 'test2',
       answers: {
-        part1: 11048,
-        part2: 64
+        //part1: 11048,
+        //part2: 64
       }
     }
   ],
   prod: {
     answers: {
-     // part1: 83432,
-    //  part2: 0
+      // part1: 83432,
+      //  part2: 0
       // 433 too low
     }
   }

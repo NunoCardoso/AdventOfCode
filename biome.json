@@ -9,7 +9,7 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "lineWidth": 110,
+    "lineWidth": 200,
     "attributePosition": "auto",
     "bracketSpacing": true
   },
@@ -18,7 +18,10 @@
     "enabled": true,
     "rules": {
       "recommended": false,
-      "suspicious": { "noConfusingLabels": "error" }
+      "suspicious": {
+        "noConfusingLabels": "error",
+        "noConsole": "error"
+      }
     }
   },
   "javascript": {
