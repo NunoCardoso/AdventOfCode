@@ -7,7 +7,7 @@ export default {
     comment: 'Avoided lists, ended up to use a list anyway.',
     difficulty: 3
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

@@ -7,7 +7,7 @@ export default {
     comment: 'Nice, simple check of slope while reading input',
     difficulty: 1
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

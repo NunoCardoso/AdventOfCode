@@ -7,7 +7,7 @@ export default {
     comment: 'Nice that I still remember OR regexes, really helps a lot here',
     difficulty: 1
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: [
     {
       id: 'test',

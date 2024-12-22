@@ -7,7 +7,7 @@ export default {
     comment: 'Simple, but I guess part 2 can have optimization',
     difficulty: 2
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

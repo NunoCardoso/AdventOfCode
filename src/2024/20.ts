@@ -10,7 +10,7 @@ export default {
       'the same track, but this was needed. Still, time is > 20s, needs optimization',
     difficulty: 3
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: [
     {
       id: 'test',

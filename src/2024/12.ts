@@ -4,11 +4,10 @@ export default {
     day: '12',
     title: 'Garden Groups',
     status: 'done',
-    comment:
-      'Guessed wrong part2. I thought it was how many meters of fences, but that was too simple. Good that I have PointPlus',
+    comment: 'Guessed wrong part2. I thought it was how many meters of fences, but that was too simple. Good that I have PointPlus',
     difficulty: 3
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: [
     {
       id: 'test1',

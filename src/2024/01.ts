@@ -7,7 +7,7 @@ export default {
     comment: 'Simple list sort and reduce. A little hiccup on unsure if distances can be negative',
     difficulty: 1
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

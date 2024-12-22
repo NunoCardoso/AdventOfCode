@@ -1,6 +1,7 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Point, World } from 'declarations'
+import { World } from 'declarations'
+import { waitForKey } from 'util/promise'
 
 type PointObj = {
   row: number
@@ -18,6 +19,7 @@ type Data = {
   end: PointObj
   path: Path | undefined
   shortestDistance: number
+  uniqueLocations: Set<string>
 }
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -45,7 +47,8 @@ export default async (lineReader: any, params: Params) => {
     rowIndex++
   }
 
-  const printWorld = (world: World<string>, opened: Step[], openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
+  const printWorld = (world: World<string>, bestOpened: Path, openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
+    log.info('best opened', bestOpened?.[bestOpened.length - 1]?.distanceDone, 'data', data.path?.[data.path.length - 1]?.distanceDone)
     for (var row = 0; row < world.length; row++) {
       let s = ''
       for (var col = 0; col < world[row].length; col++) {
@@ -56,9 +59,8 @@ export default async (lineReader: any, params: Params) => {
           let points = [row + ',' + col + ',<', row + ',' + col + ',^', row + ',' + col + ',v', row + ',' + col + ',>']
           let openedIndexHas = points.some((p) => openedIndex[p] !== undefined)
           let visitedIndexHas = points.some((p) => visitedIndex[p] !== undefined)
-          if (openedIndexHas) s += clc.blue('O')
-          else if (visitedIndexHas) s += clc.red('V')
-          else s += '.'
+          let inPath = bestOpened?.some((s) => s.row === row && s.col === col)
+          s += inPath ? clc.green('#') : openedIndexHas ? clc.blue('O') : visitedIndexHas ? clc.red('V') : '.'
         }
       }
       log.info(s)
@@ -124,16 +126,18 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const doAstar = (world: World<string>, opened: Path[], openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
-    log.debug('=== A* === opened', opened.length)
+    log.trace('=== A* === opened', opened.length)
     let path: Path = opened.splice(-1)[0]
     let head = path[path.length - 1]
-    log.debug('Picking head', head)
+    log.trace('Picking head', head)
     let headKey = getKeyWithDirection(head)
 
     if (isSame(head, data.end)) {
-      if (head.distanceDone! < data.shortestDistance) {
+      if (head.distanceDone! <= data.shortestDistance) {
         log.debug('got lowest', head.distanceDone)
         data.path = path
+        data.shortestDistance = head.distanceDone
+        path.forEach((step) => data.uniqueLocations.add(step.row + ',' + step.col))
       }
       return
     }
@@ -142,18 +146,20 @@ export default async (lineReader: any, params: Params) => {
     delete openedIndex[headKey]
 
     const newPaths: Path[] = getNewPaths(world, path, data)
-    //log.debug('new steps for', head, newPaths.map(p => p[p.length -1]))
     if (newPaths.length !== 0) {
       newPaths.forEach((newPath) => {
         let newHead = newPath[newPath.length - 1]
         const newHeadKey = getKeyWithDirection(newHead)
         // if it matches an openedIndex
+        // note that we do not discard if they are the same, so we can get alternative paths
+        // this is exclusive to this puzzle
         if (openedIndex[newHeadKey] !== undefined) {
-          // the openedIndex is better, so discard it
-          if (openedIndex[newHeadKey] <= newHead.distanceDone) {
+          // the openedIndex is better, so discard it.
+          if (openedIndex[newHeadKey] < newHead.distanceDone) {
             return
-          } else {
-            // the openedIndex is worse, remove it
+          }
+          // the openedIndex is worse, remove it from opened
+          if (openedIndex[newHeadKey] > newHead.distanceDone) {
             let index = opened.findIndex((p: Path) => getKeyWithDirection(p[p.length - 1]) === newHeadKey)
             if (index >= 0) {
               opened.splice(index, 1)
@@ -161,7 +167,8 @@ export default async (lineReader: any, params: Params) => {
             }
           }
         }
-        if (visitedIndex[newHeadKey] !== undefined && visitedIndex[newHeadKey] <= newHead.distanceDone) {
+        // keep visitedIndexes with the same distance, they may produce alternative paths
+        if (visitedIndex[newHeadKey] !== undefined && visitedIndex[newHeadKey] < newHead.distanceDone) {
           return
         }
         opened.push(newPath)
@@ -171,8 +178,8 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const solveFor = (world: World<string>, start: PointObj, end: PointObj): Data => {
-    let data: Data = { end, path: [], shortestDistance: Number.MAX_SAFE_INTEGER }
+  const solveFor = async (world: World<string>, start: PointObj, end: PointObj): Promise<Data> => {
+    let data: Data = { end, path: [], shortestDistance: Number.MAX_SAFE_INTEGER, uniqueLocations: new Set<string>() }
     let iterations = 0
     let opened: Path[] = [
       [
@@ -190,19 +197,17 @@ export default async (lineReader: any, params: Params) => {
     let iteration: number = 0
     while (opened.length > 0) {
       doAstar(world, opened, openedIndex, visitedIndex, data)
-      iteration++
-      if (iterations % 100 === 0) {
-        log.debug('it', iterations, 'opened length', opened.length)
-      }
+      if (params?.ui?.show && params?.ui.during) printWorld(world, opened[opened.length - 1], openedIndex, visitedIndex, data)
+      if (params?.ui?.keypress) await waitForKey()
       iterations++
     }
     return data
   }
 
-  let data = solveFor(world, start!, end!)
-  log.info(data)
-  part1 = data.path![data.path!.length - 1].distanceDone
-  //part2 = uniquePath.size
+  let data = await solveFor(world, start!, end!)
+  part1 = data.shortestDistance
+  if (params?.ui?.show && params?.ui.end) printWorld(world, data.path!, {}, {}, data)
+  part2 = data.uniqueLocations.size
 
   return { part1, part2 }
 }

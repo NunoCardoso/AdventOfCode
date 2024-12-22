@@ -2,12 +2,12 @@ export default {
   config: {
     year: '2024',
     day: '19',
-    title: '',
-    status: 'inprogress',
-    comment: '',
-    difficulty: 0
+    title: 'Linen Layout',
+    status: 'done',
+    comment: 'I could see this that would need a cache by a mile. Not that dfifficult since I was ready for cache.',
+    difficulty: 3
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

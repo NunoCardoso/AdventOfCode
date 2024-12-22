@@ -7,21 +7,23 @@ export default {
     comment: 'Nice heuristic to see if I can detect a picture on part 2, nice to see if AI can do it',
     difficulty: 3
   },
-  logLevel: 'debug',
-  ui: {show: true},
-  test: [{
-    id: 'test',
-    params: {
-      iterations: 100,
-      worldSize: [11,7]
-    },
-    answers: {
-      part1: 12
+  logLevel: 'info',
+  ui: { show: true },
+  test: [
+    {
+      id: 'test',
+      params: {
+        iterations: 100,
+        worldSize: [11, 7]
+      },
+      answers: {
+        part1: 12
+      }
     }
-  }],
+  ],
   params: {
     iterations: 100,
-    worldSize: [101,103]
+    worldSize: [101, 103]
   },
   prod: {
     answers: {

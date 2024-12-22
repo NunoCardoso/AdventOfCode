@@ -7,7 +7,7 @@ export default {
     comment: 'Hard part2. I only got it as I sorted the paths. A lot of simplifications can be done',
     difficulty: 4
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: [
     {
       id: 'test1',

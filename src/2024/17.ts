@@ -7,7 +7,7 @@ export default {
     comment: '',
     difficulty: 0
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: [
     {
       id: 'test1',

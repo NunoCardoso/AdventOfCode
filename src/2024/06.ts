@@ -4,11 +4,10 @@ export default {
     day: '06',
     title: 'Guard Gallivant',
     status: 'done',
-    comment:
-      'Takes 10 seconds but it gets there. Needs some optimization, lucky that map was not that big. Optimizations are on readme',
+    comment: 'Takes 10 seconds but it gets there. Needs some optimization, lucky that map was not that big. Optimizations are on readme',
     difficulty: 3
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

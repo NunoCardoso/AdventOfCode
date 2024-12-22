@@ -7,7 +7,7 @@ export default {
     comment: 'Quite simple check from pivot letters',
     difficulty: 1
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {
