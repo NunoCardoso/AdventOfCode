@@ -1,0 +1,42 @@
+It is not possible to do brute force on this one. Did millions and nothing.
+
+Let's take the program:
+Program: 2,4,1,4,7,5,4,1,1,4,5,5,0,3,3,0
+Let's separate opcode and operands
+
+NUMBER  OPCODE OPERAND INSTRUCTION RESULT
+1       2      4 (A)   bst	       B := A % 8
+1       1      1 (1)   bxl	       B := B XOR 1
+1       7      5 (B)   cdv	       C := A / 2^B
+1       1      4 (A)   bxl	       B := B XOR 4
+1       0      3 (3)   adv	       A := A / 2^3
+1       4      5 (B)   bxc	       B := B XOR C
+1       5      5 (B)   out	       OUTPUT: B % 8
+1       3      0 (0)   jnz	       IF A != 0: RESTART
+
+If we execute the first 2 opcodes, we have:
+   B := (A % 8) XOR 1
+3rd opcode:
+   C := A / 2 ^ ((A % 8) XOR 1)
+4th opcode:
+   B := ((A % 8) XOR 1) XOR 4
+5th opcode: this is the one where it shifts A value 3 bits to the right
+   A := A / 8
+6th opcode:
+   B: ((A % 8) XOR 1) XOR 4 XOR (A / 2 ^ ((A % 8) XOR 1))
+7th opcode:
+   OUTPUT ((A % 8) XOR 1) XOR 4 XOR (A / 2 ^ ((A % 8) XOR 1)) % 8
+8th opcode:
+   goto beginning if A != 0
+
+So A has to be a number that will run this routine 16 times, be 0 on the final round,
+and set B to all these values.
+
+Every cicle, A it is divided by 8. In a way, A will have to be a 16 * 3 bit value
+
+The code is:
+
+WHILE A != 0:
+    OUTPUT = ((A % 8) XOR 1) XOR 4 XOR (A / 2 ^ ((A % 8) XOR 1)) % 8
+    A = A / 8
+

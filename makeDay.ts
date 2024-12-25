@@ -12,8 +12,10 @@ if (process.argv[3]?.length !== 2) {
 }
 
 let newFileDirPath = path.join(__dirname, '/src/', process.argv[2] + '/')
+if (!fs.existsSync(newFileDirPath)) fs.mkdirSync(newFileDirPath)
 let newFilePath = path.join(__dirname, '/src/', process.argv[2] + '/' + process.argv[3] + '.ts')
 let newInputDirPath = path.join(__dirname, '/input/', process.argv[2], '/')
+if (!fs.existsSync(newInputDirPath)) fs.mkdirSync(newInputDirPath)
 if (fs.existsSync(newFilePath)) {
   console.error('Error: ' + newFilePath + ' exists')
   process.exit()

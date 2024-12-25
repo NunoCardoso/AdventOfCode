@@ -3,8 +3,9 @@ export default {
     year: '2015',
     day: '01',
     title: 'Not Quite Lisp',
-    status: 'done',
-    comment: 'Basic functional puzzle, parsing input and counting',
+    status: 'solved',
+    code: 'optimized',
+    comment: 'Functional puzzle, parsing input, split, and do counting',
     difficulty: 1
   },
   prod: {

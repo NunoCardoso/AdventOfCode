@@ -1,85 +1,101 @@
-# Advent of Code puzzle solutions
+# Advent of Code - puzzle solutions
 
-These are my solutions for the amazing [Advent of Code](https://adventofcode.com/) challenge, written in TypeScript. 
+This is my repo with code solutions for the amazing [Advent of Code](https://adventofcode.com/) challenge.
 
-Note that you can't run the programs, as the input files are missing. They are missing from this repo because the 
-Advent of Code owner asked that, as they are created by him, and as such, he has a saying on that.
+All code is written in TypeScript. 
 
-So, if you want to run this, you have to get the files yourself, and put then in the input directory, with this format:
+Note that you can't run the programs, because the input files are missing.  
+The Advent of Code owner asked participants to not republish them, as they are copyrighted by him. It is his
+work, so he decides that and we should comply. 
+
+So, if you want to run the puzzles, you need to download the input files yourself, and put then in the `input` 
+directory, like this:
 
     ./input/2015/01.input.txt
     ./input/2015/02.input.txt
     ./input/2015/02.test1.txt
 
-# Setup/install
 
-You should do a simple
+# Setup/install/run
 
-    npm install 
+Clone this repo, then do:
 
-after cloning this, and you should be fine.
+    npm install
 
-# Run
-
-## Create a puzzle template
+To make a puzzle template for a new day:
 
     npm run makeDay {year} {day}
 
-Note: if it is a new year, create the year directory under `src` and `input` directories first.
-
-## Run a puzzle program
+To run a puzzle program, do:
 
     npm run day {year} {day}
 
-## run a whole year of puzzles
+To run the whole year of puzzles:
 
     npm run year {year}
 
 Reports will be pushed into the `report` directory.
 
+# Puzzle status
+
+| year | status      | comment                                                                  |  report |
+|------|-------------|--------------------------------------------------------------------------|---------|
+| 2015 | SOLVED      | Optimized, all but md5 puzzles run under 1 second  | reports/2015.md |
+| 2016 | IN PROGRESS | stuck on 22 (hard disk move)                                             |
+| 2017 | IN PROGRESS | ongoing on 20                                                            |
+| 2018 | IN PROGRESS | ongoing on 14                                                            |
+| 2019 | TODO        |                                                                          |
+| 2020 | TODO        |                                                                          |
+| 2021 | IN PROGRESS | ongoing on 20                                                            |
+| 2022 | DONE        | Unoptimized, Needs fix after 16                                          |
+| 2023 | ALMOST DONE | Unoptimized, needs cleaning, do last puzzles                             |
+| 2024 | ONGOING     |                                                                          |
+
 # Puzzle options options: 
-| key               | type                 | description                                                          |
-|-------------------|----------------------|----------------------------------------------------------------------|
-| config.title      | string, optional     | puzzle title                                                         |
-| config.comment    | string, optional     | puzzle comments                                                      |
-| config.status     | 'done', 'inprogress' | puzzle status                                                        |
-| config.difficulty | 1 to 5               | puzzle difficulty                                                    |
-| config.tags       | string[], optional   | puzzle tags (recursive, pathfinding, md5, etc)                       |
-| config.year       | string, mandatory    | chooses the year                                                     | 
-| config.day        | string, mandatory    | chooses the day                                                      |
-| logLevel          | string               | sets log level (info, debug, etc) default: info                      |
-| mode              | string?              | if there is another solution (fastest, easiest, etc) default: normal |
-| ui                | object               | UI stuff default: { show: false }                                    |
-| ui.show           | boolean              | how or not the UI                                                    |
-| ui.end            | boolean?             |                                                                      |
-| ui.during         | boolean?             |                                                                      |
-| ui.wait:          | number?              |                                                                      |
-| ui.keypress       | boolean?             |                                                                      |
-| test              | Test?, Test[]?       | runs tests |
-| test.id           | string | tied to the test input file name |
-| test.params       | any | additional params |
+| key               | type                 | description                                                                           |
+|-------------------|----------------------|---------------------------------------------------------------------------------------|
+| config.title      | string, optional     | puzzle title                                                                          |
+| config.comment    | string, optional     | puzzle comments                                                                       |
+| config.status     | 'done', 'inprogress' | puzzle status                                                                         |
+| config.difficulty | 1 to 5               | puzzle difficulty                                                                     |
+| config.tags       | string[], optional   | puzzle tags (recursive, pathfinding, md5, etc)                                        |
+| config.year       | string, mandatory    | chooses the year                                                                      | 
+| config.day        | string, mandatory    | chooses the day                                                                       |
+| logLevel          | string               | sets log level (info, debug, etc) default: info                                       |
+| mode              | string?              | if there is another solution (fastest, easiest, etc) default: normal                  |
+| ui                | object               | UI stuff default: { show: false }                                                     |
+| ui.show           | boolean              | show or not the UI                                                                    |
+| ui.end            | boolean?             | show the UI in he end                                                                 |
+| ui.during         | boolean?             | show the UI in iterations                                                             |
+| ui.wait:          | number?              | wait for X milliseconds between iterations                                            |
+| ui.keypress       | boolean?             | wait for keypress                                                                           |
+| test              | Test?, Test[]?       | runs tests                                                                            |
+| test.id           | string | tied to the test input file name                                                      |
+| test.params       | any | additional params                                                                     |
 | test.answers      | any | object with part1 and/or part2 answers. It decides if parts should run or be skipped. |
-| prod              |  Prod? | runs final |
-| prod.params       | any | additional params |
+| prod              |  Prod? | runs final                                                                            |
+| prod.params       | any | additional params                                                                     |
 | prod.answers      | any | object with part1 and/or part2 answers. It decides if parts should run or be skipped. |
-| params            | any | params |
+| params            | any | params                                                                                |
 
-# Status
+List of tags used: 
 
-| year | status      | comment |
-|------|-------------|---------|
-| 2015 | DONE        | Optimized, all but a couple under 1 second which can't run faster |
-| 2016 | IN PROGRESS | stuck on 22 (hard disk move)  |
-| 2017 | IN PROGRESS | ongoing on 20 |
-| 2018 | IN PROGRESS | ongoing on 14 |
-| 2019 | TODO        | |
-| 2020 | TODO        | |
-| 2021 | IN PROGRESS | ongoing on 20 |
-| 2022 | DONE        | Unoptimized, Needs fix after 16 |
-| 2023 | ALMOST DONE | Unoptimized, needs cleaning, do last puzzles |
-| 2024 | ONGOING | |
+* dijkstra
+* recursion
+* a*
+* permutation
+* md5
+* combination
+* breath first
+* path finding
 
-# Guidelines
+Proposal for: 
+* STATUS: unsolved, solved
+* SPEED: slow, fast
+* CODE: clean (optimized), dirty (unoptimized)
+
+
+# Coding guidelines
 
 ## Typing
 * do type everything. Avoid `any` type. reuse types such as `Point`, `Dimension`, `World`, they help.
@@ -105,24 +121,11 @@ Some functions names: `solveFor`, `deepFirst`, `breathFirst`, `dijkstra`
       "abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']
       "123123123".match(/ab/) => null
 
-# Knowledge base
+# Algorithms Overview
 
-##  X or Y?  Rows and Columns?
+## Path finding algorithms
 
-row goes vertical, col goes horizontal
-unless it is specified otherwise in the instructions, 
-x and y should be avoided, but if not, x IS ROW, y IS COLUMN, therefore NOT EQUIVALENT to X/Y charts NOT HTML positions.
-
-when printing world, world matrixes are also row and colum
-
-| []()                   |                        |                        |                        |
-|------------------------|------------------------|------------------------|------------------------|
-| row 0, col 0, x 0, y 0 | row 0, col 1, x 0, y 1 | row 0, col 2, x 0, y 2 | row 0, col 3, x 0, y 3 |
-| row 1, col 0, x 1, y 0 | row 1, col 1, x 1, y 1 | row 1, col 2, x 1, y 2 | row 1, col 3, x 1, y 3 |
-| row 2, col 0, x 2, y 0 | row 2, col 1, x 2, y 1 | row 2, col 2, x 2, y 2 | row 2, col 3, x 2, y 3 |
-| row 3, col 0, x 3, y 0 | row 3, col 1, x 3, y 1 | row 3, col 2, x 2, y 2 | row 3, col 3, x 3, y 3 |
-
-## Algorithms
+Table summary: 
 
 | Name         | weighted graph | visits all paths? | guarantees shortest? | heuristics | comments                                         |
 |--------------|----------------|-------------------|----------------------|------------|--------------------------------------------------|
@@ -179,9 +182,28 @@ Floyd-Warshall
 * UCS is similar to Dijkstra’s algorithm but focuses only on finding the shortest path to a specific goal node.
 * It expands the least-cost node first and guarantees the shortest path, making it optimal but slower than A* for large graphs.
 
-## IDEAS 
+# IDEAS 
 
-* introduce PointObj, where {x: number, y: number}
+* introduce PointObj, where {row: number, col: number}
+
+# Guidelines
+
+##  X or Y?  Rows and Columns?
+
+row goes vertical, col goes horizontal
+unless it is specified otherwise in the instructions,
+x and y should be avoided, but if not, x IS ROW, y IS COLUMN, therefore NOT EQUIVALENT to X/Y charts NOT HTML positions.
+
+when printing world, world matrixes are also row and colum
+
+| []()                   |                        |                        |                        |
+|------------------------|------------------------|------------------------|------------------------|
+| row 0, col 0, x 0, y 0 | row 0, col 1, x 0, y 1 | row 0, col 2, x 0, y 2 | row 0, col 3, x 0, y 3 |
+| row 1, col 0, x 1, y 0 | row 1, col 1, x 1, y 1 | row 1, col 2, x 1, y 2 | row 1, col 3, x 1, y 3 |
+| row 2, col 0, x 2, y 0 | row 2, col 1, x 2, y 1 | row 2, col 2, x 2, y 2 | row 2, col 3, x 2, y 3 |
+| row 3, col 0, x 3, y 0 | row 3, col 1, x 3, y 1 | row 3, col 2, x 2, y 2 | row 3, col 3, x 3, y 3 |
+
+
 
 * move away from [number, number, number, string] or something, use objects so all is more readable
 *  speed is good, readability is even better
@@ -194,5 +216,6 @@ Floyd-Warshall
 * better describe the differences between BFS, DFS, Dijkstra, A* and why each should have: 
 ** visited cache
 ** sort by distance / heuristic / etc 
-* put ths list of tags here
+
 * what about pop() instead of splice(-1)[0]
+

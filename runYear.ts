@@ -9,11 +9,13 @@ if (process.argv[2]?.length !== 4) {
   process.exit()
 }
 
+if (!fs.existsSync('reports')) fs.mkdirSync('reports')
+
 let puzzles = fs.readdirSync(path.join('src', process.argv[2])).filter((file: any) => {
   return file.endsWith('.ts') && !file.endsWith('.solution.ts')
 })
 
-let resultFile = path.join('reports', process.argv[2] + '.txt')
+let resultFile = path.join('reports', process.argv[2] + '.md')
 
 if (fs.existsSync(resultFile)) {
   console.error('Error: ' + resultFile + ' exists')
@@ -37,7 +39,11 @@ Promise.all(puzzles.map(getConfig)).then(async (days: Array<any>) => {
     let res: Result = (await aoc(day, false)) as Result
     total += res.time
     let dur = res.time / 1000.0
-    let durString = dur < 1 ? clc.green(dur + 's') : dur < 3 ? clc.yellow(dur + 's') : clc.red(dur + 's')
+    let durString = dur < 1
+      ? clc.green(dur + 's')
+      : dur < 3
+        ? clc.yellow(dur + 's')
+        : clc.red(dur + 's')
     let status = clc.cyan('Day ' + res.config.day + ': ' + (res.config?.title ?? 'No title')) + '\n'
     if (!res.config?.title) console.error('No title')
     if (res.config.status) status += 'Status: ' + res.config.status + '\n'
