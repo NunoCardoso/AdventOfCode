@@ -135,15 +135,7 @@ export default async (lineReader: any, params: Params) => {
 
     log.debug('-- Player turn --')
 
-    log.debug(
-      '- Player has',
-      nextMove.hero.hitPoints,
-      'hit points,',
-      stats.heroArmor,
-      'armor,',
-      nextMove.hero.mana,
-      'mana'
-    )
+    log.debug('- Player has', nextMove.hero.hitPoints, 'hit points,', stats.heroArmor, 'armor,', nextMove.hero.mana, 'mana')
     log.debug('- Boss has', nextMove.boss.hitPoints, 'hit points')
 
     nextMove.boss.hitPoints = nextMove.boss.hitPoints - stats.heroDamage
@@ -166,11 +158,7 @@ export default async (lineReader: any, params: Params) => {
       }
     } else {
       spells.forEach((spell) => {
-        if (
-          spell.cost < nextMove.hero.mana &&
-          !nextMove.effects.find((effect) => effect.name === spell.name) &&
-          (spell.name !== 'Nothing' || (spell.name === 'Nothing' && nextMove.path.length > 9))
-        ) {
+        if (spell.cost < nextMove.hero.mana && !nextMove.effects.find((effect) => effect.name === spell.name) && (spell.name !== 'Nothing' || (spell.name === 'Nothing' && nextMove.path.length > 9))) {
           spellsToCast.push(spell)
         }
       })
@@ -207,15 +195,7 @@ export default async (lineReader: any, params: Params) => {
       // apply effects before player does a spell
       const props = applyEffects(_nextMove)
 
-      log.debug(
-        '- Player has',
-        _nextMove.hero.hitPoints,
-        'hit points,',
-        props.heroArmor,
-        'armor,',
-        _nextMove.hero.mana,
-        'mana'
-      )
+      log.debug('- Player has', _nextMove.hero.hitPoints, 'hit points,', props.heroArmor, 'armor,', _nextMove.hero.mana, 'mana')
       log.debug('- Boss has', _nextMove.boss.hitPoints, 'hit points')
 
       _nextMove.boss.hitPoints = _nextMove.boss.hitPoints - props.heroDamage
@@ -224,8 +204,7 @@ export default async (lineReader: any, params: Params) => {
 
       if (_nextMove.boss.hitPoints > 0) {
         log.debug('- Boss attacks for', _nextMove.boss.damage, 'damage')
-        const bossDamage =
-          _nextMove.boss.damage - props.heroArmor > 1 ? _nextMove.boss.damage - props.heroArmor : 1
+        const bossDamage = _nextMove.boss.damage - props.heroArmor > 1 ? _nextMove.boss.damage - props.heroArmor : 1
         _nextMove.hero.hitPoints -= bossDamage
       }
 
@@ -262,11 +241,7 @@ export default async (lineReader: any, params: Params) => {
       log.debug('Got', newMoves.length, 'moves')
       opened.push(...newMoves)
       opened.sort((a, b) => {
-        return a[a.length - 1].manaSpent - b[b.length - 1].manaSpent > 0
-          ? 1
-          : a[a.length - 1].boss.hitPoints - b[b.length - 1].boss.hitPoints > 0
-            ? 1
-            : -1
+        return a[a.length - 1].manaSpent - b[b.length - 1].manaSpent > 0 ? 1 : a[a.length - 1].boss.hitPoints - b[b.length - 1].boss.hitPoints > 0 ? 1 : -1
       })
     }
   }

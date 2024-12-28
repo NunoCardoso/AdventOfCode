@@ -10,22 +10,25 @@ export default async (lineReader: any, params: Params) => {
 
   let robots: PAndV[] = []
   for await (const line of lineReader) {
-    const [,p0,p1,v0,v1] = line.match(/p=(.+),(.+) v=(.+),(.+)/)
-    robots.push([[+p0,+p1],[+v0,+v1]])
+    const [, p0, p1, v0, v1] = line.match(/p=(.+),(.+) v=(.+),(.+)/)
+    robots.push([
+      [+p0, +p1],
+      [+v0, +v1]
+    ])
   }
 
   const countSafetyScore = (robots: PAndV[], size: Dimension) => {
-     let partialCounts = [0,0,0,0]
-     robots.forEach(robot => {
-       if (robot[0][0] < Math.floor(size[0] / 2)) {
-          if (robot[0][1] < Math.floor(size[1] / 2)) partialCounts[0]++
-          if (robot[0][1] >= Math.ceil(size[1] / 2)) partialCounts[2]++
-       }
-       if (robot[0][0] >= Math.ceil(size[0] / 2)) {
-         if (robot[0][1] < Math.floor(size[1] / 2)) partialCounts[1]++
-         if (robot[0][1] >= Math.ceil(size[1] / 2)) partialCounts[3]++
-       }
-     })
+    let partialCounts = [0, 0, 0, 0]
+    robots.forEach((robot) => {
+      if (robot[0][0] < Math.floor(size[0] / 2)) {
+        if (robot[0][1] < Math.floor(size[1] / 2)) partialCounts[0]++
+        if (robot[0][1] >= Math.ceil(size[1] / 2)) partialCounts[2]++
+      }
+      if (robot[0][0] >= Math.ceil(size[0] / 2)) {
+        if (robot[0][1] < Math.floor(size[1] / 2)) partialCounts[1]++
+        if (robot[0][1] >= Math.ceil(size[1] / 2)) partialCounts[3]++
+      }
+    })
     return partialCounts.reduce((a, b) => a * b)
   }
 
@@ -35,22 +38,20 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const hasAdjacentRobot = (robot: PAndV, robots: PAndV[]) =>
-    robots.some(_robot => {
+    robots.some((_robot) => {
       let h = Math.abs(_robot[0][0] - robot[0][0])
       let v = Math.abs(_robot[0][1] - robot[0][1])
-      return h <= 1 && v <= 1 && (h + v) !== 0
+      return h <= 1 && v <= 1 && h + v !== 0
     })
 
   // check that at least 66% of robots have another adjacent robot
-  const checkIfAdjacent = (robots: PAndV[]): boolean =>
-    robots.reduce((acc,robot) =>
-       acc + (hasAdjacentRobot(robot, robots) ? 1 : 0), 0) >= robots.length * (2 / 3)
+  const checkIfAdjacent = (robots: PAndV[]): boolean => robots.reduce((acc, robot) => acc + (hasAdjacentRobot(robot, robots) ? 1 : 0), 0) >= robots.length * (2 / 3)
 
   const printData = (robots: PAndV[], size: Dimension) => {
     for (var i = 0; i < size[0]; i++) {
       let s: string = ''
       for (var j = 0; j < size[1]; j++) {
-        let numberOfRobots = robots.find(r => r[0][0] === i && r[0][1] === j)?.length ?? 0
+        let numberOfRobots = robots.find((r) => r[0][0] === i && r[0][1] === j)?.length ?? 0
         s += numberOfRobots === 0 ? '.' : numberOfRobots
       }
       log.info(s)
@@ -60,8 +61,8 @@ export default async (lineReader: any, params: Params) => {
   const solveFor = (robots: PAndV[], maxIterations: number, size: Dimension): number => {
     let iterations = 0
     while (iterations < maxIterations) {
-     robots.forEach((robot) => iterate(robot, size))
-     iterations++
+      robots.forEach((robot) => iterate(robot, size))
+      iterations++
     }
     return countSafetyScore(robots, size)
   }

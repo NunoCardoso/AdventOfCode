@@ -38,10 +38,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   // A test that combines all monkey tests is given by the least common multiple
-  const monkeyMod: number = monkeys.reduce(
-    (memo: number, monkey: Monkey) => leastCommonMultiple(memo, monkey.divisible),
-    1
-  )
+  const monkeyMod: number = monkeys.reduce((memo: number, monkey: Monkey) => leastCommonMultiple(memo, monkey.divisible), 1)
 
   const generateMonkeyBusiness = (maxIterations: number, monkeys: Array<Monkey>, mode: string) => {
     let iterations = 0

@@ -17,9 +17,7 @@ export default async (lineReader: any, params: Params) => {
       .split('')
       .forEach((letter: string) => letters.set(letter, (letters.get(letter) ?? 0) + 1))
 
-    const keys = Array.from(letters.keys()).sort((a, b) =>
-      letters.get(b)! - letters.get(a)! !== 0 ? letters.get(b)! - letters.get(a)! : a.localeCompare(b)
-    )
+    const keys = Array.from(letters.keys()).sort((a, b) => (letters.get(b)! - letters.get(a)! !== 0 ? letters.get(b)! - letters.get(a)! : a.localeCompare(b)))
 
     const thisChecksum = keys.slice(0, 5).join('')
     log.debug(letters, sectionID, checksum, thisChecksum)

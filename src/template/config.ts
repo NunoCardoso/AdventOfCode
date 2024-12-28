@@ -1,9 +1,13 @@
 export default {
   config: {
+    title: '',
+    summary: '',
     year: '{{year}}',
     day: '{{day}}',
-    title: '',
-    status: 'inprogress',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'unknown',
+    code: 'dirty',
     comment: '',
     difficulty: 0
   },

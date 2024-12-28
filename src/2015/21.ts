@@ -109,14 +109,7 @@ export default async (lineReader: any, params: Params) => {
     }
 
     return combinations.sort((a, b) => {
-      return a.weapon.cost +
-        a.armor.cost +
-        a.ring1.cost +
-        a.ring2.cost -
-        (b.weapon.cost + b.armor.cost + b.ring1.cost + b.ring2.cost) <
-        0
-        ? -1
-        : 1
+      return a.weapon.cost + a.armor.cost + a.ring1.cost + a.ring2.cost - (b.weapon.cost + b.armor.cost + b.ring1.cost + b.ring2.cost) < 0 ? -1 : 1
     })
   }
 

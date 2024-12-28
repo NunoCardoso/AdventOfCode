@@ -45,13 +45,7 @@ export default async (lineReader: any, params: Params) => {
       world = world.map((row, rowIndex) =>
         row.map((cell, columnIndex) => {
           const numberOfLights = calculateNumberOfLights(world, rowIndex, columnIndex)
-          return world[rowIndex][columnIndex] === '#'
-            ? numberOfLights === 2 || numberOfLights === 3
-              ? '#'
-              : '.'
-            : numberOfLights === 3
-              ? '#'
-              : '.'
+          return world[rowIndex][columnIndex] === '#' ? (numberOfLights === 2 || numberOfLights === 3 ? '#' : '.') : numberOfLights === 3 ? '#' : '.'
         })
       )
       if (cornerStuck) makeCornersOn(world)

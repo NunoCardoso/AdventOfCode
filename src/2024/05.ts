@@ -15,9 +15,7 @@ export default async (lineReader: any, params: Params) => {
 
   const fixUpdate = (update: number[]): number[] =>
     update.sort((a, b) => {
-      let rule = orderingRules.find(
-        (rule) => (rule[0] === a && rule[1] === b) || (rule[1] === a && rule[0] === b)
-      )
+      let rule = orderingRules.find((rule) => (rule[0] === a && rule[1] === b) || (rule[1] === a && rule[0] === b))
       if (!!rule && a === rule[0]) return -1
       if (!!rule && a === rule[1]) return 1
       return 0
@@ -30,10 +28,8 @@ export default async (lineReader: any, params: Params) => {
       update.forEach((page, pageIndex) => {
         let leftRules = orderingRules.filter((rule) => rule[0] === page)
         let rightRules = orderingRules.filter((rule) => rule[1] === page)
-        if (leftRules.some((rule) => update.indexOf(rule[1]) >= 0 && update.indexOf(rule[1]) < pageIndex))
-          isOrderOK = false
-        if (rightRules.some((rule) => update.indexOf(rule[0]) >= 0 && update.indexOf(rule[0]) > pageIndex))
-          isOrderOK = false
+        if (leftRules.some((rule) => update.indexOf(rule[1]) >= 0 && update.indexOf(rule[1]) < pageIndex)) isOrderOK = false
+        if (rightRules.some((rule) => update.indexOf(rule[0]) >= 0 && update.indexOf(rule[0]) > pageIndex)) isOrderOK = false
       })
       if (part === 'part1' && isOrderOK) {
         count += update[(update.length - 1) / 2]

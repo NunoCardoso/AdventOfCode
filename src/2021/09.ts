@@ -25,8 +25,7 @@ export default async (lineReader: any, params: Params) => {
 
   log.info('world of ', worldDimension)
 
-  const isCoordSeen = (coords: Array<Coord>, c: Coord) =>
-    _.findIndex(coords, (_c: Coord) => _c.point.x === c.point.x && _c.point.y === c.point.y) >= 0
+  const isCoordSeen = (coords: Array<Coord>, c: Coord) => _.findIndex(coords, (_c: Coord) => _c.point.x === c.point.x && _c.point.y === c.point.y) >= 0
 
   const printGrid = (world: World, holes: Array<Coord>, basins: Array<Coord>) => {
     world.forEach((row, i) => {

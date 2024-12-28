@@ -12,10 +12,7 @@ export default async (lineReader: any, params: Params) => {
     if (stone === 0) return [1]
     if (stone.toString().length % 2 === 0) {
       let numberAsString = stone.toString()
-      return [
-        +numberAsString.substring(0, numberAsString.length / 2),
-        +numberAsString.substring(numberAsString.length / 2, numberAsString.length)
-      ]
+      return [+numberAsString.substring(0, numberAsString.length / 2), +numberAsString.substring(numberAsString.length / 2, numberAsString.length)]
     }
     return [(stone as number) * 2024]
   }

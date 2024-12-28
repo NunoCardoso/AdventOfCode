@@ -20,27 +20,17 @@ export default async (lineReader: any, params: Params) => {
           world2[row][column] += 2
         } else if (action.startsWith('turn')) {
           world1[row][column] = action.endsWith('off') ? 0 : 1
-          world2[row][column] = action.endsWith('off')
-            ? world2[row][column] === 0
-              ? 0
-              : world2[row][column] - 1
-            : world2[row][column] + 1
+          world2[row][column] = action.endsWith('off') ? (world2[row][column] === 0 ? 0 : world2[row][column] - 1) : world2[row][column] + 1
         }
       }
     }
   }
 
   if (!params.skipPart1) {
-    part1 = world1.reduce(
-      (acc: number, arr: Array<number>) => acc + arr.filter((x: number) => x === 1).length,
-      0
-    )
+    part1 = world1.reduce((acc: number, arr: Array<number>) => acc + arr.filter((x: number) => x === 1).length, 0)
   }
   if (!params.skipPart2) {
-    part2 = world2.reduce(
-      (acc: number, arr: Array<number>) => acc + arr.reduce((_acc: number, _arr: number) => _acc + _arr, 0),
-      0
-    )
+    part2 = world2.reduce((acc: number, arr: Array<number>) => acc + arr.reduce((_acc: number, _arr: number) => _acc + _arr, 0), 0)
   }
   return { part1, part2 }
 }

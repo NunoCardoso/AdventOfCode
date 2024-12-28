@@ -10,9 +10,7 @@ export default async (lineReader: any, params: Params) => {
   const positions: Array<number> = []
 
   for await (const line of lineReader) {
-    const [, maxPosition, position] = line
-      .match(/Disc #\d+ has (\d+) positions; at time=0, it is at position (\d+)./)
-      .map(Number)
+    const [, maxPosition, position] = line.match(/Disc #\d+ has (\d+) positions; at time=0, it is at position (\d+)./).map(Number)
     maxPositions.push(maxPosition)
     positions.push(position)
   }

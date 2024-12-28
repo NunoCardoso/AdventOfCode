@@ -19,11 +19,7 @@ export default async (lineReader: any) => {
   for await (const line of lineReader) {
     line.split('').forEach((direction: string, i: number) => {
       move(direction, currentPositionPart1, positionsPart1)
-      move(
-        direction,
-        i % 2 === 1 ? currentPositionRobotSantaPart2 : currentPositionSantaPart2,
-        positionsPart2
-      )
+      move(direction, i % 2 === 1 ? currentPositionRobotSantaPart2 : currentPositionSantaPart2, positionsPart2)
     })
   }
 

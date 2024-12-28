@@ -52,15 +52,7 @@ export default async (lineReader: any, params: Params) => {
   data.forEach((line: Puzzle) => {
     let validPermutation: Array<string> | undefined
     let leftCode: Array<number> | undefined
-    const permutations: Array<Array<string>> = new Permutation([
-      'N',
-      'NW',
-      'NE',
-      'C',
-      'SW',
-      'SE',
-      'S'
-    ]).toArray()
+    const permutations: Array<Array<string>> = new Permutation(['N', 'NW', 'NE', 'C', 'SW', 'SE', 'S']).toArray()
 
     permutations: for (let x = 0; x < permutations.length; x++) {
       leftCode = []
@@ -82,20 +74,10 @@ export default async (lineReader: any, params: Params) => {
     }
 
     solutions.push(rightCode.join(''))
-    log.debug(
-      'valid permutation',
-      validPermutation!.join(','),
-      'left code',
-      leftCode?.join(''),
-      'right code',
-      rightCode.join('')
-    )
+    log.debug('valid permutation', validPermutation!.join(','), 'left code', leftCode?.join(''), 'right code', rightCode.join(''))
   })
 
-  const part1 = solutions.reduce(
-    (x, y) => x + y.split('').filter((x) => ['1', '4', '7', '8'].includes(x)).length,
-    0
-  )
+  const part1 = solutions.reduce((x, y) => x + y.split('').filter((x) => ['1', '4', '7', '8'].includes(x)).length, 0)
 
   const part2 = solutions.reduce((x, y) => x + +y, 0)
 

@@ -18,11 +18,9 @@ export default async (lineReader: any, params: Params) => {
 
   const getKey = (pad: PointAndDirection) => pad[0] + ';' + pad[1] + ';' + pad[2]
 
-  const outOfBounds = (pad: PointAndDirection): boolean =>
-    pad[0] < 0 || pad[0] >= worldDimensions[0] || pad[1] < 0 || pad[1] >= worldDimensions[1]
+  const outOfBounds = (pad: PointAndDirection): boolean => pad[0] < 0 || pad[0] >= worldDimensions[0] || pad[1] < 0 || pad[1] >= worldDimensions[1]
 
-  const notInTail = (beam: Beam, nextHead: PointAndDirection) =>
-    beam.find((b) => b[0] === nextHead[0] && b[1] === nextHead[1] && b[2] === nextHead[2]) === undefined
+  const notInTail = (beam: Beam, nextHead: PointAndDirection) => beam.find((b) => b[0] === nextHead[0] && b[1] === nextHead[1] && b[2] === nextHead[2]) === undefined
   const getNextHead = (pad: PointAndDirection, direction: string): PointAndDirection => {
     if (direction === '>') return [pad[0], pad[1] + 1, direction]
     if (direction === '<') return [pad[0], pad[1] - 1, direction]

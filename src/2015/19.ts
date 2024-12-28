@@ -11,8 +11,7 @@ export default async (lineReader: any, params: Params) => {
   const replacements: Replacements = new Map()
   let moleculeBits: Array<string> = []
 
-  const breakIntoAtoms = (mol: string): Array<string> =>
-    mol === 'e' ? ['e'] : (mol.match(/[A-Z][a-z]*/g) as Array<string>)
+  const breakIntoAtoms = (mol: string): Array<string> => (mol === 'e' ? ['e'] : (mol.match(/[A-Z][a-z]*/g) as Array<string>))
 
   for await (const line of lineReader) {
     if (line.match('=>')) {
@@ -26,15 +25,7 @@ export default async (lineReader: any, params: Params) => {
   if (!params.skipPart1) {
     const molecules = new Set<string>()
     moleculeBits.forEach((molecule, i) => {
-      replacements
-        .get(molecule)
-        ?.forEach((reaction: string) =>
-          molecules.add(
-            moleculeBits.slice(0, i).join('') +
-              reaction +
-              moleculeBits.slice(i + 1, moleculeBits.length).join('')
-          )
-        )
+      replacements.get(molecule)?.forEach((reaction: string) => molecules.add(moleculeBits.slice(0, i).join('') + reaction + moleculeBits.slice(i + 1, moleculeBits.length).join('')))
     })
     part1 = molecules.size
   }

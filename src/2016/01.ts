@@ -12,9 +12,7 @@ export default async (lineReader: any) => {
   let visitedPoint: Point | undefined
 
   for await (const line of lineReader) {
-    line
-      .split(', ')
-      .forEach((value: string) => instructions.push([value[0], +value.substring(1, value.length)]))
+    line.split(', ').forEach((value: string) => instructions.push([value[0], +value.substring(1, value.length)]))
   }
 
   instructions.forEach((instruction) => {
@@ -22,9 +20,7 @@ export default async (lineReader: any) => {
       currentDirection = instruction[0] === 'L' ? '<' : '>'
     } else {
       const newIndex: number =
-        instruction[0] === 'L'
-          ? (directions.indexOf(currentDirection) - 1 + directions.length) % directions.length
-          : (directions.indexOf(currentDirection) + 1) % directions.length
+        instruction[0] === 'L' ? (directions.indexOf(currentDirection) - 1 + directions.length) % directions.length : (directions.indexOf(currentDirection) + 1) % directions.length
       currentDirection = directions[newIndex]
     }
 

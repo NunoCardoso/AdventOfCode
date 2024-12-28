@@ -4,8 +4,7 @@ export default {
     day: '06',
     title: 'Chronal Coordinates',
     status: 'done',
-    comment:
-      'Did not like my approach, it assumes a 0-1000 grid, calculates all spots, was expecting something better',
+    comment: 'Did not like my approach, it assumes a 0-1000 grid, calculates all spots, was expecting something better',
     difficulty: 4
   },
   logLevel: 'info',

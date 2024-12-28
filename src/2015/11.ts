@@ -9,8 +9,7 @@ export default async (lineReader: any, params: Params) => {
 
   const writePass = (values: Array<number>): string => values.map((value) => letters[value]).join('')
 
-  const readPass = (password: string): Array<number> =>
-    password.split('').map((s: string) => letters.indexOf(s))
+  const readPass = (password: string): Array<number> => password.split('').map((s: string) => letters.indexOf(s))
 
   while (part1 === '' || part2 === '') {
     const values = readPass(password)

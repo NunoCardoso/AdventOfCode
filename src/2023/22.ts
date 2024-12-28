@@ -42,10 +42,7 @@ export default async (lineReader: any, params: Params) => {
   const canGoDown = (piece: Piece) =>
     // cube below is either empty or belongs to this piece
     piece.cubes.every((cube) => {
-      return (
-        cube[2] > 1 &&
-        (world[cube[0]][cube[1]][cube[2] - 1] === -1 || world[cube[0]][cube[1]][cube[2] - 1] === piece.id)
-      )
+      return cube[2] > 1 && (world[cube[0]][cube[1]][cube[2] - 1] === -1 || world[cube[0]][cube[1]][cube[2] - 1] === piece.id)
     })
 
   const getPiece = (pieceId: number): Piece => pieces.find((p) => p.id === pieceId)!
@@ -87,9 +84,7 @@ export default async (lineReader: any, params: Params) => {
     candidatePieces.forEach((piece) => {
       if (!temp.includes(piece)) {
         // of couse, one of the supportingPieces is pieceId.
-        const otherSupportingPieces = piecesUnder
-          .get(piece)!
-          .filter((p) => p !== pieceId && !temp.includes(p))
+        const otherSupportingPieces = piecesUnder.get(piece)!.filter((p) => p !== pieceId && !temp.includes(p))
 
         if (otherSupportingPieces!.length === 0) {
           uniquePieces.push(piece)

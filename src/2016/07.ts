@@ -18,9 +18,7 @@ export default async (lineReader: any) => {
       }
       ;[...v.matchAll(/(.)(?=(.)\1)/g)]?.forEach((aba) => {
         if (aba?.[1] !== aba?.[2]) {
-          i % 2 === 0
-            ? evensPart2.push(aba![1] + aba![2] + aba![1])
-            : oddsPart2.push(aba![2] + aba![1] + aba![2]) // let's store the inverse now to make it easy for match
+          i % 2 === 0 ? evensPart2.push(aba![1] + aba![2] + aba![1]) : oddsPart2.push(aba![2] + aba![1] + aba![2]) // let's store the inverse now to make it easy for match
         }
       })
     })

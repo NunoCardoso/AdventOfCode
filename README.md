@@ -55,45 +55,47 @@ Reports will be pushed into the `report` directory.
 
 # Puzzle options options: 
 
-| key              | type                   | description                                                                              |
-|------------------|------------------------|------------------------------------------------------------------------------------------|
-| config.title     | string, optional       | puzzle title                                                                             |
-| config.comment   | string, optional       | puzzle comments on how I did with it                                                     |
-| config.result    | 'finished', 'unfinished' | puzzle result: finished means solved, fast AND clean                                     |
-| config.status    | 'solved', 'unsolved'   | puzzle status                                                                            |
-| config.speed     | 'slow', 'fast', 'md5'  | puzzle speed  (md5 is brute force that can't go faster)                                  |
-| config.code      | 'clean', 'dirty'       | puzzle code: clean means linted and formatted                                            |
-| config.difficulty | 1-5                    | puzzle difficulty: 1 solves in minutes, 4 means at least 1 day, 5 means more than 2 days |
-| config.tags      | string[]?,             | puzzle tags (see below)                                                                  |
-| config.year      | string, mandatory      | puzzle year                                                                              | 
-| config.day       | string, mandatory      | puzzle day                                                                               |
-| logLevel         | info, debug, warn, error | default: info                                                                            |
-| mode             | string?                | if there is another solution (fastest, easiest, etc) default: normal                     |
-| ui               | object                 | UI stuff default: { show: false }                                                        |
-| ui.show          | boolean                | show or not the UI                                                                       |
-| ui.end           | boolean?               | show the UI in the end                                                                   |
-| ui.during        | boolean?               | show the UI during iterations                                                            |
-| ui.wait          | number?                | wait for X milliseconds between iterations                                               |
-| ui.keypress      | boolean?               | wait for keypress                                                                        |
-| test             | Test?, Test[]?         | runs tests                                                                               |
-| test.id          | string                 | tied to the test input file name                                                         |
-| test.params      | any                    | additional params: can be whatever                                                         |
-| test.answers     | any                    | object with part1 and/or part2 answers. It decides if parts should run or be skipped.    |
-| prod             | Prod?                  | runs final                                                                               |
-| prod.params      | any                    | additional params                                                                        |
-| prod.answers     | any                    | object with part1 and/or part2 answers. It decides if parts should run or be skipped.    |
-| params           | any                    | params                                                                                   |
+| key               | type                                      | description                                                                              |
+|-------------------|-------------------------------------------|------------------------------------------------------------------------------------------|
+| config.title      | string, optional                          | puzzle title                                                                             |
+| config.summary    | string, optional                          | puzzle summary, to follow up the story                                                   |
+| config.comment    | string, optional                          | puzzle comments on how I did with it                                                     |
+| config.result     | 'finished', 'unfinished'                  | puzzle result: finished means solved, fast AND clean                                     |
+| config.status     | 'solved', 'unsolved'                      | puzzle status                                                                            |
+| config.speed      | 'unknown', 'slow', 'medium', fast', 'md5' | puzzle speed  (md5 is brute force that can't go faster)                                  |
+| config.code       | 'clean', 'dirty'                          | puzzle code: clean means linted and formatted                                            |
+| config.difficulty | 1-5                                       | puzzle difficulty: 1 solves in minutes, 4 means at least 1 day, 5 means more than 2 days |
+| config.tags       | string[]?,                                | puzzle tags (see below)                                                                  |
+| config.year       | string, mandatory                         | puzzle year                                                                              | 
+| config.day        | string, mandatory                         | puzzle day                                                                               |
+| logLevel          | info, debug, warn, error                  | default: info                                                                            |
+| mode              | string?                                   | if there is another solution (fastest, easiest, etc) default: normal                     |
+| ui                | object                                    | UI stuff default: { show: false }                                                        |
+| ui.show           | boolean                                   | show or not the UI                                                                       |
+| ui.end            | boolean?                                  | show the UI in the end                                                                   |
+| ui.during         | boolean?                                  | show the UI during iterations                                                            |
+| ui.wait           | number?                                   | wait for X milliseconds between iterations                                               |
+| ui.keypress       | boolean?                                  | wait for keypress                                                                        |
+| test              | Test?, Test[]?                            | runs tests                                                                               |
+| test.id           | string                                    | tied to the test input file name                                                         |
+| test.params       | any                                       | additional params: can be whatever                                                       |
+| test.answers      | any                                       | object with part1 and/or part2 answers. It decides if parts should run or be skipped.    |
+| prod              | Prod?                                     | runs final                                                                               |
+| prod.params       | any                                       | additional params                                                                        |
+| prod.answers      | any                                       | object with part1 and/or part2 answers. It decides if parts should run or be skipped.    |
+| params            | any                                       | params                                                                                   |
 
 List of tags used: 
 
-* dijkstra
-* recursion
-* a*
-* permutation
-* md5
-* combination
-* breath first
-* path finding
+* Dijkstra
+* Recursion
+* A*
+* Permutation
+* MD5
+* Combination
+* Breath-first
+* Depth-first
+* Path-finding
 * Bron–Kerbosch
 
 # Coding guidelines v1.0
@@ -228,7 +230,7 @@ unless it is specified otherwise in the instructions.
 Note that when printing worlds, world matrixes are seen as rows and columns, so make sure locations 
 use same system. If they use x/y, they may refer to col/row instead of row/col
 
-# Aååendixes
+# Appendixes
 
 For box drawing (https://en.wikipedia.org/wiki/Box-drawing_characters):
 
@@ -242,3 +244,11 @@ For box drawing (https://en.wikipedia.org/wiki/Box-drawing_characters):
  | U+255x |	═|	║|	╒|	╓|	╔|	╕|	╖|	╗|	╘|	╙|	╚|	╛|	╜|	╝|	╞|	╟|
  | U+256x |	╠|	╡|	╢|	╣|	╤|	╥|	╦|	╧|	╨|	╩|	╪|	╫|	╬|	╭|	╮|	╯|
  | U+257x |	╰|	╱|	╲|	╳|	╴|	╵|	╶|	╷|	╸|	╹|	╺|	╻|	╼|	╽|	╾|	╿|
+
+
+# IDEAS 
+ 
+* make output funnier
+* make runs change config
+
+## FUNNY STORY BITS

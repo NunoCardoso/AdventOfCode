@@ -65,9 +65,7 @@ export default async (lineReader: any, params: Params) => {
 
   log.debug(JSON.stringify(tree!))
 
-  const sumMetadata = (tree: Tree): number =>
-    (tree.metadata?.reduce((a, b) => a + b, 0) ?? 0) +
-    (tree.children?.reduce((a, b) => a + sumMetadata(b), 0) ?? 0)
+  const sumMetadata = (tree: Tree): number => (tree.metadata?.reduce((a, b) => a + b, 0) ?? 0) + (tree.children?.reduce((a, b) => a + sumMetadata(b), 0) ?? 0)
 
   const sumIndexes = (tree: Tree): number => {
     if (!tree.children) {

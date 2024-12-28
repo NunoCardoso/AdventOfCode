@@ -13,8 +13,7 @@ export default async (lineReader: any, params: Params) => {
         direction = (values[i + 1] - values[i]) / Math.abs(values[i + 1] - values[i])
       }
       let diff = values[i + 1] - values[i]
-      if (!((diff >= -3 && diff <= -1 && direction === -1) || (diff >= 1 && diff <= 3 && direction === 1)))
-        return false
+      if (!((diff >= -3 && diff <= -1 && direction === -1) || (diff >= 1 && diff <= 3 && direction === 1))) return false
     }
     return true
   }

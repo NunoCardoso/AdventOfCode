@@ -5,8 +5,7 @@ export default {
     title: 'No Such Thing as Too Much',
     status: 'done',
     tags: ['permutation'],
-    comments:
-      'I like the custom permutation function so I can collect the data for answers while permutating',
+    comments: 'I like the custom permutation function so I can collect the data for answers while permutating',
     difficulty: 3
   },
   test: {

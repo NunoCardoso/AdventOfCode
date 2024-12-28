@@ -4,8 +4,7 @@ export default {
     day: '17',
     title: 'Spinlock',
     status: 'done',
-    comment:
-      'Yeah, optimizing part 2 is needed, luckily 0 always stays on index 0 so I can do the calculation without having to keep an array',
+    comment: 'Yeah, optimizing part 2 is needed, luckily 0 always stays on index 0 so I can do the calculation without having to keep an array',
     difficulty: 4
   },
   logLevel: 'debug',

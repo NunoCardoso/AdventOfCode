@@ -68,23 +68,14 @@ export default async (lineReader: any, params: Params) => {
       return result
     }
     if ((wire as Wire1).op === 'NOT') {
-      const src: number =
-        typeof (wire as Wire1).src === 'number'
-          ? ((wire as Wire1).src as number)
-          : solveFor(wires, (wire as Wire1).src as string)
+      const src: number = typeof (wire as Wire1).src === 'number' ? ((wire as Wire1).src as number) : solveFor(wires, (wire as Wire1).src as string)
       result = _16bitNot(src)
       wires.set(key, result)
       log.debug('resolved not', key, result)
       return result
     }
-    const src1: number =
-      typeof (wire as Wire2).src1 === 'number'
-        ? ((wire as Wire2).src1 as number)
-        : solveFor(wires, (wire as Wire2).src1 as string)
-    const src2: number =
-      typeof (wire as Wire2).src2 === 'number'
-        ? ((wire as Wire2).src2 as number)
-        : solveFor(wires, (wire as Wire2).src2 as string)
+    const src1: number = typeof (wire as Wire2).src1 === 'number' ? ((wire as Wire2).src1 as number) : solveFor(wires, (wire as Wire2).src1 as string)
+    const src2: number = typeof (wire as Wire2).src2 === 'number' ? ((wire as Wire2).src2 as number) : solveFor(wires, (wire as Wire2).src2 as string)
     if ((wire as Wire2).op === 'OR') result = _16bitOr(src1, src2)
     if ((wire as Wire2).op === 'AND') result = _16bitAnd(src1, src2)
     if ((wire as Wire2).op === 'RSHIFT') result = src1 >> src2

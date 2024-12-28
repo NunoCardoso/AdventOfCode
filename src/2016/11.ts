@@ -85,9 +85,7 @@ export default async (lineReader: any, params: Params) => {
       })
     })
 
-    const sorted = Object.values(hash).sort((a, b) =>
-      a[0] - b[0] > 0 ? 1 : a[0] - b[0] < 0 ? -1 : a[1] - b[1]
-    )
+    const sorted = Object.values(hash).sort((a, b) => (a[0] - b[0] > 0 ? 1 : a[0] - b[0] < 0 ? -1 : a[1] - b[1]))
     return JSON.stringify(sorted)
   }
 
@@ -111,8 +109,7 @@ export default async (lineReader: any, params: Params) => {
     log.info('step: ', point.step, 'distance:', point.distance)
   }
 
-  const getElevatorFloor = (head: Point): number =>
-    head.floors.findIndex((floor: Floor) => floor.includes('E'))
+  const getElevatorFloor = (head: Point): number => head.floors.findIndex((floor: Floor) => floor.includes('E'))
 
   const isValidFloor = (floor: Floor): boolean => {
     const objectsByElement: Record<string, Array<string>> = {}
@@ -146,12 +143,7 @@ export default async (lineReader: any, params: Params) => {
     return true
   }
 
-  const goodToAddToOpened = (
-    newHead: Point,
-    openedIndex: Record<string, number>,
-    visitedIndex: Record<string, number>,
-    lowest: number
-  ) => {
+  const goodToAddToOpened = (newHead: Point, openedIndex: Record<string, number>, visitedIndex: Record<string, number>, lowest: number) => {
     const newKey = generateKey(newHead)
 
     if (!Object.prototype.hasOwnProperty.call(visitedIndex, newKey)) {
@@ -190,12 +182,7 @@ export default async (lineReader: any, params: Params) => {
     return false
   }
 
-  const getNewPoints = (
-    point: Point,
-    openedIndex: Record<string, number>,
-    visitedIndex: Record<string, number>,
-    lowest: number
-  ): Array<Point> => {
+  const getNewPoints = (point: Point, openedIndex: Record<string, number>, visitedIndex: Record<string, number>, lowest: number): Array<Point> => {
     // 1. Elevator can only go up or down
     // 2. Elevator can carry min 1 element, max 2 elements
     // 3. So that move is legal, no X+M in same floor with Y-G and no X-G
@@ -203,9 +190,7 @@ export default async (lineReader: any, params: Params) => {
     const newPoints: Array<Point> = []
 
     const currentElevatorFloor: number = getElevatorFloor(point)
-    const objectsInCurrentFloor: Array<string> = point.floors[currentElevatorFloor].filter(
-      (el: string) => el !== 'E'
-    )
+    const objectsInCurrentFloor: Array<string> = point.floors[currentElevatorFloor].filter((el: string) => el !== 'E')
 
     // on ground floor, only up
     const candidateFloors = []
@@ -234,11 +219,7 @@ export default async (lineReader: any, params: Params) => {
       // moving a floor with one element
 
       const candidateFloor = candidateFloors[nextFloor]
-      for (
-        let objectsToMoveIndex = 0;
-        objectsToMoveIndex < objectsInCurrentFloor.length;
-        objectsToMoveIndex++
-      ) {
+      for (let objectsToMoveIndex = 0; objectsToMoveIndex < objectsInCurrentFloor.length; objectsToMoveIndex++) {
         const oldFloorObjects: Array<string> = objectsInCurrentFloor.slice()
         let newFloorObjects: Array<string> = point.floors[candidateFloor].slice()
         newFloorObjects.push('E')
@@ -253,21 +234,13 @@ export default async (lineReader: any, params: Params) => {
         newPoint.distance = calculateDistance(newPoint.floors)
 
         // printFloors(newPoint)
-        if (
-          isValidFloor(newPoint.floors[candidateFloor]) &&
-          isValidFloor(newPoint.floors[currentElevatorFloor]) &&
-          goodToAddToOpened(newPoint, openedIndex, visitedIndex, lowest)
-        ) {
+        if (isValidFloor(newPoint.floors[candidateFloor]) && isValidFloor(newPoint.floors[currentElevatorFloor]) && goodToAddToOpened(newPoint, openedIndex, visitedIndex, lowest)) {
           newPoints.push(newPoint)
         }
       }
 
       // moving a floor with two elements
-      for (
-        let objectPairIndex = 0;
-        objectPairIndex < combinationOfPairsOfElements.length;
-        objectPairIndex++
-      ) {
+      for (let objectPairIndex = 0; objectPairIndex < combinationOfPairsOfElements.length; objectPairIndex++) {
         let oldFloorObjects = objectsInCurrentFloor.slice()
         let newFloorObjects = point.floors[candidateFloor].slice()
         newFloorObjects.push('E')
@@ -283,11 +256,7 @@ export default async (lineReader: any, params: Params) => {
         newPoint.step = newPoint.step + 1
         newPoint.distance = calculateDistance(newPoint.floors)
 
-        if (
-          isValidFloor(newPoint.floors[candidateFloor]) &&
-          isValidFloor(newPoint.floors[currentElevatorFloor]) &&
-          goodToAddToOpened(newPoint, openedIndex, visitedIndex, lowest)
-        ) {
+        if (isValidFloor(newPoint.floors[candidateFloor]) && isValidFloor(newPoint.floors[currentElevatorFloor]) && goodToAddToOpened(newPoint, openedIndex, visitedIndex, lowest)) {
           newPoints.push(newPoint)
         }
       }
@@ -295,17 +264,9 @@ export default async (lineReader: any, params: Params) => {
     return newPoints
   }
 
-  const solveFor = (
-    opened: Array<Point>,
-    openedIndex: Record<string, number>,
-    visitedIndex: Record<string, number>
-  ) => {
+  const solveFor = (opened: Array<Point>, openedIndex: Record<string, number>, visitedIndex: Record<string, number>) => {
     let lowestPoint: Point = { step: 999999, floors: [], distance: 0 }
-    const searchAlgorithm = async (
-      opened: Array<Point>,
-      openedIndex: Record<string, number>,
-      visitedIndex: Record<string, number>
-    ) => {
+    const searchAlgorithm = async (opened: Array<Point>, openedIndex: Record<string, number>, visitedIndex: Record<string, number>) => {
       const point: Point = opened.splice(-1)[0]
       const key = generateKey(point)
 

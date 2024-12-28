@@ -38,9 +38,7 @@ export default async (lineReader: any, params: Params) => {
     //(a.x * i + b.x * j = prize.x)
     //(a.y * i + b.y * j = prize.y)
     // => i = (prize.x * b.y - b.x * prize.y)/(a.x * b.y - a.y * b.x)
-    let i =
-      (game.prize[0] * game.buttons['B'][1] - game.buttons['B'][0] * game.prize[1]) /
-      (game.buttons['A'][0] * game.buttons['B'][1] - game.buttons['A'][1] * game.buttons['B'][0])
+    let i = (game.prize[0] * game.buttons['B'][1] - game.buttons['B'][0] * game.prize[1]) / (game.buttons['A'][0] * game.buttons['B'][1] - game.buttons['A'][1] * game.buttons['B'][0])
     let j = (game.prize[0] - game.buttons['A'][0] * i) / game.buttons['B'][0]
     if (!Number.isInteger(i) || !Number.isInteger(j)) return 0
     return i * prices['A'] + j * prices['B']

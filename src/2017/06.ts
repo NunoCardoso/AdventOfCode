@@ -32,10 +32,7 @@ export default async (lineReader: any, params: Params) => {
     for (let i = 0; i < data.length; i++) {
       data[i] += amount
       // spread the reminder
-      if (
-        (higherIndex > index && i > index && i <= higherIndex) ||
-        (higherIndex < index && (i > index || i <= higherIndex))
-      ) {
+      if ((higherIndex > index && i > index && i <= higherIndex) || (higherIndex < index && (i > index || i <= higherIndex))) {
         data[i]++
       }
       // remove the value from the memory slot

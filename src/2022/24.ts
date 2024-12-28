@@ -117,10 +117,7 @@ export default async (lineReader: any, params: Params) => {
     console.log('    ' + clc.green('#'.repeat(world.columns)) + end + clc.green('#'))
   }
 
-  const getDistance = (point1: Point, point2: Point): number =>
-    Math.sqrt(
-      (point1[0] - point2[0]) * (point1[0] - point2[0]) + (point1[1] - point2[1]) * (point1[1] - point2[1])
-    )
+  const getDistance = (point1: Point, point2: Point): number => Math.sqrt((point1[0] - point2[0]) * (point1[0] - point2[0]) + (point1[1] - point2[1]) * (point1[1] - point2[1]))
 
   const generateMove = (i: number, templateGrid: Grid, blizzards: Blizzards): Grid => {
     const grid = _.cloneDeep(templateGrid)
@@ -133,8 +130,7 @@ export default async (lineReader: any, params: Params) => {
         newPoint[0] = (newPoint[0] - (i % templateGrid.length) + templateGrid.length) % templateGrid.length
       }
       if (blizzard.direction === '<') {
-        newPoint[1] =
-          (newPoint[1] - (i % templateGrid[0].length) + templateGrid[0].length) % templateGrid[0].length
+        newPoint[1] = (newPoint[1] - (i % templateGrid[0].length) + templateGrid[0].length) % templateGrid[0].length
       }
       if (blizzard.direction === '>') {
         newPoint[1] = (newPoint[1] + i) % templateGrid[0].length
@@ -150,15 +146,9 @@ export default async (lineReader: any, params: Params) => {
     return grid
   }
 
-  const printPath = (path: Path) =>
-    printStep(path.head) +
-    '=>(' +
-    path.tail.length +
-    ')' +
-    path.tail.map((_s) => '{' + printStep(_s) + '}').join('')
+  const printPath = (path: Path) => printStep(path.head) + '=>(' + path.tail.length + ')' + path.tail.map((_s) => '{' + printStep(_s) + '}').join('')
 
-  const printStep = (step: Step) =>
-    '#' + step.move + '[' + step.point[0] + ',' + step.point[1] + ']' + step.action
+  const printStep = (step: Step) => '#' + step.move + '[' + step.point[0] + ',' + step.point[1] + ']' + step.action
 
   const makeNewPaths = ({ paths, world }: { paths: Paths; world: World }): Paths => {
     const newPaths: Paths = []
@@ -234,25 +224,13 @@ export default async (lineReader: any, params: Params) => {
         if (matchesPoint(newPath.head.point, end) || matchesPoint(newPath.head.point, start)) {
           return false
         }
-        if (
-          newPath.head.point[0] < 0 ||
-          newPath.head.point[1] < 0 ||
-          newPath.head.point[0] >= world.rows ||
-          newPath.head.point[1] >= world.columns
-        ) {
+        if (newPath.head.point[0] < 0 || newPath.head.point[1] < 0 || newPath.head.point[0] >= world.rows || newPath.head.point[1] >= world.columns) {
           log.trace('rejecting new path', printPath(newPath), 'out of bounds')
           return true
         }
         const worldMove = world.moves[newMove]
         if (worldMove[newPath.head.point[0]][newPath.head.point[1]] !== '.') {
-          log.trace(
-            'rejecting new path',
-            printPath(newPath),
-            'on moves #',
-            newMove,
-            'value is',
-            worldMove[newPath.head.point[0]][newPath.head.point[1]]
-          )
+          log.trace('rejecting new path', printPath(newPath), 'on moves #', newMove, 'value is', worldMove[newPath.head.point[0]][newPath.head.point[1]])
           return true
         }
 
@@ -386,17 +364,8 @@ export default async (lineReader: any, params: Params) => {
   for (let i = 0; i < world.rows; i++) {
     templateGrid.push('.'.repeat(world.columns).split(''))
   }
-  const numberOfDifferentMoves =
-    (world.columns * world.rows) / biggestCommonDenominator(world.rows, world.columns)
-  log.debug(
-    'World with',
-    world.columns,
-    'columns',
-    world.rows,
-    'rows, generating',
-    numberOfDifferentMoves,
-    'moves'
-  )
+  const numberOfDifferentMoves = (world.columns * world.rows) / biggestCommonDenominator(world.rows, world.columns)
+  log.debug('World with', world.columns, 'columns', world.rows, 'rows, generating', numberOfDifferentMoves, 'moves')
   for (let i = 0; i < numberOfDifferentMoves; i++) {
     const move: Grid = generateMove(i, templateGrid, blizzards)
     world.moves.push(move)
@@ -431,13 +400,7 @@ export default async (lineReader: any, params: Params) => {
     iteration++
 
     if (iteration % 10 === 0) {
-      log.debug(
-        iteration,
-        'opened',
-        opened.length,
-        'finished',
-        finished.length > 0 ? finished[0].tail.length : '-'
-      )
+      log.debug(iteration, 'opened', opened.length, 'finished', finished.length > 0 ? finished[0].tail.length : '-')
     }
   }
   // log.info(printPath(finished[0]))
@@ -479,13 +442,7 @@ export default async (lineReader: any, params: Params) => {
     iteration++
 
     if (iteration % 10 === 0) {
-      log.debug(
-        iteration,
-        'opened',
-        opened.length,
-        'finished',
-        finished.length > 0 ? finished[0].tail.length : '-'
-      )
+      log.debug(iteration, 'opened', opened.length, 'finished', finished.length > 0 ? finished[0].tail.length : '-')
     }
   }
   if (params.ui?.show && params.ui?.end) {

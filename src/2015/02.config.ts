@@ -1,10 +1,14 @@
 export default {
   config: {
+    title: 'I Was Told There Would Be No Math',
+    summary: '',
     year: '2015',
     day: '02',
-    title: 'I Was Told There Would Be No Math',
-    status: 'done',
-    comment: 'Basic functional puzzle, parsing input and doing basic math sums',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    comment: 'Functional puzzle, parsing input and doing basic math sums',
     difficulty: 1
   },
   test: [

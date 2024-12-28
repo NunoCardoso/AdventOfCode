@@ -57,12 +57,7 @@ export default async (lineReader: any, params: Params) => {
       //  return false
     }
     // log.debug('interseptX', interseptX, 'interseptY', interseptY)
-    if (
-      interseptX >= params.from &&
-      interseptX <= params.to &&
-      interseptY >= params.from &&
-      interseptY <= params.to
-    ) {
+    if (interseptX >= params.from && interseptX <= params.to && interseptY >= params.from && interseptY <= params.to) {
       if (
         (h1.speed.x > 0 ? interseptX - h1.position.x > 0 : interseptX - h1.position.x < 0) &&
         (h2.speed.x > 0 ? interseptX - h2.position.x > 0 : interseptX - h2.position.x < 0) &&
@@ -96,50 +91,16 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     if (s) {
-      if (
-        Number.isInteger(diffX1 / (length - 1)) &&
-        Number.isInteger(diffY1 / (length - 1)) &&
-        Number.isInteger(diffZ1 / (length - 1))
-      ) {
-        console.log(
-          'Got h1',
-          h1,
-          'h2',
-          h2,
-          'diffX1',
-          diffX1,
-          'diffY1',
-          diffY1,
-          'diffZ1',
-          diffZ1,
-          'length',
-          length
-        )
+      if (Number.isInteger(diffX1 / (length - 1)) && Number.isInteger(diffY1 / (length - 1)) && Number.isInteger(diffZ1 / (length - 1))) {
+        console.log('Got h1', h1, 'h2', h2, 'diffX1', diffX1, 'diffY1', diffY1, 'diffZ1', diffZ1, 'length', length)
         return h1
       }
     }
     const diffX2 = h1.position.x + (length - 1) * h1.speed.x - Math.abs(h2.position.x)
     const diffY2 = h1.position.y + (length - 1) * h1.speed.y - Math.abs(h2.position.y)
     const diffZ2 = h1.position.z + (length - 1) * h1.speed.z - Math.abs(h2.position.z)
-    if (
-      Number.isInteger(diffX2 / (length - 1)) &&
-      Number.isInteger(diffY2 / (length - 1)) &&
-      Number.isInteger(diffZ2 / (length - 1))
-    ) {
-      console.log(
-        'Got h2',
-        h2,
-        'h1',
-        h1,
-        'diffX2',
-        diffX2,
-        'diffY2',
-        diffY2,
-        'diffZ2',
-        diffZ2,
-        'length',
-        length
-      )
+    if (Number.isInteger(diffX2 / (length - 1)) && Number.isInteger(diffY2 / (length - 1)) && Number.isInteger(diffZ2 / (length - 1))) {
+      console.log('Got h2', h2, 'h1', h1, 'diffX2', diffX2, 'diffY2', diffY2, 'diffZ2', diffZ2, 'length', length)
       return h2
     }
     return undefined

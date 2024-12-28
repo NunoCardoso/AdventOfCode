@@ -6,11 +6,9 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const getCurrentMarble = (currentMarble: number, marbles: number[]): number =>
-    ((currentMarble + 1) % marbles.length) + 1
+  const getCurrentMarble = (currentMarble: number, marbles: number[]): number => ((currentMarble + 1) % marbles.length) + 1
 
-  const goBackMarble = (currentMarble: number, marbles: number[]): number =>
-    (currentMarble - 7 + marbles.length) % marbles.length
+  const goBackMarble = (currentMarble: number, marbles: number[]): number => (currentMarble - 7 + marbles.length) % marbles.length
 
   let players: number = 0
   let points: number = 0

@@ -4,8 +4,7 @@ export default {
     day: '19',
     title: 'Medicine for Rudolph',
     status: 'done',
-    comment:
-      'Check the readme for the reason of the formula used, it is quite clever puzzle to avoid path finding',
+    comment: 'Check the readme for the reason of the formula used, it is quite clever puzzle to avoid path finding',
     difficulty: 4
   },
   test: [

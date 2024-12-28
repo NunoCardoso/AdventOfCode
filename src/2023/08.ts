@@ -22,9 +22,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const doIt = (startPattern: string, endPattern: string) => {
-    const positions: Array<string> = Array.from(directions.keys()).filter((k: string) =>
-      k.endsWith(startPattern)
-    )
+    const positions: Array<string> = Array.from(directions.keys()).filter((k: string) => k.endsWith(startPattern))
     const listOfEndingIterationNumbers: Array<number> = []
     let it = 0
     while (listOfEndingIterationNumbers.length < positions.length) {

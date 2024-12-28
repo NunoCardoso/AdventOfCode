@@ -31,14 +31,7 @@ export default async (lineReader: any, params: Params) => {
         [head[0], head[1] - 1],
         [head[0], head[1] + 1]
       ] as Point[]
-    ).filter(
-      (newPoint) =>
-        newPoint[0] >= 0 &&
-        newPoint[0] < dimension[0] &&
-        newPoint[1] >= 0 &&
-        newPoint[1] < dimension[1] &&
-        world[newPoint[0]][newPoint[1]] === targetedValue
-    )
+    ).filter((newPoint) => newPoint[0] >= 0 && newPoint[0] < dimension[0] && newPoint[1] >= 0 && newPoint[1] < dimension[1] && world[newPoint[0]][newPoint[1]] === targetedValue)
   }
 
   const getScore = (world: World, points: Point[], seen: Point[]): number => {

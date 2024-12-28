@@ -42,18 +42,12 @@ export default async (lineReader: any, params: Params) => {
     ]
     return _.filter(
       candidates,
-      (c: [number, number, string]) =>
-        c[0] >= 0 &&
-        c[0] < matrix.rows &&
-        c[1] >= 0 &&
-        c[1] < matrix.columns &&
-        Object.prototype.hasOwnProperty.call(elvesKeys, '' + c[0] + ',' + c[1])
+      (c: [number, number, string]) => c[0] >= 0 && c[0] < matrix.rows && c[1] >= 0 && c[1] < matrix.columns && Object.prototype.hasOwnProperty.call(elvesKeys, '' + c[0] + ',' + c[1])
     ).map((c: [number, number, string]) => ({ x: c[0], y: c[1], d: c[2] }) as ElfAround)
   }
 
   const getElfWish = (direction: string, otherElfs: ElfsAround): string => {
-    const foundElfBlocking: boolean =
-      _.find(otherElfs, (elf: ElfAround) => elf.d.indexOf(direction) >= 0) !== undefined
+    const foundElfBlocking: boolean = _.find(otherElfs, (elf: ElfAround) => elf.d.indexOf(direction) >= 0) !== undefined
     return foundElfBlocking ? '' : direction
   }
 

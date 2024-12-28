@@ -21,11 +21,7 @@ export default async (lineReader: any, params: Params) => {
 
   const calculateIngredient = (amount: number, pleasureness: number) => amount * pleasureness
 
-  const calculateBalance = (
-    portions: Portions,
-    recipes: Array<Recipe>,
-    calorieTarget: undefined | number
-  ) => {
+  const calculateBalance = (portions: Portions, recipes: Array<Recipe>, calorieTarget: undefined | number) => {
     const res: Result = [0, 0, 0, 0, 0]
     portions.forEach((portion: number, index: number) => {
       res[0] += calculateIngredient(portion, recipes[index][0])
@@ -43,12 +39,7 @@ export default async (lineReader: any, params: Params) => {
     return res.reduce((acc: number, val: number) => acc * (val < 0 ? 0 : val), 1)
   }
 
-  const generatePortions = (
-    recipeSlots: Array<number>,
-    remaining: number,
-    portions: Array<number>,
-    data: Data
-  ) => {
+  const generatePortions = (recipeSlots: Array<number>, remaining: number, portions: Array<number>, data: Data) => {
     if (recipeSlots.length > 1) {
       for (let i = recipeSlots[0]; i <= remaining; i++) {
         generatePortions(recipeSlots.slice(1, recipeSlots.length), remaining - i, portions.concat(i), data)

@@ -14,55 +14,28 @@ export default async (lineReader: any, params: Params) => {
     if (i - 3 >= 0) {
       // w, nw, sw
       if ([world[i - 1][j], world[i - 2][j], world[i - 3][j]].join('') === 'MAS') count++
-      if (j - 3 >= 0 && [world[i - 1][j - 1], world[i - 2][j - 2], world[i - 3][j - 3]].join('') === 'MAS')
-        count++
-      if (
-        j + 3 < world[i].length &&
-        [world[i - 1][j + 1], world[i - 2][j + 2], world[i - 3][j + 3]].join('') === 'MAS'
-      )
-        count++
+      if (j - 3 >= 0 && [world[i - 1][j - 1], world[i - 2][j - 2], world[i - 3][j - 3]].join('') === 'MAS') count++
+      if (j + 3 < world[i].length && [world[i - 1][j + 1], world[i - 2][j + 2], world[i - 3][j + 3]].join('') === 'MAS') count++
     }
     if (i + 3 < world.length) {
       // e, ne, se
       if ([world[i + 1][j], world[i + 2][j], world[i + 3][j]].join('') === 'MAS') count++
-      if (j - 3 >= 0 && [world[i + 1][j - 1], world[i + 2][j - 2], world[i + 3][j - 3]].join('') === 'MAS')
-        count++
-      if (
-        j + 3 < world[i].length &&
-        [world[i + 1][j + 1], world[i + 2][j + 2], world[i + 3][j + 3]].join('') === 'MAS'
-      )
-        count++
+      if (j - 3 >= 0 && [world[i + 1][j - 1], world[i + 2][j - 2], world[i + 3][j - 3]].join('') === 'MAS') count++
+      if (j + 3 < world[i].length && [world[i + 1][j + 1], world[i + 2][j + 2], world[i + 3][j + 3]].join('') === 'MAS') count++
     }
     // n, s
     if (j - 3 >= 0 && [world[i][j - 1], world[i][j - 2], world[i][j - 3]].join('') === 'MAS') count++
-    if (j + 3 < world[i].length && [world[i][j + 1], world[i][j + 2], world[i][j + 3]].join('') === 'MAS')
-      count++
+    if (j + 3 < world[i].length && [world[i][j + 1], world[i][j + 2], world[i][j + 3]].join('') === 'MAS') count++
     return count
   }
 
   const restOfWordsPart2 = (i: number, j: number): number => {
     let count = 0
     if (i - 1 >= 0 && j - 1 >= 0 && i + 1 < world.length && j + 1 < world[i].length) {
-      if (
-        [world[i - 1][j - 1], world[i - 1][j + 1], world[i + 1][j + 1], world[i + 1][j - 1]].join('') ===
-        'MMSS'
-      )
-        count++
-      if (
-        [world[i - 1][j + 1], world[i + 1][j + 1], world[i + 1][j - 1], world[i - 1][j - 1]].join('') ===
-        'MMSS'
-      )
-        count++
-      if (
-        [world[i + 1][j + 1], world[i + 1][j - 1], world[i - 1][j - 1], world[i - 1][j + 1]].join('') ===
-        'MMSS'
-      )
-        count++
-      if (
-        [world[i + 1][j - 1], world[i - 1][j - 1], world[i - 1][j + 1], world[i + 1][j + 1]].join('') ===
-        'MMSS'
-      )
-        count++
+      if ([world[i - 1][j - 1], world[i - 1][j + 1], world[i + 1][j + 1], world[i + 1][j - 1]].join('') === 'MMSS') count++
+      if ([world[i - 1][j + 1], world[i + 1][j + 1], world[i + 1][j - 1], world[i - 1][j - 1]].join('') === 'MMSS') count++
+      if ([world[i + 1][j + 1], world[i + 1][j - 1], world[i - 1][j - 1], world[i - 1][j + 1]].join('') === 'MMSS') count++
+      if ([world[i + 1][j - 1], world[i - 1][j - 1], world[i - 1][j + 1], world[i + 1][j + 1]].join('') === 'MMSS') count++
     }
     return count
   }

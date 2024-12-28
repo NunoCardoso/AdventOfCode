@@ -62,12 +62,7 @@ export default async (lineReader: any, params: Params) => {
         // reject if it's a wall
         if (world[newHead[0]][newHead[1]] === '#') return false
         // reject if it's against a slope
-        if (
-          data.careForSlopes &&
-          ['>', '<', '^', 'v'].includes(world[newHead[0]][newHead[1]]) &&
-          world[newHead[0]][newHead[1]] !== newHead[2]
-        )
-          return false
+        if (data.careForSlopes && ['>', '<', '^', 'v'].includes(world[newHead[0]][newHead[1]]) && world[newHead[0]][newHead[1]] !== newHead[2]) return false
         return true
       })
       .map(getKey)

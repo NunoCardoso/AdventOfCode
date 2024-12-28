@@ -46,8 +46,7 @@ export default async (lineReader: any, params: Params) => {
     while (!status) {
       currentPoint[0] = currentPoint[0] + currentSpeed[0]
       currentPoint[1] = currentPoint[1] + currentSpeed[1]
-      currentSpeed[0] =
-        currentSpeed[0] === 0 ? 0 : currentSpeed[0] > 0 ? currentSpeed[0] - 1 : currentSpeed[0] + 1
+      currentSpeed[0] = currentSpeed[0] === 0 ? 0 : currentSpeed[0] > 0 ? currentSpeed[0] - 1 : currentSpeed[0] + 1
       currentSpeed[1]--
       if (currentPoint[1] > highestY) {
         log.debug('it', it, 'highestY', currentPoint[1])

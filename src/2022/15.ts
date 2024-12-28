@@ -27,11 +27,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const getInterceptedSensors = (sensors: Array<Sensor>, constantY: number): Array<Sensor> =>
-    sensors.filter(
-      (sensor) =>
-        sensor.corners.some((corner) => getAxisRatio(corner) < constantY) &&
-        sensor.corners.some((corner) => getAxisRatio(corner) >= constantY)
-    )
+    sensors.filter((sensor) => sensor.corners.some((corner) => getAxisRatio(corner) < constantY) && sensor.corners.some((corner) => getAxisRatio(corner) >= constantY))
 
   const getSensorRangeInterceptions = (sensors: Array<Sensor>, axis: number): Array<Array<Point>> => {
     const sensorRangeInterceptions: Array<Array<Point>> = []
@@ -85,19 +81,14 @@ export default async (lineReader: any, params: Params) => {
   })
 
   for await (const line of lineReader) {
-    const [, x1, y1, x2, y2] = line
-      .match(/^Sensor at x=([-\d]+), y=([-\d]+): closest beacon is at x=([-\d]+), y=([-\d]+)$/)
-      .map(Number)
+    const [, x1, y1, x2, y2] = line.match(/^Sensor at x=([-\d]+), y=([-\d]+): closest beacon is at x=([-\d]+), y=([-\d]+)$/).map(Number)
     const beacon = rotate45deg([x2, y2])
     if (!beaconIndex.has(getKey(beacon))) {
       beacons.push(beacon)
       beaconIndex.add(getKey(beacon))
     }
     const sensor = { center: rotate45deg([x1, y1]), corners: [] as Array<Point> }
-    const beaconRadius = Math.max(
-      Math.abs(beacon[0] - sensor.center[0]),
-      Math.abs(beacon[1] - sensor.center[1])
-    )
+    const beaconRadius = Math.max(Math.abs(beacon[0] - sensor.center[0]), Math.abs(beacon[1] - sensor.center[1]))
     sensor.corners = [
       [sensor.center[0] - beaconRadius, sensor.center[1] - beaconRadius],
       [sensor.center[0] + beaconRadius, sensor.center[1] - beaconRadius],
@@ -117,15 +108,10 @@ export default async (lineReader: any, params: Params) => {
     const interceptedSensors: Array<Sensor> = getInterceptedSensors(sensors, probedAxisSlope)
     // pairs of points where max sensor range intercepts the axis slope, one pair per beacon
     // if it intercepts a corner, both points are equal
-    const rangeInterceptions: Array<Array<Point>> = getSensorRangeInterceptions(
-      interceptedSensors,
-      probedAxisSlope
-    )
+    const rangeInterceptions: Array<Array<Point>> = getSensorRangeInterceptions(interceptedSensors, probedAxisSlope)
     // since the flat slope is now converted to a 45 degree, I can count y or x values. I will use x as they are sorted
     log.debug('range interceptions', rangeInterceptions)
-    let rangesWhereBeaconCannotExist: Array<Range> = rangeInterceptions
-      .map((range: Array<Point>) => [range[0][0], range[1][0]] as Range)
-      .sort((a: Range, b: Range) => a[0] - b[0] || a[1] - b[1])
+    let rangesWhereBeaconCannotExist: Array<Range> = rangeInterceptions.map((range: Array<Point>) => [range[0][0], range[1][0]] as Range).sort((a: Range, b: Range) => a[0] - b[0] || a[1] - b[1])
     // let's merge common ranges so it is easier to see h (have it sorted by x from min to max)
     rangesWhereBeaconCannotExist = mergeRange(rangesWhereBeaconCannotExist)
     // range 8-10 has 3 slots, hence 10-8+1.
@@ -172,12 +158,7 @@ export default async (lineReader: any, params: Params) => {
       // let's see if that beacon is not inside a sensor square
       const originalBeacon = unrotate45deg(candidateBeacon)
       if (sensors.every((sensor, i) => !sensorIncludesPoint(sensor, candidateBeacon))) {
-        if (
-          originalBeacon[0] >= 0 &&
-          originalBeacon[0] <= params.limit &&
-          originalBeacon[1] >= 0 &&
-          originalBeacon[1] <= params.limit
-        ) {
+        if (originalBeacon[0] >= 0 && originalBeacon[0] <= params.limit && originalBeacon[1] >= 0 && originalBeacon[1] <= params.limit) {
           foundBeacons.push(originalBeacon)
         }
       }

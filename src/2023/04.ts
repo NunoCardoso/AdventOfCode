@@ -11,9 +11,7 @@ export default async (lineReader: any, params: Params) => {
 
   for await (const line of lineReader) {
     const [left, right] = line.match(/^Card\s+\d+: (.+)$/)[1].split('|')
-    cardWins.push(
-      intersect(left.trim().split(/\s+/).map(Number), right.trim().split(/\s+/).map(Number)).length
-    )
+    cardWins.push(intersect(left.trim().split(/\s+/).map(Number), right.trim().split(/\s+/).map(Number)).length)
   }
 
   // fill with 1 for the original copies

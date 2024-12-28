@@ -1,122 +1,127 @@
 import fs from 'fs'
 import path from 'path'
 import clc from 'cli-color'
-import { Prod, Puzzle, Result, Test } from './aoc.d'
+import { Prod, PuzzleConfig, PuzzleOutput, Test } from './aoc.d'
 const readline = require('readline')
+import JSON5 from 'json5'
 
-const defaultConfig = {
+const defaultPuzzleConfig: Partial<PuzzleConfig> = {
   logLevel: 'info',
   ui: { show: false }
 }
 
-export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
-  const _puzzle = { ...defaultConfig, ...puzzle } as Puzzle
-  const app = require(
-    './' +
-      _puzzle.config.year +
-      '/' +
-      _puzzle.config.day +
-      (_puzzle.mode ? '.' + _puzzle.mode : '')
-  ).default
+export default async (_year: string, _day: string, postPuzzleConfig = {}) => {
+  let puzzleConfigPath = path.join(__dirname, _year + '/' + _day) + '.config'
+  const rawPuzzleConfig: PuzzleConfig = require(puzzleConfigPath).default
 
-  const doRun = async (run: Test | Prod, isTest: boolean): Promise<Result> => {
-    const result: Result = {
-      config: _puzzle.config,
+  const puzzle = { ...defaultPuzzleConfig, ...rawPuzzleConfig, ...postPuzzleConfig } as PuzzleConfig
+  const log = require('console-log-level')({ level: puzzle.logLevel })
+
+  const year = puzzle.config.year.toString()
+  const day = puzzle.config.day.toString().padStart(2, '0')
+  const app = require(`./${year}/${day}${puzzle.mode ? '.' + puzzle.mode : ''}`).default
+
+  const doRun = async (run: Test | Prod, isTest: boolean): Promise<PuzzleOutput> => {
+    const result: PuzzleOutput = {
+      config: puzzle.config,
       time: 0,
       mode: '',
-      part1: {
-        status: ''
-      },
-      part2: {
-        status: ''
-      }
+      part1: {},
+      part2: {},
+      id: isTest ? (run as Test)?.id : 'Prod'
     }
 
-    const targetFile = isTest ? (run as Test).id : 'input'
-
-    let line = '📅 ' + _puzzle.config.year + '/' + _puzzle.config.day + ' '
-    line += (isTest ? clc.cyan((run as Test)?.id) : clc.red('Prod')) + ' '
-
     const runParams = {
-      ...(_puzzle.params ?? {}),
+      ...(puzzle.params ?? {}),
       ...(run.params ?? {}),
-      logLevel: _puzzle.logLevel,
-      ui: _puzzle.ui,
+      logLevel: puzzle.logLevel,
+      ui: puzzle.ui,
       isTest: isTest,
       skipPart1: run.answers.part1 === undefined,
       skipPart2: run.answers.part2 === undefined
     }
 
     if (runParams.skipPart1 && runParams.skipPart2) {
-      if (log) console.log(line + clc.red('- skipped'))
       return result
     }
 
+    const targetFile = isTest ? (run as Test).id : 'input'
     let lineReader: any
-    const file = path.join(
-      __dirname,
-      '../input/',
-      _puzzle.config.year!,
-      '/',
-      _puzzle.config.day! + '.' + targetFile + '.txt'
-    )
+    const file = path.join(__dirname, '../input/', year, '/', `${day}.${targetFile}.txt`)
     if (fs.existsSync(file)) {
       lineReader = readline.createInterface({
         input: fs.createReadStream(file)
       })
     }
-    if (_puzzle.mode) {
-      if (log) console.log('Running ' + (_puzzle.mode ?? 'normal'))
+
+    result.time = new Date().getTime()
+    const answer = await app(lineReader, runParams)
+    result.time = new Date().getTime() - result.time
+
+    if (!!run?.answers?.part1) {
+      result.part1.skip = false
+      result.part1.answer = answer.part1
+      result.part1.expected = run.answers?.part1
     }
 
-    if (log) console.time('Answer time ' + targetFile)
-    else result.time = new Date().getTime()
-
-    const answer = await app(lineReader, runParams)
-
-    if (log) console.timeEnd('Answer time ' + targetFile)
-    else result.time = new Date().getTime() - result.time
-
-    if (run?.answers?.part1 !== undefined) {
-        const status = run.answers?.part1 === answer.part1 ? '✅' : '❌'
-        if (log) {
-          console.log(
-            line + 'Part 1 -',
-            answer.part1,
-            status,
-            status === '❌' ? '(Expected ' + run.answers?.part1 + ')' : ''
-          )
-        }
-        result.part1.skip = false
-        result.part1.status = status
-      }
-
-    if (run?.answers?.part2 !== undefined) {
-        const status = run.answers?.part2 === answer.part2 ? '✅' : '❌'
-        if (log) {
-          console.log(
-            line + 'Part 2 -',
-            answer.part2,
-            status,
-            status === '❌' ? '(Expected ' + run.answers?.part2 + ')' : ''
-          )
-        }
-        result.part2.skip = false
-        result.part2.status = status
-      }
+    if (!!run?.answers?.part2) {
+      result.part2.skip = false
+      result.part2.answer = answer.part2
+      result.part2.expected = run.answers?.part2
+    }
 
     return result
   }
 
-  if (Object.prototype.hasOwnProperty.call(_puzzle, 'test')) {
-    if (Array.isArray(_puzzle.test)) {
-      _puzzle.test.forEach((t: Test) => doRun(t, true))
-    } else {
-      await doRun(_puzzle.test as Test, true)
+  const printResult = (output: PuzzleOutput, isTest: boolean) => {
+    const label = isTest ? '🎄 ' + clc.cyan(output.id) : '🎁 ' + clc.red(output.id)
+
+    if (!output?.part1?.skip) {
+      const success = output.part1.answer === output.part1.expected
+      log.info(label + ' Part 1 -', output.part1.answer, success ? '✅' : '❌', !success ? '(Expected ' + output.part1.expected + ')' : '')
+    }
+    if (!output?.part2?.skip) {
+      const success = output.part2.answer === output.part2.expected
+      log.info(label + ' Part 2 -', output.part2.answer, success ? '✅' : '❌', !success ? '(Expected ' + output.part2.expected + ')' : '')
     }
   }
 
-  if (Object.prototype.hasOwnProperty.call(_puzzle, 'prod')) {
-    return await doRun(_puzzle.prod!, false)
+  const syncConfig = (output: PuzzleOutput, rawPuzzleConfig: PuzzleConfig) => {
+    // sync config with results
+    // note that day 25 only has one part
+    if (output?.part1 && (output?.part2 || output.config.day === 25)) {
+      let newStatus = output.part1.answer === output.part1.expected && (output.part2.answer === output.part2.expected || output.config.day === 25) ? 'solved' : 'unsolved'
+      let newSpeed = rawPuzzleConfig!.config!.tags?.includes('MD5') ? 'md5' : output.time <= 1000 ? 'fast' : output.time <= 3000 ? 'medium' : 'slow'
+      let newResult = rawPuzzleConfig!.config!.code === 'clean' && newStatus === 'solved' && ['fast', 'md5'].includes(newSpeed) ? 'finished' : 'unfinished'
+
+      let changed = newStatus !== rawPuzzleConfig.config.status || newSpeed !== rawPuzzleConfig.config.speed || newResult !== rawPuzzleConfig.config.result
+
+      if (changed) {
+        console.log('Updating config...')
+        fs.writeFileSync(puzzleConfigPath + '.ts', 'export default ' + JSON5.stringify(rawPuzzleConfig, null, 2))
+      }
+    }
+  }
+
+  log.info(`╔════════════════════════════════╗`)
+  log.info(`║ 🎅 Advent of Code ${year} / ${day} 🎅 ║`)
+  log.info(`╚════════════════════════════════╝`)
+
+  if (Object.prototype.hasOwnProperty.call(puzzle, 'test')) {
+    if (Array.isArray(puzzle.test)) {
+      puzzle.test.forEach(async (t: Test) => await doRun(t, true))
+    } else {
+      let output = await doRun(puzzle.test as Test, true)
+      log.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
+      printResult(output, true)
+    }
+  }
+
+  if (Object.prototype.hasOwnProperty.call(puzzle, 'prod')) {
+    let output = await doRun(puzzle.prod!, false)
+    log.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
+    printResult(output, true)
+    syncConfig(output, rawPuzzleConfig)
+    return output
   }
 }

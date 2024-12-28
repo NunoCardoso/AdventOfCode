@@ -5,11 +5,7 @@ export default async (lineReader: any, params: Params) => {
   const calorieCount: Array<number> = []
 
   for await (const line of lineReader) {
-    !line
-      ? elfIndex++
-      : !calorieCount[elfIndex]
-        ? (calorieCount[elfIndex] = +line)
-        : (calorieCount[elfIndex] += +line)
+    !line ? elfIndex++ : !calorieCount[elfIndex] ? (calorieCount[elfIndex] = +line) : (calorieCount[elfIndex] += +line)
   }
   calorieCount.sort((a: number, b: number) => b - a)
 

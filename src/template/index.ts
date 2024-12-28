@@ -1,19 +1,19 @@
 import { Params } from 'aoc.d'
 
 export default async (lineReader: any, params: Params) => {
-  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
 
+  let values: string[]
   for await (const line of lineReader) {
-    const values = line.split('')
-    part1 = values.length
-    part2 = values.length
+    values = line.split('')
   }
 
   const solveFor = (): number => {
-    return 0
+    log.info('solved')
+    return values.length
   }
 
   if (!params.skipPart1) {

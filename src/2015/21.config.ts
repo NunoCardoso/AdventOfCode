@@ -4,8 +4,7 @@ export default {
     day: '21',
     title: 'RPG Simulator 20XX',
     status: 'done',
-    comment:
-      'really funny puzzle, hard to get the day sequence right, but surprisingly quick to get optimal solution',
+    comment: 'really funny puzzle, hard to get the day sequence right, but surprisingly quick to get optimal solution',
     difficulty: 3
   },
   test: {

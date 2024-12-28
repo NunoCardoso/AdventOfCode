@@ -42,15 +42,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const calculateScore = (world: World<string>): number =>
-    world.reduce(
-      (acc, row, rowIndex) =>
-        acc +
-        row.reduce(
-          (acc2, cell, colIndex) => acc2 + (['O', '['].includes(cell) ? 100 * rowIndex + colIndex : 0),
-          0
-        ),
-      0
-    )
+    world.reduce((acc, row, rowIndex) => acc + row.reduce((acc2, cell, colIndex) => acc2 + (['O', '['].includes(cell) ? 100 * rowIndex + colIndex : 0), 0), 0)
 
   const printWorld = (world: World<string>, start: Point) => {
     for (var i = 0; i < world.length; i++) {
@@ -69,12 +61,7 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const executePath = (
-    world: World<string>,
-    current: Point,
-    instruction: string,
-    _path: Point[] | null
-  ): Point => {
+  const executePath = (world: World<string>, current: Point, instruction: string, _path: Point[] | null): Point => {
     if (!_path) return current
     let lastPlace: Point
     // I have to sort and reverse so I can do the moves from the end to the start
@@ -102,12 +89,7 @@ export default async (lineReader: any, params: Params) => {
     return lastPlace!
   }
 
-  const checkIfRobotCanMove = (
-    world: World<string>,
-    current: Point,
-    instruction: string,
-    path: Point[]
-  ): Point[] | null => {
+  const checkIfRobotCanMove = (world: World<string>, current: Point, instruction: string, path: Point[]): Point[] | null => {
     let targetedPoint: Point = [0, 0]
     if (instruction === '^') targetedPoint = [current[0] - 1, current[1]] as Point
     if (instruction === 'v') targetedPoint = [current[0] + 1, current[1]] as Point
@@ -119,13 +101,9 @@ export default async (lineReader: any, params: Params) => {
     // if we find a space, return path to signal that move is possible
     if (targetWorld === '.') return path.concat([current])
     // if we find a box, keep going to see if we find a wall or a space
-    if (targetWorld === 'O')
-      return checkIfRobotCanMove(world, targetedPoint, instruction, path.concat([current]))
+    if (targetWorld === 'O') return checkIfRobotCanMove(world, targetedPoint, instruction, path.concat([current]))
     // we are in [ or ]
-    let otherTarget: Point =
-      targetWorld === '['
-        ? [targetedPoint[0], targetedPoint[1] + 1]
-        : [targetedPoint[0], targetedPoint[1] - 1]
+    let otherTarget: Point = targetWorld === '[' ? [targetedPoint[0], targetedPoint[1] + 1] : [targetedPoint[0], targetedPoint[1] - 1]
     if (['^', 'v'].includes(instruction)) {
       let leftPath = checkIfRobotCanMove(world, targetedPoint, instruction, path.concat([current]))
       let rightPath = checkIfRobotCanMove(world, otherTarget, instruction, path)
@@ -137,18 +115,11 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const sortPath = (_path: Point[], instruction: string): Point[] => {
-    let path = _path!.reduce(
-      (acc, p) => (!!acc.find((_p: Point) => _p[0] === p[0] && _p[1] === p[1]) ? acc : [...acc, p]),
-      [] as Point[]
-    )
-    if (instruction === '^')
-      path = path.sort((a, b) => (b[0] - a[0] < 0 ? -1 : b[0] - a[0] > 0 ? 1 : b[1] - a[1]))
-    if (instruction === 'v')
-      path = path.sort((a, b) => (a[0] - b[0] < 0 ? -1 : a[0] - b[0] > 0 ? 1 : a[1] - b[1]))
-    if (instruction === '<')
-      path = path.sort((a, b) => (b[1] - a[1] < 0 ? -1 : b[1] - a[1] > 0 ? 1 : b[0] - a[0]))
-    if (instruction === '>')
-      path = path.sort((a, b) => (a[1] - b[1] < 0 ? -1 : a[1] - b[1] > 0 ? 1 : a[0] - b[0]))
+    let path = _path!.reduce((acc, p) => (!!acc.find((_p: Point) => _p[0] === p[0] && _p[1] === p[1]) ? acc : [...acc, p]), [] as Point[])
+    if (instruction === '^') path = path.sort((a, b) => (b[0] - a[0] < 0 ? -1 : b[0] - a[0] > 0 ? 1 : b[1] - a[1]))
+    if (instruction === 'v') path = path.sort((a, b) => (a[0] - b[0] < 0 ? -1 : a[0] - b[0] > 0 ? 1 : a[1] - b[1]))
+    if (instruction === '<') path = path.sort((a, b) => (b[1] - a[1] < 0 ? -1 : b[1] - a[1] > 0 ? 1 : b[0] - a[0]))
+    if (instruction === '>') path = path.sort((a, b) => (a[1] - b[1] < 0 ? -1 : a[1] - b[1] > 0 ? 1 : a[0] - b[0]))
     return path
   }
 

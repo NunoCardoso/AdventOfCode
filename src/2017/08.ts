@@ -15,9 +15,7 @@ export default async (lineReader: any, params: Params) => {
   let values: Map<string, number> = new Map()
   let instructions: Array<Instruction> = []
   for await (const line of lineReader) {
-    const [, variable, incdec, amount, testVariable, testOperator, testAmount] = line.match(
-      /(.+) (.+) (.+) if (.+) (.+) (.+)/
-    )
+    const [, variable, incdec, amount, testVariable, testOperator, testAmount] = line.match(/(.+) (.+) (.+) if (.+) (.+) (.+)/)
     if (!values.has(variable)) values.set(variable, 0)
     instructions.push({
       variable,
@@ -31,21 +29,14 @@ export default async (lineReader: any, params: Params) => {
 
   instructions.forEach((instruction) => {
     let condition: boolean | undefined = undefined
-    if (instruction.testOperator === '<')
-      condition = values.get(instruction.testVariable)! < instruction.testAmount
-    else if (instruction.testOperator === '>')
-      condition = values.get(instruction.testVariable)! > instruction.testAmount
-    else if (instruction.testOperator === '<=')
-      condition = values.get(instruction.testVariable)! <= instruction.testAmount
-    else if (instruction.testOperator === '>=')
-      condition = values.get(instruction.testVariable)! >= instruction.testAmount
-    else if (instruction.testOperator === '!=')
-      condition = values.get(instruction.testVariable)! != instruction.testAmount
-    else if (instruction.testOperator === '==')
-      condition = values.get(instruction.testVariable)! == instruction.testAmount
+    if (instruction.testOperator === '<') condition = values.get(instruction.testVariable)! < instruction.testAmount
+    else if (instruction.testOperator === '>') condition = values.get(instruction.testVariable)! > instruction.testAmount
+    else if (instruction.testOperator === '<=') condition = values.get(instruction.testVariable)! <= instruction.testAmount
+    else if (instruction.testOperator === '>=') condition = values.get(instruction.testVariable)! >= instruction.testAmount
+    else if (instruction.testOperator === '!=') condition = values.get(instruction.testVariable)! != instruction.testAmount
+    else if (instruction.testOperator === '==') condition = values.get(instruction.testVariable)! == instruction.testAmount
     if (condition) {
-      if (instruction.incdec === 'inc')
-        values.set(instruction.variable, values.get(instruction.variable)! + instruction.amount)
+      if (instruction.incdec === 'inc') values.set(instruction.variable, values.get(instruction.variable)! + instruction.amount)
       else values.set(instruction.variable, values.get(instruction.variable)! - instruction.amount)
     }
     let maxValue = Math.max(...Array.from(values.values()))

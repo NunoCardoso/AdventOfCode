@@ -18,8 +18,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: string = ''
   let part2: number = 0
 
-  const isInEnd = (step: Step, finished: Finished) =>
-    step[0][0] === finished.end[0] && step[0][1] === finished.end[1]
+  const isInEnd = (step: Step, finished: Finished) => step[0][0] === finished.end[0] && step[0][1] === finished.end[1]
 
   const goodToAdd = (step: Step, finished: Finished) =>
     // for part1, I can truncate the new paths that are bigger than the best one so far
@@ -49,10 +48,7 @@ export default async (lineReader: any, params: Params) => {
 
     if (isInEnd(step, finished)) {
       // part1: smallest path
-      if (
-        finished.mode === 'part1' &&
-        (finished.path.length === 0 || step[1].length < finished.path.length)
-      ) {
+      if (finished.mode === 'part1' && (finished.path.length === 0 || step[1].length < finished.path.length)) {
         finished.path = step[1]
       }
       // part2: longest path

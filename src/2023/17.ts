@@ -29,29 +29,11 @@ export default async (lineReader: any, params: Params) => {
   const isValidEnd = (c1: Point, c2: Coord) => c1.position[0] === c2[0] && c1.position[1] === c2[1]
 
   // prettier ignore
-  const printPoint = (p: Point) =>
-    '[' +
-    p.position[0] +
-    ',' +
-    p.position[1] +
-    '](' +
-    p.direction +
-    ',' +
-    p.straightsLeft +
-    ',' +
-    p.distance +
-    ',' +
-    p.score +
-    ')'
+  const printPoint = (p: Point) => '[' + p.position[0] + ',' + p.position[1] + '](' + p.direction + ',' + p.straightsLeft + ',' + p.distance + ',' + p.score + ')'
 
-  const isOutOfBounds = (c: Coord | CoordPlus) =>
-    c[0] < 0 || c[1] < 0 || c[0] >= worldDimensions[0] || c[1] >= worldDimensions[1]
+  const isOutOfBounds = (c: Coord | CoordPlus) => c[0] < 0 || c[1] < 0 || c[0] >= worldDimensions[0] || c[1] >= worldDimensions[1]
 
-  const isSame = (p1: Point, p2: Point) =>
-    p1.position[0] === p2.position[0] &&
-    p1.position[1] === p2.position[1] &&
-    p1.straightsLeft === p2.straightsLeft &&
-    p1.direction === p2.direction
+  const isSame = (p1: Point, p2: Point) => p1.position[0] === p2.position[0] && p1.position[1] === p2.position[1] && p1.straightsLeft === p2.straightsLeft && p1.direction === p2.direction
 
   const getScores = (p: Coord, dir: string, amount: number) => {
     let sum: number = 0
@@ -82,24 +64,16 @@ export default async (lineReader: any, params: Params) => {
     // straight is allowed
     if (p.direction !== '' && p.straightsLeft > 0) {
       if (p.direction === '>' && !isOutOfBounds([p.position[0], p.position[1] + 1])) {
-        newPositions = [
-          [p.position[0], p.position[1] + 1, p.direction, world[p.position[0]][p.position[1] + 1]]
-        ]
+        newPositions = [[p.position[0], p.position[1] + 1, p.direction, world[p.position[0]][p.position[1] + 1]]]
       }
       if (p.direction === '<' && !isOutOfBounds([p.position[0], p.position[1] - 1])) {
-        newPositions = [
-          [p.position[0], p.position[1] - 1, p.direction, world[p.position[0]][p.position[1] - 1]]
-        ]
+        newPositions = [[p.position[0], p.position[1] - 1, p.direction, world[p.position[0]][p.position[1] - 1]]]
       }
       if (p.direction === '^' && !isOutOfBounds([p.position[0] - 1, p.position[1]])) {
-        newPositions = [
-          [p.position[0] - 1, p.position[1], p.direction, world[p.position[0] - 1][p.position[1]]]
-        ]
+        newPositions = [[p.position[0] - 1, p.position[1], p.direction, world[p.position[0] - 1][p.position[1]]]]
       }
       if (p.direction === 'v' && !isOutOfBounds([p.position[0] + 1, p.position[1]])) {
-        newPositions = [
-          [p.position[0] + 1, p.position[1], p.direction, world[p.position[0] + 1][p.position[1]]]
-        ]
+        newPositions = [[p.position[0] + 1, p.position[1], p.direction, world[p.position[0] + 1][p.position[1]]]]
       }
       newPositions?.forEach((newPosition) => {
         newPoints.push({
@@ -168,12 +142,7 @@ export default async (lineReader: any, params: Params) => {
     return newPoints
   }
 
-  const breathFirst = (
-    opened: Array<Point>,
-    openedIndex: Set<string>,
-    visited: Map<string, number>,
-    data: any
-  ) => {
+  const breathFirst = (opened: Array<Point>, openedIndex: Set<string>, visited: Map<string, number>, data: any) => {
     const point = opened.splice(-1)[0]
     const key = getKey(point)
     openedIndex.delete(key)

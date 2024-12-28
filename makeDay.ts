@@ -29,7 +29,7 @@ if (fs.existsSync(newFilePath)) {
   file = fs.openSync(newInputDirPath + process.argv[3] + '.test.txt', 'a')
   fs.closeSync(file)
 
-  let content = fs.readFileSync(__dirname + '/src/template/xx.ts', 'utf8')
+  let content = fs.readFileSync(__dirname + '/src/template/config.ts', 'utf8')
   content = content.replace(/\{\{year}}/g, process.argv[2])
   content = content.replace(/\{\{day}}/g, process.argv[3])
 

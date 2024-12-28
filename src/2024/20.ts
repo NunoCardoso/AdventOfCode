@@ -77,12 +77,7 @@ export default async (lineReader: any, params: Params) => {
     return points
   }
 
-  const countCheats = (
-    world: World<string>,
-    threshold: number,
-    cheatLength: number,
-    visited: Point[]
-  ): number => {
+  const countCheats = (world: World<string>, threshold: number, cheatLength: number, visited: Point[]): number => {
     let count = 0
     visited.forEach((startPoint, index) => {
       log.debug('Startpoint', index, 'of', visited.length)
@@ -102,13 +97,7 @@ export default async (lineReader: any, params: Params) => {
     return count
   }
 
-  const solveFor = (
-    world: World<string>,
-    start: Point,
-    end: Point,
-    threshold: number,
-    cheatLength: number
-  ): number => {
+  const solveFor = (world: World<string>, start: Point, end: Point, threshold: number, cheatLength: number): number => {
     let opened: Point[] = [start]
     let path = new Set<string>()
     while (opened.length > 0) doSearch(world, opened, path, end)

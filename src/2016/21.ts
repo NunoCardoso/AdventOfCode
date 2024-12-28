@@ -9,19 +9,12 @@ export default async (lineReader: any, params: Params) => {
   const instructions: Array<string> = []
   for await (const line of lineReader) instructions.push(line)
 
-  const executeInstruction = (
-    line: string,
-    password: Array<string>,
-    reverse = false,
-    indexShiftMap: Map<number, number>
-  ) => {
+  const executeInstruction = (line: string, password: Array<string>, reverse = false, indexShiftMap: Map<number, number>) => {
     const words = line.split(/\s+/)
     if (words[0] === 'swap') {
       if (words[1] === 'letter') {
         const [source, target] = [words[2], words[5]]
-        password = password.map((letter: string) =>
-          letter === source ? target : letter === target ? source : letter
-        )
+        password = password.map((letter: string) => (letter === source ? target : letter === target ? source : letter))
       } else if (words[1] === 'position') {
         const [source, target] = [+words[2], +words[5]]
         const passwordTemp = password[source]

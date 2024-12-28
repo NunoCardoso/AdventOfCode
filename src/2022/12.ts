@@ -74,9 +74,7 @@ export default async (lineReader: any, params: Params) => {
 
   const printData = (world: World<string>, data: Data) => {
     world.forEach((row, i) => {
-      console.log(
-        row.map((cell, j) => (data.path.has(i + ',' + j) ? clc.red(world[i][j]) : world[i][j])).join('')
-      )
+      console.log(row.map((cell, j) => (data.path.has(i + ',' + j) ? clc.red(world[i][j]) : world[i][j])).join(''))
     })
     console.log('')
   }

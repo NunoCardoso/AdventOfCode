@@ -17,9 +17,7 @@ export default async (lineReader: any, params: Params) => {
     if (!params.skipPart2) {
       if (i++ % 3 !== 2) groups.push(line)
       else {
-        part2 += letterIndexes.indexOf(
-          intersect(groups[0].split(''), intersect(groups[1].split(''), line.split('')))[0]
-        )
+        part2 += letterIndexes.indexOf(intersect(groups[0].split(''), intersect(groups[1].split(''), line.split('')))[0])
         groups = []
       }
     }

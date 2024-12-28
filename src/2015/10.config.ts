@@ -4,8 +4,7 @@ export default {
     day: '10',
     title: 'Elves Look, Elves Say',
     status: 'done',
-    comment:
-      'look-and-say sequence, I do not think it can be faster, but one can try. The regex pattern is the key here',
+    comment: 'look-and-say sequence, I do not think it can be faster, but one can try. The regex pattern is the key here',
     difficulty: 2
   },
   params: {

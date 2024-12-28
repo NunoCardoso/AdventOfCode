@@ -19,9 +19,16 @@
     "rules": {
       "recommended": false,
       "suspicious": {
-        "noConfusingLabels": "error",
-        "noConsole": "error"
+        "noConfusingLabels": "error"
       }
+    }
+  },
+  "json": {
+    "parser": {
+      "allowTrailingCommas": false
+    },
+    "formatter": {
+      "trailingCommas": "none"
     }
   },
   "javascript": {

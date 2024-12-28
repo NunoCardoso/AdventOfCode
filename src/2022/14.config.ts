@@ -4,9 +4,7 @@ export default {
     day: '14',
     title: 'Regolith Reservoir',
     status: 'done',
-    comment:
-      'The hardest part is to get used to x, y coords instead of row, col. Not the fastest solution, as I ' +
-      'do drop sand point by point, but it is fast enough'
+    comment: 'The hardest part is to get used to x, y coords instead of row, col. Not the fastest solution, as I ' + 'do drop sand point by point, but it is fast enough'
   },
   ui: {
     show: true,

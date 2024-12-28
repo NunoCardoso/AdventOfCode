@@ -18,8 +18,7 @@ export default async (lineReader: any, params: Params) => {
   }
   const worldDimensions = [world.length, world[0].length]
 
-  const insideBounds = (p: Point): boolean =>
-    p[0] >= 0 && p[0] < worldDimensions[0] && p[1] >= 0 && p[1] < worldDimensions[1]
+  const insideBounds = (p: Point): boolean => p[0] >= 0 && p[0] < worldDimensions[0] && p[1] >= 0 && p[1] < worldDimensions[1]
 
   const hitsWall = (p: Point) => world[p[0]][p[1]] === '#'
 
@@ -65,15 +64,9 @@ export default async (lineReader: any, params: Params) => {
     part1 = solveFor(start, params.steps.part1).size
   }
 
-  const withinDistance = (i: number, j: number, start: Point, range: number) =>
-    Math.abs(i - start[0]) + Math.abs(j - start[1]) <= range
+  const withinDistance = (i: number, j: number, start: Point, range: number) => Math.abs(i - start[0]) + Math.abs(j - start[1]) <= range
 
-  const generatePaths = (
-    world: World<string>,
-    start: Point,
-    tiles: 'odd' | 'even',
-    range: number
-  ): number => {
+  const generatePaths = (world: World<string>, start: Point, tiles: 'odd' | 'even', range: number): number => {
     let count = 0
     for (let i = 0; i < world.length; i++) {
       for (let j = 0; j < world[i].length; j++) {
@@ -86,12 +79,7 @@ export default async (lineReader: any, params: Params) => {
     return count
   }
 
-  const generatePathList = (
-    world: World<string>,
-    start: Point,
-    tiles: 'odd' | 'even',
-    range: number
-  ): Array<string> => {
+  const generatePathList = (world: World<string>, start: Point, tiles: 'odd' | 'even', range: number): Array<string> => {
     const list: Array<string> = []
     for (let i = 0; i < world.length; i++) {
       for (let j = 0; j < world[i].length; j++) {

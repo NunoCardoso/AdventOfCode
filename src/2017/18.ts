@@ -21,8 +21,7 @@ export default async (lineReader: any, params: Params) => {
     instructions.push(instrArray)
   }
 
-  const numberOrString = (target: string, values: Record<string, number>): number =>
-    target.match(/\d+/) ? +target : values[target]
+  const numberOrString = (target: string, values: Record<string, number>): number => (target.match(/\d+/) ? +target : values[target])
 
   const solveForPart1 = (instructions: string[]): number => {
     let values: Record<string, number> = Object.fromEntries([...registers].map((r) => [r, 0]))
@@ -83,8 +82,7 @@ export default async (lineReader: any, params: Params) => {
           let [command, source, target] = instructions[p.index]
           if (command === 'snd') {
             programs[otherProgramIndex].queue.push(numberOrString(source, p.values))
-            if (programs[otherProgramIndex].status === 'waiting')
-              programs[otherProgramIndex].status = 'processing'
+            if (programs[otherProgramIndex].status === 'waiting') programs[otherProgramIndex].status = 'processing'
             p.index++
             if (p.id === 1) count++
           }

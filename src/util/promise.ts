@@ -13,5 +13,4 @@ export const waitForKey = async () => {
   })
 }
 
-export const waitSeconds = async (amount: number) =>
-  await new Promise((resolve) => setTimeout(resolve, amount ?? 100))
+export const waitSeconds = async (amount: number) => await new Promise((resolve) => setTimeout(resolve, amount ?? 100))

@@ -12,8 +12,7 @@ export default async (lineReader: any, params: Params) => {
     entries.push([+sum, others.split(' ').map(Number)])
   }
 
-  let combinations = (length: number, operators: string) =>
-    new CartesianProduct(...new Array(length).fill(operators))
+  let combinations = (length: number, operators: string) => new CartesianProduct(...new Array(length).fill(operators))
 
   const solveFor = (operators: string): number =>
     entries.reduce((acc, entry) => {

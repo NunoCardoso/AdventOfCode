@@ -42,9 +42,7 @@ export default async (lineReader: any, params: Params) => {
         boxes[boxId] = boxes[boxId].filter((lens: any) => lens[0] !== label)
       } else {
         const indexOf = boxes[boxId].findIndex((lens: any) => lens[0] === label)
-        indexOf >= 0
-          ? (boxes[boxId][indexOf][1] = +instruction[2]!)
-          : boxes[boxId].push([label, +instruction[2]!])
+        indexOf >= 0 ? (boxes[boxId][indexOf][1] = +instruction[2]!) : boxes[boxId].push([label, +instruction[2]!])
       }
     })
     boxes.forEach((box: Box, boxIndex) => {

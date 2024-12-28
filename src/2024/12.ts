@@ -27,23 +27,10 @@ export default async (lineReader: any, params: Params) => {
         [headPlot[0], headPlot[1] + 1],
         [headPlot[0], headPlot[1] - 1]
       ] as Point[]
-    ).filter(
-      (point) =>
-        point[0] >= 0 &&
-        point[0] < farm.length &&
-        point[1] >= 0 &&
-        point[1] < farm[0].length &&
-        farm[point[0]][point[1]] === plant &&
-        !visitedPlots.find((p) => isSame(p, point))
-    )
+    ).filter((point) => point[0] >= 0 && point[0] < farm.length && point[1] >= 0 && point[1] < farm[0].length && farm[point[0]][point[1]] === plant && !visitedPlots.find((p) => isSame(p, point)))
   }
 
-  const findGarden = (
-    plant: string,
-    openedPlots: Point[],
-    visitedPlots: Point[],
-    gardenPlots: Set<string>
-  ) => {
+  const findGarden = (plant: string, openedPlots: Point[], visitedPlots: Point[], gardenPlots: Set<string>) => {
     let headPlot = openedPlots.splice(-1)[0]
     visitedPlots.push(headPlot)
     gardenPlots.delete(headPlot[0] + ',' + headPlot[1])
@@ -61,24 +48,14 @@ export default async (lineReader: any, params: Params) => {
         [point[0], point[1] + 1, '>'],
         [point[0], point[1] - 1, '<']
       ] as PointPlus<string>[]
-    ).filter(
-      (point) =>
-        point[0] < 0 ||
-        point[0] >= farm.length ||
-        point[1] < 0 ||
-        point[1] >= farm[0].length ||
-        farm[point[0]][point[1]] !== plant
-    )
+    ).filter((point) => point[0] < 0 || point[0] >= farm.length || point[1] < 0 || point[1] >= farm[0].length || farm[point[0]][point[1]] !== plant)
 
   const calculateAreaAndPerimeter = (gardens: Gardens, farm: Farm) =>
     Object.keys(gardens).reduce((acc, gardenKey) => {
       let plant = gardenKey.split(':')[0]
       let gardenPlots = gardens[gardenKey]
       let gardenArea = gardenPlots.length
-      let gardenPerimeter = gardenPlots.reduce(
-        (acc, point) => acc + getNeighborsAndNonWorld(point, plant, farm).length,
-        0
-      )
+      let gardenPerimeter = gardenPlots.reduce((acc, point) => acc + getNeighborsAndNonWorld(point, plant, farm).length, 0)
       return acc + gardenArea * gardenPerimeter
     }, 0)
 
@@ -89,8 +66,7 @@ export default async (lineReader: any, params: Params) => {
         let index = fences.findIndex((fence: PointPlus<string>[]) =>
           fence.find(
             (_plot: PointPlus<string>) =>
-              ((Math.abs(_plot[0] - neighborPlot[0]) === 1 && _plot[1] - neighborPlot[1] === 0) ||
-                (Math.abs(_plot[1] - neighborPlot[1]) === 1 && _plot[0] - neighborPlot[0] === 0)) &&
+              ((Math.abs(_plot[0] - neighborPlot[0]) === 1 && _plot[1] - neighborPlot[1] === 0) || (Math.abs(_plot[1] - neighborPlot[1]) === 1 && _plot[0] - neighborPlot[0] === 0)) &&
               _plot[2] === neighborPlot[2]
           )
         )
@@ -104,9 +80,7 @@ export default async (lineReader: any, params: Params) => {
     Object.keys(gardens).reduce((acc, gardenKey) => {
       let plant = gardenKey.split(':')[0]
       // sort is important so I can calculate manhattan distances on adjacent points
-      let gardenPlots = gardens[gardenKey].sort((a, b) =>
-        a[0] - b[0] < 0 ? -1 : a[0] - b[0] > 0 ? 1 : a[1] - b[1]
-      )
+      let gardenPlots = gardens[gardenKey].sort((a, b) => (a[0] - b[0] < 0 ? -1 : a[0] - b[0] > 0 ? 1 : a[1] - b[1]))
       let gardenArea = gardenPlots.length
       let gardenSides = getGardenSides(plant, gardenPlots, farm)
       return acc + gardenArea * gardenSides

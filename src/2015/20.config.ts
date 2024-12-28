@@ -4,8 +4,7 @@ export default {
     day: '20',
     title: 'Infinite Elves and Infinite Houses',
     status: 'done',
-    comment:
-      "Not sure if I can optimize this, I have to generate until I find something first above threshold that I believe I can't reliably forecast",
+    comment: "Not sure if I can optimize this, I have to generate until I find something first above threshold that I believe I can't reliably forecast",
     difficulty: 3
   },
   test: {

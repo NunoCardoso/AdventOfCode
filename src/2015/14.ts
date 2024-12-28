@@ -18,9 +18,7 @@ export default async (lineReader: any, params: Params) => {
   const reindeers: Array<Reindeer> = []
 
   for await (const line of lineReader) {
-    const [, name, speed, duration, rest] = line.match(
-      /^(.+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+) seconds.$/
-    )
+    const [, name, speed, duration, rest] = line.match(/^(.+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+) seconds.$/)
     reindeers.push({
       name,
       speed: +speed,

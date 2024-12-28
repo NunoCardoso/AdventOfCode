@@ -43,9 +43,7 @@ export default async (lineReader: any, params: Params) => {
   const valvesWithFlow: Array<string> = ['AA']
 
   for await (const line of lineReader) {
-    const [, name, flow, valves] = line.match(
-      /^Valve (.+) has flow rate=(.+); tunnels? leads? to valves? (.+)$/
-    )
+    const [, name, flow, valves] = line.match(/^Valve (.+) has flow rate=(.+); tunnels? leads? to valves? (.+)$/)
     valveData[name] = { flow: +flow, valves: valves.split(', ') }
     if (+flow > 0) valvesWithFlow.push(name)
   }
@@ -97,11 +95,9 @@ export default async (lineReader: any, params: Params) => {
     })
   })*/
 
-  const areAllValvesWithFlowOpened = (step: Step): boolean =>
-    intersect(step.valvesOpened, valvesWithFlow).length === valvesWithFlow.length
+  const areAllValvesWithFlowOpened = (step: Step): boolean => intersect(step.valvesOpened, valvesWithFlow).length === valvesWithFlow.length
 
-  const printAction = (a: string) =>
-    a === 'moving' ? '🚀 ' : a === 'opening' ? '☸️  ' : a === 'stay' ? '🪑 ' : '🚩 '
+  const printAction = (a: string) => (a === 'moving' ? '🚀 ' : a === 'opening' ? '☸️  ' : a === 'stay' ? '🪑 ' : '🚩 ')
 
   const printStep = (s: Step) =>
     '🧍{' +
@@ -109,13 +105,7 @@ export default async (lineReader: any, params: Params) => {
     s.human.inValve +
     (!s.human.remaining ? '' : '(+' + s.human.remaining + ')') +
     '}' +
-    (s.withElephant
-      ? '🐘 {' +
-        printAction(s.elephant!.action) +
-        s.elephant!.inValve +
-        (!s.elephant!.remaining ? '' : '(+' + s.elephant!.remaining + ')') +
-        '}'
-      : '') +
+    (s.withElephant ? '🐘 {' + printAction(s.elephant!.action) + s.elephant!.inValve + (!s.elephant!.remaining ? '' : '(+' + s.elephant!.remaining + ')') + '}' : '') +
     '[💨 ' +
     s.pressure +
     '(+' +
@@ -222,10 +212,8 @@ export default async (lineReader: any, params: Params) => {
 
     remainingValves.sort((a: string, b: string) => valveData[b].flow - valveData[a].flow)
 
-    const isHumanAvailable: boolean =
-      path.head.human.action === 'opening' || path.head.human.action === 'start'
-    const isElephantAvailable: boolean =
-      path.head.elephant!.action === 'opening' || path.head.elephant!.action === 'start'
+    const isHumanAvailable: boolean = path.head.human.action === 'opening' || path.head.human.action === 'start'
+    const isElephantAvailable: boolean = path.head.elephant!.action === 'opening' || path.head.elephant!.action === 'start'
     const isHumanDone: boolean = path.head.human.action === 'stay'
     const isElephantDone: boolean = path.head.elephant!.action === 'stay'
 
@@ -494,16 +482,7 @@ export default async (lineReader: any, params: Params) => {
           const time = Math.min(humanTime, elephantTime)
 
           log.debug('make new paths:', path?.tail.map(printStep).join(' '))
-          log.debug(
-            'Human and elephant still active, human time',
-            humanTime,
-            'elephant time',
-            elephantTime,
-            'human action',
-            humanAction,
-            'elephant action',
-            elephantAction
-          )
+          log.debug('Human and elephant still active, human time', humanTime, 'elephant time', elephantTime, 'human action', humanAction, 'elephant action', elephantAction)
 
           const p = generateStep({
             head: path.head,
@@ -589,12 +568,7 @@ export default async (lineReader: any, params: Params) => {
     return newPaths
   }
 
-  const filterNonPromisingPaths = (
-    newPaths: Paths,
-    timeLimit: number,
-    allValidValves: Array<string>,
-    finished: Path | undefined
-  ): Paths => {
+  const filterNonPromisingPaths = (newPaths: Paths, timeLimit: number, allValidValves: Array<string>, finished: Path | undefined): Paths => {
     if (!finished) {
       return newPaths
     }
@@ -612,18 +586,12 @@ export default async (lineReader: any, params: Params) => {
         }
         return true
       })
-      const remainingValvesIncrease: number = remainingValves.reduce(
-        (memo: number, val: string) => memo + valveData[val].flow,
-        0
-      )
-      const estimatedValue =
-        p.head.pressure + (p.head.pressureIncrease + remainingValvesIncrease) * remainingTime
+      const remainingValvesIncrease: number = remainingValves.reduce((memo: number, val: string) => memo + valveData[val].flow, 0)
+      const estimatedValue = p.head.pressure + (p.head.pressureIncrease + remainingValvesIncrease) * remainingTime
       // console.log('finished high score is', Math.max(finished.tail[finished.tail.length - 1].pressure, finished.head.pressure))
       // console.log('estimatedValue', estimatedValue, 'pressure now',  p.head.pressure, 'rate', (p.head.pressureIncrease + remainingValvesIncrease), 'remaining time', remainingTime )
 
-      if (
-        estimatedValue < Math.max(finished.tail[finished.tail.length - 1].pressure, finished.head.pressure)
-      ) {
+      if (estimatedValue < Math.max(finished.tail[finished.tail.length - 1].pressure, finished.head.pressure)) {
         return false
       }
       return true
@@ -656,9 +624,7 @@ export default async (lineReader: any, params: Params) => {
       opened.sort(
         (a, b) =>
           // orders from least to most, we pick best candidates from end of list
-          a.head.pressure +
-          a.head.pressureIncrease * (timeLimit - a.head.time) -
-          (b.head.pressure + b.head.pressureIncrease * (timeLimit - b.head.time))
+          a.head.pressure + a.head.pressureIncrease * (timeLimit - a.head.time) - (b.head.pressure + b.head.pressureIncrease * (timeLimit - b.head.time))
       )
     }
     log.debug(

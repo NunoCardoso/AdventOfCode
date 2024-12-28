@@ -16,8 +16,7 @@ export default async (lineReader: any, params: Params) => {
   const getSpaceOrWall = (world: World<string>, [row, column]: [number, number]): string => {
     if (!world[row]) world[row] = []
     if (!world[row][column]) {
-      const val: number =
-        row * row + 3 * row + 2 * row * column + column + column * column + params.designerNumber
+      const val: number = row * row + 3 * row + 2 * row * column + column + column * column + params.designerNumber
       const bin = (val >>> 0).toString(2)
       const countOnes = bin.split('').filter((x: string) => x === '1').length
       world[row][column] = countOnes % 2 === 0 ? '.' : '#'
@@ -52,14 +51,7 @@ export default async (lineReader: any, params: Params) => {
       return !visited.has(getKey(newPoint))
     })
 
-  const doDijkstra = async (
-    world: World<string>,
-    opened: Array<Point>,
-    openedIndex: Set<string>,
-    visited: Set<string>,
-    data: Data,
-    type: string
-  ) => {
+  const doDijkstra = async (world: World<string>, opened: Array<Point>, openedIndex: Set<string>, visited: Set<string>, data: Data, type: string) => {
     const point: Point = opened.splice(-1)[0]
     const pointKey: string = getKey(point)
     log.debug('=== Dijkstra ===', point, 'opened', opened.length, 'data', data)

@@ -13,9 +13,7 @@ export default async (lineReader: any, params: Params) => {
 
   const solveForPart1 = (disk: number[]): number => {
     let cursor = disk.length - 1
-    let virtualDisk: number[][] = disk.map((d, cursor) =>
-      new Array(d).fill(isFile(cursor) ? getFileId(cursor) : null)
-    )
+    let virtualDisk: number[][] = disk.map((d, cursor) => new Array(d).fill(isFile(cursor) ? getFileId(cursor) : null))
     let virtualCursor = 1 // points to the disk place where there is empty space
 
     while (virtualCursor < cursor) {

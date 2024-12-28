@@ -7,9 +7,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const world: World<number[]> = new Array(params.size)
-    .fill(null)
-    .map(() => new Array(params.size).fill(null).map(() => []))
+  const world: World<number[]> = new Array(params.size).fill(null).map(() => new Array(params.size).fill(null).map(() => []))
 
   const areas: Record<string, number> = {}
 
@@ -24,10 +22,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   if (!params.skipPart1) {
-    part1 = world.reduce(
-      (acc, row) => acc + row.reduce((acc2, cell) => acc2 + (cell.length >= 2 ? 1 : 0), 0),
-      0
-    )
+    part1 = world.reduce((acc, row) => acc + row.reduce((acc2, cell) => acc2 + (cell.length >= 2 ? 1 : 0), 0), 0)
   }
 
   if (!params.skipPart2) {

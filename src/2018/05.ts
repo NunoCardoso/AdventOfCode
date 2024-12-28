@@ -11,8 +11,7 @@ export default async (lineReader: any, params: Params) => {
     polymer = line
   }
 
-  const canReact = (char1: string, char2: string) =>
-    char1 !== char2 && char1.toLowerCase() === char2.toLowerCase()
+  const canReact = (char1: string, char2: string) => char1 !== char2 && char1.toLowerCase() === char2.toLowerCase()
 
   const react = (polymer: string, index: number): [string, number] => {
     if (canReact(polymer[index], polymer[index + 1])) {

@@ -23,13 +23,7 @@ export default async (lineReader: any, params: Params) => {
   const outputs: Map<number, number> = new Map()
   const botIndex: RobotIndex = new Map()
 
-  const processRule = (
-    bot: number,
-    rule: Rule,
-    botValues: Array<number>,
-    botIndex: RobotIndex,
-    botIndexWithTwo: Array<number>
-  ) => {
+  const processRule = (bot: number, rule: Rule, botValues: Array<number>, botIndex: RobotIndex, botIndexWithTwo: Array<number>) => {
     botIndex.set(bot, []) // robot will not have the values anymore
     ;(['low', 'high'] as Array<keyof Rule>).forEach((key: string) => {
       // @ts-ignore
@@ -63,9 +57,7 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     if (line.startsWith('bot')) {
-      const [, bot, lowType, lowNumber, highType, highHumber] = line.match(
-        /bot (\d+) gives low to (.+) (\d+) and high to (.+) (\d+)/
-      )
+      const [, bot, lowType, lowNumber, highType, highHumber] = line.match(/bot (\d+) gives low to (.+) (\d+) and high to (.+) (\d+)/)
       rules.set(+bot, {
         low: { type: lowType, number: +lowNumber },
         high: { type: highType, number: +highHumber }

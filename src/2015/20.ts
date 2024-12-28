@@ -33,10 +33,7 @@ export default async (lineReader: any, params: Params) => {
     })
 
     const medResultPart1 = elves.reduce((acc, elf) => acc + elf, 0)
-    const medResultPart2 = elves.reduce(
-      (acc, elf) => acc + (numberOfPresentsPerElf.get(elf)! < params.maxHousePresents ? elf : 0),
-      0
-    )
+    const medResultPart2 = elves.reduce((acc, elf) => acc + (numberOfPresentsPerElf.get(elf)! < params.maxHousePresents ? elf : 0), 0)
 
     log.debug('i', i, 'medResult', medResultPart1, 'Misses', threshold - medResultPart1)
 

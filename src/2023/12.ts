@@ -14,20 +14,12 @@ export default async (lineReader: any, params: Params) => {
   for await (const line of lineReader) {
     const [spring, values] = line.split(/\s/)
     puzzlePart1.push([spring, values.split(',').map(Number)])
-    puzzlePart2.push([
-      Array(5).fill(spring).join('?'),
-      Array(5).fill(values).join(',').split(',').map(Number)
-    ])
+    puzzlePart2.push([Array(5).fill(spring).join('?'), Array(5).fill(values).join(',').split(',').map(Number)])
   }
 
   const getKey = (spring: string, values: Array<number>): string => spring + ';' + values.join(',')
 
-  const deepFirst = (
-    spring: string,
-    values: Array<number>,
-    cache: Map<string, number>,
-    depth: number
-  ): number => {
+  const deepFirst = (spring: string, values: Array<number>, cache: Map<string, number>, depth: number): number => {
     // spring starts with . , just trim it
     if (spring.startsWith('.')) {
       spring = spring.match(/^\.*(.*?)\.*$/)![1]

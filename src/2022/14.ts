@@ -24,14 +24,7 @@ export default async (lineReader: any, params: Params) => {
     for (let y = dimensions.minY; y <= dimensions.maxY; y++) {
       let line: string = ''
       for (let x = dimensions.minX; x <= dimensions.maxX; x++) {
-        line +=
-          world[y][x] === '#'
-            ? clc.red('#')
-            : world[y][x] === 'o'
-              ? clc.yellow('o')
-              : world[y][x] === '+'
-                ? clc.green('+')
-                : world[y][x]
+        line += world[y][x] === '#' ? clc.red('#') : world[y][x] === 'o' ? clc.yellow('o') : world[y][x] === '+' ? clc.green('+') : world[y][x]
       }
       lines.push(line)
     }

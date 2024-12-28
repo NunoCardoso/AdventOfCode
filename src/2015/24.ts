@@ -12,8 +12,7 @@ export default async (lineReader: any, params: Params) => {
     packages.push(+line)
   }
 
-  const calculateEntanglement = (packages: Array<number>) =>
-    packages.reduce((x: number, y: number) => x * y, 1)
+  const calculateEntanglement = (packages: Array<number>) => packages.reduce((x: number, y: number) => x * y, 1)
 
   const solveFor = (packages: Array<number>, compartments: number) => {
     const totalWeight = packages.reduce((a, b) => a + b)
@@ -25,9 +24,7 @@ export default async (lineReader: any, params: Params) => {
     let numberOfPackages = 1
 
     while (solutions.length === 0) {
-      solutions = new Combination(packages, numberOfPackages)
-        .toArray()
-        .filter((a) => a.reduce((x, y) => x + y) === targetWeight)
+      solutions = new Combination(packages, numberOfPackages).toArray().filter((a) => a.reduce((x, y) => x + y) === targetWeight)
       numberOfPackages++
     }
 

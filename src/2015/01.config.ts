@@ -1,11 +1,14 @@
 export default {
   config: {
-    year: '2015',
-    day: '01',
     title: 'Not Quite Lisp',
+    summary: 'Santa is delivering presents, but got stuck on a building',
+    year: 2015,
+    day: 1,
+    result: 'finished',
     status: 'solved',
-    code: 'optimized',
-    comment: 'Functional puzzle, parsing input, split, and do counting',
+    speed: 'fast',
+    code: 'clean',
+    comment: 'Functional puzzle. parsing input, split, and do counting',
     difficulty: 1
   },
   prod: {

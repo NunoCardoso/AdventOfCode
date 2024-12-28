@@ -38,31 +38,15 @@ describe('2018/11', () => {
       [null, 0, 5, -6, -2, -21, -26, -27, -33, -43, -49]
     ]
 
-    expect(getPowerLevelSumTable(1, 1, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(
-      powerLevelSumTable[1][1]
-    )
-    expect(getPowerLevelSumTable(1, 2, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(
-      powerLevelSumTable[1][2]
-    )
-    expect(getPowerLevelSumTable(1, 3, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(
-      powerLevelSumTable[1][3]
-    )
-    expect(getPowerLevelSumTable(1, 4, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(
-      powerLevelSumTable[1][4]
-    )
+    expect(getPowerLevelSumTable(1, 1, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(powerLevelSumTable[1][1])
+    expect(getPowerLevelSumTable(1, 2, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(powerLevelSumTable[1][2])
+    expect(getPowerLevelSumTable(1, 3, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(powerLevelSumTable[1][3])
+    expect(getPowerLevelSumTable(1, 4, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(powerLevelSumTable[1][4])
 
-    expect(getPowerLevelSumTable(2, 1, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(
-      powerLevelSumTable[2][1]
-    )
-    expect(getPowerLevelSumTable(2, 2, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(
-      powerLevelSumTable[2][2]
-    )
-    expect(getPowerLevelSumTable(2, 3, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(
-      powerLevelSumTable[2][3]
-    )
-    expect(getPowerLevelSumTable(2, 4, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(
-      powerLevelSumTable[2][4]
-    )
+    expect(getPowerLevelSumTable(2, 1, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(powerLevelSumTable[2][1])
+    expect(getPowerLevelSumTable(2, 2, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(powerLevelSumTable[2][2])
+    expect(getPowerLevelSumTable(2, 3, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(powerLevelSumTable[2][3])
+    expect(getPowerLevelSumTable(2, 4, 7400, powerLevelGrid, powerLevelSumTable)).toEqual(powerLevelSumTable[2][4])
 
     expect(getSumForArea([2, 2], [4, 4], powerLevelSumTable)).toEqual(-7)
   })

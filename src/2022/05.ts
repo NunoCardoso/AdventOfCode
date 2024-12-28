@@ -41,9 +41,7 @@ export default async (lineReader: any, params: Params) => {
 
   if (!params.skipPart2) {
     const stacks2 = global.structuredClone(stacks)
-    instructions.forEach(([howmuch, from, to]) =>
-      stacks2[to - 1].splice(stacks2[to - 1].length, 0, ...stacks2[from - 1].splice(-1 * howmuch))
-    )
+    instructions.forEach(([howmuch, from, to]) => stacks2[to - 1].splice(stacks2[to - 1].length, 0, ...stacks2[from - 1].splice(-1 * howmuch)))
     if (params.ui.end) log.debug('part 2 end', printStacks(stacks2))
     part2 = stacks2.map((s) => s[s.length - 1]).join('')
   }

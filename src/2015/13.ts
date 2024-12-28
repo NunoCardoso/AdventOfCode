@@ -12,9 +12,7 @@ export default async (lineReader: any, params: Params) => {
   const people: People = new Set()
 
   for await (const line of lineReader) {
-    const [, person1, operation, amount, person2] = line.match(
-      /([A-Z][a-z]+).+(gain|lose) (\d+).+([A-Z][a-z]+)\./
-    )
+    const [, person1, operation, amount, person2] = line.match(/([A-Z][a-z]+).+(gain|lose) (\d+).+([A-Z][a-z]+)\./)
     if (!people.has(person1)) {
       people.add(person1)
       scores.set(person1, new Map())

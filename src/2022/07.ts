@@ -29,10 +29,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   if (!params.skipPart1) {
-    part1 = Object.keys(dirSizes).reduce(
-      (acc: number, key: string) => acc + (dirSizes[key] < params!.cutoffDirSize ? dirSizes[key] : 0),
-      0
-    )
+    part1 = Object.keys(dirSizes).reduce((acc: number, key: string) => acc + (dirSizes[key] < params!.cutoffDirSize ? dirSizes[key] : 0), 0)
   }
 
   if (!params.skipPart2) {

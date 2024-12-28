@@ -39,20 +39,14 @@ Promise.all(puzzles.map(getConfig)).then(async (days: Array<any>) => {
     let res: Result = (await aoc(day, false)) as Result
     total += res.time
     let dur = res.time / 1000.0
-    let durString = dur < 1
-      ? clc.green(dur + 's')
-      : dur < 3
-        ? clc.yellow(dur + 's')
-        : clc.red(dur + 's')
+    let durString = dur < 1 ? clc.green(dur + 's') : dur < 3 ? clc.yellow(dur + 's') : clc.red(dur + 's')
     let status = clc.cyan('Day ' + res.config.day + ': ' + (res.config?.title ?? 'No title')) + '\n'
     if (!res.config?.title) console.error('No title')
     if (res.config.status) status += 'Status: ' + res.config.status + '\n'
     if (!res.config?.status) console.error('No Status')
     status += 'Difficulty: ' + (res.config?.difficulty ?? '-') + '\n'
     if (!res.config?.difficulty) console.error('No Difficulty')
-    if (res.config?.tags)
-      status +=
-        'Tags: ' + (Array.isArray(res.config?.tags) ? res.config?.tags.join(', ') : res.config?.tags) + '\n'
+    if (res.config?.tags) status += 'Tags: ' + (Array.isArray(res.config?.tags) ? res.config?.tags.join(', ') : res.config?.tags) + '\n'
     if (res.config.comment) status += 'Comment: ' + res.config.comment + '\n'
     if (!res.config?.comment) console.error('No Comment')
     status += 'Part 1 ' + res.part1.status + '  part 2 ' + res.part2.status + '  in ' + durString + '\n'

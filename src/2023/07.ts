@@ -89,10 +89,7 @@ export default async (lineReader: any, params: Params) => {
     part1 = doSort(hands, 'type' as keyof Hand, cardTypePart1).reduce((a, b, i) => a + b.rank * (i + 1), 0)
   }
   if (!params.skipPart2) {
-    part2 = doSort(hands, 'typeWithJoker' as keyof Hand, cardTypePart2).reduce(
-      (a, b, i) => a + b.rank * (i + 1),
-      0
-    )
+    part2 = doSort(hands, 'typeWithJoker' as keyof Hand, cardTypePart2).reduce((a, b, i) => a + b.rank * (i + 1), 0)
   }
 
   return { part1, part2 }

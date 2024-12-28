@@ -32,12 +32,7 @@ export default async (lineReader: any, params: Params) => {
         let deltaCol = pair[1][1] - pair[0][1]
         if (part === 'part1') {
           let newPoint: Point = [pair[1][0] + deltaRow, pair[1][1] + deltaCol]
-          if (
-            newPoint[0] >= 0 &&
-            newPoint[0] < dimension[0] &&
-            newPoint[1] >= 0 &&
-            newPoint[1] < dimension[1]
-          ) {
+          if (newPoint[0] >= 0 && newPoint[0] < dimension[0] && newPoint[1] >= 0 && newPoint[1] < dimension[1]) {
             uniquePoints.add(point2string(newPoint))
           }
         }
@@ -45,12 +40,7 @@ export default async (lineReader: any, params: Params) => {
           let anchorPoint: Point | undefined = pair[0]
           while (anchorPoint !== undefined) {
             let newPoint: Point = [anchorPoint[0] + deltaRow, anchorPoint[1] + deltaCol]
-            if (
-              newPoint[0] >= 0 &&
-              newPoint[0] < dimension[0] &&
-              newPoint[1] >= 0 &&
-              newPoint[1] < dimension[1]
-            ) {
+            if (newPoint[0] >= 0 && newPoint[0] < dimension[0] && newPoint[1] >= 0 && newPoint[1] < dimension[1]) {
               uniquePoints.add(point2string(newPoint))
               anchorPoint = newPoint
             } else {

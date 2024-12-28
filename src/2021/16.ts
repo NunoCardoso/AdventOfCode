@@ -144,43 +144,19 @@ export default async (lineReader: any, params: Params) => {
       switch (p.type) {
         case 0:
           val = p.subPackets?.reduce((x, y) => x + sumPacketOperators(y, depth + 1), 0) ?? 0
-          log.debug(
-            '  '.repeat(depth),
-            'Doing + with',
-            p.subPackets.map((x) => x.value).join(','),
-            'gives',
-            val
-          )
+          log.debug('  '.repeat(depth), 'Doing + with', p.subPackets.map((x) => x.value).join(','), 'gives', val)
           return val
         case 1:
           val = p.subPackets?.reduce((x, y) => x * sumPacketOperators(y, depth + 1), 1) ?? 0
-          log.debug(
-            '  '.repeat(depth),
-            'Doing * with',
-            p.subPackets.map((x) => x.value).join(','),
-            'gives',
-            val
-          )
+          log.debug('  '.repeat(depth), 'Doing * with', p.subPackets.map((x) => x.value).join(','), 'gives', val)
           return val
         case 2:
           val = Math.min(...p.subPackets?.map((x) => sumPacketOperators(x, depth + 1)))
-          log.debug(
-            '  '.repeat(depth),
-            'Doing min with',
-            p.subPackets.map((x) => x.value).join(','),
-            'gives',
-            val
-          )
+          log.debug('  '.repeat(depth), 'Doing min with', p.subPackets.map((x) => x.value).join(','), 'gives', val)
           return val
         case 3:
           val = Math.max(...p.subPackets?.map((x) => sumPacketOperators(x, depth + 1)))
-          log.debug(
-            '  '.repeat(depth),
-            'Doing max with',
-            p.subPackets.map((x) => x.value).join(','),
-            'gives',
-            val
-          )
+          log.debug('  '.repeat(depth), 'Doing max with', p.subPackets.map((x) => x.value).join(','), 'gives', val)
           return val
         case 4:
           val = p.value ?? 0
@@ -188,45 +164,18 @@ export default async (lineReader: any, params: Params) => {
           return val
         case 5:
           // @ts-ignore
-          val =
-            sumPacketOperators(p.subPackets[0], depth + 1) > sumPacketOperators(p.subPackets[1], depth + 1)
-              ? 1
-              : 0
-          log.debug(
-            '  '.repeat(depth),
-            'Doing > with',
-            p.subPackets.map((x) => x.value).join(','),
-            'gives',
-            val
-          )
+          val = sumPacketOperators(p.subPackets[0], depth + 1) > sumPacketOperators(p.subPackets[1], depth + 1) ? 1 : 0
+          log.debug('  '.repeat(depth), 'Doing > with', p.subPackets.map((x) => x.value).join(','), 'gives', val)
           return val
         case 6:
           // @ts-ignore
-          val =
-            sumPacketOperators(p.subPackets[0], depth + 1) < sumPacketOperators(p.subPackets[1], depth + 1)
-              ? 1
-              : 0
-          log.debug(
-            '  '.repeat(depth),
-            'Doing < with ',
-            p.subPackets.map((x) => x.value).join(','),
-            'gives',
-            val
-          )
+          val = sumPacketOperators(p.subPackets[0], depth + 1) < sumPacketOperators(p.subPackets[1], depth + 1) ? 1 : 0
+          log.debug('  '.repeat(depth), 'Doing < with ', p.subPackets.map((x) => x.value).join(','), 'gives', val)
           return val
         case 7:
           // @ts-ignore
-          val =
-            sumPacketOperators(p.subPackets[0], depth + 1) === sumPacketOperators(p.subPackets[1], depth + 1)
-              ? 1
-              : 0
-          log.debug(
-            '  '.repeat(depth),
-            'Doing == with',
-            p.subPackets.map((x) => x.value).join(','),
-            'gives',
-            val
-          )
+          val = sumPacketOperators(p.subPackets[0], depth + 1) === sumPacketOperators(p.subPackets[1], depth + 1) ? 1 : 0
+          log.debug('  '.repeat(depth), 'Doing == with', p.subPackets.map((x) => x.value).join(','), 'gives', val)
           return val
       }
       return 0

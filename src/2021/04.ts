@@ -27,8 +27,7 @@ export default async (lineReader: any, params: Params) => {
       }
     } else {
       let numbers: Array<number> = line.match(/\d+/g).map(Number)
-      if (!bingoCards[bingoCardIndex])
-        bingoCards[bingoCardIndex] = { rows: [], columns: [[], [], [], [], []] }
+      if (!bingoCards[bingoCardIndex]) bingoCards[bingoCardIndex] = { rows: [], columns: [[], [], [], [], []] }
       cardsWithoutBingo.add(bingoCardIndex)
       bingoCards[bingoCardIndex].rows[currentRow] = numbers
       numbers.forEach((number, columnIndex) => {
@@ -56,10 +55,7 @@ export default async (lineReader: any, params: Params) => {
       bingoCards[cardIndex].rows[rowIndex].splice(index, 1)
       index = bingoCards[cardIndex].columns[columnIndex].indexOf(number)
       bingoCards[cardIndex].columns[columnIndex].splice(index, 1)
-      if (
-        bingoCards[cardIndex].rows[rowIndex].length === 0 ||
-        bingoCards[cardIndex].columns[columnIndex].length === 0
-      ) {
+      if (bingoCards[cardIndex].rows[rowIndex].length === 0 || bingoCards[cardIndex].columns[columnIndex].length === 0) {
         if (part1 === 0) part1 = sumOfBingo(bingoCards[cardIndex], number)
         cardsWithoutBingo.delete(cardIndex)
         if (cardsWithoutBingo.size === 1) lastBingoCard = Array.from(cardsWithoutBingo)[0]
