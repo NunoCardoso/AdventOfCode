@@ -16,7 +16,6 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
       _puzzle.config.year +
       '/' +
       _puzzle.config.day +
-      '.solution' +
       (_puzzle.mode ? '.' + _puzzle.mode : '')
   ).default
 
@@ -78,10 +77,7 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
     if (log) console.timeEnd('Answer time ' + targetFile)
     else result.time = new Date().getTime() - result.time
 
-    if (runParams.skipPart1) {
-      if (log) console.log(line + clc.red('- Part 1 - skipped'))
-    } else {
-      if (run?.answers?.part1 !== undefined) {
+    if (run?.answers?.part1 !== undefined) {
         const status = run.answers?.part1 === answer.part1 ? '✅' : '❌'
         if (log) {
           console.log(
@@ -94,11 +90,8 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
         result.part1.skip = false
         result.part1.status = status
       }
-    }
-    if (runParams.skipPart2) {
-      if (log) console.log(line + clc.red('- Part 2 - skipped'))
-    } else {
-      if (run?.answers?.part2 !== undefined) {
+
+    if (run?.answers?.part2 !== undefined) {
         const status = run.answers?.part2 === answer.part2 ? '✅' : '❌'
         if (log) {
           console.log(
@@ -111,7 +104,7 @@ export default async (puzzle: Partial<Puzzle> = {}, log = true) => {
         result.part2.skip = false
         result.part2.status = status
       }
-    }
+
     return result
   }
 

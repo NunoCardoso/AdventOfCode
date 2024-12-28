@@ -1,4 +1,4 @@
-import { evolve, produce } from './22.solution'
+import { evolve, produce } from './22'
 
 describe('2024/22', () => {
   test('evolve', () => {

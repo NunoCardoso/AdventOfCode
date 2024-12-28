@@ -1,5 +1,5 @@
 import { World } from '../declarations'
-import { getPowerLevel, getPowerLevelSumTable, getSumForArea } from './11.solution'
+import { getPowerLevel, getPowerLevelSumTable, getSumForArea } from './11'
 
 describe('2018/11', () => {
   test('getPowerLevel', () => {

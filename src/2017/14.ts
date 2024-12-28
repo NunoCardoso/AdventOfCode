@@ -1,30 +1,69 @@
-export default {
-  config: {
-    year: '2017',
-    day: '14',
-    title: 'Disk Defragmentation',
-    status: 'done',
-    comment: 'Really clever reuse of function from day 10, very nice simple group gathering algorithm',
-    difficulty: 3
-  },
-  logLevel: 'debug',
-  test: {
-    id: 'test',
-    params: {
-      size: 128
-    },
-    answers: {
-      part1: 8108,
-      part2: 1242
-    }
-  },
-  prod: {
-    params: {
-      size: 128
-    },
-    answers: {
-      part1: 8222,
-      part2: 1086
-    }
+import { Params } from 'aoc.d'
+import { hex2bin } from '../util/conversion'
+import { knotHash } from './10'
+export default async (lineReader: any, params: Params) => {
+  let part1: number = 0
+  let part2: number = 0
+
+  let hash: string = ''
+  for await (const line of lineReader) hash = line
+
+  let activeSquares: Set<string> = new Set()
+  for (var y = 0; y < params.size; y++) {
+    knotHash(hash + '-' + y)
+      .split('')
+      .map((x) => hex2bin(x).toString().padStart(4, '0'))
+      .join('')
+      .split('')
+      .forEach((cell, x) => {
+        if (cell === '1') {
+          if (!params.skipPart1) part1++
+          if (!params.skipPart2) activeSquares.add(x + ':' + y)
+        }
+      })
   }
+
+  const getMoreSquares = (value: string, currentGroup: Set<string>): string[] => {
+    let seedValueCoords = value.split(':').map(Number)
+    return [
+      [seedValueCoords[0] + 1, seedValueCoords[1]],
+      [seedValueCoords[0] - 1, seedValueCoords[1]],
+      [seedValueCoords[0], seedValueCoords[1] + 1],
+      [seedValueCoords[0], seedValueCoords[1] - 1]
+    ]
+      .filter(
+        (value) =>
+          value[0] >= 0 &&
+          value[0] < params.size &&
+          value[1] >= 0 &&
+          value[1] < params.size &&
+          !currentGroup.has(value[0] + ':' + value[1]) &&
+          activeSquares.has(value[0] + ':' + value[1])
+      )
+      .map((value) => value[0] + ':' + value[1])
+  }
+
+  const findGroupForSquare = (seedValue: string): Set<string> => {
+    let opened = [seedValue]
+    let currentGroup: Set<string> = new Set()
+    currentGroup.add(seedValue)
+    while (opened.length > 0) {
+      let current = opened.splice(-1)[0]
+      currentGroup.add(current)
+      opened = opened.concat(getMoreSquares(current, currentGroup))
+    }
+    return currentGroup
+  }
+
+  if (!params.skipPart2) {
+    let numberOfGroups = 0
+    while (activeSquares.size > 0) {
+      let seedSquare = [...activeSquares].shift()!
+      findGroupForSquare(seedSquare).forEach((square) => activeSquares.delete(square))
+      numberOfGroups++
+    }
+    part2 = numberOfGroups
+  }
+
+  return { part1, part2 }
 }

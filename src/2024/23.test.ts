@@ -1,5 +1,5 @@
 import { Combination } from 'js-combinatorics'
-import { doBronKerbosch } from './23.solution'
+import { doBronKerbosch } from './23'
 describe('2024/23', () => {
   test('combinations', () => {
     expect(new Combination(['ab', 'cd', 'ef', 'gh'], 2).toArray()).toEqual([

@@ -1,23 +1,13 @@
-export default {
-  config: {
-    year: '2022',
-    day: '04',
-    title: 'Camp Cleanup',
-    status: 'done',
-    comment:
-      'Functional puzzle, compacted the code to very hard to do the overlap logic and summing answers while parsing input'
-  },
-  test: {
-    id: 'test',
-    answers: {
-      part1: 2,
-      part2: 4
-    }
-  },
-  prod: {
-    answers: {
-      part1: 560,
-      part2: 839
-    }
+import { Params } from 'aoc.d'
+
+export default async (lineReader: any, params: Params) => {
+  let part1: number = 0
+  let part2: number = 0
+
+  for await (const line of lineReader) {
+    const [x1, x2, y1, y2] = line.match(/\d+/g).map(Number)
+    if ((x1 <= y1 && x2 >= y2) || (y1 <= x1 && y2 >= x2)) part1++
+    if (y1 <= x1 ? y2 >= x1 : y1 <= x2) part2++
   }
+  return { part1, part2 }
 }

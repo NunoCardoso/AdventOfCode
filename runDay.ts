@@ -11,5 +11,5 @@ if (process.argv[3]?.length !== 2) {
   process.exit()
 }
 
-const puzzle = require(path.join(process.argv[2] + '/' + process.argv[3]))
+const puzzle = require(path.join(process.argv[2] + '/' + process.argv[3] + '.config'))
 aoc(puzzle.default)

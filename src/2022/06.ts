@@ -1,58 +1,20 @@
-export default {
-  config: {
-    year: '2022',
-    day: '06',
-    title: 'Tuning Trouble',
-    status: 'done',
-    comment: 'Simple text regex puzzle, compact solution script, easy with the use of Set'
-  },
-  params: {
-    size: {
-      part1: 4,
-      part2: 14
+import { Params } from 'aoc.d'
+
+export default async (lineReader: any, params: Params) => {
+  let part1: number = 0
+  let part2: number = 0
+  const solveFor = (char: Array<string>, length: number): number => {
+    for (let i = length; i < char.length; i++) {
+      if (new Set(char.slice(i - length, i)).size === length) return i
     }
-  },
-  test: [
-    {
-      id: 'test1',
-      answers: {
-        part1: 7,
-        part2: 19
-      }
-    },
-    {
-      id: 'test2',
-      answers: {
-        part1: 5,
-        part2: 23
-      }
-    },
-    {
-      id: 'test3',
-      answers: {
-        part1: 6,
-        part2: 23
-      }
-    },
-    {
-      id: 'test4',
-      answers: {
-        part1: 10,
-        part2: 29
-      }
-    },
-    {
-      id: 'test5',
-      answers: {
-        part1: 11,
-        part2: 26
-      }
-    }
-  ],
-  prod: {
-    answers: {
-      part1: 1953,
-      part2: 2301
-    }
+    return 0
   }
+
+  let char: Array<string> = []
+  for await (const line of lineReader) char = line.split('')
+
+  if (!params.skipPart1) part1 = solveFor(char, params!.size.part1)
+  if (!params.skipPart2) part2 = solveFor(char, params!.size.part2)
+
+  return { part1, part2 }
 }

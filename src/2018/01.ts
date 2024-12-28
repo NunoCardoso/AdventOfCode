@@ -1,43 +1,36 @@
-export default {
-  config: {
-    year: '2018',
-    day: '01',
-    title: 'Chronal Calibration',
-    status: 'done',
-    comment: 'choke on part2 because didnt reat it. slow, could be optimized',
-    difficulty: 1
-  },
-  logLevel: 'debug',
-  test: [
-    {
-      id: 'test1',
-      answers: {
-        part2: 0
-      }
-    },
-    {
-      id: 'test2',
-      answers: {
-        part2: 10
-      }
-    },
-    {
-      id: 'test3',
-      answers: {
-        part2: 5
-      }
-    },
-    {
-      id: 'test4',
-      answers: {
-        part2: 14
-      }
+import { Params } from 'aoc.d'
+
+export default async (lineReader: any, params: Params) => {
+  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+
+  let part1: number = 0
+  let part2: number | undefined
+
+  let changes: number[] = []
+  let seenFrequencies: number[] = [0]
+  let index = 0
+  let result = 0
+
+  let checkPart2 = () => {
+    result += changes[index % changes.length]
+    if (!seenFrequencies.includes(result)) {
+      seenFrequencies.push(result)
+    } else {
+      part2 = result
     }
-  ],
-  prod: {
-    answers: {
-      part1: 445,
-      part2: 219
-    }
+    index++
   }
+
+  for await (const line of lineReader) {
+    const value = Number(line)
+    part1 += value
+    changes.push(value)
+    checkPart2()
+  }
+
+  while (part2 === undefined) {
+    checkPart2()
+  }
+
+  return { part1, part2 }
 }

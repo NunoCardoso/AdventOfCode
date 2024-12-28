@@ -12,7 +12,7 @@ if (process.argv[2]?.length !== 4) {
 if (!fs.existsSync('reports')) fs.mkdirSync('reports')
 
 let puzzles = fs.readdirSync(path.join('src', process.argv[2])).filter((file: any) => {
-  return file.endsWith('.ts') && !file.endsWith('.solution.ts')
+  return file.endsWith('.config.ts')
 })
 
 let resultFile = path.join('reports', process.argv[2] + '.md')

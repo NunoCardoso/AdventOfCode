@@ -1,30 +1,40 @@
-export default {
-  config: {
-    year: '2015',
-    day: '24',
-    title: 'It Hangs in the Balance',
-    status: 'done',
-    tags: ['combination'],
-    comment: 'Runs in 6/7 seconds, not sure if I can do it better as it does a lot of combinations',
-    difficulty: 5
-  },
-  params: {
-    compartments: {
-      part1: 3,
-      part2: 4
-    }
-  },
-  test: {
-    id: 'test',
-    answers: {
-      part1: 99,
-      part2: 44
-    }
-  },
-  prod: {
-    answers: {
-      part1: 10439961859,
-      part2: 72050269
-    }
+import { Params } from 'aoc.d'
+import { Combination } from 'js-combinatorics'
+
+export default async (lineReader: any, params: Params) => {
+  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+
+  let part1: number = 0
+  let part2: number = 0
+
+  const packages: Array<number> = []
+  for await (const line of lineReader) {
+    packages.push(+line)
   }
+
+  const calculateEntanglement = (packages: Array<number>) =>
+    packages.reduce((x: number, y: number) => x * y, 1)
+
+  const solveFor = (packages: Array<number>, compartments: number) => {
+    const totalWeight = packages.reduce((a, b) => a + b)
+    const targetWeight = totalWeight / compartments
+
+    log.debug('Total Weight', totalWeight, 'Target Weight', targetWeight)
+
+    let solutions: Array<Array<number>> = []
+    let numberOfPackages = 1
+
+    while (solutions.length === 0) {
+      solutions = new Combination(packages, numberOfPackages)
+        .toArray()
+        .filter((a) => a.reduce((x, y) => x + y) === targetWeight)
+      numberOfPackages++
+    }
+
+    return solutions.map(calculateEntanglement).sort((a, b) => a - b)[0]
+  }
+  part1 = solveFor(packages, params.compartments.part1)
+  part2 = solveFor(packages, params.compartments.part2)
+
+  return { part1, part2 }
 }

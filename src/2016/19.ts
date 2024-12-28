@@ -1,31 +1,27 @@
-export default {
-  config: {
-    year: '2016',
-    day: '19',
-    title: 'An Elephant Named Joseph',
-    comment: 'Very interesting. run mode: study to see pattern vs brute force',
-    status: 'done',
-    difficulty: 4
-  },
-  logLevel: 'info',
-  // mode: 'study',
-  test: {
-    id: 'test',
-    params: {
-      elves: 5
-    },
-    answers: {
-      part1: 3,
-      part2: 2
+import { Params } from 'aoc.d'
+
+export default async (lineReader: any, params: Params) => {
+  let part1: number = 0
+  let part2: number = 0
+
+  const solveFor = (elvesNumber: number, mode: string): number => {
+    let elf = 1
+    for (let i = 1; i <= elvesNumber; i++) {
+      if (mode === 'part1') {
+        if (elf + 2 > i) elf = 1
+        else elf += 2
+      }
+      if (mode === 'part2') {
+        if (elf >= i - 1 - elf) elf += 2
+        else elf += 1
+        if (elf > i) elf = 1
+      }
     }
-  },
-  prod: {
-    params: {
-      elves: 3018458
-    },
-    answers: {
-      part1: 1842613,
-      part2: 1424135
-    }
+    return elf
   }
+
+  if (!params.skipPart1) part1 = solveFor(params.elves, 'part1')
+  if (!params.skipPart2) part2 = solveFor(params.elves, 'part2')
+
+  return { part1, part2 }
 }

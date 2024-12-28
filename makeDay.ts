@@ -21,7 +21,7 @@ if (fs.existsSync(newFilePath)) {
   process.exit()
 } else {
   // cp index.ts
-  fs.copyFileSync(__dirname + '/src/template/index.ts', newFileDirPath + process.argv[3] + '.solution.ts')
+  fs.copyFileSync(__dirname + '/src/template/index.ts', newFileDirPath + process.argv[3] + '.ts')
   // make input.txt
   let file = fs.openSync(newInputDirPath + process.argv[3] + '.input.txt', 'a')
   fs.closeSync(file)

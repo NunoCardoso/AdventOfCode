@@ -38,45 +38,51 @@ Reports will be pushed into the `report` directory.
 
 # Puzzle status
 
-| year | status      | comment                                            | report          |
-|------|-------------|----------------------------------------------------|-----------------|
-| 2015 | SOLVED      | Optimized, all (but md5) run under 1 second | reports/2015.md |
-| 2016 | IN PROGRESS | stuck on 22 (hard disk move)                       | reports/2016.md |
-| 2017 | IN PROGRESS | ongoing on 20                                      | reports/2017.md |
-| 2018 | IN PROGRESS | ongoing on 14                                      | reports/2018.md |
-| 2019 | TODO        |                                                    | reports/2019.md |
-| 2020 | TODO        |                                                    | reports/2020.md |
-| 2021 | IN PROGRESS | ongoing on 20                                      | reports/2021.md |
-| 2022 | ALMOST DONE | Unoptimized, Needs fix after 16                    | reports/2022.md |
-| 2023 | ALMOST DONE | Unoptimized, needs cleaning, do last puzzles       | reports/2023.md |
-| 2024 | ALMOST DONE | 17 and 24                                          | reports/2024.md |
+| year | result       | status     | speed                            | code | comment                                                  | report                   |
+|------|--------------|------------|----------------------------------|------|----------------------------------------------------------|--------------------------|
+| 2015 | ❌ UNFINISHED | ✅ SOLVED   | all (but md5) run under 1 second |      | needs review to lint                                     | reports/2015.md          |
+| 2016 | ❌ UNFINISHED | ❌ UNSOLVED |                                  |      | stuck on 22 (hard disk move)                             | reports/2016.md          |
+| 2017 | ❌ UNFINISHED | ❌ UNSOLVED |                                  |      | In progress, ongoing on 20                               | reports/2017.md          |
+| 2018 | ❌ UNFINISHED | ❌ UNSOLVED |                                  |      | In progress, ongoing on 14                               | reports/2018.md          |
+| 2019 | ❌ UNFINISHED | ❌ UNSOLVED |                                  |      | TO DO                                                    | reports/2019.md          |
+| 2020 | ❌ UNFINISHED | ❌ UNSOLVED |                                  |      | TO DO                                                    | reports/2020.md          |
+| 2021 | ❌ UNFINISHED | ❌ UNSOLVED |                                  |      | In progress, ongoing on 20                               | reports/2021.md          |
+| 2022 | ❌ UNFINISHED | ✅ SOLVED   | ?                                |      | Unoptimized, Needs fix after 16                          | reports/2022.md          |
+| 2023 | ❌ UNFINISHED | ❌ UNSOLVED |                                  |      | Unoptimized, needs to do last puzzles                    | reports/2023.md          |
+| 2024 | ❌ UNFINISHED | ✅ SOLVED   | ?                                |      | 24 solved manually, code still needs clean and optimized | reports/2024.md          |
+
+'' : ''
 
 # Puzzle options options: 
-| key               | type                 | description                                                                           |
-|-------------------|----------------------|---------------------------------------------------------------------------------------|
-| config.title      | string, optional     | puzzle title                                                                          |
-| config.comment    | string, optional     | puzzle comments                                                                       |
-| config.status     | 'done', 'inprogress' | puzzle status                                                                         |
-| config.difficulty | 1 to 5               | puzzle difficulty                                                                     |
-| config.tags       | string[], optional   | puzzle tags (recursive, pathfinding, md5, etc)                                        |
-| config.year       | string, mandatory    | chooses the year                                                                      | 
-| config.day        | string, mandatory    | chooses the day                                                                       |
-| logLevel          | string               | sets log level (info, debug, etc) default: info                                       |
-| mode              | string?              | if there is another solution (fastest, easiest, etc) default: normal                  |
-| ui                | object               | UI stuff default: { show: false }                                                     |
-| ui.show           | boolean              | show or not the UI                                                                    |
-| ui.end            | boolean?             | show the UI in he end                                                                 |
-| ui.during         | boolean?             | show the UI in iterations                                                             |
-| ui.wait:          | number?              | wait for X milliseconds between iterations                                            |
-| ui.keypress       | boolean?             | wait for keypress                                                                           |
-| test              | Test?, Test[]?       | runs tests                                                                            |
-| test.id           | string | tied to the test input file name                                                      |
-| test.params       | any | additional params                                                                     |
-| test.answers      | any | object with part1 and/or part2 answers. It decides if parts should run or be skipped. |
-| prod              |  Prod? | runs final                                                                            |
-| prod.params       | any | additional params                                                                     |
-| prod.answers      | any | object with part1 and/or part2 answers. It decides if parts should run or be skipped. |
-| params            | any | params                                                                                |
+
+| key              | type                   | description                                                                              |
+|------------------|------------------------|------------------------------------------------------------------------------------------|
+| config.title     | string, optional       | puzzle title                                                                             |
+| config.comment   | string, optional       | puzzle comments on how I did with it                                                     |
+| config.result    | 'finished', 'unfinished' | puzzle result: finished means solved, fast AND clean                                     |
+| config.status    | 'solved', 'unsolved'   | puzzle status                                                                            |
+| config.speed     | 'slow', 'fast', 'md5'  | puzzle speed  (md5 is brute force that can't go faster)                                  |
+| config.code      | 'clean', 'dirty'       | puzzle code: clean means linted and formatted                                            |
+| config.difficulty | 1-5                    | puzzle difficulty: 1 solves in minutes, 4 means at least 1 day, 5 means more than 2 days |
+| config.tags      | string[]?,             | puzzle tags (see below)                                                                  |
+| config.year      | string, mandatory      | puzzle year                                                                              | 
+| config.day       | string, mandatory      | puzzle day                                                                               |
+| logLevel         | info, debug, warn, error | default: info                                                                            |
+| mode             | string?                | if there is another solution (fastest, easiest, etc) default: normal                     |
+| ui               | object                 | UI stuff default: { show: false }                                                        |
+| ui.show          | boolean                | show or not the UI                                                                       |
+| ui.end           | boolean?               | show the UI in the end                                                                   |
+| ui.during        | boolean?               | show the UI during iterations                                                            |
+| ui.wait          | number?                | wait for X milliseconds between iterations                                               |
+| ui.keypress      | boolean?               | wait for keypress                                                                        |
+| test             | Test?, Test[]?         | runs tests                                                                               |
+| test.id          | string                 | tied to the test input file name                                                         |
+| test.params      | any                    | additional params: can be whatever                                                         |
+| test.answers     | any                    | object with part1 and/or part2 answers. It decides if parts should run or be skipped.    |
+| prod             | Prod?                  | runs final                                                                               |
+| prod.params      | any                    | additional params                                                                        |
+| prod.answers     | any                    | object with part1 and/or part2 answers. It decides if parts should run or be skipped.    |
+| params           | any                    | params                                                                                   |
 
 List of tags used: 
 
@@ -90,16 +96,12 @@ List of tags used:
 * path finding
 * Bron–Kerbosch
 
-Proposal for: 
-* STATUS: unsolved, solved
-* SPEED: slow, fast, brute-force (for md5s)
-* CODE: clean (optimized + formatted), dirty (unoptimized nor formatted)
+# Coding guidelines v1.0
 
-# Coding guidelines
-
-* Aim for <1s speed optimized
-* Aim for readability, so code should be easy to follow - be declarative, use functions
-* move away from structures like [number, number, number, string], they are fast but not readable
+* Typescript
+* Aim for less than 1 second to solve both day puzzles 
+* Focus on readability. Code should be easy to follow with declarative functions
+* Move away from structures like [number, number, number, string], they are fast but not easy to follow in code.
 
 ## Typing
 * do type everything. Avoid `any` type. reuse types such as `Point`, `Dimension`, `World`, they help.

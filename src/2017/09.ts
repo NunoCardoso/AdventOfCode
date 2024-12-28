@@ -1,51 +1,47 @@
-export default {
-  config: {
-    year: '2017',
-    day: '09',
-    title: 'Stream Processing',
-    status: 'done',
-    comment: 'It actually was easier than I thought',
-    difficulty: 2
-  },
-  logLevel: 'debug',
-  test: [
-    {
-      id: 'test1',
-      answers: { part1: 1 }
-    },
-    {
-      id: 'test2',
-      answers: { part1: 6 }
-    },
-    {
-      id: 'test3',
-      answers: { part1: 5 }
-    },
-    {
-      id: 'test4',
-      answers: { part1: 16 }
-    },
-    {
-      id: 'test5',
-      answers: { part1: 1 }
-    },
-    {
-      id: 'test6',
-      answers: { part1: 9 }
-    },
-    {
-      id: 'test7',
-      answers: { part1: 9 }
-    },
-    {
-      id: 'test8',
-      answers: { part1: 3 }
-    }
-  ],
-  prod: {
-    answers: {
-      part1: 11846,
-      part2: 6285
-    }
+import { Params } from 'aoc.d'
+
+export default async (lineReader: any, params: Params) => {
+  let part1: number = 0
+  let part2: number = 0
+
+  let groupLevel: number = 0
+  let inGarbage: boolean = false
+  let inCancelMode: boolean = false
+  for await (const line of lineReader) {
+    line.split('').forEach((char: string) => {
+      // ignore next character after cancel mode on
+      if (inCancelMode) {
+        inCancelMode = false
+        return
+      }
+      // turn on cancel mode on
+      if (char === '!') {
+        inCancelMode = true
+        return
+      }
+      // close garbage
+      if (char === '>' && inGarbage) {
+        inGarbage = false
+        return
+      }
+      // open garbage
+      if (char === '<') {
+        inGarbage ? part2++ : (inGarbage = true)
+        return
+      }
+      // ignore stuff inside garbage
+      if (inGarbage) {
+        part2++
+        return
+      }
+      // all these are outside garbage
+      if (char === '{') groupLevel++
+      if (char === '}') {
+        part1 += groupLevel
+        groupLevel--
+      }
+    })
   }
+
+  return { part1, part2 }
 }

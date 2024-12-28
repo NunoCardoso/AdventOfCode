@@ -1,4 +1,4 @@
-import { getPatternForIndex, setPatternForIndex } from './12.solution'
+import { getPatternForIndex, setPatternForIndex } from './12'
 
 describe('2018/12', () => {
   it('getPatternForIndex', () => {

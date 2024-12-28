@@ -1,23 +1,21 @@
-export default {
-  config: {
-    year: '2015',
-    day: '08',
-    title: 'Matchsticks',
-    comment: 'Using JSON.stringify helps a lot',
-    status: 'done',
-    difficulty: 2
-  },
-  test: {
-    id: 'test',
-    answers: {
-      part1: 12,
-      part2: 19
-    }
-  },
-  prod: {
-    answers: {
-      part1: 1333,
-      part2: 2046
-    }
+export default async (lineReader: any) => {
+  let rawCount = 0
+  let processedCount1 = 0
+  let processedCount2 = 0
+
+  for await (const line of lineReader) {
+    const processedLine = line
+      .replaceAll(/\\x[0-9a-f][0-9a-f]/g, '_')
+      .replaceAll(/\\"/g, '"')
+      .replaceAll(/\\\\/g, '\\')
+      .match(/^"(.*)"$/)[1]
+    rawCount += line.length
+    processedCount1 += processedLine.length
+    processedCount2 += JSON.stringify(line).length
+  }
+
+  return {
+    part1: rawCount - processedCount1,
+    part2: processedCount2 - rawCount
   }
 }

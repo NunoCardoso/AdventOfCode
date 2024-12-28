@@ -1,52 +1,66 @@
-export default {
-  config: {
-    year: '2017',
-    day: '10',
-    title: 'Knot Hash',
-    status: 'done',
-    comment: 'hard to read part2, difficulty is starting',
-    difficulty: 3
-  },
-  logLevel: 'debug',
-  test: [
-    {
-      id: 'test1',
-      params: {
-        size: 5
-      },
-      answers: {
-        part1: 12
+import { Params } from 'aoc.d'
+
+export const twistHash = (size: number, maxIterations: number, values: Array<number>) => {
+  let list = Array.from(Array(size).keys())
+  let cursor = 0
+  let skipSize = 0
+  let iterations = 0
+
+  while (iterations < maxIterations) {
+    values.forEach((value: number) => {
+      for (let i = 0; i <= Math.floor((value - 1) / 2); i++) {
+        let leftCursor = (cursor + i) % size
+        let rightCursor = (cursor + value - i - 1) % size
+        let temp = list[leftCursor]
+        list[leftCursor] = list[rightCursor]
+        list[rightCursor] = temp
       }
-    },
-    {
-      id: 'test2',
-      answers: {
-        part2: 'a2582a3a0e66e6e86e3812dcb672a272'
-      }
-    },
-    {
-      id: 'test3',
-      answers: {
-        part2: '33efeb34ea91902bb2f59c9920caa6cd'
-      }
-    },
-    {
-      id: 'test4',
-      answers: {
-        part2: '3efbe78a8d82f29979031a4aa0b16a9d'
-      }
-    },
-    {
-      id: 'test5',
-      answers: {
-        part2: '63960835bcdc130f0b66d7ff4f6a5a8e'
-      }
-    }
-  ],
-  prod: {
-    answers: {
-      part1: 38628,
-      part2: 'e1462100a34221a7f0906da15c1c979a'
-    }
+      cursor += value + skipSize
+      cursor = cursor % size
+      skipSize++
+    })
+    iterations++
   }
+  return list
+}
+
+export const knotHash = (line: string, size: number = 256) => {
+  let suffix = [17, 31, 73, 47, 23]
+  let list = line
+    .split('')
+    .map((s: string) => s.charCodeAt(0))
+    .concat(suffix)
+  let newlist = twistHash(size, 64, list)
+  let xors: Array<string> = []
+  while (newlist.length > 0) {
+    let partialList = newlist.splice(0, 16)
+    let xor = partialList.reduce((acc, val) => acc ^ val, 0)
+    xors.push(xor.toString(16).padStart(2, '0'))
+  }
+  return xors.join('')
+}
+
+export default async (lineReader: any, params: Params) => {
+  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+
+  let part1: number = 0
+  let part2: string = ''
+
+  let originalValues: Array<number> = []
+  let originalLine: string = ''
+  for await (const line of lineReader) {
+    originalLine = line
+    originalValues = line.split(/[,\s]+/).map(Number)
+  }
+
+  if (!params.skipPart1) {
+    let list = twistHash(params.size, 1, originalValues)
+    part1 = list[0] * list[1]
+  }
+
+  if (!params.skipPart2) {
+    part2 = knotHash(originalLine, params.size ?? 256)
+  }
+
+  return { part1, part2 }
 }

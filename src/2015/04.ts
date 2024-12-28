@@ -1,33 +1,21 @@
-export default {
-  config: {
-    year: '2015',
-    day: '04',
-    title: 'The Ideal Stocking Stuffer',
-    comment: 'Nothing I can do to make it faster, running MD5 hashes until they meet criteria',
-    status: 'done',
-    tags: ['md5'],
-    difficulty: 1
-  },
-  params: {
-    firstCutoff: '00000',
-    secondCutoff: '000000'
-  },
-  test: {
-    id: 'test',
-    params: {
-      secretKey: 'abcdef'
-    },
-    answers: {
-      part1: 609043
-    }
-  },
-  prod: {
-    params: {
-      secretKey: 'ckczppom'
-    },
-    answers: {
-      part1: 117946,
-      part2: 3938038
-    }
+import { Params } from 'aoc.d'
+const SparkMD5 = require('spark-md5')
+
+export default async (lineReader: any, params: Params) => {
+  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  log.info('This will take some time, MD5 puzzle')
+
+  let part1: number = 0
+  let part2: number = 0
+  let iteration: number = 0
+  let hash: string
+
+  while (part1 === 0 || part2 === 0) {
+    hash = SparkMD5.hash(params.secretKey + iteration)
+    if (hash.startsWith(params.secondCutoff) && part2 === 0) part2 = iteration
+    if (hash.startsWith(params.firstCutoff) && part1 === 0) part1 = iteration
+    iteration++
   }
+
+  return { part1, part2 }
 }

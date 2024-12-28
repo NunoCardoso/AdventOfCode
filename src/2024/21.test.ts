@@ -1,4 +1,4 @@
-import { doKeyboardMovesFor } from './21.solution'
+import { doKeyboardMovesFor } from './21'
 
 describe('2024/21 - preferrable paths', () => {
   test('<vA is SHORTER than v<A', () => {

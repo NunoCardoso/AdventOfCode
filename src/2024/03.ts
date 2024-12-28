@@ -1,31 +1,25 @@
-export default {
-  config: {
-    year: '2024',
-    day: '03',
-    title: 'Mull It Over',
-    status: 'done',
-    comment: 'Nice that I still remember OR regexes, really helps a lot here',
-    difficulty: 1
-  },
-  logLevel: 'info',
-  test: [
-    {
-      id: 'test',
-      answers: {
-        part1: 161
+import { Params } from 'aoc.d'
+import { JsonableValue } from 'ts-jest'
+
+export default async (lineReader: any, params: Params) => {
+  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+
+  let part1: number = 0
+  let part2: number = 0
+
+  let doIt: boolean = true
+  for await (const line of lineReader) {
+    const values = line.match(/(mul\(\d+,\d+\)|(do\(\))|(don't\(\)))/g)
+    values.forEach((value: string) => {
+      if (value.startsWith('do(')) doIt = true
+      if (value.startsWith("don't(")) doIt = false
+      if (value.startsWith('mul(')) {
+        let values = value.match(/\((\d+),(\d+)\)/)?.map(Number)
+        part1 += values![1] * values![2]
+        if (doIt) part2 += values![1] * values![2]
       }
-    },
-    {
-      id: 'test2',
-      answers: {
-        part2: 48
-      }
-    }
-  ],
-  prod: {
-    answers: {
-      part1: 178538786,
-      part2: 102467299
-    }
+    })
   }
+
+  return { part1, part2 }
 }

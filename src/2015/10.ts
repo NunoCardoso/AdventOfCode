@@ -1,24 +1,19 @@
-export default {
-  config: {
-    year: '2015',
-    day: '10',
-    title: 'Elves Look, Elves Say',
-    status: 'done',
-    comment:
-      'look-and-say sequence, I do not think it can be faster, but one can try. The regex pattern is the key here',
-    difficulty: 2
-  },
-  params: {
-    input: '1113122113',
-    limit: {
-      part1: 40,
-      part2: 50
-    }
-  },
-  prod: {
-    answers: {
-      part1: 360154,
-      part2: 5103798
-    }
+import { Params } from 'aoc.d'
+
+export default async (lineReader: any, params: Params) => {
+  let part1: number = 0
+  let part2: number = 0
+
+  let hash: string = params.input
+  const limit = Math.max(params.limit.part1, params.limit.part2)
+
+  for (let i = 1; i <= limit; i++) {
+    // matches a char, plus a 0-n number of same char, g repeats to all
+    const sequence: Array<string> = hash.match(/(.)\1*/g)!
+    hash = sequence.reduce((acc, value) => acc + value.length + value[0], '')
+    if (i % params.limit.part1 === 0) part1 = hash.length
+    if (i % params.limit.part2 === 0) part2 = hash.length
   }
+
+  return { part1, part2 }
 }

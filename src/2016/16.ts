@@ -1,37 +1,37 @@
-export default {
-  config: {
-    year: '2016',
-    day: '16',
-    title: 'Dragon Checksum',
-    status: 'done',
-    comment: 'md5, 3s, nothing I can do to make it faster',
-    tags: ['md5'],
-    difficulty: 1
-  },
-  logLevel: 'info',
-  test: {
-    id: 'test',
-    params: {
-      input: '10000',
-      size: {
-        part1: 20
+import { Params } from 'aoc.d'
+
+export default async (lineReader: any, params: Params) => {
+  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+
+  let part1: string = ''
+  let part2: string = ''
+
+  const getHash = (h: string): string =>
+    `${h}0${h
+      .split('')
+      .reverse()
+      .map((x: string) => (x === '1' ? '0' : '1'))
+      .join('')}`
+
+  const getChecksum = (h: string): string => {
+    let _h = h
+    while (_h.length % 2 === 0) {
+      let __h = ''
+      for (let i = 0; i < _h.length; i += 2) {
+        __h += _h[i] === _h[i + 1] ? '1' : '0'
       }
-    },
-    answers: {
-      part1: '01100'
+      _h = __h
     }
-  },
-  prod: {
-    params: {
-      input: '10111011111001111',
-      size: {
-        part1: 272,
-        part2: 35651584
-      }
-    },
-    answers: {
-      part1: '11101010111100010',
-      part2: '01001101001000101'
-    }
+    return _h
   }
+
+  const solveFor = (hash: string, size: number) => {
+    while (hash.length < size) hash = getHash(hash)
+    return getChecksum(hash.substring(0, size))
+  }
+
+  if (!params.skipPart1) part1 = solveFor(params.input, params.size.part1)
+  if (!params.skipPart2) part2 = solveFor(params.input, params.size.part2)
+
+  return { part1, part2 }
 }

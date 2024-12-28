@@ -1,72 +1,16 @@
-export default {
-  config: {
-    year: '2017',
-    day: '01',
-    title: 'Inverse Captcha',
-    status: 'done',
-    comment: 'Making sums while parsing input',
-    difficulty: 1
-  },
-  test: [
-    {
-      id: 'test1',
-      answers: {
-        part1: 3
-      }
-    },
-    {
-      id: 'test2',
-      answers: {
-        part1: 4
-      }
-    },
-    {
-      id: 'test3',
-      answers: {
-        part1: 0
-      }
-    },
-    {
-      id: 'test4',
-      answers: {
-        part1: 9
-      }
-    },
-    {
-      id: 'test5',
-      answers: {
-        part2: 6
-      }
-    },
-    {
-      id: 'test6',
-      answers: {
-        part2: 0
-      }
-    },
-    {
-      id: 'test7',
-      answers: {
-        part2: 4
-      }
-    },
-    {
-      id: 'test8',
-      answers: {
-        part2: 12
-      }
-    },
-    {
-      id: 'test9',
-      answers: {
-        part2: 4
-      }
-    }
-  ],
-  prod: {
-    answers: {
-      part1: 1175,
-      part2: 1166
+export default async (lineReader: any) => {
+  let part1: number = 0
+  let part2: number = 0
+
+  for await (const line of lineReader) {
+    const values = line.split('').map(Number)
+    for (let i = 0; i < values.length; i++) {
+      const j = (i + 1) % values.length
+      const k = (i + values.length / 2) % values.length
+      if (values[i] === values[j]) part1 += values[i]
+      if (values[i] === values[k]) part2 += values[i]
     }
   }
+
+  return { part1, part2 }
 }

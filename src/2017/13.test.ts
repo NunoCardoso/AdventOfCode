@@ -1,4 +1,4 @@
-import { getPosition } from './13.solution'
+import { getPosition } from './13'
 
 describe('2017 13', () => {
   test('getPosition', () => {

@@ -1,17 +1,14 @@
-export default {
-  config: {
-    year: '2015',
-    day: '01',
-    title: 'Not Quite Lisp',
-    status: 'solved',
-    code: 'optimized',
-    comment: 'Functional puzzle, parsing input, split, and do counting',
-    difficulty: 1
-  },
-  prod: {
-    answers: {
-      part1: 232,
-      part2: 1783
-    }
+export default async (lineReader: any) => {
+  let part1: number = 0
+  let part2: number = 0
+
+  for await (const line of lineReader) {
+    line.split('').forEach((it: string, i: number) => {
+      if (part1 === -1 && part2 === 0) part2 = i
+      if (it === '(') part1++
+      if (it === ')') part1--
+    })
   }
+
+  return { part1, part2 }
 }

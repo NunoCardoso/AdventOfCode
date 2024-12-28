@@ -1,4 +1,4 @@
-import { magnitude, reduce, sum } from './18.solution'
+import { magnitude, reduce, sum } from './18'
 
 describe('2011/18', () => {
   test('sum with no reduce', () => {

@@ -1,31 +1,21 @@
-export default {
-  config: {
-    year: '2017',
-    day: '04',
-    title: 'High-Entropy Passphrases',
-    status: 'Done',
-    comment: 'Simple rearranging words for list size comparison',
-    difficulty: 1
-  },
-  logLevel: 'debug',
-  test: [
-    {
-      id: 'test1',
-      answers: {
-        part1: 2
-      }
-    },
-    {
-      id: 'test2',
-      answers: {
-        part2: 3
-      }
-    }
-  ],
-  prod: {
-    answers: {
-      part1: 466,
-      part2: 251
-    }
+import { Params } from 'aoc.d'
+
+export default async (lineReader: any, params: Params) => {
+  let part1: number = 0
+  let part2: number = 0
+
+  for await (const line of lineReader) {
+    const values = line.split(/\s+/g)
+    const values2 = values.map((word: string) =>
+      word
+        .split('')
+        .sort((a, b) => (a.charCodeAt(0) - b.charCodeAt(0) > 0 ? 1 : -1))
+        .join('')
+    )
+
+    part1 += values.length === new Set(values).size ? 1 : 0
+    part2 += values2.length === new Set(values2).size ? 1 : 0
   }
+
+  return { part1, part2 }
 }
