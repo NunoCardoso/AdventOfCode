@@ -38,18 +38,18 @@ Reports will be pushed into the `report` directory.
 
 # Puzzle status
 
-| year | status      | comment                                                                  |  report |
-|------|-------------|--------------------------------------------------------------------------|---------|
-| 2015 | SOLVED      | Optimized, all but md5 puzzles run under 1 second  | reports/2015.md |
-| 2016 | IN PROGRESS | stuck on 22 (hard disk move)                                             |
-| 2017 | IN PROGRESS | ongoing on 20                                                            |
-| 2018 | IN PROGRESS | ongoing on 14                                                            |
-| 2019 | TODO        |                                                                          |
-| 2020 | TODO        |                                                                          |
-| 2021 | IN PROGRESS | ongoing on 20                                                            |
-| 2022 | DONE        | Unoptimized, Needs fix after 16                                          |
-| 2023 | ALMOST DONE | Unoptimized, needs cleaning, do last puzzles                             |
-| 2024 | ONGOING     |                                                                          |
+| year | status      | comment                                            | report          |
+|------|-------------|----------------------------------------------------|-----------------|
+| 2015 | SOLVED      | Optimized, all (but md5) run under 1 second | reports/2015.md |
+| 2016 | IN PROGRESS | stuck on 22 (hard disk move)                       | reports/2016.md |
+| 2017 | IN PROGRESS | ongoing on 20                                      | reports/2017.md |
+| 2018 | IN PROGRESS | ongoing on 14                                      | reports/2018.md |
+| 2019 | TODO        |                                                    | reports/2019.md |
+| 2020 | TODO        |                                                    | reports/2020.md |
+| 2021 | IN PROGRESS | ongoing on 20                                      | reports/2021.md |
+| 2022 | ALMOST DONE | Unoptimized, Needs fix after 16                    | reports/2022.md |
+| 2023 | ALMOST DONE | Unoptimized, needs cleaning, do last puzzles       | reports/2023.md |
+| 2024 | ALMOST DONE | 17 and 24                                          | reports/2024.md |
 
 # Puzzle options options: 
 | key               | type                 | description                                                                           |
@@ -88,18 +88,30 @@ List of tags used:
 * combination
 * breath first
 * path finding
+* Bron–Kerbosch
 
 Proposal for: 
 * STATUS: unsolved, solved
-* SPEED: slow, fast
-* CODE: clean (optimized), dirty (unoptimized)
-
+* SPEED: slow, fast, brute-force (for md5s)
+* CODE: clean (optimized + formatted), dirty (unoptimized nor formatted)
 
 # Coding guidelines
+
+* Aim for <1s speed optimized
+* Aim for readability, so code should be easy to follow - be declarative, use functions
+* move away from structures like [number, number, number, string], they are fast but not readable
 
 ## Typing
 * do type everything. Avoid `any` type. reuse types such as `Point`, `Dimension`, `World`, they help.
 * If possible, avoid `Record` and use `Map`. `Set` are also useful sometimes instead of `Array`
+** for increments, try map.set("a", (map.get("a") ?? 0) + 1)
+** prefer reduce for sums 
+* Prefer Location to Point. Location implies coordinates, Point is something that has location but also extra stuff
+* Prefer For...Of and For...in then forEach: 
+** For... of loops over the Values
+** For...in: Loops over the Keys.
+** We can use break and continue (forEach we can't)
+** we do not need to have the array ready for iteration (permutations and stuff)
 
 ## Coding names
 * Be as declarative as possible, use function names to describe the steps
@@ -120,6 +132,18 @@ Some functions names: `solveFor`, `deepFirst`, `breathFirst`, `dijkstra`
       "abcabfgabsefd".match(/ab/) => ['ab', index: 0, input: 'abcabfgabsefd', groups: undefined]
       "abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']
       "123123123".match(/ab/) => null
+
+## Path finding
+
+* use pop() instead of splice(-1)[0]
+* terminology: 
+** step: a node with extra info (location, distance/score, etc) 
+** path: list of steps. 
+** head: latest step from a path
+** queue instead of opened 
+
+## TODO 
+* do a nicer output with emojis and box drawing chars
 
 # Algorithms Overview
 
@@ -182,40 +206,37 @@ Floyd-Warshall
 * UCS is similar to Dijkstra’s algorithm but focuses only on finding the shortest path to a specific goal node.
 * It expands the least-cost node first and guarantees the shortest path, making it optimal but slower than A* for large graphs.
 
-# IDEAS 
-
-* introduce PointObj, where {row: number, col: number}
-
 # Guidelines
 
 ##  X or Y?  Rows and Columns?
 
-row goes vertical, col goes horizontal
-unless it is specified otherwise in the instructions,
-x and y should be avoided, but if not, x IS ROW, y IS COLUMN, therefore NOT EQUIVALENT to X/Y charts NOT HTML positions.
-
-when printing world, world matrixes are also row and colum
+* Row goes vertical (↓), col goes horizontal (→)
+* X goes horizontal (→), Y goes vertical (↓) like the HTML pages
 
 | []()                   |                        |                        |                        |
 |------------------------|------------------------|------------------------|------------------------|
-| row 0, col 0, x 0, y 0 | row 0, col 1, x 0, y 1 | row 0, col 2, x 0, y 2 | row 0, col 3, x 0, y 3 |
-| row 1, col 0, x 1, y 0 | row 1, col 1, x 1, y 1 | row 1, col 2, x 1, y 2 | row 1, col 3, x 1, y 3 |
-| row 2, col 0, x 2, y 0 | row 2, col 1, x 2, y 1 | row 2, col 2, x 2, y 2 | row 2, col 3, x 2, y 3 |
-| row 3, col 0, x 3, y 0 | row 3, col 1, x 3, y 1 | row 3, col 2, x 2, y 2 | row 3, col 3, x 3, y 3 |
+| row 0, col 0, x 0, y 0 | row 0, col 1, x 1, y 0 | row 0, col 2, x 2, y 0 | row 0, col 3, x 3, y 0 |
+| row 1, col 0, x 0, y 1 | row 1, col 1, x 1, y 1 | row 1, col 2, x 2, y 1 | row 1, col 3, x 3, y 1 |
+| row 2, col 0, x 0, y 2 | row 2, col 1, x 1, y 2 | row 2, col 2, x 2, y 2 | row 2, col 3, x 3, y 2 |
+| row 3, col 0, x 0, y 3 | row 3, col 1, x 1, y 3 | row 3, col 2, x 2, y 3 | row 3, col 3, x 3, y 3 |
 
+If it is confusing, use PointObj, where {row: number, col: number}
 
+unless it is specified otherwise in the instructions.
+Note that when printing worlds, world matrixes are seen as rows and columns, so make sure locations 
+use same system. If they use x/y, they may refer to col/row instead of row/col
 
-* move away from [number, number, number, string] or something, use objects so all is more readable
-*  speed is good, readability is even better
-* rethink renaming Point to Location. Location implies coordinates, Point is something that has location but also extra stuff
-* dimension: to object where I have Height, width to better signal that the first value is for number of rows, other one is for number of colums 
-* Get the terminology ready: 
-* - path: succession of steps. Should it be changed?
-* - head: latest step
+# Aååendixes
 
-* better describe the differences between BFS, DFS, Dijkstra, A* and why each should have: 
-** visited cache
-** sort by distance / heuristic / etc 
+For box drawing (https://en.wikipedia.org/wiki/Box-drawing_characters):
 
-* what about pop() instead of splice(-1)[0]
-
+ | 0      |1|	2|	3|	4|	5|	6|	7|	8|	9|	A|	B|	C|	D|	E|	F|
+ |--------|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+ | U+250x |	─|	━|	│|	┃|	┄|	┅|	┆|	┇|	┈|	┉|	┊|	┋|	┌|	┍|	┎|	┏|
+ | U+251x |	┐|	┑|	┒|	┓|	└|	┕|	┖|	┗|	┘|	┙|	┚|	┛|	├|	┝|	┞|	┟|
+ | U+252x |	┠|	┡|	┢|	┣|	┤|	┥|	┦|	┧|	┨|	┩|	┪|	┫|	┬|	┭|	┮|	┯|
+ | U+253x |	┰|	┱|	┲|	┳|	┴|	┵|	┶|	┷|	┸|	┹|	┺|	┻|	┼|	┽|	┾|	┿|
+ | U+254x |	╀|	╁|	╂|	╃|	╄|	╅|	╆|	╇|	╈|	╉|	╊|	╋|	╌|	╍|	╎|	╏|
+ | U+255x |	═|	║|	╒|	╓|	╔|	╕|	╖|	╗|	╘|	╙|	╚|	╛|	╜|	╝|	╞|	╟|
+ | U+256x |	╠|	╡|	╢|	╣|	╤|	╥|	╦|	╧|	╨|	╩|	╪|	╫|	╬|	╭|	╮|	╯|
+ | U+257x |	╰|	╱|	╲|	╳|	╴|	╵|	╶|	╷|	╸|	╹|	╺|	╻|	╼|	╽|	╾|	╿|

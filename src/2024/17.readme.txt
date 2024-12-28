@@ -14,18 +14,20 @@ NUMBER  OPCODE OPERAND INSTRUCTION RESULT
 1       5      5 (B)   out	       OUTPUT: B % 8
 1       3      0 (0)   jnz	       IF A != 0: RESTART
 
-If we execute the first 2 opcodes, we have:
-   B := (A % 8) XOR 1
+If we execute the first 1 opcodes, we have:
+   A: A, B: A % 8, C:C
+If we execute the first 1 opcodes, we have:
+   A: A, B : (A % 8) XOR 1, C: C
 3rd opcode:
-   C := A / 2 ^ ((A % 8) XOR 1)
+   A: A, B: (A % 8) XOR 1, C := A / (2 ^ ((A % 8) XOR 1))
 4th opcode:
-   B := ((A % 8) XOR 1) XOR 4
-5th opcode: this is the one where it shifts A value 3 bits to the right
-   A := A / 8
+   A: A, B: ((A % 8) XOR 1) XOR 4, C: A / (2 ^ ((A % 8) XOR 1))
+5th opcode:
+   A: A / 8, B: ((A % 8) XOR 1) XOR 4, C: A / (2 ^ ((A % 8) XOR 1))
 6th opcode:
-   B: ((A % 8) XOR 1) XOR 4 XOR (A / 2 ^ ((A % 8) XOR 1))
+   A: A / 8, B: ((((A % 8) XOR 1) XOR 4) XOR (A / (2 ^ ((A % 8) XOR 1))))
 7th opcode:
-   OUTPUT ((A % 8) XOR 1) XOR 4 XOR (A / 2 ^ ((A % 8) XOR 1)) % 8
+   OUTPUT B: ((((A % 8) XOR 1) XOR 4) XOR (A / (2 ^ ((A % 8) XOR 1)))) % 8
 8th opcode:
    goto beginning if A != 0
 
@@ -40,3 +42,72 @@ WHILE A != 0:
     OUTPUT = ((A % 8) XOR 1) XOR 4 XOR (A / 2 ^ ((A % 8) XOR 1)) % 8
     A = A / 8
 
+so:
+  => A is a certain number, A (with binary 3 * 16 long)
+  => output is [2] in 1st iteration
+  => A divided by 8 equals A* (with binary 3 * 15 long)
+  => output is [4] 2nd iteration
+  => A* divided by 8 equals A** (with binary 3 * 14 long)
+  => output is [1] 3nd iteration
+  => A** divided by 8 equals A*** (with binary 3 * 13 long)
+  (...)
+
+  => A (???) divided by 8 equals A******* = 46 (binary as 3*2 long)
+  => output is [3] on 15th iteration
+  => A (46) divided by 8 equals A******** = 5 (binary as 3*1 long)
+  => output is [0] on 16th iteration
+  => A (5) divided by 8 equals 0
+  => A is = 0, program ends
+
+Note that if I go to find numbers in reverse, OUTPUT depends on more digits
+on the left than the last 3:
+
+((A % 8) XOR 1) XOR 4 XOR (A / 2 ^ ((A % 8) XOR 1)) % 8
+
+(A % 8) can be 0-7, (A % 8) XOR 1 still 0-7, so  A / (2 ^ [0 to 7]) can be from
+A to A / 2^7, which is 128. that is 7 bits on the left.
+
+So, this means I have to make path finding to "guess" those numbers on the left.
+
+Or... I can just go from left to right, so I do not have to guess on the left, but on the right
+Guessing on the right is easy, as I can always come from the lowest number, and go up until it matches
+
+The minimum A value is 8 ** 15, so it produces
+
+in binary: 1_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000
+in octal : 1000000000000000 (16 digits)
+
+incrementals are targeted with power. For example, power starts as 14.
+ numberA += 8n ** power
+means increments as
+
+  in binary: 001_001_000_000_000_000_000_000_000_000_000_000_000_000_000_000
+             001_010_000_000_000_000_000_000_000_000_000_000_000_000_000_000
+             001_011_000_000_000_000_000_000_000_000_000_000_000_000_000_000
+             etc
+
+   in octal: 1100000000000000
+             1200000000000000
+             1300000000000000
+             etc
+
+I reached first value at 4000000000000000 with 23 iterations.
+First one giving me the last program value, 0.
+GOT 4300000000000000 after 24 iterations     (starting on 4010000000000000)
+GOT 4350000000000000 after 40 iterations     (starting on 4301000000000000)
+GOT 4354000000000000 after 32 iterations     (starting on 4350100000000000)
+GOT 4354300000000000 after 24 iterations     (starting on 4354010000000000)
+GOT 4354330000000000 after 24 iterations     (starting on 4354301000000000)
+GOT 4354337000000000 after 56 iterations     (starting on 4354330100000000)
+GOT 4354337200000000 after 16 iterations     (starting on 4354337010000000)
+GOT 4354337670000000 after 312 iterations    (starting on 4354337201000000)
+GOT 4354337671000000 after 8 iterations      (starting on 43543376701000000)
+GOT 4354337671200000 after 16 iterations     (starting on 43543376710100000)
+GOT 4354337671230000 after 24 iterations     (starting on 43543376712010000)
+GOT 4354337671237000 after 56 iterations     (starting on 43543376712301000)
+GOT 4354337671237200 after 16 iterations     (starting on 43543376712370100)
+GOT 4354337671237230 after 24 iterations     (starting on 4354337671237201)
+GOT 4354337671603002 after 116586 iterations (starting on 4354337671237221)
+
+4354337671603002 is octal for the answer
+100_011_101_100_011_011_111_110_111_001_110_000_011_000_000_010 is binary for answer

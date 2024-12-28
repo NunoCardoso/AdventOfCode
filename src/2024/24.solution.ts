@@ -1,10 +1,10 @@
 import { Params } from 'aoc.d'
-import { bin2dec } from 'util/conversion'
+import { bin2dec, dec2bin } from 'util/conversion'
 
 // source1, operator, source2
 type Op = [string, string, string]
 export default async (lineReader: any, params: Params) => {
-  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: string = ''
@@ -24,11 +24,11 @@ export default async (lineReader: any, params: Params) => {
     if (line.indexOf('->') >= 0) {
       let [, s1, op, s2, s3] = line.match(/(.*) (.*) (.*) -> (.*)/)
       data[s3] = [s1, op, s2]
-      let prefix = s3[0]
-      if (['x', 'y', 'z'].includes(prefix)) wires[prefix].push(s3)
-      if (!['x', 'y', 'z'].includes(s1[0])) middleWires.add(s1)
-      if (!['x', 'y', 'z'].includes(s2[0])) middleWires.add(s2)
-      if (!['x', 'y', 'z'].includes(s3[0])) middleWires.add(s3)
+      ;([s1, s2, s3] as string[]).forEach((s) => {
+        let prefix = s[0]
+        if (['x', 'y', 'z'].includes(prefix)) wires[prefix].push(s)
+        else middleWires.add(s)
+      })
     }
   }
   Object.keys(wires).forEach((key) => {
@@ -59,10 +59,22 @@ export default async (lineReader: any, params: Params) => {
   }
 
   if (!params.skipPart2) {
-    let xValue = wires['x'].join('')
-    let yValue = wires['y'].join('')
-    let zValue = wires['z'].join('')
+    let xValueBin = wires['x'].map(resolveWire).join('')
+    let yValueBin = wires['y'].map(resolveWire).join('')
+    let zValueBin = wires['z'].map(resolveWire).join('')
+    log.debug('bin: x', xValueBin, 'y', yValueBin, 'z', zValueBin)
+    let x = bin2dec(xValueBin)
+    let y = bin2dec(yValueBin)
+    let z = bin2dec(zValueBin)
+    log.debug('dec: x', x, 'y', y, 'z', z)
+    let rightZ = x + y
+    let rightZbin = dec2bin(rightZ)
+    log.debug('right z:', rightZ, 'bin: ', rightZbin)
 
+    /* let xValue = wires['x'].join('')
+     let yValue = wires['y'].join('')
+     let zValue = wires['z'].join('')
+ */
     part2 = ''
   }
 

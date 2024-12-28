@@ -1,0 +1,393 @@
+for i >= 2:
+
+1. XOR has to be from X and Y
+2. Only XOR feeds a Z
+3. (X XOR Y) is one of the entries in #2
+4. the other entry from #2 comes from a OR
+5. one of the entries in #4 is (x(i-1) AND Y(i-1))
+6. the other from #4 is an AND
+7. one of entries in #6 is a (x(i-1) XOR y(i-1))
+
+Find who does not obeys this?
+
+#10 NOT OK
+    vcf <=> z10
+# 17 NOT OK
+AND should be XOR
+# 18 NOT OK
+XOR should be AND
+   fhg <=> z17
+# 35 not OK
+   dvb <=> fsq
+#39, 40 NOT OK
+   tnc <=> z39
+
+dvb,fhg,fsq,tnc,vcf,z10,z17,z39
+
+#00 OK
+======
+y00 AND x00 -> kvj
+   x00 XOR y00 -> z00
+
+#01 OK
+======
+y01 AND x01 -> rtg
+y01 XOR x01 -> bhq
+   bhq XOR kvj -> z01
+
+#02 OK
+======
+x02 AND y02 -> dmq
+y02 XOR x02 -> mpj
+   kvj AND bhq -> wkc
+   rtg OR wkc -> htw
+   mpj XOR htw -> z02
+
+#03 OK
+======
+x03 AND y03 -> psr
+y03 XOR x03 -> nbw
+   htw AND mpj -> sdk
+   dmq OR sdk -> gwf
+   nbw XOR gwf -> z03
+
+#04 OK
+======
+y04 AND x04 -> ggt
+x04 XOR y04 -> cnr
+   nbw AND gwf -> btm
+   psr OR btm -> hct
+   cnr XOR hct -> z04
+
+#05 OK
+======
+y05 AND x05 -> wnc
+y05 XOR x05 -> pmh
+   cnr AND hct -> nbp
+   ggt OR nbp -> ffv
+   pmh XOR ffv -> z05
+
+#06 OK
+======
+x06 AND y06 -> kbv
+x06 XOR y06 -> wsn
+   ffv AND pmh -> brb
+   brb OR wnc -> sfm
+   sfm XOR wsn -> z06
+
+#07 OK
+======
+y07 AND x07 -> ghp
+x07 XOR y07 -> nvh
+    wsn AND sfm -> kjs
+    kbv OR kjs -> jqv
+    jqv XOR nvh -> z07
+
+#08 OK
+======
+x08 AND y08 -> qwf
+y08 XOR x08 -> gmw
+    nvh AND jqv -> tfs
+    ghp OR tfs -> cqn
+    gmw XOR cqn -> z08
+
+#09 OK
+======
+x09 AND y09 -> kwg
+y09 XOR x09 -> gff
+    gmw AND cqn -> jfn
+    qwf OR jfn -> jgj
+    jgj XOR gff -> z09
+
+#10 NOT OK
+==========
+x10 XOR y10 -> kck
+x10 AND y10 -> z10
+
+=> try vcf with z10
+
+need to solve skm before x11
+(    jgj AND gff -> fwc
+     kwg OR fwc -> skm
+      kck XOR skm -> vcf
+)
+
+#11 OK
+======
+x11 AND y11 -> gvd
+x11 XOR y11 -> bmd
+    skm AND kck -> sst
+    sst OR vcf -> fgb
+    fgb XOR bmd -> z11
+
+#12 OK
+======
+x12 AND y12 -> kdb
+x12 XOR y12 -> qbw
+    bmd AND fgb -> jgv
+    jgv OR gvd -> gvj
+    qbw XOR gvj -> z12
+
+#13 OK
+======
+x13 AND y13 -> sdf
+y13 XOR x13 -> ctc
+    gvj AND qbw -> brq
+    kdb OR brq -> bgh
+    bgh XOR ctc -> z13
+
+#14 OK
+======
+x14 AND y14 -> dtj
+x14 XOR y14 -> pvs
+    ctc AND bgh -> jmr
+    jmr OR sdf -> wgc
+    pvs XOR wgc -> z14
+
+#15 OK
+======
+x15 XOR y15 -> mng
+y15 AND x15 -> pnm
+    pvs AND wgc -> mjr
+    dtj OR mjr -> rhw
+    mng XOR rhw -> z15
+
+#16 OK
+======
+y16 XOR x16 -> dcj
+y16 AND x16 -> pwj
+    mng AND rhw -> nbg
+    nbg OR pnm -> rfv
+    dcj XOR rfv -> z16
+
+#17 NOT OK
+==========
+x17 AND y17 -> qjn
+x17 XOR y17 -> qjg
+    dcj AND rfv -> dpc
+    dpc OR pwj -> jjf
+    qjg AND jjf -> z17
+
+#18 NOT OK
+==========
+x18 XOR y18 -> vgw
+x18 AND y18 -> mpf
+    jjf XOR qjg -> fhg
+    qjn OR fhg -> jfb
+    jfb XOR vgw -> z18
+
+#19 OK
+======
+x19 XOR y19 -> pjs
+y19 AND x19 -> ccq
+    vgw AND jfb -> jsh
+    mpf OR jsh -> nwg
+    pjs XOR nwg -> z19
+
+#20 OK
+======
+x20 XOR y20 -> shw
+y20 AND x20 -> mkd
+    pjs AND nwg -> jfs
+    ccq OR jfs -> trb
+    shw XOR trb -> z20
+
+#21 OK
+======
+y21 XOR x21 -> ddd
+x21 AND y21 -> drw
+    trb AND shw -> nrr
+    mkd OR nrr -> tvq
+    ddd XOR tvq -> z21
+
+#22 OK
+======
+x22 XOR y22 -> tfj
+x22 AND y22 -> nnb
+    tvq AND ddd -> fcj
+    fcj OR drw -> pgc
+    pgc XOR tfj -> z22
+
+#23 OK
+======
+y23 XOR x23 -> vwg
+y23 AND x23 -> fjp
+    pgc AND tfj -> btr
+    btr OR nnb -> vks
+    vks XOR vwg -> z23
+
+#24 OK
+======
+y24 AND x24 -> hfm
+y24 XOR x24 -> swd
+    vks AND vwg -> jfd
+    jfd OR fjp -> tcj
+    tcj XOR swd -> z24
+
+#25 OK
+======
+y25 AND x25 -> dwh
+x25 XOR y25 -> vnt
+    tcj AND swd -> wwm
+    hfm OR wwm -> kcd
+    kcd XOR vnt -> z25
+
+#26 OK
+======
+y26 AND x26 -> jsr
+x26 XOR y26 -> snd
+    vnt AND kcd -> vdd
+    vdd OR dwh -> ffw
+    ffw XOR snd -> z26
+
+#27 OK
+======
+x27 XOR y27 -> qbg
+y27 AND x27 -> qqr
+    ffw AND snd -> msw
+    msw OR jsr -> wgr
+    qbg XOR wgr -> z27
+
+#28 OK
+======
+y28 XOR x28 -> cws
+y28 AND x28 -> tsd
+    wgr AND qbg -> dhp
+    qqr OR dhp -> kqp
+    cws XOR kqp -> z28
+
+#29 OK
+======
+y29 AND x29 -> jbf
+x29 XOR y29 -> qkw
+    kqp AND cws -> wfw
+    tsd OR wfw -> dqp
+    qkw XOR dqp -> z29
+
+#30 OK
+======
+x30 XOR y30 -> hqf
+y30 AND x30 -> ttk
+    dqp AND qkw -> dpr
+    dpr OR jbf -> ctm
+    ctm XOR hqf -> z30
+
+#31 OK
+======
+y31 AND x31 -> vqt
+y31 XOR x31 -> crj
+    ctm AND hqf -> dmw
+    ttk OR dmw -> ghf
+    ghf XOR crj -> z31
+
+#32 OK
+======
+y32 AND x32 -> whq
+y32 XOR x32 -> krc
+    crj AND ghf -> mns
+    vqt OR mns -> bcj
+    krc XOR bcj -> z32
+
+#33 OK
+======
+x33 XOR y33 -> pmn
+y33 AND x33 -> dfv
+    krc AND bcj -> rhp
+    rhp OR whq -> pfq
+    pmn XOR pfq -> z33
+
+#34 OK
+======
+x34 XOR y34 -> vbh
+x34 AND y34 -> bbf
+    pmn AND pfq -> rnj
+    dfv OR rnj -> qnv
+    qnv XOR vbh -> z34
+
+#35 NOT OK maybe dvb with fsq
+======
+y35 XOR x35 -> fsq
+y35 AND x35 -> dvb
+    qnv AND vbh -> tgn
+    tgn OR bbf -> jsn
+    dvb XOR jsn -> z35
+
+#36 OK
+======
+x36 XOR y36 -> ncq
+y36 AND x36 -> kss
+    jsn AND dvb -> ftc
+    ftc OR fsq -> bwc
+    ncq XOR bwc -> z36
+
+#37 OK
+======
+y37 AND x37 -> jjb
+x37 XOR y37 -> rhj
+    bwc AND ncq -> psp
+    psp OR kss -> mdv
+    rhj XOR mdv -> z37
+
+#38 OK
+======
+x38 XOR y38 -> rsn
+y38 AND x38 -> gqm
+    rhj AND mdv -> bfn
+    jjb OR bfn -> hkj
+    hkj XOR rsn -> z38
+
+#39 NOT OK tnc => z39
+======
+y39 XOR x39 -> kmh
+y39 AND x39 -> rvd
+    rsn AND hkj -> kfp
+    gqm OR kfp -> mnd
+    kmh XOR mnd -> tnc
+
+#40 NOT OK tnc => z39
+======
+ y40 AND x40 -> jmc
+ x40 XOR y40 -> rtf
+    kmh AND mnd -> wrj
+    rvd OR wrj -> z39
+    rtf XOR tnc -> z40
+
+#41 OK
+======
+y41 XOR x41 -> hpr
+y41 AND x41 -> mdh
+    rtf AND tnc -> gtv
+    gtv OR jmc -> hvk
+    hvk XOR hpr -> z41
+
+#42 OK
+======
+y42 AND x42 -> rft
+x42 XOR y42 -> rnc
+    hvk AND hpr -> ngm
+    ngm OR mdh -> wps
+    wps XOR rnc -> z42
+
+#43 OK
+======
+x43 AND y43 -> nfp
+x43 XOR y43 -> jjd
+    rnc AND wps -> hsp
+    hsp OR rft -> hmg
+    hmg XOR jjd -> z43
+
+#44 OK
+======
+y44 AND x44 -> hqb
+x44 XOR y44 -> qgg
+    hmg AND jjd -> wfc
+    nfp OR wfc -> knf
+    knf XOR qgg -> z44
+
+#45 OK
+======
+knf AND qgg -> fvb
+fvb OR hqb -> z45
+
+
+
