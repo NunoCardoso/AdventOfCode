@@ -72,10 +72,14 @@ export default async (lineReader: any, params: Params) => {
   solveFor()
 
   // sort descending
-  const sortedMinutesPerGuard = Object.keys(totalMinutesPerGuard).sort((a, b) => totalMinutesPerGuard[+b] - totalMinutesPerGuard[+a])
+  const sortedMinutesPerGuard = Object.keys(totalMinutesPerGuard).sort(
+    (a, b) => totalMinutesPerGuard[+b] - totalMinutesPerGuard[+a]
+  )
   const topGuard = +sortedMinutesPerGuard[0]
 
-  const sortedTopMinutes = Object.keys(topMinutesPerGuard[topGuard]).sort((a, b) => topMinutesPerGuard[topGuard][+b] - topMinutesPerGuard[topGuard][+a])
+  const sortedTopMinutes = Object.keys(topMinutesPerGuard[topGuard]).sort(
+    (a, b) => topMinutesPerGuard[topGuard][+b] - topMinutesPerGuard[topGuard][+a]
+  )
   const topMinute = +sortedTopMinutes[0]
 
   console.log(totalMinutesPerGuard, topMinutesPerGuard)
@@ -88,7 +92,9 @@ export default async (lineReader: any, params: Params) => {
     })
   })
 
-  const highestMinuteAndGuard = Object.keys(topInstancesPerGuard).sort((a, b) => topInstancesPerGuard[b] - topInstancesPerGuard[a])
+  const highestMinuteAndGuard = Object.keys(topInstancesPerGuard).sort(
+    (a, b) => topInstancesPerGuard[b] - topInstancesPerGuard[a]
+  )
 
   let part2values = highestMinuteAndGuard[0].split(':').map(Number)
   part2 = part2values[0] * part2values[1]

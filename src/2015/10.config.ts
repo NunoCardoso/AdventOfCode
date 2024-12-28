@@ -1,12 +1,17 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '10',
     title: 'Elves Look, Elves Say',
-    status: 'done',
-    comment: 'look-and-say sequence, I do not think it can be faster, but one can try. The regex pattern is the key here',
+    year: 2015,
+    day: 10,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
+  mode: 'fastest',
   params: {
     input: '1113122113',
     limit: {
@@ -21,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config

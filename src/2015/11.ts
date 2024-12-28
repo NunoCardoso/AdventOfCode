@@ -7,18 +7,18 @@ export default async (lineReader: any, params: Params) => {
   const letters = 'abcdefghijklmnopqrstuvwxyz'
   let password = params.password
 
-  const writePass = (values: Array<number>): string => values.map((value) => letters[value]).join('')
+  const writePass = (values: number[]): string => values.map((value) => letters[value]).join('')
 
-  const readPass = (password: string): Array<number> => password.split('').map((s: string) => letters.indexOf(s))
+  const readPass = (password: string): number[] => password.split('').map((s: string) => letters.indexOf(s))
 
   while (part1 === '' || part2 === '') {
     const values = readPass(password)
-    values[values.length - 1]++
-    for (let i = values.length - 1; i > 0; i--) {
-      if (values[i] === letters.length) {
-        values[i] = 0
-        values[i - 1]++
-      }
+    let i = values.length - 1
+    values[i]++
+    while (values[i] === letters.length) {
+      values[i] = 0
+      values[i - 1]++
+      i--
     }
     password = writePass(values)
 
@@ -26,6 +26,7 @@ export default async (lineReader: any, params: Params) => {
     for (let i = 0; i < values.length - 2; i++) {
       if (values[i] + 1 === values[i + 1] && values[i] + 2 === values[i + 2]) {
         threeLettersFound = true
+        break
       }
     }
     const forbiddenLetters = !!password.match(/[lio]/)

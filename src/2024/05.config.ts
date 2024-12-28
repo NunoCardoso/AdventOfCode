@@ -4,7 +4,8 @@ export default {
     day: '05',
     title: 'Print queue',
     status: 'done',
-    comment: 'I think I got lucky in guessing that a simple sort will get me the right order, so I did not overcomplicate',
+    comment:
+      'I think I got lucky in guessing that a simple sort will get me the right order, so I did not overcomplicate',
     difficulty: 1
   },
   logLevel: 'info',

@@ -1,10 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '05',
-    title: "Doesn't He Have Intern-Elves For This?",
-    status: 'done',
-    comment: 'Just text regex checking',
+    title: "Does't He Have Intern-Elves For This?",
+    year: 2015,
+    day: 5,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    tags: ['Regex'],
     difficulty: 1
   },
   prod: {
@@ -14,3 +19,5 @@ export default {
     }
   }
 }
+
+export default config

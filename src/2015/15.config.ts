@@ -1,15 +1,18 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '15',
     title: 'Science for Hungry People',
-    status: 'done',
-    comment: 'not happy with the code for portion calculation but it works',
+    year: 2015,
+    day: 15,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 3
   },
   params: {
     calories: {
-      part1: undefined,
       part2: 500
     }
   },
@@ -27,3 +30,5 @@ export default {
     }
   }
 }
+
+export default config

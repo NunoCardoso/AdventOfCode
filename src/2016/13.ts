@@ -51,7 +51,14 @@ export default async (lineReader: any, params: Params) => {
       return !visited.has(getKey(newPoint))
     })
 
-  const doDijkstra = async (world: World<string>, opened: Array<Point>, openedIndex: Set<string>, visited: Set<string>, data: Data, type: string) => {
+  const doDijkstra = async (
+    world: World<string>,
+    opened: Array<Point>,
+    openedIndex: Set<string>,
+    visited: Set<string>,
+    data: Data,
+    type: string
+  ) => {
     const point: Point = opened.splice(-1)[0]
     const pointKey: string = getKey(point)
     log.debug('=== Dijkstra ===', point, 'opened', opened.length, 'data', data)

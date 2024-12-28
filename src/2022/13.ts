@@ -37,11 +37,18 @@ export default async (lineReader: any, params: Params) => {
         if (score !== 0) return score
       }
     }
-    return (left as NestedArray).length < (right as NestedArray).length ? -1 : (left as any).length > (right as any).length ? 1 : 0
+    return (left as NestedArray).length < (right as NestedArray).length
+      ? -1
+      : (left as any).length > (right as any).length
+        ? 1
+        : 0
   }
 
   if (!params.skipPart1) {
-    part1 = data.reduce((acc, packet, index) => acc + (compare(parse(packet[0]), parse(packet[1])) === -1 ? 1 : 0) * (index + 1), 0)
+    part1 = data.reduce(
+      (acc, packet, index) => acc + (compare(parse(packet[0]), parse(packet[1])) === -1 ? 1 : 0) * (index + 1),
+      0
+    )
   }
   if (!params.skipPart2) {
     const _data: Array<string> = data

@@ -32,7 +32,11 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const solveFor = (registers: Record<string, number>, instructions: Array<Instruction>, returnRegister: string): number => {
+  const solveFor = (
+    registers: Record<string, number>,
+    instructions: Array<Instruction>,
+    returnRegister: string
+  ): number => {
     for (let i = 0; i < instructions.length; i++) {
       switch (instructions[i].instruction) {
         case 'hlf':

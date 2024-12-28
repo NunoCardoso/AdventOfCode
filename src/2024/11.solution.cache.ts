@@ -12,7 +12,10 @@ export default async (lineReader: any, params: Params) => {
     if (rock === 0) return [1]
     if (rock.toString().length % 2 === 0) {
       let numberAsString = rock.toString()
-      return [+numberAsString.substring(0, numberAsString.length / 2), +numberAsString.substring(numberAsString.length / 2, numberAsString.length)]
+      return [
+        +numberAsString.substring(0, numberAsString.length / 2),
+        +numberAsString.substring(numberAsString.length / 2, numberAsString.length)
+      ]
     }
     return [(rock as number) * 2024]
   }

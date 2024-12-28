@@ -7,7 +7,9 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const world: World<number[]> = new Array(params.size).fill(null).map(() => new Array(params.size).fill(null).map(() => []))
+  const world: World<number[]> = new Array(params.size)
+    .fill(null)
+    .map(() => new Array(params.size).fill(null).map(() => []))
 
   const areas: Record<string, number> = {}
 

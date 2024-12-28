@@ -86,7 +86,9 @@ export default async (lineReader: any, params: Params) => {
     const firstRepeatedCycle = cacheHit[1][0]
     const delta = cacheHit[0] - firstRepeatedCycle
     const repeatedCycleIndex = ((params.cycles - 1 - firstRepeatedCycle) % delta) + firstRepeatedCycle
-    const cachedCycle: Array<number> | undefined = Array.from(cache.values()).find((val) => val[0] === repeatedCycleIndex)
+    const cachedCycle: Array<number> | undefined = Array.from(cache.values()).find(
+      (val) => val[0] === repeatedCycleIndex
+    )
     part2 = cachedCycle![1]
   }
 

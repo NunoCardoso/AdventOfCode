@@ -20,7 +20,7 @@ if (fs.existsSync(newFilePath)) {
   console.error('Error: ' + newFilePath + ' exists')
   process.exit()
 } else {
-  // cp index.ts
+  // make solution file
   fs.copyFileSync(__dirname + '/src/template/index.ts', newFileDirPath + process.argv[3] + '.ts')
   // make input.txt
   let file = fs.openSync(newInputDirPath + process.argv[3] + '.input.txt', 'a')
@@ -29,12 +29,17 @@ if (fs.existsSync(newFilePath)) {
   file = fs.openSync(newInputDirPath + process.argv[3] + '.test.txt', 'a')
   fs.closeSync(file)
 
-  let content = fs.readFileSync(__dirname + '/src/template/config.ts', 'utf8')
+  // make config file
+  let content = fs.readFileSync(__dirname + '/src/template/config.ts.template', 'utf8')
   content = content.replace(/\{\{year}}/g, process.argv[2])
   content = content.replace(/\{\{day}}/g, process.argv[3])
 
   file = fs.openSync(newFilePath, 'a')
   fs.writeSync(file, content)
   fs.closeSync(file)
+
+  // make readme file
+  fs.copyFileSync(__dirname + '/src/template/day.readme.md', newFileDirPath + process.argv[3] + '.readme.md')
+
   console.log('done')
 }

@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '21',
     title: 'RPG Simulator 20XX',
-    status: 'done',
-    comment: 'really funny puzzle, hard to get the day sequence right, but surprisingly quick to get optimal solution',
+    year: 2015,
+    day: 21,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 3
   },
   test: {
@@ -27,3 +31,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -84,7 +84,11 @@ export default async (lineReader: any, params: Params) => {
       } else if (conjunctionList.includes(target)) {
         const conjunctionInputs = conjunctionIndex.get(target)!
         // send high if at least one is low
-        const newPulseType: PulseType = conjunctionInputs.some((t) => data.memory[t.replaceAll('%', '').replaceAll('&', '')] === 'low') ? 'high' : 'low'
+        const newPulseType: PulseType = conjunctionInputs.some(
+          (t) => data.memory[t.replaceAll('%', '').replaceAll('&', '')] === 'low'
+        )
+          ? 'high'
+          : 'low'
         cables['&' + target].forEach((el: string) => newPulses.push([target, newPulseType, el]))
       }
     })

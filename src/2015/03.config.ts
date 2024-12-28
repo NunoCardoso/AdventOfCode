@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '03',
     title: 'Perfectly Spherical Houses in a Vacuum',
-    status: 'done',
-    comment: 'Good solution in the sense that a set is passed as function arg and changed by reference',
+    year: 2015,
+    day: 3,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   prod: {
@@ -14,3 +18,5 @@ export default {
     }
   }
 }
+
+export default config

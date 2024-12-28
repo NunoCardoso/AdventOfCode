@@ -74,7 +74,14 @@ export default async (lineReader: any, params: Params) => {
     }
 
     solutions.push(rightCode.join(''))
-    log.debug('valid permutation', validPermutation!.join(','), 'left code', leftCode?.join(''), 'right code', rightCode.join(''))
+    log.debug(
+      'valid permutation',
+      validPermutation!.join(','),
+      'left code',
+      leftCode?.join(''),
+      'right code',
+      rightCode.join('')
+    )
   })
 
   const part1 = solutions.reduce((x, y) => x + y.split('').filter((x) => ['1', '4', '7', '8'].includes(x)).length, 0)

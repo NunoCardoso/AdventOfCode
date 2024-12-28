@@ -1,11 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '04',
     title: 'The Ideal Stocking Stuffer',
-    comment: 'Nothing I can do to make it faster, running MD5 hashes until they meet criteria',
-    status: 'done',
-    tags: ['md5'],
+    year: 2015,
+    day: 4,
+    result: 'finished',
+    status: 'solved',
+    speed: 'md5',
+    code: 'clean',
+    tags: ['MD5'],
     difficulty: 1
   },
   params: {
@@ -31,3 +35,5 @@ export default {
     }
   }
 }
+
+export default config

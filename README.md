@@ -97,6 +97,7 @@ List of tags used:
 * Depth-first
 * Path-finding
 * Bron–Kerbosch
+* Regex
 
 # Coding guidelines v1.0
 
@@ -106,11 +107,13 @@ List of tags used:
 * Move away from structures like [number, number, number, string], they are fast but not easy to follow in code.
 
 ## Typing
-* do type everything. Avoid `any` type. reuse types such as `Point`, `Dimension`, `World`, they help.
+* do type everything. Avoid `any` type. 
+* Reuse types such as `Location`, `Dimension`, `World`, they help.
+* use [] instead of `Array`.
 * If possible, avoid `Record` and use `Map`. `Set` are also useful sometimes instead of `Array`
 ** for increments, try map.set("a", (map.get("a") ?? 0) + 1)
 ** prefer reduce for sums 
-* Prefer Location to Point. Location implies coordinates, Point is something that has location but also extra stuff
+* Prefer `Location` to `Point`. `Location` implies coordinates, `Point` is something that has location but also extra stuff
 * Prefer For...Of and For...in then forEach: 
 ** For... of loops over the Values
 ** For...in: Loops over the Keys.
@@ -125,7 +128,7 @@ Some functions names: `solveFor`, `deepFirst`, `breathFirst`, `dijkstra`
 * try to separate part1 and part2, while avoiding unnecessary array walks for each part. 
 
 ## Dependencies
-* Avoid lodash, use native JS 
+* **Avoid** lodash, use native JS 
 * libraries allowed: 
 ** js-combinatronics (for permutation / combination)
 ** spark-mp5 (md5 generation)
@@ -136,6 +139,8 @@ Some functions names: `solveFor`, `deepFirst`, `breathFirst`, `dijkstra`
       "abcabfgabsefd".match(/ab/) => ['ab', index: 0, input: 'abcabfgabsefd', groups: undefined]
       "abcabfgabsefd".match(/ab/g) => ['ab', 'ab', 'ab']
       "123123123".match(/ab/) => null
+
+* find duplicate characters: line.match(/(.)\1/g)
 
 ## Path finding
 
@@ -248,7 +253,8 @@ For box drawing (https://en.wikipedia.org/wiki/Box-drawing_characters):
 
 # IDEAS 
  
-* make output funnier
-* make runs change config
+* make output on report like a book, optional solve
+* title and summary to XX.readme.md
+* FUNNY STORY BITS in XX.readme.md
 
-## FUNNY STORY BITS
+

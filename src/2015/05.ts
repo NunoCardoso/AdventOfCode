@@ -12,9 +12,9 @@ export default async (lineReader: any, params: Params) => {
       if (vowelsNumber >= 3 && duplicates >= 1 && !forbiddenStrings) part1++
     }
     if (!params.skipPart2) {
-      const duplicates2 = line.match(/(..).*\1/g)?.length
-      const letterWith1distance = line.match(/(.).\1/g)?.length
-      if (duplicates2 > 0 && letterWith1distance > 0) part2++
+      const doubleDuplicates = line.match(/(..).*\1/g)?.length
+      const letterWith1Distance = line.match(/(.).\1/g)?.length
+      if (doubleDuplicates > 0 && letterWith1Distance > 0) part2++
     }
   }
 

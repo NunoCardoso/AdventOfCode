@@ -43,7 +43,12 @@ export default async (lineReader: any, params: Params) => {
 
   const valueFromLosangeKeypad = (point: Point): string => losangeKeyboard[point.map(String).join(',')]
 
-  const solveFor = (codes: Array<string>, position: Point, keypad: (point: Point, instruction: string) => void, getValue: (point: Point) => string): string =>
+  const solveFor = (
+    codes: Array<string>,
+    position: Point,
+    keypad: (point: Point, instruction: string) => void,
+    getValue: (point: Point) => string
+  ): string =>
     codes
       .map((code: string) => {
         code.split('').forEach((instruction: string) => keypad(position, instruction))

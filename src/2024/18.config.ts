@@ -4,7 +4,9 @@ export default {
     day: '18',
     title: 'RAM Run',
     status: 'done',
-    comment: 'In this puzzle, X is horizontal (col) distance, Y is vertical (row) distance. I am out of ideas to' + 'optimize, maybe try bytes / 2, then bytes / 4, etc',
+    comment:
+      'In this puzzle, X is horizontal (col) distance, Y is vertical (row) distance. I am out of ideas to' +
+      'optimize, maybe try bytes / 2, then bytes / 4, etc',
     tags: ['a*'],
     difficulty: 4
   },

@@ -46,7 +46,8 @@ Promise.all(puzzles.map(getConfig)).then(async (days: Array<any>) => {
     if (!res.config?.status) console.error('No Status')
     status += 'Difficulty: ' + (res.config?.difficulty ?? '-') + '\n'
     if (!res.config?.difficulty) console.error('No Difficulty')
-    if (res.config?.tags) status += 'Tags: ' + (Array.isArray(res.config?.tags) ? res.config?.tags.join(', ') : res.config?.tags) + '\n'
+    if (res.config?.tags)
+      status += 'Tags: ' + (Array.isArray(res.config?.tags) ? res.config?.tags.join(', ') : res.config?.tags) + '\n'
     if (res.config.comment) status += 'Comment: ' + res.config.comment + '\n'
     if (!res.config?.comment) console.error('No Comment')
     status += 'Part 1 ' + res.part1.status + '  part 2 ' + res.part2.status + '  in ' + durString + '\n'

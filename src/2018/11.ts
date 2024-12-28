@@ -12,12 +12,24 @@ export const getPowerLevel = (row: number, col: number, serial: number): number 
 }
 
 // getPowerLevelSumTable is a table where each cell has the sum of all cells in the square it makes
-export const getPowerLevelSumTable = (row: number, col: number, gridSerialInput: number, powerLevelGrid: World<number | null>, powerLevelSumTable: World<number | null>) => {
+export const getPowerLevelSumTable = (
+  row: number,
+  col: number,
+  gridSerialInput: number,
+  powerLevelGrid: World<number | null>,
+  powerLevelSumTable: World<number | null>
+) => {
   return (
     (powerLevelSumTable[row - 1][col - 1] ?? 0) +
     (powerLevelGrid[row][col] ?? 0) +
-    range(0, row).reduce((acc, _row) => acc + (_row === 0 || col === 0 ? 0 : getPowerLevel(_row, col, gridSerialInput)), 0) +
-    range(0, col).reduce((acc, _col) => acc + (row === 0 || _col === 0 ? 0 : getPowerLevel(row, _col, gridSerialInput)), 0)
+    range(0, row).reduce(
+      (acc, _row) => acc + (_row === 0 || col === 0 ? 0 : getPowerLevel(_row, col, gridSerialInput)),
+      0
+    ) +
+    range(0, col).reduce(
+      (acc, _col) => acc + (row === 0 || _col === 0 ? 0 : getPowerLevel(row, _col, gridSerialInput)),
+      0
+    )
   )
 }
 
@@ -35,13 +47,21 @@ export default async (lineReader: any, params: Params) => {
   let gridSerialInput: number
   for await (const line of lineReader) gridSerialInput = +line
 
-  let powerLevelGrid: World<number | null> = new Array(params.size + 1).fill(null).map(() => new Array(params.size + 1).fill(null))
+  let powerLevelGrid: World<number | null> = new Array(params.size + 1)
+    .fill(null)
+    .map(() => new Array(params.size + 1).fill(null))
   let powerLevelSumTable: World<number | null> = global.structuredClone(powerLevelGrid)
 
   for (var row = 1; row <= params.size; row++) {
     for (var col = 1; col <= params.size; col++) {
       powerLevelGrid[row][col] = getPowerLevel(row, col, gridSerialInput!)
-      powerLevelSumTable[row][col] = getPowerLevelSumTable(row, col, gridSerialInput!, powerLevelGrid, powerLevelSumTable)
+      powerLevelSumTable[row][col] = getPowerLevelSumTable(
+        row,
+        col,
+        gridSerialInput!,
+        powerLevelGrid,
+        powerLevelSumTable
+      )
     }
   }
 

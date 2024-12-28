@@ -1,12 +1,16 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '07',
     title: 'Some Assembly Required',
-    status: 'done',
-    tags: ['recursive'],
-    comment: 'First recursive puzzle, works as intended',
-    difficulty: 2
+    year: 2015,
+    day: 7,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2,
+    tags: ['Recursion']
   },
   prod: {
     answers: {
@@ -15,3 +19,5 @@ export default {
     }
   }
 }
+
+export default config

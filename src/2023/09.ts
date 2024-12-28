@@ -24,7 +24,9 @@ export default async (lineReader: any, params: Params) => {
         }
         sequence = newSequence
       }
-      return acc + (mode === 'part1' ? lastNumbers.reduce((a, b) => a + b) : firstNumbers.reverse().reduce((a, b) => b - a))
+      return (
+        acc + (mode === 'part1' ? lastNumbers.reduce((a, b) => a + b) : firstNumbers.reverse().reduce((a, b) => b - a))
+      )
     }, 0)
 
   if (!params.skipPart1) {

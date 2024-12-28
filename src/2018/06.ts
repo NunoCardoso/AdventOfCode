@@ -18,7 +18,8 @@ export default async (lineReader: any, params: Params) => {
     points.push([x, y, index++])
   }
 
-  const getManhattan = (point1: PointPlus, point2: PointPlus) => Math.abs(point1[0] - point2[0]) + Math.abs(point1[1] - point2[1])
+  const getManhattan = (point1: PointPlus, point2: PointPlus) =>
+    Math.abs(point1[0] - point2[0]) + Math.abs(point1[1] - point2[1])
 
   const getClosestPointIdAndTotalDistance = (thisPoint: PointPlus): [number | null, number] => {
     let closestPointId: number[] = []

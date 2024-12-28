@@ -1,12 +1,16 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '13',
     title: 'Knights of the Dinner Table',
-    status: 'done',
-    tags: ['permutation'],
-    comment: 'I like the simple way to change the setup for part 2',
-    difficulty: 2
+    year: 2015,
+    day: 13,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2,
+    tags: ['Permutation']
   },
   params: {
     name: 'Nuno'
@@ -24,3 +28,5 @@ export default {
     }
   }
 }
+
+export default config

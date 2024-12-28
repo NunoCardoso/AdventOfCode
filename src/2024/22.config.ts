@@ -4,7 +4,9 @@ export default {
     day: '22',
     title: 'Monkey Market',
     status: 'done',
-    comment: 'Not hard but hard to comprehend the whole thing. Had trouble separating price from price diff from' + 'secret number, but with careful debugging, I managed.',
+    comment:
+      'Not hard but hard to comprehend the whole thing. Had trouble separating price from price diff from' +
+      'secret number, but with careful debugging, I managed.',
     difficulty: 4
   },
   logLevel: 'info',

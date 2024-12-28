@@ -29,7 +29,10 @@ export default async (lineReader: any, params: Params) => {
     while (true) {
       if (it >= instructions.length) break
       log.debug('it', it, 'registers', registers, 'instruction', instructions[it])
-      const value: number = typeof instructions[it].x === 'number' ? (instructions[it].x as number) : (registers[instructions[it].x] as number)
+      const value: number =
+        typeof instructions[it].x === 'number'
+          ? (instructions[it].x as number)
+          : (registers[instructions[it].x] as number)
       if (instructions[it].op === 'cpy') registers[instructions[it].y!] = value
       if (instructions[it].op === 'inc') registers[instructions[it].x] = registers[instructions[it].x] + 1
       if (instructions[it].op === 'dec') registers[instructions[it].x] = registers[instructions[it].x] - 1

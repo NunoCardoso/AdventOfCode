@@ -47,8 +47,19 @@ export default async (lineReader: any, params: Params) => {
     rowIndex++
   }
 
-  const printWorld = (world: World<string>, bestOpened: Path, openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
-    log.info('best opened', bestOpened?.[bestOpened.length - 1]?.distanceDone, 'data', data.path?.[data.path.length - 1]?.distanceDone)
+  const printWorld = (
+    world: World<string>,
+    bestOpened: Path,
+    openedIndex: Record<string, number>,
+    visitedIndex: Record<string, number>,
+    data: Data
+  ) => {
+    log.info(
+      'best opened',
+      bestOpened?.[bestOpened.length - 1]?.distanceDone,
+      'data',
+      data.path?.[data.path.length - 1]?.distanceDone
+    )
     for (var row = 0; row < world.length; row++) {
       let s = ''
       for (var col = 0; col < world[row].length; col++) {
@@ -125,7 +136,13 @@ export default async (lineReader: any, params: Params) => {
     ])
   }
 
-  const doAstar = (world: World<string>, opened: Path[], openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
+  const doAstar = (
+    world: World<string>,
+    opened: Path[],
+    openedIndex: Record<string, number>,
+    visitedIndex: Record<string, number>,
+    data: Data
+  ) => {
     log.trace('=== A* === opened', opened.length)
     let path: Path = opened.splice(-1)[0]
     let head = path[path.length - 1]
@@ -174,7 +191,13 @@ export default async (lineReader: any, params: Params) => {
         opened.push(newPath)
         openedIndex[newHeadKey] = newHead.distanceDone
       })
-      opened.sort((a, b) => b[b.length - 1].distanceDone + b[b.length - 1].distanceLeft - a[a.length - 1].distanceDone - a[a.length - 1].distanceLeft)
+      opened.sort(
+        (a, b) =>
+          b[b.length - 1].distanceDone +
+          b[b.length - 1].distanceLeft -
+          a[a.length - 1].distanceDone -
+          a[a.length - 1].distanceLeft
+      )
     }
   }
 
@@ -197,7 +220,8 @@ export default async (lineReader: any, params: Params) => {
     let iteration: number = 0
     while (opened.length > 0) {
       doAstar(world, opened, openedIndex, visitedIndex, data)
-      if (params?.ui?.show && params?.ui.during) printWorld(world, opened[opened.length - 1], openedIndex, visitedIndex, data)
+      if (params?.ui?.show && params?.ui.during)
+        printWorld(world, opened[opened.length - 1], openedIndex, visitedIndex, data)
       if (params?.ui?.keypress) await waitForKey()
       iterations++
     }

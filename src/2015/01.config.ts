@@ -1,14 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
     title: 'Not Quite Lisp',
-    summary: 'Santa is delivering presents, but got stuck on a building',
     year: 2015,
     day: 1,
     result: 'finished',
     status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Functional puzzle. parsing input, split, and do counting',
     difficulty: 1
   },
   prod: {
@@ -18,3 +18,5 @@ export default {
     }
   }
 }
+
+export default config

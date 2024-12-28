@@ -7,7 +7,8 @@ export const getPatternForIndex = (i: number, currentState: string[]) =>
     return currentState[index]
   })
 
-export const setPatternForIndex = (i: number, pattern: string, currentState: string[], negativeState: string[]) => (i < 0 ? (negativeState[Math.abs(i)] = pattern) : (currentState[i] = pattern))
+export const setPatternForIndex = (i: number, pattern: string, currentState: string[], negativeState: string[]) =>
+  i < 0 ? (negativeState[Math.abs(i)] = pattern) : (currentState[i] = pattern)
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -71,7 +72,13 @@ export default async (lineReader: any, params: Params) => {
 
       currentState = nextState
 
-      log.debug(iterations, currentState.slice(0, negativeStateShift).join(''), '|', currentState.slice(negativeStateShift, currentState.length).join(''), negativeStateShift)
+      log.debug(
+        iterations,
+        currentState.slice(0, negativeStateShift).join(''),
+        '|',
+        currentState.slice(negativeStateShift, currentState.length).join(''),
+        negativeStateShift
+      )
     }
 
     // part1

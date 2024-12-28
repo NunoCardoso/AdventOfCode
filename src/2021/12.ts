@@ -85,7 +85,12 @@ export default async (lineReader: any, params: Params) => {
     return morePaths
   }
 
-  const searchAlgorithm = (finishedPaths: Array<Path>, steps: Steps, currentPath: Path, numberOfVisitsForSmallCaves: string) => {
+  const searchAlgorithm = (
+    finishedPaths: Array<Path>,
+    steps: Steps,
+    currentPath: Path,
+    numberOfVisitsForSmallCaves: string
+  ) => {
     const morePaths: Array<Path> = findMorePaths(steps, currentPath, numberOfVisitsForSmallCaves)
 
     // if more paths is empty, this returns

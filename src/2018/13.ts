@@ -25,9 +25,11 @@ export default async (lineReader: any, params: Params) => {
   const replaceCharacter = (world: World<string>, rowIndex: number, colIndex: number) => {
     // need to replace the value, let's assume it can be |, - or +
     let trackOnLeft = colIndex > 0 ? ['-', '/', '\\', '+'].includes(world[rowIndex][colIndex - 1]) : false
-    let trackOnRight = colIndex < world[rowIndex].length - 1 ? ['-', '/', '\\', '+'].includes(world[rowIndex][colIndex + 1]) : false
+    let trackOnRight =
+      colIndex < world[rowIndex].length - 1 ? ['-', '/', '\\', '+'].includes(world[rowIndex][colIndex + 1]) : false
     let trackOnTop = rowIndex > 0 ? ['|', '/', '\\', '+'].includes(world[rowIndex - 1][colIndex]) : false
-    let trackOnBottom = rowIndex < world.length - 1 ? ['|', '/', '\\', '+'].includes(world[rowIndex + 1][colIndex]) : false
+    let trackOnBottom =
+      rowIndex < world.length - 1 ? ['|', '/', '\\', '+'].includes(world[rowIndex + 1][colIndex]) : false
     if (trackOnLeft && trackOnBottom && !trackOnRight && !trackOnTop) return '\\'
     if (trackOnRight && trackOnTop && !trackOnLeft && !trackOnBottom) return '\\'
     if (trackOnLeft && trackOnTop && !trackOnRight && !trackOnBottom) return '/'
@@ -172,7 +174,9 @@ export default async (lineReader: any, params: Params) => {
       }
 
       // carts move first by row, then by column
-      carts = carts.sort((a, b) => (a.location[0] - b.location[0] < 0 ? -1 : a.location[0] - b.location[0] > 0 ? 1 : a.location[1] - b.location[1]))
+      carts = carts.sort((a, b) =>
+        a.location[0] - b.location[0] < 0 ? -1 : a.location[0] - b.location[0] > 0 ? 1 : a.location[1] - b.location[1]
+      )
 
       log.debug('number of carts', carts.length)
       log.debug(

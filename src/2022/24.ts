@@ -117,7 +117,8 @@ export default async (lineReader: any, params: Params) => {
     console.log('    ' + clc.green('#'.repeat(world.columns)) + end + clc.green('#'))
   }
 
-  const getDistance = (point1: Point, point2: Point): number => Math.sqrt((point1[0] - point2[0]) * (point1[0] - point2[0]) + (point1[1] - point2[1]) * (point1[1] - point2[1]))
+  const getDistance = (point1: Point, point2: Point): number =>
+    Math.sqrt((point1[0] - point2[0]) * (point1[0] - point2[0]) + (point1[1] - point2[1]) * (point1[1] - point2[1]))
 
   const generateMove = (i: number, templateGrid: Grid, blizzards: Blizzards): Grid => {
     const grid = _.cloneDeep(templateGrid)
@@ -146,7 +147,8 @@ export default async (lineReader: any, params: Params) => {
     return grid
   }
 
-  const printPath = (path: Path) => printStep(path.head) + '=>(' + path.tail.length + ')' + path.tail.map((_s) => '{' + printStep(_s) + '}').join('')
+  const printPath = (path: Path) =>
+    printStep(path.head) + '=>(' + path.tail.length + ')' + path.tail.map((_s) => '{' + printStep(_s) + '}').join('')
 
   const printStep = (step: Step) => '#' + step.move + '[' + step.point[0] + ',' + step.point[1] + ']' + step.action
 
@@ -224,13 +226,25 @@ export default async (lineReader: any, params: Params) => {
         if (matchesPoint(newPath.head.point, end) || matchesPoint(newPath.head.point, start)) {
           return false
         }
-        if (newPath.head.point[0] < 0 || newPath.head.point[1] < 0 || newPath.head.point[0] >= world.rows || newPath.head.point[1] >= world.columns) {
+        if (
+          newPath.head.point[0] < 0 ||
+          newPath.head.point[1] < 0 ||
+          newPath.head.point[0] >= world.rows ||
+          newPath.head.point[1] >= world.columns
+        ) {
           log.trace('rejecting new path', printPath(newPath), 'out of bounds')
           return true
         }
         const worldMove = world.moves[newMove]
         if (worldMove[newPath.head.point[0]][newPath.head.point[1]] !== '.') {
-          log.trace('rejecting new path', printPath(newPath), 'on moves #', newMove, 'value is', worldMove[newPath.head.point[0]][newPath.head.point[1]])
+          log.trace(
+            'rejecting new path',
+            printPath(newPath),
+            'on moves #',
+            newMove,
+            'value is',
+            worldMove[newPath.head.point[0]][newPath.head.point[1]]
+          )
           return true
         }
 

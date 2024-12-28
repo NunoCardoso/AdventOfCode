@@ -56,7 +56,8 @@ export default async (lineReader: any, params: Params) => {
     console.log('')
   }
 
-  const outOfBounds = (newPoint: Point) => newPoint[0] < 0 || newPoint[0] >= worldDimensions[0] || newPoint[1] < 0 || newPoint[1] >= worldDimensions[1]
+  const outOfBounds = (newPoint: Point) =>
+    newPoint[0] < 0 || newPoint[0] >= worldDimensions[0] || newPoint[1] < 0 || newPoint[1] >= worldDimensions[1]
 
   const isSame = (p: Point, p2: Point) => p[0] === p2[0] && p[1] === p2[1]
 
@@ -81,13 +82,17 @@ export default async (lineReader: any, params: Params) => {
       const pointValue = getValue(point)
       const newPointValue = getValue(newPoint)
 
-      const isTop = (newPointValue: string, point: Point, newPoint: Point): boolean => ['S', '7', '|', 'F'].includes(newPointValue) && newPoint[0] === point[0] - 1
+      const isTop = (newPointValue: string, point: Point, newPoint: Point): boolean =>
+        ['S', '7', '|', 'F'].includes(newPointValue) && newPoint[0] === point[0] - 1
 
-      const isBottom = (newPointValue: string, point: Point, newPoint: Point): boolean => ['S', 'J', '|', 'L'].includes(newPointValue) && newPoint[0] === point[0] + 1
+      const isBottom = (newPointValue: string, point: Point, newPoint: Point): boolean =>
+        ['S', 'J', '|', 'L'].includes(newPointValue) && newPoint[0] === point[0] + 1
 
-      const isLeft = (newPointValue: string, point: Point, newPoint: Point): boolean => ['S', 'L', '-', 'F'].includes(newPointValue) && newPoint[1] === point[1] - 1
+      const isLeft = (newPointValue: string, point: Point, newPoint: Point): boolean =>
+        ['S', 'L', '-', 'F'].includes(newPointValue) && newPoint[1] === point[1] - 1
 
-      const isRight = (newPointValue: string, point: Point, newPoint: Point): boolean => ['S', 'J', '-', '7'].includes(newPointValue) && newPoint[1] === point[1] + 1
+      const isRight = (newPointValue: string, point: Point, newPoint: Point): boolean =>
+        ['S', 'J', '-', '7'].includes(newPointValue) && newPoint[1] === point[1] + 1
 
       if (pointValue === '|' && (isTop(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))) {
         return true
@@ -136,22 +141,40 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const guessPipeValue = (p: Point, pipeBefore: Point, pipeAfter: Point): string => {
-    if ((isSame([p[0], p[1] - 1], pipeBefore) && isSame([p[0], p[1] + 1], pipeAfter)) || (isSame([p[0], p[1] - 1], pipeAfter) && isSame([p[0], p[1] + 1], pipeBefore))) {
+    if (
+      (isSame([p[0], p[1] - 1], pipeBefore) && isSame([p[0], p[1] + 1], pipeAfter)) ||
+      (isSame([p[0], p[1] - 1], pipeAfter) && isSame([p[0], p[1] + 1], pipeBefore))
+    ) {
       return '-'
     }
-    if ((isSame([p[0] - 1, p[1]], pipeBefore) && isSame([p[0] + 1, p[1]], pipeAfter)) || (isSame([p[0] - 1, p[1]], pipeAfter) && isSame([p[0] + 1, p[1]], pipeBefore))) {
+    if (
+      (isSame([p[0] - 1, p[1]], pipeBefore) && isSame([p[0] + 1, p[1]], pipeAfter)) ||
+      (isSame([p[0] - 1, p[1]], pipeAfter) && isSame([p[0] + 1, p[1]], pipeBefore))
+    ) {
       return '|'
     }
-    if ((isSame([p[0] + 1, p[1]], pipeBefore) && isSame([p[0], p[1] - 1], pipeAfter)) || (isSame([p[0] + 1, p[1]], pipeAfter) && isSame([p[0], p[1] - 1], pipeBefore))) {
+    if (
+      (isSame([p[0] + 1, p[1]], pipeBefore) && isSame([p[0], p[1] - 1], pipeAfter)) ||
+      (isSame([p[0] + 1, p[1]], pipeAfter) && isSame([p[0], p[1] - 1], pipeBefore))
+    ) {
       return '7'
     }
-    if ((isSame([p[0] + 1, p[1]], pipeBefore) && isSame([p[0], p[1] + 1], pipeAfter)) || (isSame([p[0] + 1, p[1]], pipeAfter) && isSame([p[0], p[1] + 1], pipeBefore))) {
+    if (
+      (isSame([p[0] + 1, p[1]], pipeBefore) && isSame([p[0], p[1] + 1], pipeAfter)) ||
+      (isSame([p[0] + 1, p[1]], pipeAfter) && isSame([p[0], p[1] + 1], pipeBefore))
+    ) {
       return 'F'
     }
-    if ((isSame([p[0] - 1, p[1]], pipeBefore) && isSame([p[0], p[1] - 1], pipeAfter)) || (isSame([p[0] - 1, p[1]], pipeAfter) && isSame([p[0], p[1] - 1], pipeBefore))) {
+    if (
+      (isSame([p[0] - 1, p[1]], pipeBefore) && isSame([p[0], p[1] - 1], pipeAfter)) ||
+      (isSame([p[0] - 1, p[1]], pipeAfter) && isSame([p[0], p[1] - 1], pipeBefore))
+    ) {
       return 'J'
     }
-    if ((isSame([p[0] - 1, p[1]], pipeBefore) && isSame([p[0], p[1] + 1], pipeAfter)) || (isSame([p[0] - 1, p[1]], pipeAfter) && isSame([p[0], p[1] + 1], pipeBefore))) {
+    if (
+      (isSame([p[0] - 1, p[1]], pipeBefore) && isSame([p[0], p[1] + 1], pipeAfter)) ||
+      (isSame([p[0] - 1, p[1]], pipeAfter) && isSame([p[0], p[1] + 1], pipeBefore))
+    ) {
       return 'L'
     }
     return ''

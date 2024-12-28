@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '18',
     title: 'Like a GIF For Your Yard',
-    status: 'done',
-    comment: 'Mapping changes in a grid and iterating until the final state exists',
+    year: 2015,
+    day: 18,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 3
   },
   ui: {
@@ -42,3 +46,5 @@ export default {
     }
   }
 }
+
+export default config

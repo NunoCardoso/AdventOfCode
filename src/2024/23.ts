@@ -55,7 +55,10 @@ export default async (lineReader: any, params: Params) => {
     let treeComputers: Set<string> = new Set()
     for (var [computerA, otherComputers] of connections.entries()) {
       new Combination(otherComputers, 2).toArray().forEach(([computerB, computerC]) => {
-        if (connectionSet.has(computerB + '-' + computerC) && [computerA, computerB, computerC].some((c) => c.startsWith('t')))
+        if (
+          connectionSet.has(computerB + '-' + computerC) &&
+          [computerA, computerB, computerC].some((c) => c.startsWith('t'))
+        )
           treeComputers.add([computerA, computerB, computerC].sort((a, b) => a.localeCompare(b)).join(','))
       })
     }

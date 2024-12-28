@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '08',
     title: 'Matchsticks',
-    comment: 'Using JSON.stringify helps a lot',
-    status: 'done',
+    year: 2015,
+    day: 8,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
   test: {
@@ -21,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

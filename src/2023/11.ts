@@ -33,8 +33,11 @@ export default async (lineReader: any, params: Params) => {
   const distanceBetweenTwoPoints = (p1: Point, p2: Point, distanceInEmpty: number) =>
     Math.abs(p2[0] - p1[0]) +
     Math.abs(p2[1] - p1[1]) +
-    rowsWithoutGalaxies.filter((row: number) => row > Math.min(p2[0], p1[0]) && row < Math.max(p2[0], p1[0])).length * distanceInEmpty +
-    columnsWithoutGalaxies.filter((col: number) => col > Math.min(p2[1], p1[1]) && col < Math.max(p2[1], p1[1])).length * distanceInEmpty
+    rowsWithoutGalaxies.filter((row: number) => row > Math.min(p2[0], p1[0]) && row < Math.max(p2[0], p1[0])).length *
+      distanceInEmpty +
+    columnsWithoutGalaxies.filter((col: number) => col > Math.min(p2[1], p1[1]) && col < Math.max(p2[1], p1[1]))
+      .length *
+      distanceInEmpty
 
   const solveFor = (distanceInEmpty: number): number => {
     let lowestSum = 0

@@ -28,8 +28,10 @@ export default async (lineReader: any, params: Params) => {
       update.forEach((page, pageIndex) => {
         let leftRules = orderingRules.filter((rule) => rule[0] === page)
         let rightRules = orderingRules.filter((rule) => rule[1] === page)
-        if (leftRules.some((rule) => update.indexOf(rule[1]) >= 0 && update.indexOf(rule[1]) < pageIndex)) isOrderOK = false
-        if (rightRules.some((rule) => update.indexOf(rule[0]) >= 0 && update.indexOf(rule[0]) > pageIndex)) isOrderOK = false
+        if (leftRules.some((rule) => update.indexOf(rule[1]) >= 0 && update.indexOf(rule[1]) < pageIndex))
+          isOrderOK = false
+        if (rightRules.some((rule) => update.indexOf(rule[0]) >= 0 && update.indexOf(rule[0]) > pageIndex))
+          isOrderOK = false
       })
       if (part === 'part1' && isOrderOK) {
         count += update[(update.length - 1) / 2]

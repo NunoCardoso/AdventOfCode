@@ -50,7 +50,13 @@ export default async (lineReader: any, params: Params) => {
     return Object.keys(groups).length
   } */
 
-  const solve = (group1: Array<Array<string>>, group2: Array<Array<string>>, keys: Array<string>, connections: Set<string>, leftoverConnections: number) => {
+  const solve = (
+    group1: Array<Array<string>>,
+    group2: Array<Array<string>>,
+    keys: Array<string>,
+    connections: Set<string>,
+    leftoverConnections: number
+  ) => {
     let gr
   }
 

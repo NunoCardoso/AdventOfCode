@@ -9,48 +9,52 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   const replacements: Replacements = new Map()
-  let moleculeBits: Array<string> = []
+  let atoms: string[] = []
 
-  const breakIntoAtoms = (mol: string): Array<string> => (mol === 'e' ? ['e'] : (mol.match(/[A-Z][a-z]*/g) as Array<string>))
+  const breakIntoAtoms = (mol: string): string[] => (mol === 'e' ? ['e'] : mol.match(/[A-Z][a-z]*/g)!)
 
   for await (const line of lineReader) {
     if (line.match('=>')) {
       const [left, right] = line.split(' => ')
       replacements.set(left, (replacements.get(left) ?? []).concat(right))
     } else {
-      if (line) moleculeBits = breakIntoAtoms(line)
+      if (line) atoms = breakIntoAtoms(line)
     }
   }
 
   if (!params.skipPart1) {
     const molecules = new Set<string>()
-    moleculeBits.forEach((molecule, i) => {
-      replacements.get(molecule)?.forEach((reaction: string) => molecules.add(moleculeBits.slice(0, i).join('') + reaction + moleculeBits.slice(i + 1, moleculeBits.length).join('')))
-    })
+    atoms.forEach((atom, i) =>
+      replacements
+        .get(atom)
+        ?.forEach((reaction: string) =>
+          molecules.add(atoms.slice(0, i).join('') + reaction + atoms.slice(i + 1, atoms.length).join(''))
+        )
+    )
     part1 = molecules.size
   }
 
   if (!params.skipPart2) {
-    let normalMolecules = 0
-    let commaMolecules = 0
-    let parenthesisMolecules = 0
-    moleculeBits.forEach((bit) => {
-      switch (bit) {
+    let atomsCount = 0
+    let commas = 0
+    let parenthesis = 0
+    atoms.forEach((atom: string) => {
+      switch (atom) {
         case 'Rn':
         case 'Ar':
-          parenthesisMolecules++
+          parenthesis++
           break
         case 'Y':
-          commaMolecules++
+          commas++
           break
         default:
-          normalMolecules++
+          atomsCount++
       }
     })
-    log.debug('normal', normalMolecules, 'comma', commaMolecules, 'parenthesis', parenthesisMolecules)
+    log.debug('normal', atomsCount, 'comma', commas, 'parenthesis', parenthesis)
     // in test, we have e => H or e => O
     // in prod we have e => HF or e => AB, which requires one less step to go to e
-    part2 = normalMolecules - commaMolecules - (params.isTest ? 0 : 1)
+    part2 = atomsCount - commas - (params.isTest ? 0 : 1)
   }
 
   return { part1, part2 }

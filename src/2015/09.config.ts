@@ -1,11 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '09',
     title: 'All in a Single Night',
-    comment: 'City path travelling, shortest / longest routes, done easily with permutations',
-    status: 'done',
-    tags: ['permutation'],
+    year: 2015,
+    day: 9,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    tags: ['Permutation'],
     difficulty: 2
   },
   test: {
@@ -22,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config

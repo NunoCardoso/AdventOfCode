@@ -17,7 +17,9 @@ export default async (lineReader: any, params: Params) => {
   log.info('Setting screen width ' + dimensions.width + ' height ' + dimensions.height)
 
   const printGrid = () => {
-    screen.forEach((row, i) => console.log(row.map((cell, j) => (screen[i][j] === '#' ? clc.blue(screen[i][j]) : screen[i][j])).join('')))
+    screen.forEach((row, i) =>
+      console.log(row.map((cell, j) => (screen[i][j] === '#' ? clc.blue(screen[i][j]) : screen[i][j])).join(''))
+    )
   }
 
   for await (const line of lineReader) {

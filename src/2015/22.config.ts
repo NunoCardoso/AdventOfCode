@@ -3,10 +3,14 @@ export default {
     year: '2015',
     day: '22',
     title: 'Wizard Simulator 20XX',
-    status: 'done',
-    comment: 'if I let Nothing to be an action, then I get a lower value for part 2 (987) than the answer (1216)',
-    difficulty: 3
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'clean',
+    difficulty: 4,
+    tags: ['Path finding']
   },
+  logLevel: 'info',
   test: [
     {
       id: 'test1',
@@ -16,7 +20,7 @@ export default {
         spells: ['Poison', 'Magic Missile']
       },
       answers: {
-        part1: 173 + 53
+        //  part1: 173 + 53
       }
     },
     {
@@ -27,7 +31,7 @@ export default {
         spells: ['Recharge', 'Shield', 'Drain', 'Poison', 'Magic Missile']
       },
       answers: {
-        part1: 229 + 113 + 73 + 173 + 53
+        //  part1: 229 + 113 + 73 + 173 + 53
       }
     }
   ],

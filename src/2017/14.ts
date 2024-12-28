@@ -32,7 +32,13 @@ export default async (lineReader: any, params: Params) => {
       [seedValueCoords[0], seedValueCoords[1] - 1]
     ]
       .filter(
-        (value) => value[0] >= 0 && value[0] < params.size && value[1] >= 0 && value[1] < params.size && !currentGroup.has(value[0] + ':' + value[1]) && activeSquares.has(value[0] + ':' + value[1])
+        (value) =>
+          value[0] >= 0 &&
+          value[0] < params.size &&
+          value[1] >= 0 &&
+          value[1] < params.size &&
+          !currentGroup.has(value[0] + ':' + value[1]) &&
+          activeSquares.has(value[0] + ':' + value[1])
       )
       .map((value) => value[0] + ':' + value[1])
   }

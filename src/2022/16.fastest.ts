@@ -48,7 +48,8 @@ export default async (lineReader: any, params: Params) => {
 
   const tunnelsBetweenValvesWithFlow: TunnelMap = new Map()
 
-  const areAllValvesWithFlowOpened = (step: Step): boolean => intersect(step.valvesOpened, valvesWithFlow).length === valvesWithFlow.length
+  const areAllValvesWithFlowOpened = (step: Step): boolean =>
+    intersect(step.valvesOpened, valvesWithFlow).length === valvesWithFlow.length
 
   const printAction = (a: string) => (a === 'moving' ? '🚀 ' : a === 'opening' ? '☸️  ' : a === 'stay' ? '🪑 ' : '🚩 ')
 
@@ -58,7 +59,13 @@ export default async (lineReader: any, params: Params) => {
     s.human.inValve +
     (!s.human.remaining ? '' : '(+' + s.human.remaining + ')') +
     '}' +
-    (s.withElephant ? '🐘 {' + printAction(s.elephant!.action) + s.elephant!.inValve + (!s.elephant!.remaining ? '' : '(+' + s.elephant!.remaining + ')') + '}' : '') +
+    (s.withElephant
+      ? '🐘 {' +
+        printAction(s.elephant!.action) +
+        s.elephant!.inValve +
+        (!s.elephant!.remaining ? '' : '(+' + s.elephant!.remaining + ')') +
+        '}'
+      : '') +
     '[💨 ' +
     s.pressure +
     '(+' +
@@ -93,7 +100,9 @@ export default async (lineReader: any, params: Params) => {
       opened.sort(
         (a, b) =>
           // orders from least to most, we pick best candidates from end of list
-          a.head.pressure + a.head.pressureIncrease * (timeLimit - a.head.time) - (b.head.pressure + b.head.pressureIncrease * (timeLimit - b.head.time))
+          a.head.pressure +
+          a.head.pressureIncrease * (timeLimit - a.head.time) -
+          (b.head.pressure + b.head.pressureIncrease * (timeLimit - b.head.time))
       )
     }
     log.debug(

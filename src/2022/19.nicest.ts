@@ -36,9 +36,11 @@ export default async (lineReader: any, params: Params) => {
 
   const blueprints: Array<Blueprint> = []
 
-  const haveResourcesForGeodeRobot = (blueprint: Blueprint, head: Step) => head.resources.obsidian >= blueprint.geodeRobot.obsidian && head.resources.ore >= blueprint.geodeRobot.ore
+  const haveResourcesForGeodeRobot = (blueprint: Blueprint, head: Step) =>
+    head.resources.obsidian >= blueprint.geodeRobot.obsidian && head.resources.ore >= blueprint.geodeRobot.ore
 
-  const haveResourcesForObsidianRobot = (blueprint: Blueprint, head: Step) => head.resources.clay >= blueprint.obsidianRobot.clay && head.resources.ore >= blueprint.obsidianRobot.ore
+  const haveResourcesForObsidianRobot = (blueprint: Blueprint, head: Step) =>
+    head.resources.clay >= blueprint.obsidianRobot.clay && head.resources.ore >= blueprint.obsidianRobot.ore
 
   const haveResourcesForClayRobot = (blueprint: Blueprint, head: Step) => head.resources.ore >= blueprint.clayRobot.ore
 
@@ -63,16 +65,33 @@ export default async (lineReader: any, params: Params) => {
         ))
 
   const timeToMakeAClayRobot = (blueprint: Blueprint, step: Step): number =>
-    1 + (haveResourcesForClayRobot(blueprint, step) ? 0 : Math.max(Math.ceil((blueprint.clayRobot.ore - step.resources.ore) / step.robots.ore)))
+    1 +
+    (haveResourcesForClayRobot(blueprint, step)
+      ? 0
+      : Math.max(Math.ceil((blueprint.clayRobot.ore - step.resources.ore) / step.robots.ore)))
 
   const timeToMakeAnOreRobot = (blueprint: Blueprint, step: Step): number =>
-    1 + (haveResourcesForOreRobot(blueprint, step) ? 0 : Math.max(Math.ceil((blueprint.oreRobot.ore - step.resources.ore) / step.robots.ore)))
+    1 +
+    (haveResourcesForOreRobot(blueprint, step)
+      ? 0
+      : Math.max(Math.ceil((blueprint.oreRobot.ore - step.resources.ore) / step.robots.ore)))
 
   const canBuildGeodeRobot = (blueprint: Blueprint, head: Step) => head.robots.obsidian > 0
 
   const canBuildObsidianRobot = (blueprint: Blueprint, head: Step) => head.robots.clay > 0
 
-  const printStep = (s: Step) => '[' + s.robots.ore.toString() + ',' + s.robots.clay.toString() + ',' + s.robots.obsidian.toString() + ',' + s.robots.geode.toString() + '](' + s.time + ')'
+  const printStep = (s: Step) =>
+    '[' +
+    s.robots.ore.toString() +
+    ',' +
+    s.robots.clay.toString() +
+    ',' +
+    s.robots.obsidian.toString() +
+    ',' +
+    s.robots.geode.toString() +
+    '](' +
+    s.time +
+    ')'
 
   const printPath = (path: Path) => path.map(printStep).join(',')
 
@@ -91,7 +110,12 @@ export default async (lineReader: any, params: Params) => {
     const maxRobots: Robots = {
       geode: 100,
       obsidian: blueprint.geodeRobot.obsidian,
-      ore: Math.max(blueprint.geodeRobot.ore, blueprint.obsidianRobot.ore, blueprint.clayRobot.ore, blueprint.oreRobot.ore),
+      ore: Math.max(
+        blueprint.geodeRobot.ore,
+        blueprint.obsidianRobot.ore,
+        blueprint.clayRobot.ore,
+        blueprint.oreRobot.ore
+      ),
       clay: blueprint.obsidianRobot.clay
     }
 

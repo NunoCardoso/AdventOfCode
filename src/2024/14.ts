@@ -45,7 +45,8 @@ export default async (lineReader: any, params: Params) => {
     })
 
   // check that at least 66% of robots have another adjacent robot
-  const checkIfAdjacent = (robots: PAndV[]): boolean => robots.reduce((acc, robot) => acc + (hasAdjacentRobot(robot, robots) ? 1 : 0), 0) >= robots.length * (2 / 3)
+  const checkIfAdjacent = (robots: PAndV[]): boolean =>
+    robots.reduce((acc, robot) => acc + (hasAdjacentRobot(robot, robots) ? 1 : 0), 0) >= robots.length * (2 / 3)
 
   const printData = (robots: PAndV[], size: Dimension) => {
     for (var i = 0; i < size[0]; i++) {

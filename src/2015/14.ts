@@ -14,12 +14,14 @@ export default async (lineReader: any, params: Params) => {
 
   let part1: number = 0
   let part2: number = 0
-  const timeCutoff = params.cutoff
-  const reindeers: Array<Reindeer> = []
+  const finishTime = params.seconds
+  const reindeerPart1: Reindeer[] = []
 
   for await (const line of lineReader) {
-    const [, name, speed, duration, rest] = line.match(/^(.+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+) seconds.$/)
-    reindeers.push({
+    const [, name, speed, duration, rest] = line.match(
+      /^(.+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+) seconds.$/
+    )
+    reindeerPart1.push({
       name,
       speed: +speed,
       duration: +duration,
@@ -28,35 +30,35 @@ export default async (lineReader: any, params: Params) => {
       distance: 0
     })
   }
+  const reindeerPart2 = global.structuredClone(reindeerPart1)
 
   if (!params.skipPart1) {
-    reindeers.forEach((reindeer) => {
+    reindeerPart1.forEach((reindeer) => {
       let time = 0
-      let distance = 0
       let mode = 'running'
-      while (time < timeCutoff) {
-        let amount: number
+      while (time < finishTime) {
+        let timeBit: number
         if (mode === 'running') {
-          amount = Math.min(reindeer.duration, timeCutoff - time)
-          distance += reindeer.speed * amount
+          timeBit = Math.min(reindeer.duration, finishTime - time)
+          reindeer.distance += reindeer.speed * timeBit
           mode = 'resting'
         } else {
-          amount = Math.min(reindeer.rest, timeCutoff - time)
+          timeBit = Math.min(reindeer.rest, finishTime - time)
           mode = 'running'
         }
-        time += amount
+        time += timeBit
       }
-      if (distance > part1) part1 = distance
-      log.debug('reindeer', reindeer.name, 'distance', distance)
+      if (reindeer.distance > part1) part1 = reindeer.distance
+      log.debug('reindeer', reindeer.name, 'distance', reindeer.distance)
     })
   }
 
   if (!params.skipPart2) {
     let time = 0
     let distanceInLead: number = 0
-    let reindeerInLead: Array<Reindeer> = [] // can be more than one in the lead at same time
-    while (time < timeCutoff) {
-      reindeers.forEach((reindeer, i) => {
+    let reindeerInLead: Reindeer[] = [] // can be more than one in the lead at same time
+    while (time < finishTime) {
+      reindeerPart2.forEach((reindeer) => {
         const moddedTime = time % (reindeer.duration + reindeer.rest)
         if (moddedTime < reindeer.duration) {
           reindeer.distance += reindeer.speed
@@ -72,7 +74,7 @@ export default async (lineReader: any, params: Params) => {
       reindeerInLead.forEach((reindeer: Reindeer) => reindeer.score++)
       time++
     }
-    part2 = reindeers.sort((a, b) => b.score - a.score)[0].score
+    part2 = reindeerPart2.sort((a, b) => b.score - a.score)[0].score
   }
 
   return { part1, part2 }

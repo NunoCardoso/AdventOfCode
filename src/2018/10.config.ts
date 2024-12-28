@@ -4,14 +4,23 @@ export default {
     day: '10',
     title: 'The stars align',
     status: 'done',
-    comment: 'Nice, the hardest was to come out with the heuristic, and the structure to gather stars, bounding box and step',
+    comment:
+      'Nice, the hardest was to come out with the heuristic, and the structure to gather stars, bounding box and step',
     difficulty: 2
   },
   logLevel: 'debug',
   test: {
     id: 'test',
     answers: {
-      part1: '#...#..###\n' + '#...#...#.\n' + '#...#...#.\n' + '#####...#.\n' + '#...#...#.\n' + '#...#...#.\n' + '#...#...#.\n' + '#...#..###\n',
+      part1:
+        '#...#..###\n' +
+        '#...#...#.\n' +
+        '#...#...#.\n' +
+        '#####...#.\n' +
+        '#...#...#.\n' +
+        '#...#...#.\n' +
+        '#...#...#.\n' +
+        '#...#..###\n',
       part2: 3
     }
   },

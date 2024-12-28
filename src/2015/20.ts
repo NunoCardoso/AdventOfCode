@@ -1,24 +1,11 @@
 import { Params } from 'aoc.d'
+import { divisors } from '../util/divisors'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
-
-  /* an approximation is that the middle divisors are wrapping the square root value.
-     so, with 30, Math.sqrt(30) is between 5 and 6, which are the middle divisors
-   */
-  const divisors = (n: number): Array<number> => {
-    const divisorList = [1, n]
-    for (let i = 2; i < Math.pow(n, 0.5); i++) {
-      if (n % i === 0) {
-        divisorList.push(i)
-        divisorList.push(n / i)
-      }
-    }
-    return divisorList
-  }
 
   const threshold = params.threshold
   const numberOfPresentsPerElf: Map<number, number> = new Map()
@@ -33,9 +20,21 @@ export default async (lineReader: any, params: Params) => {
     })
 
     const medResultPart1 = elves.reduce((acc, elf) => acc + elf, 0)
-    const medResultPart2 = elves.reduce((acc, elf) => acc + (numberOfPresentsPerElf.get(elf)! < params.maxHousePresents ? elf : 0), 0)
+    const medResultPart2 = elves.reduce(
+      (acc, elf) => acc + (numberOfPresentsPerElf.get(elf)! < params.maxHousePresents ? elf : 0),
+      0
+    )
 
-    log.debug('i', i, 'medResult', medResultPart1, 'Misses', threshold - medResultPart1)
+    log.debug(
+      'iteration',
+      i,
+      'elves',
+      elves,
+      'presents part 1',
+      medResultPart1 * 10,
+      'Misses',
+      threshold - medResultPart1
+    )
 
     if (medResultPart1 * params.elfMultiplier.part1 >= threshold) {
       if (part1 === 0) part1 = i

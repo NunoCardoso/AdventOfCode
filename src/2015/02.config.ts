@@ -1,14 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
     title: 'I Was Told There Would Be No Math',
-    summary: '',
-    year: '2015',
-    day: '02',
+    year: 2015,
+    day: 2,
     result: 'finished',
     status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Functional puzzle, parsing input and doing basic math sums',
     difficulty: 1
   },
   test: [
@@ -34,3 +34,5 @@ export default {
     }
   }
 }
+
+export default config

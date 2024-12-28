@@ -4,7 +4,8 @@ export default {
     day: '13',
     title: 'Claw Contraption',
     status: 'done',
-    comment: 'Actually very easy, once you understand that it is just a pair of lines and solution is in the interception',
+    comment:
+      'Actually very easy, once you understand that it is just a pair of lines and solution is in the interception',
     difficulty: 1
   },
   logLevel: 'info',

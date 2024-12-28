@@ -43,11 +43,17 @@ export default async (lineReader: any, params: Params) => {
   const readKey = (s: string): Point => [...s.matchAll(/\d+/g)].map((x: any) => parseInt(x[0])) as Point
   const isSame = (s: Step | Point, s2: Step | Point): boolean => s[0] === s2[0] && s[1] === s2[1]
 
-  const outOfBounds = (newStep: Step | Point, end: Point) => newStep[0] < 0 || newStep[1] < 0 || newStep[0] > end[0] || newStep[1] > end[1]
+  const outOfBounds = (newStep: Step | Point, end: Point) =>
+    newStep[0] < 0 || newStep[1] < 0 || newStep[0] > end[0] || newStep[1] > end[1]
 
   const getDistanceToFinish = (x: number, y: number, end: Point): number => end[0] - x + (end[1] - y)
 
-  const printWorld = (world: World<string | number>, opened: Array<Step>, visited: Record<string, number>, finished: Record<string, number>) => {
+  const printWorld = (
+    world: World<string | number>,
+    opened: Array<Step>,
+    visited: Record<string, number>,
+    finished: Record<string, number>
+  ) => {
     const _world = _.cloneDeep(world)
     Object.keys(visited).forEach((s: string) => {
       const p: Point = readKey(s)
@@ -62,7 +68,12 @@ export default async (lineReader: any, params: Params) => {
     console.log('lowest cost', finished.lowestCost)
   }
 
-  const searchAlgorithm = async (world: World, opened: Array<Step>, visited: Record<string, number>, finished: Record<string, any>) => {
+  const searchAlgorithm = async (
+    world: World,
+    opened: Array<Step>,
+    visited: Record<string, number>,
+    finished: Record<string, any>
+  ) => {
     const head: Step = opened.splice(-1)[0]
     const key: string = getKey(head)
     log.debug('=== Starting ===')
@@ -85,10 +96,30 @@ export default async (lineReader: any, params: Params) => {
 
     const newSteps: Array<Step> = _.reject(
       [
-        [head[0] - 1, head[1], getDistanceToFinish(head[0] - 1, head[1], finished.end), head[3] + (outOfBounds([head[0] - 1, head[1]], finished.end) ? 0 : (world[head[0] - 1][head[1]] as number))],
-        [head[0] + 1, head[1], getDistanceToFinish(head[0] + 1, head[1], finished.end), head[3] + (outOfBounds([head[0] + 1, head[1]], finished.end) ? 0 : (world[head[0] + 1][head[1]] as number))],
-        [head[0], head[1] - 1, getDistanceToFinish(head[0], head[1] - 1, finished.end), head[3] + (outOfBounds([head[0], head[1] - 1], finished.end) ? 0 : (world[head[0]][head[1] - 1] as number))],
-        [head[0], head[1] + 1, getDistanceToFinish(head[0], head[1] + 1, finished.end), head[3] + (outOfBounds([head[0], head[1] + 1], finished.end) ? 0 : (world[head[0]][head[1] + 1] as number))]
+        [
+          head[0] - 1,
+          head[1],
+          getDistanceToFinish(head[0] - 1, head[1], finished.end),
+          head[3] + (outOfBounds([head[0] - 1, head[1]], finished.end) ? 0 : (world[head[0] - 1][head[1]] as number))
+        ],
+        [
+          head[0] + 1,
+          head[1],
+          getDistanceToFinish(head[0] + 1, head[1], finished.end),
+          head[3] + (outOfBounds([head[0] + 1, head[1]], finished.end) ? 0 : (world[head[0] + 1][head[1]] as number))
+        ],
+        [
+          head[0],
+          head[1] - 1,
+          getDistanceToFinish(head[0], head[1] - 1, finished.end),
+          head[3] + (outOfBounds([head[0], head[1] - 1], finished.end) ? 0 : (world[head[0]][head[1] - 1] as number))
+        ],
+        [
+          head[0],
+          head[1] + 1,
+          getDistanceToFinish(head[0], head[1] + 1, finished.end),
+          head[3] + (outOfBounds([head[0], head[1] + 1], finished.end) ? 0 : (world[head[0]][head[1] + 1] as number))
+        ]
       ],
       (newStep: Step) => {
         if (outOfBounds(newStep, finished.end)) {
@@ -125,7 +156,12 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const getThemPath = async (world: World, opened: Array<Step>, visited: Record<string, number>, finished: Record<string, any>) => {
+  const getThemPath = async (
+    world: World,
+    opened: Array<Step>,
+    visited: Record<string, number>,
+    finished: Record<string, any>
+  ) => {
     while (opened.length > 0) {
       await searchAlgorithm(world, opened, visited, finished)
 

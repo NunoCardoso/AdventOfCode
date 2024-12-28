@@ -11,7 +11,16 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = -1
 
   const seeds: Array<number> = []
-  const sequence: Array<string> = ['seed', 'soil', 'fertilizer', 'water', 'light', 'temperature', 'humidity', 'location']
+  const sequence: Array<string> = [
+    'seed',
+    'soil',
+    'fertilizer',
+    'water',
+    'light',
+    'temperature',
+    'humidity',
+    'location'
+  ]
   const almanac: Record<string, Array<Convert>> = {
     'seed-to-soil': [],
     'soil-to-fertilizer': [],
@@ -67,7 +76,8 @@ export default async (lineReader: any, params: Params) => {
     return selectedRanges
   }
 
-  const doConvert = (rules: Array<Convert>, ranges: Array<Range>): Array<Range> => ranges.map((range) => applyRulesOnRange(range, rules)).flat()
+  const doConvert = (rules: Array<Convert>, ranges: Array<Range>): Array<Range> =>
+    ranges.map((range) => applyRulesOnRange(range, rules)).flat()
 
   const getLocation = (range: Range): number => {
     let ranges: Array<Range> = [range]

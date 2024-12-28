@@ -8,7 +8,8 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const getNumberOfDifferences = (s1: Array<string>, s2: Array<string>): number => s1.map((s, i) => (s === s2[i] ? 0 : 1)).reduce((a: number, b: number) => a + b, 0)
+  const getNumberOfDifferences = (s1: Array<string>, s2: Array<string>): number =>
+    s1.map((s, i) => (s === s2[i] ? 0 : 1)).reduce((a: number, b: number) => a + b, 0)
 
   const rotate90 = (world: World<string>): World<string> => {
     const newWorld: World<string> = Array(world[0].length)

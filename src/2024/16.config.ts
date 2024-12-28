@@ -4,7 +4,9 @@ export default {
     day: '16',
     title: 'Reindeer Maze',
     status: 'done',
-    comment: 'This one took me a while to figure out the trick, which is to let opened paths that have same distance, ' + 'and visited indexes with same distance, to keep going, not prune them.',
+    comment:
+      'This one took me a while to figure out the trick, which is to let opened paths that have same distance, ' +
+      'and visited indexes with same distance, to keep going, not prune them.',
     difficulty: 4
   },
   logLevel: 'info',

@@ -3,8 +3,8 @@ import { Permutation } from 'js-combinatorics'
 type Distances = Map<string, Map<string, number>>
 export default async (lineReader: any) => {
   const distances: Distances = new Map()
-  let part1: number = 1000000
-  let part2: number = 0
+  let part1: number = Number.MAX_VALUE
+  let part2: number = Number.MIN_VALUE
 
   for await (const line of lineReader) {
     const [, city1, city2, distance] = line.match(/(.+) to (.+) = (\d+)/)
@@ -14,15 +14,14 @@ export default async (lineReader: any) => {
     distances.get(city2)!.set(city1, +distance)
   }
 
-  const places: Array<string> = Array.from(distances.keys())
-  new Permutation(places).toArray().forEach((placeSet: Array<string>) => {
-    let res = 0
-    for (let index = 0; index < placeSet.length - 1; index++) {
-      res += distances.get(placeSet[index])!.get(placeSet[index + 1])!
-    }
-    if (res < part1) part1 = res
-    if (res > part2) part2 = res
-  })
+  for (let placeSet of new Permutation(Array.from(distances.keys()))) {
+    let distance = placeSet.reduce(
+      (acc, place, index) => (index === 0 ? acc : acc + distances.get(placeSet[index - 1])!.get(placeSet[index])!),
+      0
+    )
+    if (distance < part1) part1 = distance
+    if (distance > part2) part2 = distance
+  }
 
   return { part1, part2 }
 }

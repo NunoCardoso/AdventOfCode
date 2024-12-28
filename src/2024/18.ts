@@ -69,7 +69,12 @@ export default async (lineReader: any, params: Params) => {
     )
   }
 
-  const printWorld = (opened: Step[], openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
+  const printWorld = (
+    opened: Step[],
+    openedIndex: Record<string, number>,
+    visitedIndex: Record<string, number>,
+    data: Data
+  ) => {
     for (var row = 0; row < data.size.height; row++) {
       let s = ''
       for (var col = 0; col < data.size.width; col++) {
@@ -89,7 +94,12 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const doAStar = (opened: Step[], openedIndex: Record<string, number>, visitedIndex: Record<string, number>, data: Data) => {
+  const doAStar = (
+    opened: Step[],
+    openedIndex: Record<string, number>,
+    visitedIndex: Record<string, number>,
+    data: Data
+  ) => {
     log.debug('=== A* === opened', opened.length)
     let head: Step = opened.splice(-1)[0]!
     log.debug('Picking head', head)
@@ -113,13 +123,29 @@ export default async (lineReader: any, params: Params) => {
         if (openedIndex[stepKey] !== undefined) {
           // the openedIndex is better, so discard it
           if (openedIndex[stepKey] <= newStep.distanceDone) {
-            log.trace('openedindex with step', stepKey, 'has distance', openedIndex[stepKey], 'better than step.distanceDone', newStep.distanceDone, ', returning')
+            log.trace(
+              'openedindex with step',
+              stepKey,
+              'has distance',
+              openedIndex[stepKey],
+              'better than step.distanceDone',
+              newStep.distanceDone,
+              ', returning'
+            )
             return
           } else {
             // the openedIndex is worse, remove it
             let index = opened.findIndex((s: Step) => getKey(s) === stepKey)
             if (index >= 0) {
-              log.trace('openedindex with step', newStep, 'has distance', openedIndex[stepKey], 'worse than step.distanceDone', newStep.distanceDone, ', removing from opened')
+              log.trace(
+                'openedindex with step',
+                newStep,
+                'has distance',
+                openedIndex[stepKey],
+                'worse than step.distanceDone',
+                newStep.distanceDone,
+                ', removing from opened'
+              )
               opened.splice(index, 1)
               delete openedIndex[stepKey]
             }
@@ -128,7 +154,15 @@ export default async (lineReader: any, params: Params) => {
 
         // if it matches an visitedIndex
         if (visitedIndex[stepKey] !== undefined && visitedIndex[stepKey] <= newStep.distanceDone) {
-          log.trace('visitedIndex with step', stepKey, 'has distance', visitedIndex[stepKey], 'better than step.distanceDone', newStep.distanceDone, ', returning')
+          log.trace(
+            'visitedIndex with step',
+            stepKey,
+            'has distance',
+            visitedIndex[stepKey],
+            'better than step.distanceDone',
+            newStep.distanceDone,
+            ', returning'
+          )
           return
         }
         opened.push(newStep)
@@ -198,7 +232,15 @@ export default async (lineReader: any, params: Params) => {
           byteThatClosesPath = getKey(lastByte)
           break
         } else {
-          log.info('time', time, 'byte', lastByteKey, 'hit path, had to recalculate, end value', step?.distanceDone, 'continue')
+          log.info(
+            'time',
+            time,
+            'byte',
+            lastByteKey,
+            'hit path, had to recalculate, end value',
+            step?.distanceDone,
+            'continue'
+          )
           // save new path
           currentWinningPath = step?.path
         }

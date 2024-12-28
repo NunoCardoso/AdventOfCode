@@ -22,7 +22,8 @@ export default async (lineReader: any, params: Params) => {
     i++
   }
 
-  const isOutOfBounds = (world: World<string>, position: PointPlus<string>) => position[0] < 0 || position[1] < 0 || position[0] >= world.length || position[1] >= world[0].length
+  const isOutOfBounds = (world: World<string>, position: PointPlus<string>) =>
+    position[0] < 0 || position[1] < 0 || position[0] >= world.length || position[1] >= world[0].length
 
   const nextDirection = (direction: string): string => {
     let directions = ['^', '>', 'v', '<']
@@ -33,7 +34,10 @@ export default async (lineReader: any, params: Params) => {
   const justPoint2string = (p: PointPlus<string>): string => p[0] + ':' + p[1]
   const fullPoint2string = (p: PointPlus<string>): string => p[0] + ':' + p[1] + ':' + p[2]
 
-  const move = (position: PointPlus<string>, world: World<string>): [PointPlus<string>, PointPlus<string>[], string] => {
+  const move = (
+    position: PointPlus<string>,
+    world: World<string>
+  ): [PointPlus<string>, PointPlus<string>[], string] => {
     let visitedPositions: PointPlus<string>[] = []
     let currentPosition: PointPlus<string> = position
     let newPosition: PointPlus<string> | undefined = undefined

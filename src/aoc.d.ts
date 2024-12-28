@@ -1,9 +1,20 @@
 export type Params = Record<string, any>
 export type Result = 'unfinished' | 'finished'
 export type Status = 'unsolved' | 'solved'
-export type Status = 'slow' | 'medium' | 'fast' | 'md5' | 'unknown'
+export type Speed = 'slow' | 'medium' | 'fast' | 'md5' | 'unknown'
 export type Code = 'clean' | 'dirty'
-export type Tag = 'Dijkstra' | 'Recursion' | 'A*' | 'Permutation' | 'MD5' | 'Combination' | 'Breath-first' | 'Depth-first' | 'Path-finding' | 'Bron–Kerbosch'
+export type Tag =
+  | 'Regex'
+  | 'Dijkstra'
+  | 'Recursion'
+  | 'A*'
+  | 'Permutation'
+  | 'MD5'
+  | 'Combination'
+  | 'Breath-first'
+  | 'Depth-first'
+  | 'Path-finding'
+  | 'Bron–Kerbosch'
 
 export type Answer = string | number
 
@@ -31,7 +42,6 @@ export type Test = Prod & {
 
 export type Config = {
   title: string
-  summary: string
   year: number
   day: number
   tags?: Tag[]
@@ -39,8 +49,7 @@ export type Config = {
   status: Status
   speed: Speed
   code: Code
-  comment: string
-  difficulty: number
+  difficulty: number // 1 - very easy, 2: easy, 3: ok, 4: hard, 5: very hard
 }
 
 export type PuzzleConfig = {
@@ -49,7 +58,7 @@ export type PuzzleConfig = {
   logLevel?: string
   ui?: UI
   test?: Test | Array<Test>
-  prod?: Prod
+  prod: Prod
   params?: Params
 }
 

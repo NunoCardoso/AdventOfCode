@@ -75,7 +75,8 @@ export default async (lineReader: any, params: Params) => {
     const value = part[(workflow as Workflow).test.key]
     log.debug('test op', (workflow as any).test.op, 'value', value, 'val', (workflow as any).test.val)
     const res: Workflow =
-      ((workflow as any).test.op === '>' && value - (workflow as any).test.val > 0) || ((workflow as any).test.op === '<' && value - (workflow as any).test.val < 0)
+      ((workflow as any).test.op === '>' && value - (workflow as any).test.val > 0) ||
+      ((workflow as any).test.op === '<' && value - (workflow as any).test.val < 0)
         ? (workflow as any).success
         : (workflow as any).failure
     if (res === 'A' || res === 'R') return res
@@ -87,7 +88,12 @@ export default async (lineReader: any, params: Params) => {
     log.debug('resolveWorkflow', part, 'workflow', workflow)
     // let res: Array<[number, number]> = [] // success, failure
     if (workflow === 'A') {
-      return (part.x[1] - part.x[0] + 1) * (part.m[1] - part.m[0] + 1) * (part.a[1] - part.a[0] + 1) * (part.s[1] - part.s[0] + 1)
+      return (
+        (part.x[1] - part.x[0] + 1) *
+        (part.m[1] - part.m[0] + 1) *
+        (part.a[1] - part.a[0] + 1) *
+        (part.s[1] - part.s[0] + 1)
+      )
     }
     if (workflow === 'R') {
       return 0
@@ -109,11 +115,17 @@ export default async (lineReader: any, params: Params) => {
         // @ts-ignore
         // console.log('double range, run resolveWorkflow.success on key',key,'range',[range[0], val - 1],
         //  'resolveWorkflow.failure on key',key,'range',[val, range[1]])
-        return resolveWorkflow({ ...part, [key]: [range[0], val - 1] }, workflow.success) + resolveWorkflow({ ...part, [key]: [val, range[1]] }, workflow.failure)
+        return (
+          resolveWorkflow({ ...part, [key]: [range[0], val - 1] }, workflow.success) +
+          resolveWorkflow({ ...part, [key]: [val, range[1]] }, workflow.failure)
+        )
       } else {
         // console.log('double range, run resolveWorkflow.success on key',key,'range',[range[0], val - 1],
         //  'resolveWorkflow.failure on key',key,'range',[val, range[1]])
-        return resolveWorkflow({ ...part, [key]: [val + 1, range[1]] }, workflow.success) + resolveWorkflow({ ...part, [key]: [range[0], val] }, workflow.failure)
+        return (
+          resolveWorkflow({ ...part, [key]: [val + 1, range[1]] }, workflow.success) +
+          resolveWorkflow({ ...part, [key]: [range[0], val] }, workflow.failure)
+        )
       }
     }
     return 0

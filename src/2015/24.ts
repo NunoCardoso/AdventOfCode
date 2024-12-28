@@ -24,7 +24,9 @@ export default async (lineReader: any, params: Params) => {
     let numberOfPackages = 1
 
     while (solutions.length === 0) {
-      solutions = new Combination(packages, numberOfPackages).toArray().filter((a) => a.reduce((x, y) => x + y) === targetWeight)
+      solutions = new Combination(packages, numberOfPackages)
+        .toArray()
+        .filter((a) => a.reduce((x, y) => x + y) === targetWeight)
       numberOfPackages++
     }
 

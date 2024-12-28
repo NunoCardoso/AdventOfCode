@@ -37,7 +37,9 @@ export default async (lineReader: any, params: Params) => {
   let id: number = 0
   for await (const line of lineReader) {
     if (line.startsWith('/dev')) {
-      const [, row, column, size, used, avail] = line?.match(/\/dev\/grid\/node-x(\d+)-y(\d+)\s+(\d+)T\s+(\d+)T\s+(\d+)T/)
+      const [, row, column, size, used, avail] = line?.match(
+        /\/dev\/grid\/node-x(\d+)-y(\d+)\s+(\d+)T\s+(\d+)T\s+(\d+)T/
+      )
       if (!world[+row]) world[+row] = []
       world[+row][+column] = {
         id: id++,
@@ -64,8 +66,12 @@ export default async (lineReader: any, params: Params) => {
         let perc = Math.floor((+node.used * 100) / +node.size)
         string += perc.toString().padStart(3, ' ')
         let key = rowIndex + ',' + colIndex
-        let arrowLeft = moves.find((m) => m[0][0] === rowIndex && m[0][1] === colIndex && m[1][0] === rowIndex && m[1][1] === colIndex + 1)
-        let arrowRight = moves.find((m) => m[1][0] === rowIndex && m[1][1] === colIndex && m[0][0] === rowIndex && m[0][1] === colIndex + 1)
+        let arrowLeft = moves.find(
+          (m) => m[0][0] === rowIndex && m[0][1] === colIndex && m[1][0] === rowIndex && m[1][1] === colIndex + 1
+        )
+        let arrowRight = moves.find(
+          (m) => m[1][0] === rowIndex && m[1][1] === colIndex && m[0][0] === rowIndex && m[0][1] === colIndex + 1
+        )
         if (arrowLeft) {
           string += arrowRight ? clc.cyan('↔') : clc.cyan('→')
         }
@@ -79,15 +85,20 @@ export default async (lineReader: any, params: Params) => {
       row.forEach((node, colIndex) => {
         let key = rowIndex + ',' + colIndex
         let otherKey = rowIndex + 1 + ',' + colIndex
-        let arrowDown = !!moves.find((m) => m[0][0] === rowIndex && m[0][1] === colIndex && m[1][0] === rowIndex + 1 && m[1][1] === colIndex)
-        let arrowUp = moves.find((m) => m[1][0] === rowIndex && m[1][1] === colIndex && m[0][0] === rowIndex + 1 && m[0][1] === colIndex)
+        let arrowDown = !!moves.find(
+          (m) => m[0][0] === rowIndex && m[0][1] === colIndex && m[1][0] === rowIndex + 1 && m[1][1] === colIndex
+        )
+        let arrowUp = moves.find(
+          (m) => m[1][0] === rowIndex && m[1][1] === colIndex && m[0][0] === rowIndex + 1 && m[0][1] === colIndex
+        )
         string += clc.cyan(' ' + (arrowUp ? '↑' : ' ') + (arrowDown ? '↓' : ' ') + ' ')
       })
       console.log(string)
     })
   }
 
-  const isAdjacent = (row1: number, row2: number, col1: number, col2: number) => (Math.abs(row1 - row2) === 1 && col1 === col2) || (Math.abs(col1 - col2) === 1 && row1 === row2)
+  const isAdjacent = (row1: number, row2: number, col1: number, col2: number) =>
+    (Math.abs(row1 - row2) === 1 && col1 === col2) || (Math.abs(col1 - col2) === 1 && row1 === row2)
 
   const initialMoves: Move[] = []
 

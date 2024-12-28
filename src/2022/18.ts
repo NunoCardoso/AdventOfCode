@@ -7,9 +7,15 @@ export default async (lineReader: any, params: Params) => {
 
   type Point = [number, number, number]
 
-  let minX: number | undefined, maxX: number | undefined, minY: number | undefined, maxY: number | undefined, minZ: number | undefined, maxZ: number | undefined
+  let minX: number | undefined,
+    maxX: number | undefined,
+    minY: number | undefined,
+    maxY: number | undefined,
+    minZ: number | undefined,
+    maxZ: number | undefined
 
-  const isObsidian = (needle: Point, haystack: Record<string, Point>): boolean => Object.prototype.hasOwnProperty.call(haystack, '' + needle[0] + ',' + needle[1] + ',' + needle[2])
+  const isObsidian = (needle: Point, haystack: Record<string, Point>): boolean =>
+    Object.prototype.hasOwnProperty.call(haystack, '' + needle[0] + ',' + needle[1] + ',' + needle[2])
 
   const isOutside = (needle: Point, haystack: Record<string, Point>) => {
     if (outsideBoundaries(needle)) {
@@ -94,13 +100,17 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const isVisited = (visited: Record<string, Point>, c: Point) => Object.prototype.hasOwnProperty.call(visited, '' + c[0] + ',' + c[1] + ',' + c[2])
+  const isVisited = (visited: Record<string, Point>, c: Point) =>
+    Object.prototype.hasOwnProperty.call(visited, '' + c[0] + ',' + c[1] + ',' + c[2])
 
   const setVisited = (visited: Record<string, Point>, c: Point): void => {
     visited['' + c[0] + ',' + c[1] + ',' + c[2]] = c
   }
 
-  const exploreOutside = (obsidianPointKeys: Record<string, Point>, initialPaths: Array<Point>): Record<string, Point> => {
+  const exploreOutside = (
+    obsidianPointKeys: Record<string, Point>,
+    initialPaths: Array<Point>
+  ): Record<string, Point> => {
     log.debug('started explore outside')
     const visited: Record<string, Point> = {}
     const opened: Array<Point> = initialPaths
@@ -161,7 +171,16 @@ export default async (lineReader: any, params: Params) => {
     }
     const outsidePointKeys: Record<string, Point> = exploreOutside(obsidianPointKeys, initialPaths)
     const insidePoints = maxSpace - Object.keys(obsidianPointKeys).length - Object.keys(outsidePointKeys).length
-    log.debug('max space', maxSpace, 'obsidians', Object.keys(obsidianPointKeys).length, 'outside', Object.keys(outsidePointKeys).length, 'inside', insidePoints)
+    log.debug(
+      'max space',
+      maxSpace,
+      'obsidians',
+      Object.keys(obsidianPointKeys).length,
+      'outside',
+      Object.keys(outsidePointKeys).length,
+      'inside',
+      insidePoints
+    )
     Object.values(obsidianPointKeys).forEach((point) => {
       part2 += numberOfExposedSurfaces2(point, outsidePointKeys)
     })

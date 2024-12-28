@@ -14,11 +14,14 @@ export default async (lineReader: any, params: Params) => {
   let stars: Star[] = []
 
   for await (const line of lineReader) {
-    const [, pX, pY, vX, vY] = line.match(/position=<\s*([^\s]+),\s*([^\s]+)> velocity=<\s*([^\s]+),\s*([^\s]+)>/).map(Number)
+    const [, pX, pY, vX, vY] = line
+      .match(/position=<\s*([^\s]+),\s*([^\s]+)> velocity=<\s*([^\s]+),\s*([^\s]+)>/)
+      .map(Number)
     stars.push([pX, pY, vX, vY])
   }
 
-  const getBoundingBoxArea = (boundingBox: BoundingBox): number => (boundingBox[1][0] - boundingBox[0][0]) * (boundingBox[1][1] - boundingBox[0][1])
+  const getBoundingBoxArea = (boundingBox: BoundingBox): number =>
+    (boundingBox[1][0] - boundingBox[0][0]) * (boundingBox[1][1] - boundingBox[0][1])
 
   const getBoundingBox = (stars: Star[]): [BoundingBox, number] => {
     let lowestX: number = Number.MAX_SAFE_INTEGER

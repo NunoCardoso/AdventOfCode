@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 
-type Stat = {
+type Spell = {
   name: string
   cost: number
   damage?: number
@@ -8,10 +8,19 @@ type Stat = {
   amount?: number
 }
 
-type Effect = {
-  name: string
-  duration: number
-  amount: number
+type Move = {
+  bossDamage: number
+  bossHitPoints: number
+  heroHitPoints: number
+  heroMana: number
+  heroArmor: number
+  heroArmorDuration: number
+  heroDamage: number
+  heroDamageDuration: number
+  heroManaIncrease: number
+  heroManaDuration: number
+  manaSpent: number
+  description: string
 }
 
 type Boss = {
@@ -19,24 +28,19 @@ type Boss = {
   damage: number
 }
 
-type Hero = {
-  hitPoints: number
-  mana: number
-}
-
-type Move = {
-  hero: Hero
-  boss: Boss
-  path: string
-  manaSpent: number
-  description: string
-  effects: Array<Effect>
-}
+type Path = Move[]
 
 type Data = {
-  path: Array<Move>
-  score: number
+  path: Path
 }
+
+const spells: Spell[] = [
+  { name: 'Magic Missile', cost: 53, damage: 4 },
+  { name: 'Drain', cost: 73, damage: 2, amount: 2 },
+  { name: 'Shield', cost: 113, duration: 6, amount: 7 },
+  { name: 'Poison', cost: 173, duration: 6, amount: 3 },
+  { name: 'Recharge', cost: 229, duration: 5, amount: 101 }
+]
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -46,232 +50,193 @@ export default async (lineReader: any, params: Params) => {
 
   const boss: Boss = { hitPoints: 0, damage: 0 }
 
-  const spells: Array<Stat> = [
-    { name: 'Magic Missile', cost: 53, damage: 4, duration: 1 },
-    { name: 'Drain', cost: 73, damage: 2, amount: 2, duration: 1 },
-    { name: 'Shield', cost: 113, duration: 6, amount: 7 },
-    { name: 'Poison', cost: 173, duration: 6, amount: 3 },
-    { name: 'Recharge', cost: 229, duration: 5, amount: 101 }
-    // { name: 'Nothing', cost: 0 },
-  ]
-
   for await (const line of lineReader) {
-    if (line.match(/Hit Points/)) {
-      boss.hitPoints = parseInt(line.match(/Hit Points: (\d+)/)[1])
+    if (line.match(/Hit Points/)) boss.hitPoints = +line.match(/Hit Points: (\d+)/)[1]
+    if (line.match(/Damage/)) boss.damage = +line.match(/Damage: (\d+)/)[1]
+  }
+
+  const isFinished = (move: Move): boolean => move.heroHitPoints <= 0 || move.bossHitPoints <= 0
+  const heroWon = (move: Move): boolean => move.heroHitPoints > 0 && move.bossHitPoints <= 0
+  const heroLost = (move: Move): boolean => move.heroHitPoints <= 0 && move.bossHitPoints > 0
+
+  const printMove = (move: Move) =>
+    `🦸: ❤️(${move.heroHitPoints}),⚔️(${move.heroDamage}),🛡(${move.heroArmor}),🔮(${move.heroMana})` +
+    `⏱️[⚔️${move.heroDamageDuration},🛡${move.heroArmorDuration},🔮${move.heroManaDuration}]` +
+    `    🧌: ❤️(${move.bossHitPoints}),⚔️(${move.bossDamage}),💲(${move.manaSpent}),${move.description}`
+
+  const printBattle = (path: Move[]) => path.map(printMove).join('\n')
+
+  const applyEffects = (move: Move) => {
+    if (move.heroArmorDuration > 0) {
+      move.heroArmor = 7
+      move.heroArmorDuration--
+    } else {
+      move.heroArmor = 0
     }
-    if (line.match(/Damage/)) {
-      boss.damage = parseInt(line.match(/Damage: (\d+)/)[1])
+    if (move.heroDamageDuration > 0) {
+      move.heroDamage = 3
+      move.bossHitPoints -= 3
+      move.heroDamageDuration--
+    } else {
+      move.heroDamage = 0
+    }
+    if (move.heroManaDuration > 0) {
+      move.heroMana += 101
+      move.heroManaDuration--
     }
   }
 
-  const isFinished = (move: Move): boolean => {
-    return move.hero.hitPoints <= 0 || move.boss.hitPoints <= 0
-  }
-
-  const heroWon = (move: Move): boolean => {
-    return move.hero.hitPoints > 0 && move.boss.hitPoints <= 0
-  }
-
-  const applyEffects = (nextMove: Move) => {
-    let heroDamage = 0
-    let heroArmor = 0
-    let recharge = 0
-
-    // execute hero effects
-    for (let i = nextMove.effects.length - 1; i >= 0; i--) {
-      const effect = nextMove.effects[i]
-
-      if (effect.name === 'Magic Missile') {
-        nextMove.boss.hitPoints -= 4
-        nextMove.effects[i].duration--
-        if (nextMove.effects[i].duration === 0) {
-          nextMove.effects.splice(i, 1)
-        }
-      }
-      if (effect.name === 'Drain') {
-        nextMove.boss.hitPoints -= 2
-        nextMove.hero.hitPoints += effect.amount
-        nextMove.effects[i].duration--
-        if (nextMove.effects[i].duration === 0) {
-          nextMove.effects.splice(i, 1)
-        }
-      }
-      if (effect.name === 'Shield') {
-        heroArmor += effect.amount
-        nextMove.effects[i].duration--
-        if (nextMove.effects[i].duration === 0) {
-          nextMove.effects.splice(i, 1)
-        }
-      }
-      if (effect.name === 'Poison') {
-        heroDamage += effect.amount
-        nextMove.effects[i].duration--
-        if (nextMove.effects[i].duration === 0) {
-          nextMove.effects.splice(i, 1)
-        }
-      }
-      if (effect.name === 'Recharge') {
-        recharge += effect.amount
-        nextMove.effects[i].duration--
-        if (nextMove.effects[i].duration === 0) {
-          nextMove.effects.splice(i, 1)
-        }
-      }
-    }
-
-    return { heroArmor, heroDamage, recharge }
-  }
-  const getNextMoves = (data: Data, moves: Array<Move>, mode: string): Array<Array<Move>> => {
-    const nextMove = { ...moves[moves.length - 1] }
-    const nextMoves: Array<Array<Move>> = []
+  const getNextMoves = (move: Move, data: Data, mode: string): Move[] => {
+    const nextMoves: Move[] = []
 
     if (mode === 'part2') {
-      nextMove.hero.hitPoints = nextMove.hero.hitPoints - 1
-      if (nextMove.hero.hitPoints <= 0) return nextMoves
+      move.heroHitPoints--
+      log.trace('Part 2 - hero - 1 health, now is', move.heroHitPoints)
+      if (heroLost(move)) return nextMoves
     }
 
-    // player turn: apply effects before casting a spell
-    const stats = applyEffects(nextMove)
-
-    log.debug('-- Player turn --')
-
-    log.debug('- Player has', nextMove.hero.hitPoints, 'hit points,', stats.heroArmor, 'armor,', nextMove.hero.mana, 'mana')
-    log.debug('- Boss has', nextMove.boss.hitPoints, 'hit points')
-
-    nextMove.boss.hitPoints = nextMove.boss.hitPoints - stats.heroDamage
-    log.debug('- Player effects deal damage', stats.heroDamage)
-    log.debug('- Effects:', nextMove.effects)
-
+    // apply effects before casting a spell. Remove expired ones
+    applyEffects(move)
     // boss dead, no need to spend mana
-    if (nextMove.boss.hitPoints <= 0) {
-      nextMoves.push(moves.concat(nextMove))
+    if (heroWon(move)) {
+      log.trace('Boss dead from poison effects!')
+      nextMoves.push(move)
       return nextMoves
     }
 
-    const spellsToCast: Array<Stat> = []
-    if (params.isTest && Array.isArray(params.spells) && params.spells.length > 0) {
-      const _spell = params.spells.shift()
-      const spellFound = spells.find((spell) => spell.name === _spell)
-      if (spellFound) {
-        spellsToCast.push(spellFound)
-        log.debug('- Testing: pushing only one spell', _spell)
-      }
+    log.trace('-- Next move: Hero turn --')
+    log.trace(printMove(move))
+
+    const nextSpells: Spell[] = []
+    // to do the test, we will follow the spells given in the example
+    if (params.isTest && params.spells?.length > 0) {
+      let _spell = params.spells.shift()
+      const spellFound = spells.find((spell) => spell.name === _spell)!
+      nextSpells.push(spellFound)
+      log.trace('- Testing: pushing only one spell', spellFound)
     } else {
       spells.forEach((spell) => {
-        if (spell.cost < nextMove.hero.mana && !nextMove.effects.find((effect) => effect.name === spell.name) && (spell.name !== 'Nothing' || (spell.name === 'Nothing' && nextMove.path.length > 9))) {
-          spellsToCast.push(spell)
+        if (spell.cost <= move.heroMana) {
+          let spellNotInUse =
+            spell.name === 'Poison'
+              ? move.heroDamageDuration === 0
+              : spell.name === 'Shield'
+                ? move.heroArmorDuration === 0
+                : spell.name === 'Recharge'
+                  ? move.heroManaDuration === 0
+                  : true
+          if (spellNotInUse) nextSpells.push(spell)
         }
       })
+      // If we do nothing as an option, we actually get a better score!
+      /*if (move.heroDamageDuration > 0 ||  move.heroArmorDuration > 0 || move.heroManaDuration > 0) {
+        nextSpells.push({ name: 'Nothing', cost: 0 })
+      }*/
     }
-
-    spellsToCast.forEach((spell: Stat) => {
-      // If I have mana and spell is not casted already and for the "nothing", do it after step 5
-      const _nextMove = global.structuredClone(nextMove)
-
-      if (typeof spell.duration === 'number') {
-        _nextMove.effects.push({
-          name: spell.name,
-          amount: spell.amount ?? 0,
-          duration: spell.duration ?? 0
-        })
+    log.debug(
+      'Available spells for',
+      printMove(move),
+      nextSpells.map((s) => s.name)
+    )
+    nextSpells?.forEach((spell: Spell) => {
+      const nextMove = {
+        ...move,
+        description: spell.name,
+        manaSpent: move.manaSpent + spell.cost,
+        heroMana: move.heroMana - spell.cost
       }
 
-      _nextMove.hero.mana -= spell.cost
-      _nextMove.manaSpent += spell.cost
-      _nextMove.description = 'Player casts ' + spell.name
-      _nextMove.path = _nextMove.path + '-' + spell.name[0]
-
-      log.debug(_nextMove.description)
-      log.debug('')
-
-      //  do not execute if it was casted now
-      if (spell.name !== 'Recharge') {
-        log.debug('- Adding recharge', stats.recharge)
-        _nextMove.hero.mana += stats.recharge
+      if (spell.name === 'Shield') nextMove.heroArmorDuration = spell.duration!
+      else if (spell.name === 'Poison') nextMove.heroDamageDuration = spell.duration!
+      else if (spell.name === 'Recharge') nextMove.heroManaDuration = spell.duration!
+      else if (spell.name === 'Magic Missile') nextMove.bossHitPoints -= 4
+      else if (spell.name === 'Drain') {
+        nextMove.bossHitPoints -= spell.damage!
+        nextMove.heroHitPoints += spell.amount!
       }
 
-      log.debug('-- Boss turn --')
-
-      // apply effects before player does a spell
-      const props = applyEffects(_nextMove)
-
-      log.debug('- Player has', _nextMove.hero.hitPoints, 'hit points,', props.heroArmor, 'armor,', _nextMove.hero.mana, 'mana')
-      log.debug('- Boss has', _nextMove.boss.hitPoints, 'hit points')
-
-      _nextMove.boss.hitPoints = _nextMove.boss.hitPoints - props.heroDamage
-      log.debug('- Player effects deal damage', props.heroDamage)
-      log.debug('- Effects:', _nextMove.effects)
-
-      if (_nextMove.boss.hitPoints > 0) {
-        log.debug('- Boss attacks for', _nextMove.boss.damage, 'damage')
-        const bossDamage = _nextMove.boss.damage - props.heroArmor > 1 ? _nextMove.boss.damage - props.heroArmor : 1
-        _nextMove.hero.hitPoints -= bossDamage
+      if (heroWon(nextMove)) {
+        log.trace('Boss dead, will not even play this round!')
+        nextMoves.push(nextMove)
+        return
       }
 
-      //  do not execute if it was casted now
-      if (props.recharge > 0) {
-        log.debug('- Adding recharge', props.recharge)
-        _nextMove.hero.mana += props.recharge
+      applyEffects(nextMove)
+
+      if (heroWon(nextMove)) {
+        log.trace('Boss dead from poison effects, no need to spend more mana')
+        nextMoves.push(nextMove)
+        return nextMoves
       }
 
-      // do not add next move if it can't beat high score
-      if (data.score > _nextMove.manaSpent) {
-        nextMoves.push(moves.concat(_nextMove))
-      }
+      log.trace('-- Next move: Boss turn --')
+      log.trace(printMove(nextMove))
+
+      let bossDamage = nextMove.bossDamage - nextMove.heroArmor
+      if (bossDamage < 1) bossDamage = 1
+      nextMove.heroHitPoints -= bossDamage
+      // do not add this next move if it can't beat high score
+      if (data.path.length === 0 || data.path[data.path.length - 1].manaSpent > nextMove.manaSpent)
+        nextMoves.push(nextMove)
     })
 
     return nextMoves
   }
 
-  const goToBattle = (opened: Array<Array<Move>>, data: Data, mode: string) => {
-    const move: Array<Move> = opened.splice(-1)[0]
-    const latestMove = move[move.length - 1]
+  // first the least amount of mana spent. Second, the least amount of boss health
+  const sortMoves = (a: Move[], b: Move[]) =>
+    a[a.length - 1].manaSpent - b[b.length - 1].manaSpent > 0
+      ? 1
+      : a[a.length - 1].bossHitPoints - b[b.length - 1].bossHitPoints > 0
+        ? 1
+        : -1
 
-    if (isFinished(latestMove)) {
-      if (heroWon(latestMove)) {
-        log.debug('Player won with', latestMove.manaSpent)
-        if (latestMove.manaSpent < data.score) {
-          log.debug('Movie has a high score', latestMove.manaSpent, 'old score', data.score)
-          data.score = latestMove.manaSpent
-          data.path = move
+  const goToBattle = (queue: Path[], data: Data, mode: string) => {
+    const path: Path = queue.pop()!
+    const head = path[path.length - 1]
+
+    log.debug('-- Next in queue: --')
+    log.debug(printBattle(path))
+
+    if (isFinished(head)) {
+      if (heroWon(head)) {
+        log.debug('Player won with', head.manaSpent)
+        let score = data.path.length > 0 ? data.path[data.path.length - 1].manaSpent : Number.MAX_VALUE
+        if (head.manaSpent < score) {
+          log.debug('Move has a high score', head.manaSpent, 'old score', score)
+          data.path = path
         }
       }
-    } else {
-      const newMoves: Array<Array<Move>> = getNextMoves(data, move, mode)
-      log.debug('Got', newMoves.length, 'moves')
-      opened.push(...newMoves)
-      opened.sort((a, b) => {
-        return a[a.length - 1].manaSpent - b[b.length - 1].manaSpent > 0 ? 1 : a[a.length - 1].boss.hitPoints - b[b.length - 1].boss.hitPoints > 0 ? 1 : -1
-      })
+      return
     }
+    getNextMoves(head, data, mode).forEach((newMove) => queue.push([...path, newMove]))
+    queue.sort(sortMoves)
   }
 
   const solveFor = (mode: string) => {
-    const data = {
-      score: 9999,
-      path: []
-    }
-
-    const opened: Array<Array<Move>> = [
+    const data: Data = { path: [] }
+    const queue: Path[] = [
       [
         {
-          hero: {
-            mana: params.mana,
-            hitPoints: params.hitPoints
-          },
-          boss: { ...boss },
+          bossHitPoints: boss.hitPoints,
+          bossDamage: boss.damage,
+          heroMana: params.mana,
+          heroHitPoints: params.hitPoints,
+          heroArmor: 0,
+          heroArmorDuration: 0,
+          heroDamage: 0,
+          heroDamageDuration: 0,
+          heroManaIncrease: 0,
+          heroManaDuration: 0,
           manaSpent: 0,
-          path: 's',
-          description: 'start',
-          effects: []
+          description: 'start'
         }
       ]
     ]
-    while (opened.length > 0) {
-      goToBattle(opened, data, mode)
-    }
-    log.debug('Final path', data.path)
-    return data.score
+    while (queue.length > 0) goToBattle(queue, data, mode)
+    log.info('Final path')
+    log.info(printBattle(data.path))
+    return data.path[data.path.length - 1]?.manaSpent
   }
 
   part1 = solveFor('part1')

@@ -174,7 +174,8 @@ export default async (lineReader: any, params: Params) => {
           return val
         case 7:
           // @ts-ignore
-          val = sumPacketOperators(p.subPackets[0], depth + 1) === sumPacketOperators(p.subPackets[1], depth + 1) ? 1 : 0
+          val =
+            sumPacketOperators(p.subPackets[0], depth + 1) === sumPacketOperators(p.subPackets[1], depth + 1) ? 1 : 0
           log.debug('  '.repeat(depth), 'Doing == with', p.subPackets.map((x) => x.value).join(','), 'gives', val)
           return val
       }

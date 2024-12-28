@@ -1,11 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '12',
     title: 'JSAbacusFramework.io',
-    status: 'done',
-    comments: 'Simple recursive way or parsing a tree',
-    tags: ['recursive'],
+    year: 2015,
+    day: 12,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    tags: ['Recursion'],
     difficulty: 2
   },
   prod: {
@@ -15,3 +19,5 @@ export default {
     }
   }
 }
+
+export default config

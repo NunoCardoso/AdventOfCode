@@ -1,16 +1,20 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '14',
     title: 'Reindeer Olympics',
-    status: 'done',
-    comment: 'The trick is to accept that multiple reindeers can be in the lead at the same time',
+    year: 2015,
+    day: 14,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
   test: {
     id: 'test',
     params: {
-      cutoff: 1000
+      seconds: 1000
     },
     answers: {
       part1: 1120,
@@ -19,7 +23,7 @@ export default {
   },
   prod: {
     params: {
-      cutoff: 2503
+      seconds: 2503
     },
     answers: {
       part1: 2696,
@@ -27,3 +31,5 @@ export default {
     }
   }
 }
+
+export default config

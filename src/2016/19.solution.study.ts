@@ -19,7 +19,20 @@ export default async (lineReader: any, params: Params) => {
       } else {
         nextIndex = (index + Math.floor(elves.length / 2)) % elves.length
       }
-      log.debug('elves', elves.length, 'index', index, 'nextIndex', nextIndex, 'elf', elves[index]?.elf, 'got', elves[nextIndex]?.presents, 'presents from elf', elves[nextIndex]?.elf)
+      log.debug(
+        'elves',
+        elves.length,
+        'index',
+        index,
+        'nextIndex',
+        nextIndex,
+        'elf',
+        elves[index]?.elf,
+        'got',
+        elves[nextIndex]?.presents,
+        'presents from elf',
+        elves[nextIndex]?.elf
+      )
       elves[index].presents += elves[nextIndex].presents
       elves.splice(nextIndex, 1)
       if (mode === 'part1') {

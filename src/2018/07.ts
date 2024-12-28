@@ -51,7 +51,9 @@ export default async (lineReader: any, params: Params) => {
     while (pendingTasks.length > 0) {
       // get more pending tasks that have all preceding tasks done
       // I only need the first one (as they are already in alphabetical order)
-      let doableTask = pendingTasks.find((t) => taskXisPrecededByTaskY[t].every((dependentT) => doneTasks.includes(dependentT)))
+      let doableTask = pendingTasks.find((t) =>
+        taskXisPrecededByTaskY[t].every((dependentT) => doneTasks.includes(dependentT))
+      )
 
       if (doableTask) {
         // take it off from pending tasks, put it to done
@@ -138,7 +140,13 @@ export default async (lineReader: any, params: Params) => {
 
     // so, let's find more doable tasks for all idling workers (pass the current backlog as well)
     let doableTasks = getDoableTasks(nextDoneTasks, nextStep.doneTasks, nextStep.backlogTasks)
-    nextStep.action = 'Time advanced to ' + nextTime + 's, doable tasks: [' + doableTasks.join('') + '] Workers idle: ' + nextIdleWorkers.join(', ')
+    nextStep.action =
+      'Time advanced to ' +
+      nextTime +
+      's, doable tasks: [' +
+      doableTasks.join('') +
+      '] Workers idle: ' +
+      nextIdleWorkers.join(', ')
 
     // no more tasks to do for now, maybe wait for another task to be finished
     if (doableTasks.length === 0)
@@ -194,10 +202,20 @@ export default async (lineReader: any, params: Params) => {
   const doDijkstra = (opened: Path[], data: Data) => {
     const path: Path = opened.splice(-1)[0]
 
-    log.debug('=== Dijkstra === opened', opened.length, 'current low', data.path ? data.path[data.path?.length - 1].time : '-', printPath(path))
+    log.debug(
+      '=== Dijkstra === opened',
+      opened.length,
+      'current low',
+      data.path ? data.path[data.path?.length - 1].time : '-',
+      printPath(path)
+    )
 
     if (path[path.length - 1].doneTasks.length === data.end) {
-      if (!data.path || (typeof data.path[data.path.length - 1]?.time === 'number' && path[path.length - 1].time < data.path[data.path.length - 1]?.time)) {
+      if (
+        !data.path ||
+        (typeof data.path[data.path.length - 1]?.time === 'number' &&
+          path[path.length - 1].time < data.path[data.path.length - 1]?.time)
+      ) {
         log.info('got lowest', path[path.length - 1].time, printPath(path))
         data.path = path
       }

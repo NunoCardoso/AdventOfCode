@@ -1,11 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '17',
     title: 'No Such Thing as Too Much',
-    status: 'done',
-    tags: ['permutation'],
-    comments: 'I like the custom permutation function so I can collect the data for answers while permutating',
+    year: 2015,
+    day: 17,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    tags: ['Permutation'],
     difficulty: 3
   },
   test: {
@@ -28,3 +32,5 @@ export default {
     }
   }
 }
+
+export default config

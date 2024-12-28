@@ -4,7 +4,8 @@ export default async (lineReader: any) => {
   const dataPart1: Record<string, number> = {}
   const dataPart2: Record<string, number> = {}
 
-  const increment = (data: Record<string, number>, key: string) => (data[key] !== undefined ? data[key]++ : (data[key] = 1))
+  const increment = (data: Record<string, number>, key: string) =>
+    data[key] !== undefined ? data[key]++ : (data[key] = 1)
 
   for await (const line of lineReader) {
     const [X1, Y1, X2, Y2] = line.match(/\d+/g).map(Number)
