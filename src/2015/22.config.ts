@@ -1,14 +1,16 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '22',
+    year: 2015,
+    day: 22,
     title: 'Wizard Simulator 20XX',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
     code: 'clean',
     difficulty: 4,
-    tags: ['Path finding']
+    tags: ['Path-finding']
   },
   logLevel: 'info',
   test: [
@@ -20,7 +22,7 @@ export default {
         spells: ['Poison', 'Magic Missile']
       },
       answers: {
-        //  part1: 173 + 53
+        part1: 173 + 53
       }
     },
     {
@@ -31,7 +33,7 @@ export default {
         spells: ['Recharge', 'Shield', 'Drain', 'Poison', 'Magic Missile']
       },
       answers: {
-        //  part1: 229 + 113 + 73 + 173 + 53
+        part1: 229 + 113 + 73 + 173 + 53
       }
     }
   ],
@@ -46,3 +48,5 @@ export default {
     }
   }
 }
+
+export default config

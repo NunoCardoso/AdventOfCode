@@ -234,8 +234,8 @@ export default async (lineReader: any, params: Params) => {
       ]
     ]
     while (queue.length > 0) goToBattle(queue, data, mode)
-    log.info('Final path')
-    log.info(printBattle(data.path))
+    log.debug('Final path')
+    log.debug(printBattle(data.path))
     return data.path[data.path.length - 1]?.manaSpent
   }
 

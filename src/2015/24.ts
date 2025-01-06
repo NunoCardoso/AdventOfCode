@@ -7,33 +7,38 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const packages: Array<number> = []
-  for await (const line of lineReader) {
-    packages.push(+line)
-  }
+  const packages: number[] = []
+  for await (const line of lineReader) packages.push(+line)
+  // Sort numbers in descending order
+  packages.sort((a, b) => b - a)
 
-  const calculateEntanglement = (packages: Array<number>) => packages.reduce((x: number, y: number) => x * y, 1)
-
-  const solveFor = (packages: Array<number>, compartments: number) => {
+  const solveFor = (packages: number[], numberOfCompartments: number): number => {
     const totalWeight = packages.reduce((a, b) => a + b)
-    const targetWeight = totalWeight / compartments
+    const targetWeight = totalWeight / numberOfCompartments
 
-    log.debug('Total Weight', totalWeight, 'Target Weight', targetWeight)
+    let minPackages = 0
+    let sum = 0
+    while (sum < targetWeight) sum += packages[minPackages++]
 
-    let solutions: Array<Array<number>> = []
-    let numberOfPackages = 1
+    let answer
 
-    while (solutions.length === 0) {
-      solutions = new Combination(packages, numberOfPackages)
-        .toArray()
-        .filter((a) => a.reduce((x, y) => x + y) === targetWeight)
-      numberOfPackages++
+    while (!answer) {
+      for (let c of new Combination(packages, minPackages)) {
+        if (c.reduce((a: number, b: number) => a + b, 0) === targetWeight) {
+          answer = Math.min(
+            answer ?? Number.MAX_VALUE,
+            c.reduce((a: number, b: number) => a * b, 1)
+          )
+        }
+      }
+      minPackages++
     }
 
-    return solutions.map(calculateEntanglement).sort((a, b) => a - b)[0]
+    return answer
   }
-  part1 = solveFor(packages, params.compartments.part1)
-  part2 = solveFor(packages, params.compartments.part2)
+
+  if (!params.skipPart1) part1 = solveFor(packages, params.compartments.part1)
+  if (!params.skipPart2) part2 = solveFor(packages, params.compartments.part2)
 
   return { part1, part2 }
 }

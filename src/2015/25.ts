@@ -5,11 +5,8 @@ export default async (lineReader: any, params: Params) => {
 
   let part1: number = 0
 
-  let data: Array<number> = []
-
-  for await (const line of lineReader) {
-    data = line.match(/\d+/g).map(Number)
-  }
+  let data: number[] = []
+  for await (const line of lineReader) data = line.match(/\d+/g).map(Number)
 
   const generateNewCode = (code: number): number => (code * 252533) % 33554393
 

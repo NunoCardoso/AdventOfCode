@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '25',
     title: 'Let It Snow',
-    status: 'done',
-    comment: 'Simple solution, happy to get it done quick',
+    year: 2015,
+    day: 25,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   params: {
@@ -16,3 +20,5 @@ export default {
     }
   }
 }
+
+export default config

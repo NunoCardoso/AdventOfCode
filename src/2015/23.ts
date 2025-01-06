@@ -12,7 +12,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const instructions: Array<Instruction> = []
+  const instructions: Instruction[] = []
 
   for await (const line of lineReader) {
     const [instruction, param1, param2] = line.split(/\s+/)
@@ -32,11 +32,7 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const solveFor = (
-    registers: Record<string, number>,
-    instructions: Array<Instruction>,
-    returnRegister: string
-  ): number => {
+  const solveFor = (registers: Record<string, number>, instructions: Instruction[], returnRegister: string): number => {
     for (let i = 0; i < instructions.length; i++) {
       switch (instructions[i].instruction) {
         case 'hlf':
@@ -52,14 +48,10 @@ export default async (lineReader: any, params: Params) => {
           i += instructions[i].amount! - 1
           break
         case 'jie':
-          if (registers[instructions[i].register!] % 2 === 0) {
-            i += instructions[i].amount! - 1
-          }
+          if (registers[instructions[i].register!] % 2 === 0) i += instructions[i].amount! - 1
           break
         case 'jio':
-          if (registers[instructions[i].register!] === 1) {
-            i += instructions[i].amount! - 1
-          }
+          if (registers[instructions[i].register!] === 1) i += instructions[i].amount! - 1
           break
       }
     }

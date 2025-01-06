@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '23',
     title: 'Opening the Turing Lock',
-    status: 'done',
-    comment: 'Another instruction list puzzle, not requiring anything special',
+    year: 2015,
+    day: 23,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
   test: {
@@ -21,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

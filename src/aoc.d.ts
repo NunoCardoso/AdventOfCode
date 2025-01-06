@@ -67,6 +67,7 @@ export type PuzzleOutput = {
   config: Config
   time: number
   mode: string
+  skipped: boolean
   part1: {
     skip?: boolean
     answer?: Answer

@@ -9,7 +9,7 @@ let config: PuzzleConfig = {
     status: 'solved',
     speed: 'fast',
     code: 'clean',
-    tags: ['Permutation'],
+    tags: ['Combination'],
     difficulty: 3
   },
   test: {

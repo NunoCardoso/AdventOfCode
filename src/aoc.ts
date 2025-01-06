@@ -3,31 +3,22 @@ import path from 'path'
 import clc from 'cli-color'
 import { Prod, PuzzleConfig, PuzzleOutput, Result, Speed, Status, Test } from './aoc.d'
 const readline = require('readline')
-import JSON5 from 'json5'
 
-const defaultPuzzleConfig: Partial<PuzzleConfig> = {
-  logLevel: 'info',
-  ui: { show: false }
-}
-
-export default async (_year: string, _day: string, postPuzzleConfig = {}) => {
-  let puzzleConfigPath = path.join(__dirname, _year + '/' + _day) + '.config'
-  const rawPuzzleConfig: PuzzleConfig = require(puzzleConfigPath).default
-
-  const puzzle = { ...defaultPuzzleConfig, ...rawPuzzleConfig, ...postPuzzleConfig } as PuzzleConfig
+export default async (puzzle: PuzzleConfig) => {
   const log = require('console-log-level')({ level: puzzle.logLevel })
 
   const year = puzzle.config.year.toString()
   const day = puzzle.config.day.toString().padStart(2, '0')
   const app = require(`./${year}/${day}${puzzle.mode ? '.' + puzzle.mode : ''}`).default
 
-  const doRun = async (run: Test | Prod, isTest: boolean): Promise<PuzzleOutput> => {
+  const doRun = async (run: Test | Prod, isTest: boolean) => {
     const result: PuzzleOutput = {
       config: puzzle.config,
       mode: puzzle?.mode ?? '',
       time: 0,
       part1: {},
       part2: {},
+      skipped: false,
       id: isTest ? (run as Test)?.id : 'Prod'
     }
 
@@ -42,6 +33,7 @@ export default async (_year: string, _day: string, postPuzzleConfig = {}) => {
     }
 
     if (runParams.skipPart1 && runParams.skipPart2) {
+      result.skipped = true
       return result
     }
 
@@ -129,6 +121,7 @@ export default async (_year: string, _day: string, postPuzzleConfig = {}) => {
         newResult !== rawPuzzleConfig.config.result
 
       if (changed) {
+        let puzzleConfigPath = path.join(__dirname, year, day + '.config')
         let content = fs.readFileSync(puzzleConfigPath + '.ts', 'utf8')
         console.log('Updating config...')
         content = content
@@ -140,25 +133,30 @@ export default async (_year: string, _day: string, postPuzzleConfig = {}) => {
     }
   }
 
-  log.info(`╔════════════════════════════════╗`)
-  log.info(`║ 🎅 Advent of Code ${year} / ${day} 🎅 ║`)
-  log.info(`╚════════════════════════════════╝`)
+  let string = ` 🎅 Advent of Code ${year} / ${day} 🎅 `
+  log.info('╔' + '═'.repeat(string.length) + '╗')
+  log.info(`║${string}║`)
+  log.info('╚' + '═'.repeat(string.length) + '╝')
 
   if (Object.prototype.hasOwnProperty.call(puzzle, 'test')) {
     if (Array.isArray(puzzle.test)) {
       puzzle.test.forEach(async (t: Test) => await doRun(t, true))
     } else {
       let output = await doRun(puzzle.test as Test, true)
-      log.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
-      printResult(output, true)
+      if (!output.skipped) {
+        log.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
+        printResult(output, true)
+      }
     }
   }
 
   if (Object.prototype.hasOwnProperty.call(puzzle, 'prod')) {
     let output = await doRun(puzzle.prod!, false)
-    log.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
-    printResult(output, false)
-    syncConfig(output, rawPuzzleConfig)
-    return output
+    if (!output.skipped) {
+      log.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
+      printResult(output, false)
+      syncConfig(output, puzzle)
+      return output
+    }
   }
 }

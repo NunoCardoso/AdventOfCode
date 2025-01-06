@@ -1,5 +1,6 @@
 import * as path from 'path'
 import aoc from 'aoc'
+import { PuzzleConfig } from 'aoc.d'
 
 if (process.argv[2]?.length !== 4 && !process.argv[2]?.startsWith('20')) {
   console.error('usage: ts-node runDay {year} {day}')
@@ -11,4 +12,6 @@ if (process.argv[3]?.length < 1 && process.argv[3]?.length > 2) {
   process.exit()
 }
 
-aoc(process.argv[2], process.argv[3].padStart(2, '0'))
+let puzzleConfigPath = path.join(__dirname, 'src', process.argv[2], process.argv[3].padStart(2, '0') + '.config')
+const rawPuzzleConfig: PuzzleConfig = require(puzzleConfigPath).default
+aoc(rawPuzzleConfig)

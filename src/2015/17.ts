@@ -18,7 +18,7 @@ export default async (lineReader: any, params: Params) => {
   let minimumFill: number = containers.length
   containers.sort((a, b) => b.value - a.value)
 
-  const permute = (containers: Containers, temp: Containers = []) => {
+  const combine = (containers: Containers, temp: Containers = []) => {
     for (let i = 0; i < containers.length; i++) {
       const currentContainer: Containers = [...temp, containers[i]]
       // if we overshoot or match, do not permute more, skip to next. If not, keep digging
@@ -38,11 +38,11 @@ export default async (lineReader: any, params: Params) => {
         }
         continue
       }
-      permute(containers.slice(i + 1), currentContainer)
+      combine(containers.slice(i + 1), currentContainer)
     }
   }
 
-  permute(containers, [])
+  combine(containers, [])
   log.debug(fills)
 
   return {

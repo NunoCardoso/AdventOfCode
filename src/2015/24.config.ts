@@ -1,13 +1,18 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2015',
-    day: '24',
     title: 'It Hangs in the Balance',
-    status: 'done',
-    tags: ['combination'],
-    comment: 'Runs in 6/7 seconds, not sure if I can do it better as it does a lot of combinations',
+    year: 2015,
+    day: 24,
+    result: 'unfinished',
+    status: 'solved',
+    speed: 'slow',
+    code: 'clean',
+    tags: ['Combination'],
     difficulty: 5
   },
+  logLevel: 'info',
   params: {
     compartments: {
       part1: 3,
@@ -28,3 +33,5 @@ export default {
     }
   }
 }
+
+export default config
