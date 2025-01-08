@@ -1,16 +1,16 @@
 import { Params } from 'aoc.d'
-import { Point } from 'declarations'
+import { Location } from 'declarations'
 const SparkMD5 = require('spark-md5')
 
 // point, path
 type Path = string
-type Step = [Point, Path]
+type Step = [Location, Path]
 
 type Finished = {
   path: string
   passcode: string
   mode: string
-  end: Point
+  end: Location
 }
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })

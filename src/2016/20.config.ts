@@ -3,7 +3,7 @@ export default {
     year: '2016',
     day: '20',
     title: 'Firewall Rules',
-    status: 'done',
+    status: 'solved',
     comment: 'Quite easy, considering it is day 20, trick is to have a mergeRange function',
     difficulty: 1
   },

@@ -1,5 +1,4 @@
 import { generateCombinations, generateCombinations2, generatePermutations } from './permutation'
-
 ;('./permutation')
 
 describe('util/permutation', () => {

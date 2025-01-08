@@ -1,21 +1,21 @@
 import { Params } from 'aoc.d'
-import { Point } from 'declarations'
+import { Location } from 'declarations'
 
 export default async (lineReader: any, params: Params) => {
   let part1: string = ''
   let part2: string = ''
 
-  const codes: Array<string> = []
+  const codes: string[] = []
   for await (const line of lineReader) codes.push(line)
 
-  const squareKeypad = (point: Point, instruction: string) => {
+  const squareKeypad = (point: Location, instruction: string) => {
     if (instruction === 'L') point[0] = point[0] === 0 ? 0 : point[0] - 1
     else if (instruction === 'R') point[0] = point[0] === 2 ? 2 : point[0] + 1
     else if (instruction === 'U') point[1] = point[1] === 0 ? 0 : point[1] - 1
     else point[1] = point[1] === 2 ? 2 : point[1] + 1
   }
 
-  const losangeKeypad = (point: Point, instruction: string) => {
+  const losangeKeypad = (point: Location, instruction: string) => {
     const length = Math.abs(point[0]) + Math.abs(point[1])
     if (instruction === 'L') point[0] = length === 2 && point[0] <= 0 ? point[0] : point[0] - 1
     else if (instruction === 'R') point[0] = length === 2 && point[0] >= 0 ? point[0] : point[0] + 1
@@ -23,7 +23,7 @@ export default async (lineReader: any, params: Params) => {
     else point[1] = length === 2 && point[1] >= 0 ? point[1] : point[1] + 1
   }
 
-  const valueFromSquareKeypad = (point: Point): string => (point[0] + 1 + point[1] * 3).toString()
+  const valueFromSquareKeypad = (point: Location): string => (point[0] + 1 + point[1] * 3).toString()
 
   const losangeKeyboard: Record<string, string> = {
     '0,-2': '1',
@@ -41,13 +41,13 @@ export default async (lineReader: any, params: Params) => {
     '0,2': 'D'
   }
 
-  const valueFromLosangeKeypad = (point: Point): string => losangeKeyboard[point.map(String).join(',')]
+  const valueFromLosangeKeypad = (point: Location): string => losangeKeyboard[point.map(String).join(',')]
 
   const solveFor = (
-    codes: Array<string>,
-    position: Point,
-    keypad: (point: Point, instruction: string) => void,
-    getValue: (point: Point) => string
+    codes: string[],
+    position: Location,
+    keypad: (point: Location, instruction: string) => void,
+    getValue: (point: Location) => string
   ): string =>
     codes
       .map((code: string) => {

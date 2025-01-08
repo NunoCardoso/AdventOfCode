@@ -7,15 +7,13 @@ export default async (lineReader: any, params: Params) => {
   let part1: string = ''
   let part2: string = ''
 
-  const solutionPart1: Array<string> = []
+  const solutionPart1: string[] = []
   let solutionsPart2: number = 0
-  const solutionPart2: Array<string> = []
-  let i: number = 0
-
-  log.info('This will take some time, MD5 puzzle')
+  const solutionPart2: string[] = []
+  let iterations: number = 0
 
   while (solutionsPart2 < 8) {
-    const hash: string = SparkMD5.hash(params.secretKey + i)
+    const hash: string = SparkMD5.hash(params.secretKey + iterations)
     if (hash.startsWith('00000')) {
       const position = hash.substring(5, 6)
       const character = hash.substring(6, 7)
@@ -29,8 +27,7 @@ export default async (lineReader: any, params: Params) => {
         solutionPart2[+position] = character
       }
     }
-    if (i % 1000000 === 0) log.debug('Searching', i)
-    i++
+    iterations++
   }
   part1 = solutionPart1.join('')
   part2 = solutionPart2.join('')

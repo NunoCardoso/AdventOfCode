@@ -77,7 +77,7 @@ export default async (puzzle: PuzzleConfig) => {
 
     if (!output?.part1?.skip) {
       const success = output.part1.answer === output.part1.expected
-      log.info(
+      console.info(
         label + ' Part 1 -',
         output.part1.answer,
         success ? '✅' : '❌',
@@ -86,7 +86,7 @@ export default async (puzzle: PuzzleConfig) => {
     }
     if (!output?.part2?.skip) {
       const success = output.part2.answer === output.part2.expected
-      log.info(
+      console.info(
         label + ' Part 2 -',
         output.part2.answer,
         success ? '✅' : '❌',
@@ -134,9 +134,9 @@ export default async (puzzle: PuzzleConfig) => {
   }
 
   let string = ` 🎅 Advent of Code ${year} / ${day} 🎅 `
-  log.info('╔' + '═'.repeat(string.length) + '╗')
-  log.info(`║${string}║`)
-  log.info('╚' + '═'.repeat(string.length) + '╝')
+  console.info('╔' + '═'.repeat(string.length) + '╗')
+  console.info(`║${string}║`)
+  console.info('╚' + '═'.repeat(string.length) + '╝')
 
   if (Object.prototype.hasOwnProperty.call(puzzle, 'test')) {
     if (Array.isArray(puzzle.test)) {
@@ -144,7 +144,7 @@ export default async (puzzle: PuzzleConfig) => {
     } else {
       let output = await doRun(puzzle.test as Test, true)
       if (!output.skipped) {
-        log.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
+        console.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
         printResult(output, true)
       }
     }
@@ -153,7 +153,7 @@ export default async (puzzle: PuzzleConfig) => {
   if (Object.prototype.hasOwnProperty.call(puzzle, 'prod')) {
     let output = await doRun(puzzle.prod!, false)
     if (!output.skipped) {
-      log.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
+      console.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
       printResult(output, false)
       syncConfig(output, puzzle)
       return output

@@ -1,4 +1,4 @@
-import { Point } from 'declarations'
+import { Point } from '../declarations.d'
 
 export const isSame = (p1: Point, p2: Point) => p1[0] === p2[0] && p1[1] === p2[1]
 

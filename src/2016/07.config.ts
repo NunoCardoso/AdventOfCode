@@ -1,11 +1,14 @@
 export default {
   config: {
-    year: '2016',
-    day: '07',
+    year: 2016,
+    day: 7,
     title: 'Internet Protocol Version 7',
-    status: 'done',
-    comment: 'Tricky match regex but just parse input and sums for certain conditions',
-    difficulty: 2
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2,
+    tags: ['Regex']
   },
   logLevel: 'info',
   test: [

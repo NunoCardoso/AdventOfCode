@@ -11,7 +11,12 @@ type Rule = {
   high: RuleDecision
 }
 
-type RobotIndex = Map<number, Array<number> | undefined>
+type RuleKey = keyof Rule
+
+type Rules = Map<number, Rule>
+type Outputs = Map<number, number>
+type RobotIndex = Map<number, number[] | undefined>
+const ruleKeys: RuleKey[] = ['low', 'high']
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -19,20 +24,20 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const rules: Map<number, Rule> = new Map()
-  const outputs: Map<number, number> = new Map()
+  const rules: Rules = new Map()
+  const outputs: Outputs = new Map()
   const botIndex: RobotIndex = new Map()
+  const botIndexWithTwoMicrochips: number[] = []
 
   const processRule = (
     bot: number,
     rule: Rule,
-    botValues: Array<number>,
+    botValues: number[],
     botIndex: RobotIndex,
-    botIndexWithTwo: Array<number>
+    botIndexWithTwo: number[]
   ) => {
     botIndex.set(bot, []) // robot will not have the values anymore
-    ;(['low', 'high'] as Array<keyof Rule>).forEach((key: string) => {
-      // @ts-ignore
+    ruleKeys.forEach((key: RuleKey) => {
       const ruleDecision = rule[key]
       if (ruleDecision.type === 'bot') {
         const botNumber = ruleDecision.number
@@ -51,15 +56,13 @@ export default async (lineReader: any, params: Params) => {
     })
   }
 
-  const botIndexWithTwo: Array<number> = []
-
   for await (const line of lineReader) {
     if (line.startsWith('value')) {
       const [value, bot] = line.match(/\d+/g).map(Number)
       if (!botIndex.has(bot)) botIndex.set(bot, [value])
       else {
         botIndex.get(bot)!.push(value)
-        botIndexWithTwo.push(bot)
+        botIndexWithTwoMicrochips.push(bot)
       }
     }
     if (line.startsWith('bot')) {
@@ -73,19 +76,12 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  while (botIndexWithTwo.length > 0) {
-    log.debug('there is a bot with two, ', botIndexWithTwo)
-    for (let i = botIndexWithTwo.length - 1; i >= 0; i--) {
-      const bot = botIndexWithTwo[i]
-      const rule = rules.get(bot)
-      if (rule) {
-        const botValues: Array<number> = botIndex.get(bot)!.sort((a, b) => (a - b > 0 ? 1 : -1))
-        log.debug('Found rule, bot', bot, 'will decide between', botValues)
-        if (intersect(botValues, params.botValues).length === params.botValues.length) part1 = bot
-        processRule(bot, rule, botValues, botIndex, botIndexWithTwo)
-      }
-      botIndexWithTwo.splice(i, 1)
-    }
+  while (botIndexWithTwoMicrochips.length > 0) {
+    const bot = botIndexWithTwoMicrochips.pop()!
+    const rule = rules.get(bot)!
+    const botValues: number[] = botIndex.get(bot)!.sort((a, b) => (a - b > 0 ? 1 : -1))
+    if (intersect(botValues, params.botValues).length === params.botValues.length) part1 = bot
+    processRule(bot, rule, botValues, botIndex, botIndexWithTwoMicrochips)
   }
 
   part2 = outputs.get(0)! * outputs.get(1)! * outputs.get(2)!

@@ -2,7 +2,7 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
-    title: "Does't He Have Intern-Elves For This?",
+    title: "Doesn't He Have Intern-Elves For This?",
     year: 2015,
     day: 5,
     result: 'finished',

@@ -1,10 +1,12 @@
 export default {
   config: {
-    year: '2016',
-    day: '10',
     title: 'Balance Bots',
-    status: 'done',
-    comment: 'it assumes that you have all rules loaded before starting chain reaction',
+    year: 2016,
+    day: 10,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 3
   },
   logLevel: 'info',

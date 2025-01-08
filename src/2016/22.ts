@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Point, World } from 'declarations'
+import { Location, World } from 'declarations'
 
 type Node = {
   id: number
@@ -9,18 +9,18 @@ type Node = {
   avail: number
 }
 
-type Move = [Point, Point]
+type Move = [Location, Location]
 
 type Data = {
-  endLocation: Point
+  endLocation: Location
   bestScore: number
   path: Step[]
 }
 
 type Step = {
   score: number
-  dataNodeLocation: Point
-  emptyNodeLocation: Point
+  dataNodeLocation: Location
+  emptyNodeLocation: Location
   distance: number
   move?: Move
   path: Step[]
@@ -134,11 +134,11 @@ export default async (lineReader: any, params: Params) => {
     })
   }
 
-  const getManhattanDistance = (p1: Point, p2: Point) => Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1])
+  const getManhattanDistance = (p1: Location, p2: Location) => Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1])
 
   // if the empty node is not next to the data node, add *100 to the distance so it is always worse than
   // distances from the data node to the end node
-  const getDistance = (emptyNodeLocation: Point, dataNodeLocation: Point, endLocation: Point) => {
+  const getDistance = (emptyNodeLocation: Location, dataNodeLocation: Location, endLocation: Location) => {
     let firstManhattanDistance = getManhattanDistance(emptyNodeLocation, dataNodeLocation)
     if (firstManhattanDistance > 1) {
       return firstManhattanDistance * 100

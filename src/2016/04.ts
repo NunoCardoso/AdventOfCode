@@ -21,10 +21,7 @@ export default async (lineReader: any, params: Params) => {
       letters.get(b)! - letters.get(a)! !== 0 ? letters.get(b)! - letters.get(a)! : a.localeCompare(b)
     )
 
-    const thisChecksum = keys.slice(0, 5).join('')
-    log.debug(letters, sectionID, checksum, thisChecksum)
-
-    if (thisChecksum === checksum) {
+    if (keys.slice(0, 5).join('') === checksum) {
       part1 += +sectionID
 
       if (!params.skipPart2) {

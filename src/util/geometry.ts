@@ -1,4 +1,4 @@
-import { Point } from 'declarations'
+import { Point } from '../declaration.d'
 
 export const lineIntersect = (a: [Point, Point], b: [Point, Point]): Point | undefined => {
   // Check if none of the lines are of length 0

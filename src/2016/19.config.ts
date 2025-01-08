@@ -4,7 +4,7 @@ export default {
     day: '19',
     title: 'An Elephant Named Joseph',
     comment: 'Very interesting. run mode: study to see pattern vs brute force',
-    status: 'done',
+    status: 'solved',
     difficulty: 4
   },
   logLevel: 'info',

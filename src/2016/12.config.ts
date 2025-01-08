@@ -1,9 +1,11 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
     year: '2016',
     day: '12',
     title: "Leonardo's Monorail",
-    status: 'done',
+    status: 'solved',
     comment: 'Jumping cursor with input commands',
     difficulty: 2
   },
@@ -20,3 +22,5 @@ export default {
     }
   }
 }
+
+export default config

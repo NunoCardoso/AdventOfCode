@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '03',
     title: 'Squares With Three Sides',
-    status: 'done',
-    comment: 'Hardest part is to align values for part 2',
+    year: 2016,
+    day: 3,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   logLevel: 'info',
@@ -15,3 +19,5 @@ export default {
     }
   }
 }
+
+export default config

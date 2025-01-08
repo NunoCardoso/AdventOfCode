@@ -3,7 +3,7 @@ export default {
     year: '2016',
     day: '14',
     title: 'One-Time Pad',
-    status: 'done',
+    status: 'solved',
     comment: 'This will take some time around 30s, MD5 puzzle',
     tags: ['md5'],
     difficulty: 3

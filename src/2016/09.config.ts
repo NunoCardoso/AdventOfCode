@@ -1,12 +1,16 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '09',
+    year: 2016,
+    day: 9,
     title: 'Explosives in Cyberspace',
-    status: 'done',
-    comment: 'a little annoying to get it right',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 3,
-    tags: ['recursion']
+    tags: ['Recursion']
   },
   logLevel: 'info',
   test: [
@@ -36,3 +40,5 @@ export default {
     }
   }
 }
+
+export default config

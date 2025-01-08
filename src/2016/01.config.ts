@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '01',
     title: 'No Time for a Taxicab',
-    status: 'done',
-    comment: 'Parsing input directions and tracking the movement of a cursor, not complicated',
+    year: 2016,
+    day: 1,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   test: [
@@ -40,3 +44,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { World } from 'declarations'
+import { Dimension, World } from 'declarations'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -8,17 +8,15 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: string = '\n'
 
-  const dimensions: any = params.screenSize
+  const dimension: Dimension = params.screenSize
 
-  const screen: World<string> = Array(dimensions.height)
+  const screen: World<string> = Array(dimension[0])
     .fill(null)
-    .map(() => Array(dimensions.width).fill('.'))
-
-  log.info('Setting screen width ' + dimensions.width + ' height ' + dimensions.height)
+    .map(() => Array(dimension[1]).fill('.'))
 
   const printGrid = () => {
     screen.forEach((row, i) =>
-      console.log(row.map((cell, j) => (screen[i][j] === '#' ? clc.blue(screen[i][j]) : screen[i][j])).join(''))
+      log.info(row.map((cell, j) => (screen[i][j] === '#' ? clc.blue(screen[i][j]) : screen[i][j])).join(''))
     )
   }
 
@@ -34,7 +32,7 @@ export default async (lineReader: any, params: Params) => {
     if (line.startsWith('rotate')) {
       const [, axis, index, amount] = line.match(/rotate .+ (.)=(\d+) by (\d+)/)
       if (axis === 'y') {
-        const newRow = []
+        const newRow: string[] = []
         for (let column = 0; column < screen[+index].length; column++) {
           const newColumnIndex = (column + +amount) % screen[+index].length
           newRow[newColumnIndex] = screen[+index][column]
@@ -42,7 +40,7 @@ export default async (lineReader: any, params: Params) => {
         screen[+index] = newRow
       }
       if (axis === 'x') {
-        const newColumn = []
+        const newColumn: string[] = []
         for (let row = 0; row < screen.length; row++) {
           const newRowIndex = (row + +amount) % screen.length
           newColumn[newRowIndex] = screen[row][+index]
@@ -58,10 +56,10 @@ export default async (lineReader: any, params: Params) => {
 
   if (params.ui.show && params.ui.end) printGrid()
 
-  for (let row = 0; row < screen.length; row++) {
-    part1 += screen[row].filter((pixel) => pixel === '#').length
-    part2 += screen[row].join('') + '\n'
-  }
+  screen.forEach((row) => {
+    part1 += row.filter((pixel) => pixel === '#').length
+    part2 += row.join('') + '\n'
+  })
 
   return { part1, part2 }
 }

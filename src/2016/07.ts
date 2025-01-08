@@ -5,10 +5,10 @@ export default async (lineReader: any) => {
   let part2: number = 0
 
   for await (const line of lineReader) {
-    const oddsPart1: Array<string> = []
-    const evensPart1: Array<string> = []
-    const oddsPart2: Array<string> = []
-    const evensPart2: Array<string> = []
+    const oddsPart1: string[] = []
+    const evensPart1: string[] = []
+    const oddsPart2: string[] = []
+    const evensPart2: string[] = []
 
     // inside brackets will be always on odd index numbers (1,3,5,...)
     line.split(/[[\]]/).forEach((v: string, i: number) => {
@@ -16,11 +16,11 @@ export default async (lineReader: any) => {
       if (abba?.[0][0] !== abba?.[0][1]) {
         i % 2 === 0 ? evensPart1.push(abba![0]) : oddsPart1.push(abba![0])
       }
-      ;[...v.matchAll(/(.)(?=(.)\1)/g)]?.forEach((aba) => {
+      for (let aba of v.matchAll(/(.)(?=(.)\1)/g)) {
         if (aba?.[1] !== aba?.[2]) {
           i % 2 === 0 ? evensPart2.push(aba![1] + aba![2] + aba![1]) : oddsPart2.push(aba![2] + aba![1] + aba![2]) // let's store the inverse now to make it easy for match
         }
-      })
+      }
     })
 
     if (evensPart1.length > 0 && oddsPart1.length === 0) part1++

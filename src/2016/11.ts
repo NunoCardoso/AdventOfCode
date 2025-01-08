@@ -2,85 +2,44 @@ import { Params } from 'aoc.d'
 import clc from 'cli-color'
 import { Combination } from 'js-combinatorics'
 
-type Floor = Array<string>
+type Floor = string[]
 
-type Point = {
-  floors: Array<Floor>
+type Step = {
+  floors: Floor[]
+  key: string // serializing floor state
   distance: number // sum distance of elements to the top floor
-  step: number // steps counter
+  moves: number // moves counter
 }
+
+type Path = Step[]
+
+type Data = {
+  moves: number
+  path: Path
+}
+
+type VisitedIndex = Record<string, number>
+type QueueIndex = Record<string, [distance: number, moves: number]>
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  let part1: number = 0
-  let part2: number = 0
+  // to use as A* heuristic if I want
+  const calculateDistance = (floors: Floor[]) =>
+    // items on last floor cost 0. This is "manhattan distance" of itens to top floor.
+    floors.reduce((acc, f, i) => acc + f.length * (floors.length - 1 - i), 0)
 
-  const data: Point = { floors: [], distance: 1000, step: 0 }
-
-  let indexOfObjects: Array<string> = ['E']
-
-  const calculateDistance = (floors: Array<Floor>) => {
-    let count = 0
-    const topFloor = floors.length - 1
-
-    floors.forEach((f, i) => {
-      // number of things * distance to topFloor
-      count += f.length * (topFloor - i)
-    })
-    return count
-  }
-
-  for await (const line of lineReader) {
-    const objects: Array<string> = []
-    const m = line.match(/The (.+) floor contains (.*)./)
-    const index = ['first', 'second', 'third', 'fourth'].indexOf(m[1])
-    if (index === 0) {
-      objects.push('E')
-    }
-    const bits = m[2].split(/(, |and )/)
-    for (let i = 0; i < bits.length; i++) {
-      if (bits[i].trim().startsWith('a ')) {
-        let m2 = bits[i].match(/a (.+)-compatible microchip/)
-        if (m2?.length > 0) {
-          const object = m2[1][0].toUpperCase() + 'M'
-          objects.push(object)
-          indexOfObjects.push(object)
-        } else {
-          m2 = bits[i].match(/a (.+) generator/)
-          if (m2?.length > 0) {
-            const object = m2[1][0].toUpperCase() + 'G'
-            objects.push(object)
-            indexOfObjects.push(object)
-          }
-        }
-      }
-    }
-    data.floors![index] = objects.sort()
-  }
-
-  // elevator is always first
-  const generateKey = (point: Point): string => {
-    // for this, having [LM,LG] on flpor 2 and [XM,XG] on floor 3 is interchangeable
-    // so let's "anonimize" the patters so we can create really unique floor configurations
-
-    // this will be arrays of floors where [G,M] are (order is important)
-    // So, a LG in 1st floor and LM in 4th yields [0,3]
-
-    // elevator goes first as the [-1, x] (x = floor number)
-    // sorting is important to ensure similar configurations belong to same key
-    const hash: Record<string, Array<number>> = { E: [-1, 0] }
-    point.floors.forEach((f, i) => {
-      f.forEach((el) => {
-        if (el === 'E') {
-          hash.E[1] = i
-        } else {
-          const code = el[0]
+  // see readme on why use this instead of a simple JSON.stringify
+  const generateKey = (step: Step): string => {
+    const hash: Record<string, number[]> = { E: [-1, 0] }
+    step.floors.forEach((floor, i) => {
+      floor.forEach((element) => {
+        if (element === 'E') hash.E[1] = i
+        else {
+          const code = element[0]
           const type = ['G', 'M']
-          if (!Object.prototype.hasOwnProperty.call(hash, code)) {
-            hash[code] = []
-          }
-          hash[code][type.indexOf(el[1])] = i
+          if (!hash[code]) hash[code] = []
+          hash[code][type.indexOf(element[1])] = i
         }
       })
     })
@@ -89,268 +48,257 @@ export default async (lineReader: any, params: Params) => {
     return JSON.stringify(sorted)
   }
 
-  const printFloors = (point: Point) => {
+  const printFloors = (point: Step) => {
     for (let i = point.floors!.length - 1; i >= 0; i--) {
       log.info(
-        'F' +
-          clc.yellow('F' + (i + 1)) +
+        clc.yellow('F' + (i + 1)) +
           ' ' +
-          indexOfObjects
-            .map((o) => {
-              if (point.floors![i].indexOf(o) >= 0) {
-                return o.padEnd(2, ' ')
-              } else {
-                return '. '
-              }
-            })
-            .join(' ')
+          indexOfObjects.map((o) => (point.floors![i].includes(o) ? o.padEnd(2, ' ') : '. ')).join(' ')
       )
     }
-    log.info('step: ', point.step, 'distance:', point.distance)
+    log.info('step: ', point.moves, 'distance:', point.distance)
   }
 
-  const getElevatorFloor = (head: Point): number => head.floors.findIndex((floor: Floor) => floor.includes('E'))
+  const getElevatorFloor = (step: Step): number => step.floors.findIndex((floor) => floor.includes('E'))
 
+  //  I cannot have an unpaired microchip XM in a floor where there is a YG
   const isValidFloor = (floor: Floor): boolean => {
-    const objectsByElement: Record<string, Array<string>> = {}
-    const unpairedMicrochips: Array<string> = []
+    const objectsByElement: Record<string, string[]> = {}
+    const unpairedMicrochips: string[] = []
+    const floorHasAGenerator = floor.some((el) => el.endsWith('G'))
 
+    // making hash of {radioisotope: [generator?, microchip?]} on this floor
     floor.forEach((object) => {
-      if (!!object && object.length === 2) {
+      if (object.length === 2) {
         // not an elevator
-        if (!Object.prototype.hasOwnProperty.call(objectsByElement, object[0])) {
-          objectsByElement[object[0]] = []
-        }
+        if (!objectsByElement[object[0]]) objectsByElement[object[0]] = []
         objectsByElement[object[0]].push(object)
       }
     })
-
-    Object.keys(objectsByElement).forEach((el) => {
-      if (objectsByElement[el].length === 1) {
-        const _el = objectsByElement[el][0]
-        if (_el.endsWith('M')) {
-          unpairedMicrochips.push(_el)
-        }
-      }
+    // Collect list of unpaired microchips and generators
+    Object.values(objectsByElement).forEach((elements) => {
+      if (elements.length === 1 && elements[0].endsWith('M')) unpairedMicrochips.push(elements[0])
     })
-
-    const floorHasAGenerator = floor.find((el) => el.endsWith('G')) !== undefined
-
-    // If I have an unpaired microchip XM in a floor where there is a YG, then it is invalid
-    if (unpairedMicrochips.length > 0 && floorHasAGenerator) {
-      return false
-    }
-    return true
+    return !floorHasAGenerator || (floorHasAGenerator && unpairedMicrochips.length === 0)
   }
 
-  const goodToAddToOpened = (
-    newHead: Point,
-    openedIndex: Record<string, number>,
-    visitedIndex: Record<string, number>,
-    lowest: number
-  ) => {
-    const newKey = generateKey(newHead)
+  const inTail = (path: Path, newHead: Step) => path.some((step) => step.key === newHead.key)
 
-    if (!Object.prototype.hasOwnProperty.call(visitedIndex, newKey)) {
-      // still not in the open
-      if (!Object.prototype.hasOwnProperty.call(openedIndex, newKey)) {
-        if (newHead.step > lowest) {
-          return false
-        }
-        openedIndex[newKey] = newHead.step
-        return true
-      }
+  // 1. Elevator can only go up or down with minimum of 1 element, maximum of 2 elements
+  // 2. There is no point on moving generators down. We take microchips to go down.
+  // 3. For a move to be legal, no X+M in same floor with Y+G, without X-G
+  const getNewPaths = (path: Path): Path[] => {
+    let newPaths: Path[] = []
+    let head = path[path.length - 1]
+    log.trace('Getting more paths for', head.key)
 
-      // already in the open but with lower steps
-      if (openedIndex[newKey] > newHead.step) {
-        if (newHead.step > lowest) {
-          return false
-        }
-        openedIndex[newKey] = newHead.step
-        return true
-      }
-
-      // do not add. it is unvisited, but it is in opened list with lower steps
-      return false
+    const currentElevatorFloor: number = getElevatorFloor(head)
+    const objectsInCurrentFloor: string[] = head.floors[currentElevatorFloor].filter((el: string) => el !== 'E')
+    const floorAbove: number | null = currentElevatorFloor === head.floors.length - 1 ? null : currentElevatorFloor + 1
+    const floorBelow: number | null = currentElevatorFloor === 0 ? null : currentElevatorFloor - 1
+    let areFloorsBelowEmpty = true
+    for (let i = 0; i < currentElevatorFloor; i++) {
+      if (head.floors[i].length > 0) areFloorsBelowEmpty = false
     }
 
-    // I revisit it but with lower steps -> re-add to opened
-    if (visitedIndex[newKey] > newHead.step) {
-      if (newHead.step > lowest) {
-        return false
+    // let's do up first
+    if (floorAbove !== null) {
+      let newPathsMovingUp: Path[] = []
+      for (let objectPairsToMove of new Combination(objectsInCurrentFloor, 2)) {
+        const newHead: Step = { ...head, floors: [...head.floors] }
+        newHead.floors[currentElevatorFloor] = objectsInCurrentFloor.filter(
+          (o) => o !== 'E' && !objectPairsToMove.includes(o)
+        )
+        newHead.floors[floorAbove] = newHead.floors[floorAbove].concat(['E', ...objectPairsToMove]).sort()
+        newHead.moves++
+        newHead.distance = calculateDistance(newHead.floors)
+        newHead.key = generateKey(newHead)
+        if (
+          isValidFloor(newHead.floors[floorAbove]) &&
+          isValidFloor(newHead.floors[currentElevatorFloor]) &&
+          !inTail(path, newHead)
+        )
+          newPathsMovingUp.push([...path, newHead])
       }
-      visitedIndex[newKey] = newHead.step
-      openedIndex[newKey] = newHead.step
-      return true
+      // if edge case where no legal moves going up (the test example), then do this with only one up
+      if (newPathsMovingUp.length === 0) {
+        for (let objectToMove of objectsInCurrentFloor) {
+          const newHead: Step = { ...head, floors: [...head.floors] }
+          newHead.floors[currentElevatorFloor] = objectsInCurrentFloor.filter((o) => o !== 'E' && o !== objectToMove)
+          newHead.floors[floorAbove] = newHead.floors[floorAbove].concat(['E', objectToMove]).sort()
+          newHead.moves++
+          newHead.distance = calculateDistance(newHead.floors)
+          newHead.key = generateKey(newHead)
+          if (
+            isValidFloor(newHead.floors[floorAbove]) &&
+            isValidFloor(newHead.floors[currentElevatorFloor]) &&
+            !inTail(path, newHead)
+          )
+            newPathsMovingUp.push([...path, newHead])
+        }
+      }
+      newPaths = newPaths.concat(newPathsMovingUp)
     }
 
-    return false
+    // moving down => only one element
+    if (floorBelow !== null && !areFloorsBelowEmpty) {
+      for (let objectToMove of objectsInCurrentFloor) {
+        const newHead: Step = { ...head, floors: [...head.floors] }
+        newHead.floors[currentElevatorFloor] = objectsInCurrentFloor.filter((o) => o !== 'E' && o !== objectToMove)
+        newHead.floors[floorBelow] = newHead.floors[floorBelow].concat(['E', objectToMove]).sort()
+        newHead.moves++
+        newHead.distance = calculateDistance(newHead.floors)
+        newHead.key = generateKey(newHead)
+        if (
+          isValidFloor(newHead.floors[floorBelow]) &&
+          isValidFloor(newHead.floors[currentElevatorFloor]) &&
+          !inTail(path, newHead)
+        )
+          newPaths.push([...path, newHead])
+      }
+    }
+    return newPaths
   }
 
-  const getNewPoints = (
-    point: Point,
-    openedIndex: Record<string, number>,
-    visitedIndex: Record<string, number>,
-    lowest: number
-  ): Array<Point> => {
-    // 1. Elevator can only go up or down
-    // 2. Elevator can carry min 1 element, max 2 elements
-    // 3. So that move is legal, no X+M in same floor with Y-G and no X-G
+  const aStarSorting = (a: Path, b: Path) => b[b.length - 1].moves - a[a.length - 1].moves
 
-    const newPoints: Array<Point> = []
+  const doAstar = async (queue: Path[], queueIndex: QueueIndex, visitedIndex: VisitedIndex, data: Data) => {
+    log.trace('=== A* === queue', queue.length)
+    const path: Path = queue.pop()!
+    const head: Step = path[path.length - 1]
+    log.trace('Picking head', head.key)
+    delete queueIndex[head.key]
 
-    const currentElevatorFloor: number = getElevatorFloor(point)
-    const objectsInCurrentFloor: Array<string> = point.floors[currentElevatorFloor].filter((el: string) => el !== 'E')
+    if (head.moves > data.moves) {
+      log.trace('No point in continuing this, worse than the current best path')
+      return
+    }
 
-    // on ground floor, only up
-    const candidateFloors = []
-    if (currentElevatorFloor === 0) {
-      candidateFloors.push(1)
-      // on top floor, only down
-    } else if (currentElevatorFloor === point.floors.length - 1) {
-      candidateFloors.push(point.floors.length - 2)
+    if (head.distance === 0) {
+      if (head.moves < data.moves) {
+        log.debug('got lowest', head.moves)
+        data.moves = head.moves
+        data.path = path
+      }
+      return
+    }
+
+    // check visited status
+    const visitedStep = visitedIndex[head.key]
+    // never visited or visited with a worse move count
+    if (visitedStep === undefined || visitedStep > head.moves) {
+      log.trace('No visited with key', head.key, 'Set it with', head.moves)
+      visitedIndex[head.key] = head.moves
     } else {
-      let floorsDownEmpty = true
-      for (let i = 0; i < currentElevatorFloor; i++) {
-        if (point.floors[i].length > 0) {
-          floorsDownEmpty = false
-        }
-      }
-      // go down only if there are objects there
-      candidateFloors.push(currentElevatorFloor + 1)
-      if (!floorsDownEmpty) {
-        candidateFloors.push(currentElevatorFloor - 1)
-      }
+      log.trace('visited with key', head.key, 'is better, returning')
+      // return, as there are better.
+      return
     }
 
-    const combinationOfPairsOfElements = new Combination(objectsInCurrentFloor, 2).toArray()
+    const newPaths: Path[] = getNewPaths(path)
+    if (newPaths.length > 0) {
+      log.trace('Got ', newPaths.length, 'new paths: ')
+      newPaths.forEach((newPath, i) => {
+        let newHead = newPath[newPath.length - 1]
+        log.trace(' > Path #', i, newHead.key, 'distance', newHead.distance, 'moves', newHead.moves)
 
-    for (let nextFloor = 0; nextFloor < candidateFloors.length; nextFloor++) {
-      // moving a floor with one element
+        let queued = queueIndex[newHead.key]
+        let visited = visitedIndex[newHead.key]
 
-      const candidateFloor = candidateFloors[nextFloor]
-      for (let objectsToMoveIndex = 0; objectsToMoveIndex < objectsInCurrentFloor.length; objectsToMoveIndex++) {
-        const oldFloorObjects: Array<string> = objectsInCurrentFloor.slice()
-        let newFloorObjects: Array<string> = point.floors[candidateFloor].slice()
-        newFloorObjects.push('E')
-        // take object from old floor, put on next floor
-        newFloorObjects.push(oldFloorObjects.splice(objectsToMoveIndex, 1)[0])
-        newFloorObjects = newFloorObjects.sort()
-
-        const newPoint: Point = global.structuredClone(point)
-        newPoint.floors[currentElevatorFloor] = oldFloorObjects
-        newPoint.floors[candidateFloor] = newFloorObjects
-        newPoint.step = newPoint.step + 1
-        newPoint.distance = calculateDistance(newPoint.floors)
-
-        // printFloors(newPoint)
-        if (
-          isValidFloor(newPoint.floors[candidateFloor]) &&
-          isValidFloor(newPoint.floors[currentElevatorFloor]) &&
-          goodToAddToOpened(newPoint, openedIndex, visitedIndex, lowest)
-        ) {
-          newPoints.push(newPoint)
+        if (!!visited && visited < newHead.moves) {
+          log.trace('Found in visiting, it is worse, returning')
+          return
         }
-      }
 
-      // moving a floor with two elements
-      for (let objectPairIndex = 0; objectPairIndex < combinationOfPairsOfElements.length; objectPairIndex++) {
-        let oldFloorObjects = objectsInCurrentFloor.slice()
-        let newFloorObjects = point.floors[candidateFloor].slice()
-        newFloorObjects.push('E')
-        // start with the rightmost index, which is always higher
-        const objectsToMove: Array<string> = combinationOfPairsOfElements[objectPairIndex]
-        oldFloorObjects = oldFloorObjects.filter((o: string) => !objectsToMove.includes(o))
-        newFloorObjects.push(...objectsToMove)
-        newFloorObjects = newFloorObjects.sort()
-
-        const newPoint = global.structuredClone(point)
-        newPoint.floors[currentElevatorFloor] = oldFloorObjects
-        newPoint.floors[candidateFloor] = newFloorObjects
-        newPoint.step = newPoint.step + 1
-        newPoint.distance = calculateDistance(newPoint.floors)
-
-        if (
-          isValidFloor(newPoint.floors[candidateFloor]) &&
-          isValidFloor(newPoint.floors[currentElevatorFloor]) &&
-          goodToAddToOpened(newPoint, openedIndex, visitedIndex, lowest)
-        ) {
-          newPoints.push(newPoint)
+        // if visited and better, update
+        if (!!visited && visited > newHead.moves) {
+          log.trace('Found in visiting, it is better, updating')
+          visitedIndex[newHead.key] = newHead.moves
         }
-      }
-    }
-    return newPoints
-  }
 
-  const solveFor = (
-    opened: Array<Point>,
-    openedIndex: Record<string, number>,
-    visitedIndex: Record<string, number>
-  ) => {
-    let lowestPoint: Point = { step: 999999, floors: [], distance: 0 }
-    const searchAlgorithm = async (
-      opened: Array<Point>,
-      openedIndex: Record<string, number>,
-      visitedIndex: Record<string, number>
-    ) => {
-      const point: Point = opened.splice(-1)[0]
-      const key = generateKey(point)
+        // if opened and worse, return, do not add
+        if (!!queued && queued[1] < newHead.moves) {
+          log.trace('Found in queue, it is worse, returning')
+          return
+        }
 
-      if (point.distance === 0) {
-        if (lowestPoint.step > point.step) {
-          lowestPoint = point
-          // remove opened values that have higher steps than current lowest step
-          for (let i = opened.length - 1; i >= 0; i--) {
-            if (opened[i].step > lowestPoint.step) {
-              const key = generateKey(opened[i])
-              opened.splice(i, 1)
-              delete openedIndex[key]
-            }
+        // if opened and better, remove it from queue
+        if (!!queued && queued[1] > newHead.moves) {
+          log.trace('Found in queue, it is better, removing from queue')
+          let index = queue.findIndex((p: Path) => p[p.length - 1].key === newHead.key)
+          if (index >= 0) {
+            queue.splice(index, 1)
+            delete queueIndex[newHead.key]
           }
         }
-        return
-      }
 
-      if (!Object.prototype.hasOwnProperty.call(visitedIndex, key)) {
-        visitedIndex[key] = point.step
-      } else {
-        if (visitedIndex[key] > point.step) {
-          visitedIndex[key] = point.step
-        }
-      }
-
-      const newPoints: Array<Point> = getNewPoints(point, openedIndex, visitedIndex, lowestPoint.step)
-      if (newPoints.length > 0) {
-        opened.push(...newPoints)
-        opened.sort((a, b) => b.distance - a.distance)
-      }
+        // not visited and not opened, or visited and better, opened and better
+        queue.push(newPath)
+        queueIndex[newHead.key] = [newHead.distance, newHead.moves]
+      })
+      queue.sort(aStarSorting)
     }
-
-    let it = 0
-    while (opened.length > 0) {
-      searchAlgorithm(opened, openedIndex, visitedIndex)
-      it++
-      if (it % 10000 === 0) {
-        console.log('it', it, 'opened', opened.length, 'lowestSteps', lowestPoint.step)
-      }
-    }
-    return lowestPoint.step
   }
 
+  const solveFor = (step: Step) => {
+    let queue: Path[] = [[step]]
+    let queueIndex: QueueIndex = { [step.key]: [step.distance, step.moves] }
+    let visitedIndex: Record<string, number> = {}
+    let data: Data = { moves: Number.MAX_VALUE, path: [] }
+    let iterations = 0
+    while (queue.length > 0) {
+      doAstar(queue, queueIndex, visitedIndex, data)
+      iterations++
+    }
+    console.log('finished in ', iterations, 'iterations')
+    if (params.ui?.show && params.ui?.end) {
+      data.path.forEach((step) => printFloors(step))
+    }
+    return data.moves
+  }
+
+  let part1: number = 0
+  let part2: number = 0
+
+  const step: Step = { floors: [], key: '', distance: 0, moves: 0 }
+
+  let indexOfObjects: string[] = ['E']
+
+  for await (const line of lineReader) {
+    const objects: string[] = []
+    const [, floor, content] = line.match(/The (.+) floor contains (.*)./)
+    const index = ['first', 'second', 'third', 'fourth'].indexOf(floor)
+    const bits = content.split(/(, |and )/)
+    for (let bit of bits) {
+      if (bit.trim().startsWith('a ')) {
+        let [, radioisotope, type] = bit.match(/a (.+)(-compatible microchip| generator)/)
+        let object = radioisotope[0].toUpperCase() + (type.endsWith('generator') ? 'G' : 'M')
+        objects.push(object)
+        indexOfObjects.push(object)
+      }
+    }
+    step.floors![index] = objects.sort()
+  }
+  // add elevator
+  step.floors[0].unshift('E')
   indexOfObjects.sort()
-  data.distance = calculateDistance(data.floors!)
 
   if (!params.skipPart1) {
-    part1 = solveFor([data], { [generateKey(data)]: 0 }, {})
+    const step1 = global.structuredClone(step)
+    step1.distance = calculateDistance(step1.floors!)
+    step1.key = generateKey(step1)
+    if (params.ui?.show) printFloors(step1)
+    part1 = solveFor(step1)
   }
 
   if (!params.skipPart2) {
-    const data2 = global.structuredClone(data)
-    indexOfObjects = indexOfObjects.concat(['XG', 'XM', 'YG', 'YM']).sort()
-    data2.floors[0].push('XG', 'XM', 'YG', 'YM')
-    data2.distance = calculateDistance(data2.floors!)
-    printFloors(data2)
-    part2 = solveFor([data2], { [generateKey(data2)]: 0 }, {})
+    const step2 = global.structuredClone(step)
+    indexOfObjects = indexOfObjects.concat(['XG', 'XM', 'YG', 'YM'])
+    step2.floors[0].push('XG', 'XM', 'YG', 'YM')
+    step2.distance = calculateDistance(step2.floors!)
+    step2.key = generateKey(step2)
+    if (params.ui?.show) printFloors(step2)
+    part2 = solveFor(step2)
   }
 
   return { part1, part2 }

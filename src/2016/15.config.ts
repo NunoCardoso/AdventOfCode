@@ -3,7 +3,7 @@ export default {
     year: '2016',
     day: '15',
     title: 'Timing is Everything',
-    status: 'done',
+    status: 'solved',
     comment: 'not sure if I can do faster by analysing common multiple, but it is <1s with brute force',
     difficulty: 2
   },

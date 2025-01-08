@@ -62,20 +62,18 @@ export type PuzzleConfig = {
   params?: Params
 }
 
+export type PuzzleOutputAnswer = {
+  skip?: boolean
+  answer?: Answer
+  expected?: Answer
+}
+
 export type PuzzleOutput = {
   id: string
   config: Config
   time: number
   mode: string
   skipped: boolean
-  part1: {
-    skip?: boolean
-    answer?: Answer
-    expected?: Answer
-  }
-  part2: {
-    skip?: boolean
-    answer?: Answer
-    expected?: Answer
-  }
+  part1: PuzzleOutputAnswer
+  part2: PuzzleOutputAnswer
 }

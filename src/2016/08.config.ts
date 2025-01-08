@@ -1,21 +1,22 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '08',
+    year: 2016,
+    day: 8,
     title: 'Two-Factor Authentication',
-    status: 'done',
-    comment: 'Shifts on row and column grid are boring but doable',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
-  logLevel: 'info',
+  logLevel: 'warn',
   ui: { show: true, end: true },
   test: {
     id: 'test',
     params: {
-      screenSize: {
-        height: 3,
-        width: 7
-      }
+      screenSize: [3, 7]
     },
     answers: {
       part1: 6
@@ -23,10 +24,7 @@ export default {
   },
   prod: {
     params: {
-      screenSize: {
-        height: 6,
-        width: 50
-      }
+      screenSize: [6, 50]
     },
     answers: {
       part1: 119,
@@ -41,3 +39,5 @@ export default {
     }
   }
 }
+
+export default config

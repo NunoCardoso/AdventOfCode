@@ -1,12 +1,20 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '11',
     title: 'Radioisotope Thermoelectric Generators',
-    status: 'canBeImproved',
-    comment: '18s, maybe it can be done better with a pure dijkstra, needs refactor',
+    year: 2016,
+    day: 11,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 4,
-    tags: ['path finding']
+    tags: ['Path-finding']
+  },
+  ui: {
+    show: true,
+    end: true
   },
   logLevel: 'info',
   test: {
@@ -22,3 +30,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -1,10 +1,12 @@
 export default {
   config: {
-    year: '2016',
-    day: '02',
     title: 'Bathroom Security',
-    status: 'done',
-    comment: 'Follow directions and see where it lands on a keyboard, simple',
+    year: 2016,
+    day: 2,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficult: 1
   },
   logLevel: 'info',

@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '06',
+    year: 2016,
+    day: 6,
     title: 'Signals and Noise',
-    status: 'done',
-    comment: 'counting letter occurences in two directions, not complicated',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   logLevel: 'info',
@@ -22,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config

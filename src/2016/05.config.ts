@@ -1,11 +1,16 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '05',
+    year: 2016,
+    day: 5,
     title: 'How About a Nice Game of Chess?',
-    status: 'done',
-    comment: 'md5, 18s, nothing I can do to make it faster',
-    difficulty: 2
+    result: 'finished',
+    status: 'solved',
+    speed: 'md5',
+    code: 'clean',
+    difficulty: 2,
+    tags: ['MD5']
   },
   logLevel: 'info',
   test: {
@@ -28,3 +33,5 @@ export default {
     }
   }
 }
+
+export default config

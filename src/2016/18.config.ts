@@ -4,7 +4,7 @@ export default {
     day: '18',
     title: 'Like a Rogue',
     comment: 'I checked if there are patterns on generated rows, there are not so do not believe I can optimize it',
-    status: 'done',
+    status: 'solved',
     difficulty: 1
   },
   logLevel: 'info',

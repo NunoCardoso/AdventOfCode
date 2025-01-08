@@ -3,7 +3,7 @@ export default {
     year: '2016',
     day: '17',
     title: 'Two Steps Forward',
-    status: 'done',
+    status: 'solved',
     comment: 'Map changes with each step, blind breath first works',
     tags: ['breath first'],
     difficulty: 2

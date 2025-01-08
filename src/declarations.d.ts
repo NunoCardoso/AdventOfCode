@@ -1,5 +1,5 @@
 // deprecated
-export type Point = [number, number]
+export type Location = [number, number]
 
 export type Location = [row: number, col: number]
 

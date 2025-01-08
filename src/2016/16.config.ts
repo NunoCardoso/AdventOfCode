@@ -3,7 +3,7 @@ export default {
     year: '2016',
     day: '16',
     title: 'Dragon Checksum',
-    status: 'done',
+    status: 'solved',
     comment: 'md5, 3s, nothing I can do to make it faster',
     tags: ['md5'],
     difficulty: 1
