@@ -14,7 +14,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const instructions: Array<Instruction> = []
+  const instructions: Instruction[] = []
   for await (const line of lineReader) {
     const [op, x, y] = line.split(/\s+/)
     instructions.push({

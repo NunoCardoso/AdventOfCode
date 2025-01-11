@@ -1,11 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '17',
     title: 'Two Steps Forward',
+    year: 2016,
+    day: 17,
+    result: 'finished',
     status: 'solved',
-    comment: 'Map changes with each step, blind breath first works',
-    tags: ['breath first'],
+    speed: 'fast',
+    code: 'clean',
+    tags: ['Path-finding'],
     difficulty: 2
   },
   logLevel: 'info',
@@ -51,3 +55,5 @@ export default {
     }
   }
 }
+
+export default config

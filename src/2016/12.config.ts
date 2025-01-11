@@ -2,11 +2,13 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '12',
     title: "Leonardo's Monorail",
+    year: 2016,
+    day: 12,
+    result: 'finished',
     status: 'solved',
-    comment: 'Jumping cursor with input commands',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
   test: {

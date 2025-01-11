@@ -2,35 +2,31 @@ import { Params } from 'aoc.d'
 const SparkMD5 = require('spark-md5')
 
 export default async (lineReader: any, params: Params) => {
-  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
-
   let part1: number = 0
   let part2: number = 0
 
   const generateMd5Part1 = (hash: string): string => SparkMD5.hash(hash)
 
   const generateMd5Part2 = (hash: string): string => {
-    let _hash = SparkMD5.hash(hash)
-    for (let i = 0; i < params.repetition; i++) _hash = SparkMD5.hash(_hash)
-    return _hash
+    for (let i = 0; i <= params.repetition; i++) hash = SparkMD5.hash(hash)
+    return hash
   }
 
   const keyHas3repetitions = (key: string) => key.match(/(.)\1\1/)?.[1]
 
   const keyHas5repetitions = (key: string) => [...key.matchAll(/(.)\1\1\1\1/g)].map((x: any) => x[1])
 
-  const solveFor = (md5Generator: (s: string) => string) => {
-    const keys: Array<number> = []
-    let it = 0
-    const memory: Map<string, Array<number>> = new Map()
+  const solveFor = (md5Generator: (hash: string) => string) => {
+    const keys: number[] = []
+    let iterations = 0
+    const memory: Map<string, number[]> = new Map()
 
     while (keys.length < params.cutoff) {
-      const key = md5Generator(params.salt + it)
-
+      const key = md5Generator(params.salt + iterations)
       keyHas5repetitions(key)?.forEach((rep) => {
         memory.set(
           rep,
-          (memory.get(rep) ?? []).filter((n: number) => it - n < params.viewAhead).sort((a, b) => a - b)
+          (memory.get(rep) ?? []).filter((n: number) => iterations - n < params.viewAhead).sort((a, b) => a - b)
         )
         keys.push(...memory.get(rep)!)
         keys.sort((a, b) => a - b)
@@ -39,9 +35,9 @@ export default async (lineReader: any, params: Params) => {
       const match = keyHas3repetitions(key)
       if (match) {
         if (!memory.has(match)) memory.set(match, [])
-        memory.get(match)!.push(it)
+        memory.get(match)!.push(iterations)
       }
-      it++
+      iterations++
     }
     return keys
   }

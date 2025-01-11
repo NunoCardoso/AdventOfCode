@@ -1,14 +1,19 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '13',
     title: 'A Maze of Twisty Little Cubicles',
+    year: 2016,
+    day: 13,
+    result: 'finished',
     status: 'solved',
-    comment: 'Simple Dijkstra, just disable the end check for part2 to keep visiting',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2,
-    tags: ['dijkstra']
+    tags: ['Dijkstra']
   },
   logLevel: 'info',
+  mode: 'fastest',
   test: {
     id: 'test',
     params: {
@@ -31,3 +36,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -1,11 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '16',
     title: 'Dragon Checksum',
+    year: 2016,
+    day: 16,
+    result: 'finished',
     status: 'solved',
-    comment: 'md5, 3s, nothing I can do to make it faster',
-    tags: ['md5'],
+    speed: 'md5',
+    code: 'clean',
+    tags: ['MD5'],
     difficulty: 1
   },
   logLevel: 'info',
@@ -35,3 +39,5 @@ export default {
     }
   }
 }
+
+export default config

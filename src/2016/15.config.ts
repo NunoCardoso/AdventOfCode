@@ -1,13 +1,17 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '15',
     title: 'Timing is Everything',
+    year: 2016,
+    day: 15,
+    result: 'finished',
     status: 'solved',
-    comment: 'not sure if I can do faster by analysing common multiple, but it is <1s with brute force',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {
@@ -21,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

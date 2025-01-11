@@ -1,39 +1,52 @@
 import { Params } from 'aoc.d'
+import { range } from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
-  // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
 
-  const maxPositions: Array<number> = []
-  const positions: Array<number> = []
+  const maxPositions: number[] = []
+  const initialPositions: number[] = []
 
   for await (const line of lineReader) {
     const [, maxPosition, position] = line
       .match(/Disc #\d+ has (\d+) positions; at time=0, it is at position (\d+)./)
       .map(Number)
     maxPositions.push(maxPosition)
-    positions.push(position)
+    initialPositions.push(position)
   }
 
-  const areAligned = (discs: Array<number>): boolean => discs.every((disc) => disc === 0)
+  // for part 2
+  if (!params.isTest) {
+    maxPositions.push(11)
+    initialPositions.push(0)
+  }
 
-  const solveFor = (maxPositions: Array<number>, positions: Array<number>): number => {
-    let found = 0
-    let it = 0
-    while (found === 0) {
-      const _positions = positions.slice()
-      for (let i = 0; i < _positions.length; i++) _positions[i] = (_positions[i] + i + it) % maxPositions[i]
-      if (areAligned(_positions)) found = it
-      else it++
+  let biggestDisc = Math.max(...maxPositions)
+  let biggestDiscIndex = maxPositions.indexOf(biggestDisc)
+  let positionOfBiggestDisc = initialPositions[biggestDiscIndex]
+
+  let time = biggestDisc - positionOfBiggestDisc - biggestDiscIndex
+  while (part1 === 0 || part2 === 0) {
+    log.debug('time', time, 'part1', part1, 'part2', part2)
+    let upperLimit = maxPositions.length
+    // do not check the last wheel for part 1 for prod
+    if (!params.isTest && part1 === 0) upperLimit = maxPositions.length - 1
+
+    let found = range(upperLimit).reduce((acc, discIndex) => {
+      if ((initialPositions[discIndex] + time + discIndex) % maxPositions[discIndex] !== 0) return false
+      return acc
+    }, true)
+
+    if (found) {
+      // one off, for reasons
+      if (part1 === 0) part1 = time - 1
+      else part2 = time - 1
     }
-    return it - 1
+    time += biggestDisc
   }
 
-  part1 = solveFor(maxPositions, positions)
-  maxPositions.push(11)
-  positions.push(0)
-  part2 = solveFor(maxPositions, positions)
   return { part1, part2 }
 }

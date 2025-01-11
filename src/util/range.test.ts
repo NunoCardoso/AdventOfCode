@@ -1,7 +1,11 @@
-import { mergeRange } from './range'
+import { mergeRange, range } from './range'
 
 describe('util/range', () => {
   test('range', () => {
+    expect(range(5, 0)).toEqual([0, 1, 2, 3, 4])
+    expect(range(5, 3)).toEqual([3, 4, 5, 6, 7])
+  })
+  test('mergeRange', () => {
     expect(
       mergeRange(
         [

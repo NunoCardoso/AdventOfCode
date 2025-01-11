@@ -11,7 +11,7 @@ export type Tag =
   | 'Permutation'
   | 'MD5'
   | 'Combination'
-  | 'Breath-first'
+  | 'Breadth-first'
   | 'Depth-first'
   | 'Path-finding'
   | 'Bron–Kerbosch'

@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '18',
     title: 'Like a Rogue',
-    comment: 'I checked if there are patterns on generated rows, there are not so do not believe I can optimize it',
+    year: 2016,
+    day: 18,
+    result: 'finished',
     status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   logLevel: 'info',
@@ -45,3 +49,5 @@ export default {
     }
   }
 }
+
+export default config

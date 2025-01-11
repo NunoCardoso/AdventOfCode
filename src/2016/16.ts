@@ -13,16 +13,15 @@ export default async (lineReader: any, params: Params) => {
       .map((x: string) => (x === '1' ? '0' : '1'))
       .join('')}`
 
-  const getChecksum = (h: string): string => {
-    let _h = h
-    while (_h.length % 2 === 0) {
-      let __h = ''
-      for (let i = 0; i < _h.length; i += 2) {
-        __h += _h[i] === _h[i + 1] ? '1' : '0'
+  const getChecksum = (hash: string): string => {
+    while (hash.length % 2 === 0) {
+      let newHash = ''
+      for (let i = 0; i < hash.length; i += 2) {
+        newHash += hash[i] === hash[i + 1] ? '1' : '0'
       }
-      _h = __h
+      hash = newHash
     }
-    return _h
+    return hash
   }
 
   const solveFor = (hash: string, size: number) => {

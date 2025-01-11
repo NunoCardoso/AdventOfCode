@@ -1,11 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '14',
     title: 'One-Time Pad',
+    year: 2016,
+    day: 14,
+    result: 'finished',
     status: 'solved',
-    comment: 'This will take some time around 30s, MD5 puzzle',
-    tags: ['md5'],
+    speed: 'md5',
+    code: 'clean',
+    tags: ['MD5'],
     difficulty: 3
   },
   logLevel: 'info',
@@ -35,3 +39,5 @@ export default {
     }
   }
 }
+
+export default config

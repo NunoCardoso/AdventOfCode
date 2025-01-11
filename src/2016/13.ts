@@ -1,9 +1,9 @@
 import { Params } from 'aoc.d'
-import { World } from 'declarations'
+import { Location, World } from 'declarations'
+import * as location from '../util/location'
 
-// x, y, cost, path
-type Point = [number, number, number, Set<string>?]
-type Data = { lowestScore: number; end: Point; path: Set<string> }
+type Data = { end: Location; path: Path | undefined }
+type Path = Location[]
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -13,108 +13,88 @@ export default async (lineReader: any, params: Params) => {
 
   const world: World<string> = []
 
-  const getSpaceOrWall = (world: World<string>, [row, column]: [number, number]): string => {
-    if (!world[row]) world[row] = []
-    if (!world[row][column]) {
-      const val: number = row * row + 3 * row + 2 * row * column + column + column * column + params.designerNumber
+  const getSpaceOrWall = (world: World<string>, [x, y]: Location): string => {
+    if (!world[y]) world[y] = []
+    if (!world[y][x]) {
+      const val: number = x * x + 3 * x + 2 * x * y + y + y * y + params.designerNumber
       const bin = (val >>> 0).toString(2)
       const countOnes = bin.split('').filter((x: string) => x === '1').length
-      world[row][column] = countOnes % 2 === 0 ? '.' : '#'
+      world[y][x] = countOnes % 2 === 0 ? '.' : '#'
     }
-    return world[row][column]
+    return world[y][x]
   }
 
-  for (let row = 0; row < 2; row++) {
-    for (let column = 0; column < 2; column++) {
-      getSpaceOrWall(world, [row, column])
-    }
-  }
+  const outOfBounds = (l: Location) => l[0] < 0 || l[1] < 0
 
-  const getKey = (p: Point): string => p[0] + ',' + p[1]
-
-  const isSame = (p: Point, p2: Point): boolean => p[0] === p2[0] && p[1] === p2[1]
-
-  const outOfBounds = (p: Point) => p[0] < 0 || p[1] < 0
-
-  const getNewPoints = (point: Point, world: World<string>, visited: Set<string>) =>
-    (
+  // reverse, so it can hit the end of the list first
+  const inTail = (head: Location, path: Path) => path.reverse().some((l) => location.isSame(l, head))
+  const getNewPaths = (path: Path, world: World<string>, visited: Set<string>) => {
+    let head = path[path.length - 1]
+    return (
       [
-        [point[0] - 1, point[1], point[2] + 1],
-        [point[0] + 1, point[1], point[2] + 1],
-        [point[0], point[1] - 1, point[2] + 1],
-        [point[0], point[1] + 1, point[2] + 1]
-      ] as Array<Point>
-    ).filter((newPoint: Point) => {
-      if (outOfBounds(newPoint)) return false
-      if (getSpaceOrWall(world, [newPoint[0], newPoint[1]]) === '#') return false
-      newPoint[3] = new Set(point[3])!.add(getKey(newPoint))
-      return !visited.has(getKey(newPoint))
-    })
+        [head[0] - 1, head[1]],
+        [head[0] + 1, head[1]],
+        [head[0], head[1] - 1],
+        [head[0], head[1] + 1]
+      ] as Location[]
+    )
+      .filter((newLocation: Location) => {
+        if (outOfBounds(newLocation)) return false
+        if (getSpaceOrWall(world, newLocation) === '#') return false
+        if (inTail(newLocation, path)) return false
+        return !visited.has(location.getKey(newLocation))
+      })
+      .map((newLocation: Location) => [...path, newLocation])
+  }
 
-  const doDijkstra = async (
-    world: World<string>,
-    opened: Array<Point>,
-    openedIndex: Set<string>,
-    visited: Set<string>,
-    data: Data,
-    type: string
-  ) => {
-    const point: Point = opened.splice(-1)[0]
-    const pointKey: string = getKey(point)
-    log.debug('=== Dijkstra ===', point, 'opened', opened.length, 'data', data)
+  const doDijkstra = async (world: World<string>, queue: Path[], visited: Set<string>, data: Data, type: string) => {
+    const path: Path = queue.pop()!
+    let head: Location = path[path.length - 1]
+    const headKey: string = location.getKey(head)
+    visited.add(headKey)
+
+    log.trace('=== Dijkstra ===', head, 'opened', queue.length, 'data', data)
 
     // if part1, we return when getting to the end
-    if (type === 'part1' && isSame(point, data.end)) {
-      if (data.lowestScore > point[2]) {
-        log.debug('Got lowest score with', point)
-        data.lowestScore = point[2]
-        data.path = point[3]!
+    if (type === 'part1' && location.isSame(head, data.end)) {
+      if (!data.path || data.path.length > path.length) {
+        log.debug('Got lowest score with', head, path.length)
+        data.path = path
       }
       return
     }
-
     // if part2, return when we do X steps
-    if (type === 'part2' && point[2] > params.cutoff) return
+    if (type === 'part2' && path.length > params.cutoff) return
 
-    visited.add(pointKey)
-    openedIndex.delete(pointKey)
+    const newPaths: Path[] = getNewPaths(path, world, visited)
 
-    const newPoints: Array<Point> = getNewPoints(point, world, visited)
-
-    if (newPoints.length > 0) {
-      newPoints.forEach((newPoint) => {
-        const newPointKey = getKey(newPoint)
-        if (!openedIndex.has(newPointKey)) {
-          opened.push(newPoint)
-          openedIndex.add(newPointKey)
-        } else {
-          const index = opened.findIndex((p: Point) => isSame(p, newPoint))
-          if (opened[index][2] > newPoint[2]) opened[index] = newPoint
-        }
+    if (newPaths.length > 0) {
+      newPaths.forEach((newPath) => {
+        let newHead = newPath[newPath.length - 1]
+        const newHeadKey = location.getKey(newHead)
+        // if queue has it with worse score, delete it
+        const index = queue.findIndex((p: Path) => location.isSame(p[p.length - 1], newHead))
+        if (index >= 0 && queue[index].length > newPath.length) queue.splice(index, 1)
+        queue.push(newPath)
       })
-      opened.sort((a, b) => b[2] - a[2])
+      queue.sort((a: Path, b: Path) => b.length - a.length)
     }
   }
 
-  const solveFor = (world: World<string>, target: Point, type: string): number => {
+  const solveFor = (world: World<string>, target: Location, type: string): number => {
+    const data: Data = { end: target, path: undefined }
+    const start: Path = [[1, 1]]
+    const queue: Path[] = [start]
     const visited: Set<string> = new Set()
-    const data: Data = { lowestScore: Number.POSITIVE_INFINITY, end: target, path: new Set() }
-    const start: Point = [1, 1, 0]
-    const opened: Array<Point> = [start]
-    const openedIndex: Set<string> = new Set()
-    opened.forEach((point) => openedIndex.add(getKey(point)))
-    while (opened.length > 0) {
-      doDijkstra(world, opened, openedIndex, visited, data, type)
-    }
-    if (type === 'part1') return data.lowestScore
+    visited.add(location.getKey([1, 1]))
+    while (queue.length > 0) doDijkstra(world, queue, visited, data, type)
+    if (type === 'part1') return data.path!.length - 1 // (start point does not count)
     if (type === 'part2') return visited.size
     return 0
   }
 
-  if (!params.skipPart1) {
-    part1 = solveFor(world.slice(), params.target, 'part1')
-  }
-  part2 = solveFor(world.slice(), params.target, 'part2')
+  if (!params.skipPart1) part1 = solveFor(world.slice(), params.target, 'part1')
+  if (!params.skipPart2) part2 = solveFor(world.slice(), params.target, 'part2')
 
   return { part1, part2 }
 }

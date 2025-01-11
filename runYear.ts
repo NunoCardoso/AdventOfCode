@@ -70,12 +70,13 @@ const getConsoleOutput = (results: PuzzleOutput[]): string[] => {
     part1: 'Part 1'.length,
     part2: 'Part 2'.length,
     time: 'time'.length,
-    tags: 'tags'.length,
+    tags: 'tags'.length
   }
   results.forEach((res) => {
     if (res.config.day.toString().length > partialWidth.day) partialWidth.day = res.config.day.toString().length
     if (res.config.title.length > partialWidth.title) partialWidth.title = res.config.title.length
-    if (renderDifficulty(res.config.difficulty).length > partialWidth.difficulty) partialWidth.difficulty = renderDifficulty(res.config.difficulty).length
+    if (renderDifficulty(res.config.difficulty).length > partialWidth.difficulty)
+      partialWidth.difficulty = renderDifficulty(res.config.difficulty).length
     if (renderAnswer(res.part1).length > partialWidth.part1) partialWidth.part1 = renderAnswer(res.part1).length
     if (renderAnswer(res.part2).length > partialWidth.part2) partialWidth.part2 = renderAnswer(res.part2).length
     if (res.time && renderTime(res.time).length > partialWidth.time) partialWidth.time = renderTime(res.time).length

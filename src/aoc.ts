@@ -140,7 +140,13 @@ export default async (puzzle: PuzzleConfig) => {
 
   if (Object.prototype.hasOwnProperty.call(puzzle, 'test')) {
     if (Array.isArray(puzzle.test)) {
-      puzzle.test.forEach(async (t: Test) => await doRun(t, true))
+      puzzle.test.forEach(async (t: Test) => {
+        let output = await doRun(t, true)
+        if (!output.skipped) {
+          console.info('Running ' + (output.mode ?? 'normal') + ' ⏰  ' + output.time + 'ms')
+          printResult(output, true)
+        }
+      })
     } else {
       let output = await doRun(puzzle.test as Test, true)
       if (!output.skipped) {

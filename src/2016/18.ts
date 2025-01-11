@@ -6,36 +6,28 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const countDots = (line: string) => line.replaceAll('^', '').length
-
-  const isTrap = (tile: string) => tile === '^'
-  const getTile = (left: string, center: string, right: string): string => {
-    if (isTrap(left) && isTrap(center) && !isTrap(right)) return '^'
-    if (!isTrap(left) && isTrap(center) && isTrap(right)) return '^'
-    if (isTrap(left) && !isTrap(center) && !isTrap(right)) return '^'
-    if (!isTrap(left) && !isTrap(center) && isTrap(right)) return '^'
-    return '.'
-  }
-
   let row: string = ''
   for await (const line of lineReader) row = line
 
-  const solveFor = (row: string, rowNumber: number) => {
-    let count = countDots(row)
-    let it = 1
-    while (it++ < rowNumber) {
-      let newLine = ''
-      for (let j = 0; j < row.length; j++) {
-        newLine += getTile(row[j - 1], row[j], row[j + 1])
+  // this way of counting is faster than row.replaceAll('^', '').length
+  let count = row.split('').filter((x) => x === '.').length
+  let iterations = 1
+  let maxIterations = Math.max(params.rows.part1 ?? 0, params.rows.part2 ?? 0)
+  let newLine, _row
+  while (iterations++ < maxIterations) {
+    newLine = ''
+    _row = `.${row}.`
+    for (let i = 1; i < _row.length - 1; i++) {
+      if (_row[i - 1] !== _row[i + 1]) newLine += '^'
+      else {
+        newLine += '.'
+        count++
       }
-      row = newLine
-      count += countDots(row)
     }
-    return count
+    row = newLine
+    if (part1 === 0 && iterations === params.rows.part1) part1 = count
   }
-
-  if (!params.skipPart1) part1 = solveFor(row, params.rows.part1)
-  if (!params.skipPart2) part2 = solveFor(row, params.rows.part2)
+  part2 = count
 
   return { part1, part2 }
 }
