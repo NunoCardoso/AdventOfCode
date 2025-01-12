@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '19',
     title: 'A Series of Tubes',
-    status: 'inprogress',
+    year: 2017,
+    day: 19,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: '',
     difficulty: 0
   },
@@ -22,3 +27,5 @@ export default {
     }
   }
 }
+
+export default config

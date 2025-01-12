@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '15',
     title: 'Dueling Generators',
-    status: 'Done',
+    year: 2017,
+    day: 15,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'I believe it is intentionally slow, 30sec on part1, need to find a pattern to make it <1s',
     difficulty: 4
   },
@@ -36,3 +41,5 @@ export default {
     }
   }
 }
+
+export default config

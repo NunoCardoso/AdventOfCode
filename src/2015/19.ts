@@ -22,40 +22,37 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  if (!params.skipPart1) {
-    const molecules = new Set<string>()
-    atoms.forEach((atom, i) =>
-      replacements
-        .get(atom)
-        ?.forEach((reaction: string) =>
-          molecules.add(atoms.slice(0, i).join('') + reaction + atoms.slice(i + 1, atoms.length).join(''))
-        )
-    )
-    part1 = molecules.size
-  }
+  const molecules = new Set<string>()
+  let atomsCount = 0
+  let commas = 0
+  let parenthesis = 0
 
-  if (!params.skipPart2) {
-    let atomsCount = 0
-    let commas = 0
-    let parenthesis = 0
-    atoms.forEach((atom: string) => {
-      switch (atom) {
-        case 'Rn':
-        case 'Ar':
-          parenthesis++
-          break
-        case 'Y':
-          commas++
-          break
-        default:
-          atomsCount++
-      }
-    })
-    log.debug('normal', atomsCount, 'comma', commas, 'parenthesis', parenthesis)
-    // in test, we have e => H or e => O
-    // in prod we have e => HF or e => AB, which requires one less step to go to e
-    part2 = atomsCount - commas - (params.isTest ? 0 : 1)
-  }
+  atoms.forEach((atom, i) => {
+    replacements
+      .get(atom)
+      ?.forEach((reaction: string) =>
+        molecules.add(atoms.slice(0, i).join('') + reaction + atoms.slice(i + 1, atoms.length).join(''))
+      )
+
+    switch (atom) {
+      case 'Rn':
+      case 'Ar':
+        parenthesis++
+        break
+      case 'Y':
+        commas++
+        break
+      default:
+        atomsCount++
+    }
+  })
+
+  log.debug('normal', atomsCount, 'comma', commas, 'parenthesis', parenthesis)
+  // in test, we have e => H or e => O
+  // in prod we have e => HF or e => AB, which requires one less step to go to e
+
+  part1 = molecules.size
+  part2 = atomsCount - commas - (params.isTest ? 0 : 1)
 
   return { part1, part2 }
 }

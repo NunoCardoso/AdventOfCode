@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '01',
     title: 'Inverse Captcha',
-    status: 'done',
-    comment: 'Making sums while parsing input',
+    year: 2017,
+    day: 1,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   test: [
@@ -70,3 +74,5 @@ export default {
     }
   }
 }
+
+export default config

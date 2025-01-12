@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '18',
     title: 'Duet',
-    status: 'done',
+    year: 2017,
+    day: 18,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'Damn hard to make it right, the receive and send order was hard, so was pop() or shift()',
     difficulty: 4
   },
@@ -29,3 +34,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '10',
     title: 'Knot Hash',
-    status: 'done',
+    year: 2017,
+    day: 10,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'hard to read part2, difficulty is starting',
     difficulty: 3
   },
@@ -50,3 +55,5 @@ export default {
     }
   }
 }
+
+export default config

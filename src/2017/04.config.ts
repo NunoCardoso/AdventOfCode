@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '04',
     title: 'High-Entropy Passphrases',
-    status: 'Done',
+    year: 2017,
+    day: 4,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'Simple rearranging words for list size comparison',
     difficulty: 1
   },
@@ -29,3 +34,5 @@ export default {
     }
   }
 }
+
+export default config

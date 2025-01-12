@@ -15,8 +15,7 @@ let config: PuzzleConfig = {
   test: {
     id: 'test',
     answers: {
-      part1: 0
-      //part2: 7
+      //   part2: 7
     }
   },
   prod: {

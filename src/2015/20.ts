@@ -25,17 +25,6 @@ export default async (lineReader: any, params: Params) => {
       0
     )
 
-    log.debug(
-      'iteration',
-      i,
-      'elves',
-      elves,
-      'presents part 1',
-      medResultPart1 * 10,
-      'Misses',
-      threshold - medResultPart1
-    )
-
     if (medResultPart1 * params.elfMultiplier.part1 >= threshold) {
       if (part1 === 0) part1 = i
       if (part2 !== 0) break

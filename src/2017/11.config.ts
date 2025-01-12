@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '11',
     title: 'Hex Ed',
-    status: 'done',
+    year: 2017,
+    day: 11,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'I guess step 2 can be optimized, to avoid repeat',
     difficulty: 2
   },
@@ -41,3 +46,5 @@ export default {
     }
   }
 }
+
+export default config

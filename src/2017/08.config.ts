@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '08',
     title: 'I Heard You Like Registers',
-    status: 'Done',
+    year: 2017,
+    day: 8,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'Just execute instructions and see where the ball lands',
     difficulty: 1
   },
@@ -22,3 +27,5 @@ export default {
     }
   }
 }
+
+export default config

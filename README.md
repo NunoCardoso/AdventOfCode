@@ -38,20 +38,18 @@ Reports will be pushed into the `report` directory.
 
 # Puzzle status
 
-| year | result       | status     | speed                                    | code    | comment                                                  | report                   |
-|------|--------------|------------|------------------------------------------|---------|----------------------------------------------------------|--------------------------|
-| 2015 | ❌ UNFINISHED | ✅ SOLVED   | all (but md5 and #24) run under 1 second | cleaned | That 24...                                               | reports/2015.md          |
-| 2016 | ❌ UNFINISHED | ❌ UNSOLVED |                                          |         | stuck on 22 (hard disk move)                             | reports/2016.md          |
-| 2017 | ❌ UNFINISHED | ❌ UNSOLVED |                                          |         | In progress, ongoing on 20                               | reports/2017.md          |
-| 2018 | ❌ UNFINISHED | ❌ UNSOLVED |                                          |         | In progress, ongoing on 14                               | reports/2018.md          |
-| 2019 | ❌ UNFINISHED | ❌ UNSOLVED |                                          |         | TO DO                                                    | reports/2019.md          |
-| 2020 | ❌ UNFINISHED | ❌ UNSOLVED |                                          |         | TO DO                                                    | reports/2020.md          |
-| 2021 | ❌ UNFINISHED | ❌ UNSOLVED |                                          |         | In progress, ongoing on 20                               | reports/2021.md          |
-| 2022 | ❌ UNFINISHED | ✅ SOLVED   | ?                                        |         | Unoptimized, Needs fix after 16                          | reports/2022.md          |
-| 2023 | ❌ UNFINISHED | ❌ UNSOLVED |                                          |         | Unoptimized, needs to do last puzzles                    | reports/2023.md          |
-| 2024 | ❌ UNFINISHED | ✅ SOLVED   | ?                                        |         | 24 solved manually, code still needs clean and optimized | reports/2024.md          |
-
-'' : ''
+| year | result       | status     | speed                                   | code    | comment                                                 | report                   |
+|------|--------------|------------|-----------------------------------------|---------|---------------------------------------------------------|--------------------------|
+| 2015 | ✅ FINISHED   | ✅ SOLVED   | all (but md) run under 1 second | cleaned | linted, cleaned                                                 | reports/2015.md          |
+| 2016 | ❌ UNFINISHED | ❌ UNSOLVED |                                         |         | stuck on 22 (hard disk move), linted, cleaned           | reports/2016.md          |
+| 2017 | ❌ UNFINISHED | ❌ UNSOLVED |                                         |         | In progress, ongoing on 20                              | reports/2017.md          |
+| 2018 | ❌ UNFINISHED | ❌ UNSOLVED |                                         |         | In progress, ongoing on 14                              | reports/2018.md          |
+| 2019 | ❌ UNFINISHED | ❌ UNSOLVED |                                         |         | TO DO                                                   | reports/2019.md          |
+| 2020 | ❌ UNFINISHED | ❌ UNSOLVED |                                         |         | TO DO                                                   | reports/2020.md          |
+| 2021 | ❌ UNFINISHED | ❌ UNSOLVED |                                         |         | In progress, ongoing on 20                              | reports/2021.md          |
+| 2022 | ❌ UNFINISHED | ✅ SOLVED   | ?                                       |         | Unoptimized, Needs fix after 16                         | reports/2022.md          |
+| 2023 | ❌ UNFINISHED | ❌ UNSOLVED |                                         |         | Unoptimized, needs to do last puzzles                   | reports/2023.md          |
+| 2024 | ❌ UNFINISHED | ✅ SOLVED   | ?                                       |         | 24 solved manually, code still needs clean and optimized | reports/2024.md          |
 
 # Puzzle options options: 
 
@@ -105,9 +103,11 @@ List of tags used:
 * Aim for less than 1 second to solve both day puzzles 
 * Focus on readability. Code should be easy to follow with declarative functions
 * Move away from structures like [number, number, number, string], they are fast but not easy to follow in code.
+* after solution is done, I can remove the partial part codes. Solutions should run both parts in one go. 
 
 ## Typing
 * do type everything. Avoid `any` type. 
+* avoid global.structureClone, it is very slow
 * Reuse types such as `Location`, `Dimension`, `World`, they help.
 * use [] instead of `Array`.
 * If possible, avoid `Record` and use `Map`. `Set` are also useful sometimes instead of `Array`
@@ -129,8 +129,7 @@ Some functions names: `solveFor`, `deepFirst`, `breathFirst`, `dijkstra`
 
 ## Dependencies
 * **Avoid** lodash, use native JS 
-* libraries allowed: 
-** js-combinatronics (for permutation / combination)
+* libraries allowed:
 ** spark-mp5 (md5 generation)
 
 ## Regex
@@ -150,6 +149,7 @@ Some functions names: `solveFor`, `deepFirst`, `breathFirst`, `dijkstra`
 ** path: list of steps. 
 ** head: latest step from a path
 ** queue instead of opened 
+** visited
 
 ## TODO 
 * do a nicer output with emojis and box drawing chars
@@ -232,7 +232,7 @@ Floyd-Warshall
 If it is confusing, use PointObj, where {row: number, col: number}
 
 unless it is specified otherwise in the instructions.
-Note that when printing worlds, world matrixes are seen as rows and columns, so make sure locations 
+Note that when printing worlds, world matrix are seen as rows and columns, so make sure locations 
 use same system. If they use x/y, they may refer to col/row instead of row/col
 
 # Appendixes

@@ -37,8 +37,8 @@ export default async (lineReader: any, params: Params) => {
     return answer
   }
 
-  if (!params.skipPart1) part1 = solveFor(packages, params.compartments.part1)
-  if (!params.skipPart2) part2 = solveFor(packages, params.compartments.part2)
+  part1 = solveFor(packages, params.compartments.part1)
+  part2 = solveFor(packages, params.compartments.part2)
 
   return { part1, part2 }
 }

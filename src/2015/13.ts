@@ -29,19 +29,15 @@ export default async (lineReader: any, params: Params) => {
       return score > highScore ? score : highScore
     }, 0)
 
-  if (!params.skipPart1) {
-    part1 = solveFor(people, scores)
-  }
+  part1 = solveFor(people, scores)
 
-  if (!params.skipPart2) {
-    people.add(params.name)
-    scores.set(params.name, new Map())
-    people.forEach((name: string) => {
-      scores.get(name)!.set(params.name, 0)
-      scores.get(params.name)!.set(name, 0)
-    })
-    part2 = solveFor(people, scores)
-  }
+  people.add(params.name)
+  scores.set(params.name, new Map())
+  people.forEach((name: string) => {
+    scores.get(name)!.set(params.name, 0)
+    scores.get(params.name)!.set(name, 0)
+  })
+  part2 = solveFor(people, scores)
 
   return { part1, part2 }
 }

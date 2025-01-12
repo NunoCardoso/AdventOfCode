@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '05',
     title: 'A Maze of Twisty Trampolines, All Alike',
-    status: 'Done',
+    year: 2017,
+    day: 5,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'Done, jumps in a list.',
     difficulty: 1
   },
@@ -22,3 +27,5 @@ export default {
     }
   }
 }
+
+export default config

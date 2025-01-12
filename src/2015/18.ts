@@ -7,8 +7,12 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const grid: Grid<string> = []
-  for await (const line of lineReader) grid.push(line.split(''))
+  const grid1: Grid<string> = [],
+    grid2: Grid<string> = []
+  for await (const line of lineReader) {
+    grid1.push(line.split(''))
+    grid2.push(line.split(''))
+  }
 
   const printGrid = (grid: Grid<string>, iteration: string | number) => {
     log.info('iteration', iteration)
@@ -59,13 +63,8 @@ export default async (lineReader: any, params: Params) => {
     return grid.reduce((acc, row) => acc + row.filter((cell) => cell === '#').length, 0)
   }
 
-  if (!params.skipPart1) {
-    part1 = solveFor(global.structuredClone(grid), params.limit, false)
-  }
-
-  if (!params.skipPart2) {
-    part2 = solveFor(global.structuredClone(grid), params.limit, true)
-  }
+  part1 = solveFor(grid1, params.limit, false)
+  part2 = solveFor(grid2, params.limit, true)
 
   return { part1, part2 }
 }

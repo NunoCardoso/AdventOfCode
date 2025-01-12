@@ -41,14 +41,14 @@ export default async (lineReader: any, params: Params) => {
         const newIndex = indexShiftMap.get(index)!
         const diff = newIndex - index
         if (diff > 0) {
-          for (let i in range(diff)) password.splice(0, 0, password.splice(-1)[0])
+          for (let i in range(diff)) password.unshift(password.pop()!)
         } else {
-          for (let i in range(Math.abs(diff))) password.push(password.splice(0, 1)[0])
+          for (let i in range(Math.abs(diff))) password.push(password.shift()!)
         }
       } else if ((words[1] === 'right' && !reverse) || (words[1] === 'left' && reverse)) {
-        for (let i in range(+words[2])) password.splice(0, 0, password.splice(-1)[0])
+        for (let i in range(+words[2])) password.unshift(password.pop()!)
       } else if ((words[1] === 'left' && !reverse) || (words[1] === 'right' && reverse)) {
-        for (let i in range(+words[2])) password.push(password.splice(0, 1)[0])
+        for (let i in range(+words[2])) password.push(password.shift()!)
       }
     }
     log.debug('line', line, 'password: ', password.join(''))

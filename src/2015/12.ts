@@ -23,12 +23,8 @@ export default async (lineReader: any, params: Params) => {
     return Object.keys(node).reduce((acc: number, _el: string) => acc + solveFor(node[_el], ignoreRed), 0)
   }
 
-  if (!params.skipPart1) {
-    part1 = solveFor(map, false)
-  }
-  if (!params.skipPart2) {
-    part2 = solveFor(map, true)
-  }
+  part1 = solveFor(map, false)
+  part2 = solveFor(map, true)
 
   return { part1, part2 }
 }

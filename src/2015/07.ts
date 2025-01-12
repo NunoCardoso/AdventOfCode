@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import { dec2bin } from '../util/conversion'
 
 type Wire1 = { op: string; src: string | number }
 type Wire2 = { op: string; src1: string | number; src2: string | number }
@@ -78,15 +77,11 @@ export default async (lineReader: any, params: Params) => {
     return result
   }
 
-  const wiresPart2: Wires = global.structuredClone(wires)
+  const wiresPart2: Wires = new Map(wires)
 
-  if (!params.skipPart1) {
-    part1 = solveFor(wires, 'a')
-  }
+  part1 = solveFor(wires, 'a')
+  wiresPart2.set('b', part1)
+  part2 = solveFor(wiresPart2, 'a')
 
-  if (!params.skipPart2) {
-    wiresPart2.set('b', part1)
-    part2 = solveFor(wiresPart2, 'a')
-  }
   return { part1, part2 }
 }

@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '06',
     title: 'Memory Reallocation',
-    status: 'Done',
+    year: 2017,
+    day: 6,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'Turned out not complicated, just making a math to avoid several array runs',
     difficulty: 1
   },
@@ -22,3 +27,5 @@ export default {
     }
   }
 }
+
+export default config

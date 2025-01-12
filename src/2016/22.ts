@@ -1,6 +1,7 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
 import { Location, World } from 'declarations'
+import { getManhattanDistance, isSame } from 'util/location'
 
 type Node = {
   id: number
@@ -12,18 +13,17 @@ type Node = {
 type Move = [Location, Location]
 
 type Data = {
-  endLocation: Location
-  bestScore: number
-  path: Step[]
+  end: Location
+  path: Path
 }
 
+type Path = Step[]
+
 type Step = {
-  score: number
   dataNodeLocation: Location
   emptyNodeLocation: Location
   distance: number
-  move?: Move
-  path: Step[]
+  score: number
 }
 
 export default async (lineReader: any, params: Params) => {
@@ -51,15 +51,15 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const printData = (world: World<Node>, moves: Move[]) => {
-    console.log(moves)
-    console.log(
+    log.info(moves)
+    log.info(
       '    |' +
         new Array(world[0].length)
           .fill(null)
           .map((_, i) => i.toString().padStart(3, ' '))
           .join(' ')
     )
-    console.log('='.repeat(105))
+    log.info('='.repeat(105))
     world.forEach((row, rowIndex) => {
       let string = rowIndex.toString().padStart(3, ' ') + ' |'
       row.forEach((node, colIndex) => {
@@ -72,15 +72,11 @@ export default async (lineReader: any, params: Params) => {
         let arrowRight = moves.find(
           (m) => m[1][0] === rowIndex && m[1][1] === colIndex && m[0][0] === rowIndex && m[0][1] === colIndex + 1
         )
-        if (arrowLeft) {
-          string += arrowRight ? clc.cyan('↔') : clc.cyan('→')
-        }
-        if (arrowRight) {
-          string += arrowLeft ? clc.cyan('↔') : clc.cyan('←')
-        }
+        if (arrowLeft) string += arrowRight ? clc.cyan('↔') : clc.cyan('→')
+        if (arrowRight) string += arrowLeft ? clc.cyan('↔') : clc.cyan('←')
         if (!arrowLeft && !arrowRight) string += ' '
       })
-      console.log(string)
+      log.info(string)
       string = '    |'
       row.forEach((node, colIndex) => {
         let key = rowIndex + ',' + colIndex
@@ -93,7 +89,7 @@ export default async (lineReader: any, params: Params) => {
         )
         string += clc.cyan(' ' + (arrowUp ? '↑' : ' ') + (arrowDown ? '↓' : ' ') + ' ')
       })
-      console.log(string)
+      log.info(string)
     })
   }
 
@@ -111,12 +107,11 @@ export default async (lineReader: any, params: Params) => {
               if (world[row1][col1].used <= world[row2][col2].avail) {
                 part1++
                 // for part2
-                if (isAdjacent(row1, row2, col1, col2)) {
+                if (isAdjacent(row1, row2, col1, col2))
                   initialMoves.push([
                     [row1, col1],
                     [row2, col2]
                   ])
-                }
               }
             }
           }
@@ -125,52 +120,42 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  const doSearch = (opened: Step[], data: Data) => {
-    const head = opened.splice(-1)[0]
-    if (isSame(data.endLocation, head.dataNodeLocation)) {
+  const doAstar = (queue: Path[], data: Data) => {
+    const path = queue.pop()!
+    const head = path[path.length - 1]
+    if (isSame(data.end, head.dataNodeLocation)) {
+      if (data.path.length === 0 || data.path.length > path.length) data.path = path
+      return
     }
-    head.possibleMoves?.forEach((move) => {
-      head.score++
-    })
   }
-
-  const getManhattanDistance = (p1: Location, p2: Location) => Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1])
 
   // if the empty node is not next to the data node, add *100 to the distance so it is always worse than
   // distances from the data node to the end node
   const getDistance = (emptyNodeLocation: Location, dataNodeLocation: Location, endLocation: Location) => {
     let firstManhattanDistance = getManhattanDistance(emptyNodeLocation, dataNodeLocation)
-    if (firstManhattanDistance > 1) {
-      return firstManhattanDistance * 100
-    }
+    if (firstManhattanDistance > 1) return firstManhattanDistance * 100
     return getManhattanDistance(dataNodeLocation, endLocation)
   }
 
   if (!params.skipPart2) {
     const data: Data = {
-      endLocation: [0, 0],
-      path: [],
-      bestScore: Number.MAX_SAFE_INTEGER
+      end: [0, 0],
+      path: []
     }
-
     let iterations = 0
-    let opened: Step[] = [
+    let start: Path = [
       {
         score: 0,
         distance: 0,
         emptyNodeLocation: initialMoves[0][0],
-        dataNodeLocation: [0, world[0].length - 1],
-        path: []
+        dataNodeLocation: [0, world[0].length - 1]
       }
     ]
-    opened[0].distance = getDistance(opened[0].emptyNodeLocation, opened[0].dataNodeLocation, data.endLocation)
+    start[0].distance = getDistance(start[0].emptyNodeLocation, start[0].dataNodeLocation, data.end)
+
+    let queue: Path[] = [start]
     printData(world, initialMoves)
-    while (opened.length > 0) {
-      doSearch(opened, data)
-      if (iterations++ % 100 === 0) {
-        log.debug('it', iterations, 'opened length', opened.length)
-      }
-    }
+    while (queue.length > 0) doAstar(world, queue, data)
     part2 = data.path?.length
   }
 

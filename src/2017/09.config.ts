@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '09',
     title: 'Stream Processing',
-    status: 'done',
+    year: 2017,
+    day: 9,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'It actually was easier than I thought',
     difficulty: 2
   },
@@ -49,3 +54,5 @@ export default {
     }
   }
 }
+
+export default config

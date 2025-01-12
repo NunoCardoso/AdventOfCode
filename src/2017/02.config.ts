@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '02',
     title: 'Corruption Checksum',
-    status: 'done',
+    year: 2017,
+    day: 2,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'Making sums while parsing input',
     difficulty: 1
   },
@@ -28,3 +33,5 @@ export default {
     }
   }
 }
+
+export default config

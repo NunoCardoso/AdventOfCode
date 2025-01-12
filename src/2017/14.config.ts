@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '14',
     title: 'Disk Defragmentation',
-    status: 'done',
+    year: 2017,
+    day: 14,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'Really clever reuse of function from day 10, very nice simple group gathering algorithm',
     difficulty: 3
   },
@@ -28,3 +33,5 @@ export default {
     }
   }
 }
+
+export default config

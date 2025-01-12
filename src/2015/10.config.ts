@@ -11,7 +11,6 @@ let config: PuzzleConfig = {
     code: 'clean',
     difficulty: 2
   },
-  mode: 'fastest',
   params: {
     input: '1113122113',
     limit: {

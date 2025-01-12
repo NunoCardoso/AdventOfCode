@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '03',
     title: 'Spiral Memory',
-    status: 'done',
+    year: 2017,
+    day: 3,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'Trying to be smart and avoid doing a spiral for part1, so that part2 "forces" me to do a spiral...',
     difficulty: 1
   },
@@ -27,3 +32,5 @@ export default {
     }
   }
 }
+
+export default config

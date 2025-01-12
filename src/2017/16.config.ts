@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2017',
-    day: '16',
     title: 'Permutation Promenade',
-    status: 'done',
+    year: 2017,
+    day: 16,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     comment: 'typical have-to-find-a-delta so I can skip 10000000 iterations. Nice',
     difficulty: 3
   },
@@ -27,3 +32,5 @@ export default {
     }
   }
 }
+
+export default config

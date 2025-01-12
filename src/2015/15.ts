@@ -4,8 +4,11 @@ type Recipe = [capacity: number, durability: number, flavor: number, texture: nu
 type Portions = number[]
 type Balance = Recipe
 type Data = {
-  score: number
-  calories?: number
+  scorePart1: number
+  scorePart2: number
+  calories: {
+    part2: number
+  }
 }
 
 export default async (lineReader: any, params: Params) => {
@@ -20,18 +23,27 @@ export default async (lineReader: any, params: Params) => {
 
   const calculateIngredient = (amount: number, pleasureness: number) => amount * pleasureness
 
-  const calculateBalance = (portions: Portions, recipes: Recipe[], calorieTarget?: number) => {
-    const balance: Balance = [0, 0, 0, 0, 0]
+  const calculateBalance = (portions: Portions, recipes: Recipe[], data: Data) => {
+    let balancePart1: Balance = [0, 0, 0, 0, 0],
+      balancePart2: Balance = [0, 0, 0, 0, 0]
     portions.forEach((portion: number, index: number) => {
-      balance[0] += calculateIngredient(portion, recipes[index][0])
-      balance[1] += calculateIngredient(portion, recipes[index][1])
-      balance[2] += calculateIngredient(portion, recipes[index][2])
-      balance[3] += calculateIngredient(portion, recipes[index][3])
-      if (calorieTarget) balance[4] += calculateIngredient(portion, recipes[index][4])
+      balancePart1[0] += calculateIngredient(portion, recipes[index][0])
+      balancePart2[0] += calculateIngredient(portion, recipes[index][0])
+      balancePart1[1] += calculateIngredient(portion, recipes[index][1])
+      balancePart2[1] += calculateIngredient(portion, recipes[index][1])
+      balancePart1[2] += calculateIngredient(portion, recipes[index][2])
+      balancePart2[2] += calculateIngredient(portion, recipes[index][2])
+      balancePart1[3] += calculateIngredient(portion, recipes[index][3])
+      balancePart2[3] += calculateIngredient(portion, recipes[index][3])
+      balancePart2[4] += calculateIngredient(portion, recipes[index][4])
     })
-    if (!!calorieTarget && balance[4] !== calorieTarget) return 0
-    balance.pop() // remove calories from final equation
-    return balance.reduce((acc: number, val: number) => acc * (val < 0 ? 0 : val), 1)
+    if (balancePart2[4] !== data.calories.part2) balancePart2 = [0, 0, 0, 0, 0]
+    balancePart1.pop()
+    balancePart2.pop()
+    let bPart1 = balancePart1.reduce((acc: number, val: number) => acc * (val < 0 ? 0 : val), 1)
+    let bPart2 = balancePart2.reduce((acc: number, val: number) => acc * (val < 0 ? 0 : val), 1)
+    if (data.scorePart1 < bPart1) data.scorePart1 = bPart1
+    if (data.scorePart2 < bPart2) data.scorePart2 = bPart2
   }
 
   const generatePortions = (recipeSlots: number[], remaining: number, portions: number[], data: Data) => {
@@ -40,24 +52,15 @@ export default async (lineReader: any, params: Params) => {
         generatePortions(recipeSlots.slice(1, recipeSlots.length), remaining - i, portions.concat(i), data)
     } else {
       portions.push(100 - portions.reduce((a, b) => a + b))
-      const balance = calculateBalance(portions, recipes, data.calories)
-      if (balance > data.score) data.score = balance
+      calculateBalance(portions, recipes, data)
     }
   }
 
-  const solveFor = (calories: number) => {
-    const recipeSlots: number[] = new Array(recipes.length).fill(0)
-    const data: Data = { score: 0, calories }
-    generatePortions(recipeSlots, 100, [], data)
-    return data.score
-  }
-
-  if (!params.skipPart1) {
-    part1 = solveFor(params.calories.part1)
-  }
-  if (!params.skipPart2) {
-    part2 = solveFor(params.calories.part2)
-  }
+  const recipeSlots: number[] = new Array(recipes.length).fill(0)
+  const data: Data = { scorePart1: 0, scorePart2: 0, calories: params.calories }
+  generatePortions(recipeSlots, 100, [], data)
+  part1 = data.scorePart1
+  part2 = data.scorePart2
 
   return { part1, part2 }
 }
