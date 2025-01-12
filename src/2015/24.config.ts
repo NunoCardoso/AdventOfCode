@@ -5,9 +5,9 @@ let config: PuzzleConfig = {
     title: 'It Hangs in the Balance',
     year: 2015,
     day: 24,
-    result: 'unfinished',
+    result: 'finished',
     status: 'solved',
-    speed: 'slow',
+    speed: 'fast',
     code: 'clean',
     tags: ['Combination'],
     difficulty: 5

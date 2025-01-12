@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Combination } from 'js-combinatorics'
+import { combination } from 'util/combination'
 
 type Floor = string[]
 
@@ -104,7 +104,7 @@ export default async (lineReader: any, params: Params) => {
     // let's do up first
     if (floorAbove !== null) {
       let newPathsMovingUp: Path[] = []
-      for (let objectPairsToMove of new Combination(objectsInCurrentFloor, 2)) {
+      for (let objectPairsToMove of combination(objectsInCurrentFloor, 2)) {
         const newHead: Step = { ...head, floors: [...head.floors] }
         newHead.floors[currentElevatorFloor] = objectsInCurrentFloor.filter(
           (o) => o !== 'E' && !objectPairsToMove.includes(o)
@@ -250,7 +250,7 @@ export default async (lineReader: any, params: Params) => {
       doAstar(queue, queueIndex, visitedIndex, data)
       iterations++
     }
-    console.log('finished in ', iterations, 'iterations')
+    log.debug('finished in ', iterations, 'iterations')
     if (params.ui?.show && params.ui?.end) {
       data.path.forEach((step) => printFloors(step))
     }

@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { Combination } from 'js-combinatorics'
+import { combination } from 'util/combination'
 
 type Stat = {
   name: string
@@ -94,7 +94,7 @@ export default async (lineReader: any, params: Params) => {
 
   const getCost = (s: Setup) => s.weapon.cost + s.armor.cost + s.ring1.cost + s.ring2.cost
 
-  let ringCombinations = new Combination(rings, 2).toArray()
+  let ringCombinations = combination(rings, 2)
   const getCombinations = (): Setup[] =>
     weapons.reduce(
       (acc, weapon) =>

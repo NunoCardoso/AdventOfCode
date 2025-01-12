@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { Permutation } from 'js-combinatorics'
+import { permutation } from 'util/permutation'
 
 type People = Set<string>
 type Scores = Map<string, Map<string, number>>
@@ -21,7 +21,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const solveFor = (people: People, scores: Scores): number =>
-    new Permutation(people).toArray().reduce((highScore, permute) => {
+    permutation([...people]).reduce((highScore, permute) => {
       const score = permute.reduce((acc, person1, i) => {
         const person2 = permute[(i + 1) % permute.length]
         return acc + scores.get(person1)!.get(person2)! + scores.get(person2)!.get(person1)!

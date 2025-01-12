@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '21',
     title: 'Scrambled Letters and Hash',
+    year: 2016,
+    day: 21,
+    result: 'finished',
     status: 'solved',
-    comment: 'Clever that we have to reverse instructions AND the output',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 3
   },
   test: {
@@ -33,3 +37,4 @@ export default {
     }
   }
 }
+export default config

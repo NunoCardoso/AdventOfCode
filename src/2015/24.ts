@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { Combination } from 'js-combinatorics'
+import { combination } from 'util/combination'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -23,7 +23,7 @@ export default async (lineReader: any, params: Params) => {
     let answer
 
     while (!answer) {
-      for (let c of new Combination(packages, minPackages)) {
+      for (let c of combination(packages, minPackages)) {
         if (c.reduce((a: number, b: number) => a + b, 0) === targetWeight) {
           answer = Math.min(
             answer ?? Number.MAX_VALUE,

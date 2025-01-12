@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '20',
     title: 'Firewall Rules',
+    year: 2016,
+    day: 20,
+    result: 'finished',
     status: 'solved',
-    comment: 'Quite easy, considering it is day 20, trick is to have a mergeRange function',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   test: {
@@ -27,3 +31,5 @@ export default {
     }
   }
 }
+
+export default config

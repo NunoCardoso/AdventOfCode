@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2016',
-    day: '19',
     title: 'An Elephant Named Joseph',
-    comment: 'Very interesting. run mode: study to see pattern vs brute force',
+    year: 2016,
+    day: 19,
+    result: 'finished',
     status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 4
   },
   logLevel: 'info',
@@ -29,3 +33,5 @@ export default {
     }
   }
 }
+
+export default config

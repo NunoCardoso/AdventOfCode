@@ -13,7 +13,7 @@ let config: PuzzleConfig = {
     tags: ['Path-finding']
   },
   ui: {
-    show: true,
+    show: false,
     end: true
   },
   logLevel: 'info',

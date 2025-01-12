@@ -1,4 +1,4 @@
-import { Permutation } from 'js-combinatorics'
+import { permutation } from 'util/permutation'
 
 type Distances = Map<string, Map<string, number>>
 export default async (lineReader: any) => {
@@ -14,7 +14,7 @@ export default async (lineReader: any) => {
     distances.get(city2)!.set(city1, +distance)
   }
 
-  for (let placeSet of new Permutation(Array.from(distances.keys()))) {
+  for (let placeSet of permutation(Array.from(distances.keys()))) {
     let distance = placeSet.reduce(
       (acc, place, index) => (index === 0 ? acc : acc + distances.get(placeSet[index - 1])!.get(placeSet[index])!),
       0

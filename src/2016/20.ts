@@ -6,7 +6,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let ranges: Array<Range> = []
+  let ranges: Range[] = []
   for await (const line of lineReader) ranges.push(line.split('-').map(Number))
 
   ranges.sort((a, b) => a[0] - b[0] || a[1] - b[1])
