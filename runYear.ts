@@ -2,7 +2,8 @@ const path = require('path')
 const fs = require('fs')
 import aoc from 'aoc'
 import { PuzzleConfig, PuzzleOutput, PuzzleOutputAnswer } from 'aoc.d'
-const clc = require('cli-color')
+var readline = require('readline')
+var rl = readline.createInterface(process.stdin, process.stdout)
 
 if (process.argv[2]?.length !== 4) {
   console.error('usage: ts-node runYear {year}')
@@ -17,10 +18,6 @@ let puzzles = fs.readdirSync(path.join('src', year)).filter((file: any) => file.
 let resultFileMD = path.join('reports', year + '.md')
 let resultFileTXT = path.join('reports', year + '.txt')
 
-if (fs.existsSync(resultFileMD) || fs.existsSync(resultFileTXT)) {
-  console.error('Error: report exists')
-  process.exit()
-}
 
 const getPuzzle = async (p: any) => {
   const puzzle = require(path.join(process.argv[2] + '/' + p))
@@ -28,10 +25,6 @@ const getPuzzle = async (p: any) => {
   delete _p.test
   return _p
 }
-
-let f = fs.openSync(resultFileMD, 'a+')
-let f2 = fs.openSync(resultFileTXT, 'a+')
-let totalTime = 0
 
 const padCenter = (s: string, len: number) => {
   let _s = s.substring(0, Math.floor(s.length / 2))
@@ -209,19 +202,41 @@ const getMdOutput = (results: PuzzleOutput[], totalTime: number): string => {
   s += 'Total time: ' + totalTime / 1000.0 + 's' + '\n\n'
   return s
 }
+const proceed = async () => {
+  let f = fs.openSync(resultFileMD, 'w+')
+  let f2 = fs.openSync(resultFileTXT, 'w+')
+  let totalTime = 0
 
-Promise.all(puzzles.map(getPuzzle)).then(async (puzzles: PuzzleConfig[]) => {
-  let results: PuzzleOutput[] = []
-  for (let puzzle of puzzles) {
-    let res = (await aoc(puzzle!)) as PuzzleOutput
-    results.push(res)
-    console.clear()
-    getConsoleOutput(results).map((c) => console.log(c))
-    totalTime += res.time
-  }
-  let consoleOutput = getConsoleOutput(results)
-  fs.writeSync(f2, consoleOutput.join('\n'))
+  Promise.all(puzzles.map(getPuzzle)).then(async (puzzles: PuzzleConfig[]) => {
+    let results: PuzzleOutput[] = []
+    for (let puzzle of puzzles) {
+      let res = (await aoc(puzzle!)) as PuzzleOutput
+      results.push(res)
+      console.clear()
+      getConsoleOutput(results).map((c) => console.log(c))
+      totalTime += res.time
+    }
+    let consoleOutput = getConsoleOutput(results)
+    fs.writeSync(f2, consoleOutput.join('\n'))
 
-  let mdOutput = getMdOutput(results, totalTime)
-  fs.writeSync(f, mdOutput)
-})
+    let mdOutput = getMdOutput(results, totalTime)
+    fs.writeSync(f, mdOutput)
+  }).finally(() => {
+    console.log('done')
+    process.exit()
+  })
+}
+
+if (fs.existsSync(resultFileMD) || fs.existsSync(resultFileTXT)) {
+  rl.question("Report exists. Overwrite? [yes]/no: ", (answer: string) => {
+    if (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'yes' && answer !== '') {
+      console.error('Error: report exists')
+      process.exit()
+    } else {
+       proceed()
+    }
+  })
+} else {
+   proceed()
+}
+

@@ -7,9 +7,6 @@ export default async (lineReader: any, params: Params) => {
   let part1: string = ''
   let part2: string = ''
 
-  const instructions: string[] = []
-  for await (const line of lineReader) instructions.push(line)
-
   const executeInstruction = (
     line: string,
     password: string[],
@@ -64,20 +61,19 @@ export default async (lineReader: any, params: Params) => {
     return indexShiftMap
   }
 
-  if (!params.skipPart1) {
-    let password: string[] = params.password.part1.split('')
-    let shiftMap = getIndexShiftMap(password.length, false)
-    for (let instruction of instructions) password = executeInstruction(instruction, password, false, shiftMap)
+  const instructions: string[] = []
+  for await (const line of lineReader) instructions.push(line)
 
-    part1 = password.join('')
-  }
+  let password: string[] = params.password.part1.split('')
+  let shiftMap = getIndexShiftMap(password.length, false)
+  for (let instruction of instructions) password = executeInstruction(instruction, password, false, shiftMap)
 
-  if (!params.skipPart2) {
-    let password: string[] = params.password.part2.split('')
-    let shiftMap = getIndexShiftMap(password.length, true)
-    for (let instruction of instructions.reverse()) password = executeInstruction(instruction, password, true, shiftMap)
-    part2 = password.join('')
-  }
+  part1 = password.join('')
+
+  password = params.password.part2.split('')
+  shiftMap = getIndexShiftMap(password.length, true)
+  for (let instruction of instructions.reverse()) password = executeInstruction(instruction, password, true, shiftMap)
+  part2 = password.join('')
 
   return { part1, part2 }
 }

@@ -14,17 +14,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const instructions: Instruction[] = []
-  for await (const line of lineReader) {
-    const [op, x, y] = line.split(/\s+/)
-    instructions.push({
-      op,
-      x: x.match(/\d+/) ? +x : x,
-      y: y ? (y.match(/\d+/) ? +y : y) : null
-    })
-  }
-
-  const runRegister = (registers: Registers) => {
+  const runRegister = (registers: Registers, instructions: Instruction[]) => {
     let it = 0
     while (true) {
       if (it >= instructions.length) break
@@ -45,7 +35,17 @@ export default async (lineReader: any, params: Params) => {
     return registers.a
   }
 
-  part1 = runRegister({ a: 0, b: 0, c: 0, d: 0 })
-  part2 = runRegister({ a: 0, b: 0, c: 1, d: 0 })
+  const instructions: Instruction[] = []
+  for await (const line of lineReader) {
+    const [op, x, y] = line.split(/\s+/)
+    instructions.push({
+      op,
+      x: x.match(/\d+/) ? +x : x,
+      y: y ? (y.match(/\d+/) ? +y : y) : null
+    })
+  }
+
+  part1 = runRegister({ a: 0, b: 0, c: 0, d: 0 }, instructions)
+  part2 = runRegister({ a: 0, b: 0, c: 1, d: 0 }, instructions)
   return { part1, part2 }
 }

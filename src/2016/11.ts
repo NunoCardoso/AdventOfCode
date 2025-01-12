@@ -24,6 +24,13 @@ type QueueIndex = Record<string, [distance: number, moves: number]>
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
+  let part1: number = 0
+  let part2: number = 0
+
+  const step: Step = { floors: [], key: '', distance: 0, moves: 0 }
+
+  let indexOfObjects: string[] = ['E']
+
   // to use as A* heuristic if I want
   const calculateDistance = (floors: Floor[]) =>
     // items on last floor cost 0. This is "manhattan distance" of itens to top floor.
@@ -256,13 +263,6 @@ export default async (lineReader: any, params: Params) => {
     }
     return data.moves
   }
-
-  let part1: number = 0
-  let part2: number = 0
-
-  const step: Step = { floors: [], key: '', distance: 0, moves: 0 }
-
-  let indexOfObjects: string[] = ['E']
 
   for await (const line of lineReader) {
     const objects: string[] = []

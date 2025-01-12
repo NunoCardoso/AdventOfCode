@@ -17,6 +17,9 @@ export default async (lineReader: any, params: Params) => {
   const finishTime = params.seconds
   const reindeerPart1: Reindeer[] = [],
     reindeerPart2: Reindeer[] = []
+  let time = 0
+  let distanceInLead: number = 0
+  let reindeerInLead: Reindeer[] = [] // can be more than one in the lead at same time
 
   for await (const line of lineReader) {
     const [, name, speed, duration, rest] = line.match(
@@ -53,9 +56,6 @@ export default async (lineReader: any, params: Params) => {
     log.debug('reindeer', reindeer.name, 'distance', reindeer.distance)
   })
 
-  let time = 0
-  let distanceInLead: number = 0
-  let reindeerInLead: Reindeer[] = [] // can be more than one in the lead at same time
   while (time < finishTime) {
     reindeerPart2.forEach((reindeer) => {
       const moddedTime = time % (reindeer.duration + reindeer.rest)

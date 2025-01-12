@@ -5,14 +5,14 @@ export default async (lineReader: any, params: Params) => {
 
   let part1: number = 0
 
-  let data: number[] = []
-  for await (const line of lineReader) data = line.match(/\d+/g).map(Number)
-
-  const generateNewCode = (code: number): number => (code * 252533) % 33554393
-
   let row = 1
   let column = 1
   let code = params.firstCode
+  let data: number[] = []
+
+  const generateNewCode = (code: number): number => (code * 252533) % 33554393
+
+  for await (const line of lineReader) data = line.match(/\d+/g).map(Number)
 
   while (part1 === 0) {
     if (row === 1) {

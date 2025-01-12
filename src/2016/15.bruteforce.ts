@@ -9,14 +9,6 @@ export default async (lineReader: any, params: Params) => {
   const maxPositions: number[] = []
   const positions: number[] = []
 
-  for await (const line of lineReader) {
-    const [, maxPosition, position] = line
-      .match(/Disc #\d+ has (\d+) positions; at time=0, it is at position (\d+)./)
-      .map(Number)
-    maxPositions.push(maxPosition)
-    positions.push(position)
-  }
-
   const areAligned = (discs: number[]): boolean => discs.every((disc) => disc === 0)
 
   const solveFor = (maxPositions: number[], positions: number[]): number => {
@@ -29,6 +21,14 @@ export default async (lineReader: any, params: Params) => {
       else iterations++
     }
     return iterations - 1
+  }
+
+  for await (const line of lineReader) {
+    const [, maxPosition, position] = line
+      .match(/Disc #\d+ has (\d+) positions; at time=0, it is at position (\d+)./)
+      .map(Number)
+    maxPositions.push(maxPosition)
+    positions.push(position)
   }
 
   if (!params.skipPart1) part1 = solveFor(maxPositions, positions)

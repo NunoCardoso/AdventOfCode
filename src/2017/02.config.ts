@@ -5,11 +5,10 @@ let config: PuzzleConfig = {
     title: 'Corruption Checksum',
     year: 2017,
     day: 2,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Making sums while parsing input',
     difficulty: 1
   },
   test: [

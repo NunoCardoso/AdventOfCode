@@ -5,9 +5,6 @@ export default async (lineReader: any, params: Params) => {
   let part1: string = ''
   let part2: string = ''
 
-  const codes: string[] = []
-  for await (const line of lineReader) codes.push(line)
-
   const squareKeypad = (point: Location, instruction: string) => {
     if (instruction === 'L') point[0] = point[0] === 0 ? 0 : point[0] - 1
     else if (instruction === 'R') point[0] = point[0] === 2 ? 2 : point[0] + 1
@@ -55,6 +52,9 @@ export default async (lineReader: any, params: Params) => {
         return getValue(position)
       })
       .join('')
+
+  const codes: string[] = []
+  for await (const line of lineReader) codes.push(line)
 
   part1 = solveFor(codes, [1, 1], squareKeypad, valueFromSquareKeypad)
   part2 = solveFor(codes, [-2, 0], losangeKeypad, valueFromLosangeKeypad)

@@ -9,7 +9,6 @@ let config: PuzzleConfig = {
     status: 'unsolved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Trying to be smart and avoid doing a spiral for part1, so that part2 "forces" me to do a spiral...',
     difficulty: 1
   },
   test: {

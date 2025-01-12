@@ -28,6 +28,7 @@ export default async (lineReader: any, params: Params) => {
 
   // reverse, so it can hit the end of the list first
   const inTail = (head: Location, path: Path) => path.reverse().some((l) => location.isSame(l, head))
+
   const getNewPaths = (path: Path, world: World<string>, visited: Set<string>) => {
     let head = path[path.length - 1]
     return (

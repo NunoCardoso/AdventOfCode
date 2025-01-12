@@ -50,11 +50,6 @@ export default async (lineReader: any, params: Params) => {
 
   const boss: Boss = { hitPoints: 0, damage: 0 }
 
-  for await (const line of lineReader) {
-    if (line.match(/Hit Points/)) boss.hitPoints = +line.match(/Hit Points: (\d+)/)[1]
-    if (line.match(/Damage/)) boss.damage = +line.match(/Damage: (\d+)/)[1]
-  }
-
   const isFinished = (move: Move): boolean => move.heroHitPoints <= 0 || move.bossHitPoints <= 0
   const heroWon = (move: Move): boolean => move.heroHitPoints > 0 && move.bossHitPoints <= 0
   const heroLost = (move: Move): boolean => move.heroHitPoints <= 0 && move.bossHitPoints > 0
@@ -237,6 +232,11 @@ export default async (lineReader: any, params: Params) => {
     log.debug('Final path')
     log.debug(printBattle(data.path))
     return data.path[data.path.length - 1]?.manaSpent
+  }
+
+  for await (const line of lineReader) {
+    if (line.match(/Hit Points/)) boss.hitPoints = +line.match(/Hit Points: (\d+)/)[1]
+    if (line.match(/Damage/)) boss.damage = +line.match(/Damage: (\d+)/)[1]
   }
 
   part1 = solveFor('part1')

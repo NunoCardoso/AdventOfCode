@@ -20,8 +20,8 @@ export default async (lineReader: any, params: Params) => {
     return elf
   }
 
-  if (!params.skipPart1) part1 = solveFor(params.elves, 'part1')
-  if (!params.skipPart2) part2 = solveFor(params.elves, 'part2')
+  part1 = solveFor(params.elves, 'part1')
+  part2 = solveFor(params.elves, 'part2')
 
   return { part1, part2 }
 }

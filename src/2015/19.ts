@@ -10,7 +10,10 @@ export default async (lineReader: any, params: Params) => {
 
   const replacements: Replacements = new Map()
   let atoms: string[] = []
-
+  const molecules = new Set<string>()
+  let atomsCount = 0
+  let commas = 0
+  let parenthesis = 0
   const breakIntoAtoms = (mol: string): string[] => (mol === 'e' ? ['e'] : mol.match(/[A-Z][a-z]*/g)!)
 
   for await (const line of lineReader) {
@@ -21,11 +24,6 @@ export default async (lineReader: any, params: Params) => {
       if (line) atoms = breakIntoAtoms(line)
     }
   }
-
-  const molecules = new Set<string>()
-  let atomsCount = 0
-  let commas = 0
-  let parenthesis = 0
 
   atoms.forEach((atom, i) => {
     replacements

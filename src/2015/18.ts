@@ -7,13 +7,6 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const grid1: Grid<string> = [],
-    grid2: Grid<string> = []
-  for await (const line of lineReader) {
-    grid1.push(line.split(''))
-    grid2.push(line.split(''))
-  }
-
   const printGrid = (grid: Grid<string>, iteration: string | number) => {
     log.info('iteration', iteration)
     grid.forEach((row) => log.info(row.join('').replaceAll('#', '⬜').replaceAll('.', '⬛')))
@@ -61,6 +54,13 @@ export default async (lineReader: any, params: Params) => {
     }
     if (params.ui?.show && params.ui?.end) printGrid(grid, 'end')
     return grid.reduce((acc, row) => acc + row.filter((cell) => cell === '#').length, 0)
+  }
+
+  const grid1: Grid<string> = [],
+    grid2: Grid<string> = []
+  for await (const line of lineReader) {
+    grid1.push(line.split(''))
+    grid2.push(line.split(''))
   }
 
   part1 = solveFor(grid1, params.limit, false)

@@ -19,27 +19,7 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   const wires: Wires = new Map()
-
-  for await (const line of lineReader) {
-    const values = line.split(' ')
-    // NOT x -> y
-    if (values.length === 4) {
-      wires.set(values[3], { op: 'NOT', src: values[1] })
-    }
-    // 1 -> c or x -> c
-    if (values.length === 3) {
-      wires.set(values[2], isNaN(values[0]) ? values[0] : +values[0])
-    }
-    // 1 something b -> c or a something b -> c
-    if (values.length === 5) {
-      wires.set(values[4], {
-        op: values[1],
-        src1: isNaN(values[0]) ? values[0] : +values[0],
-        src2: isNaN(values[2]) ? values[2] : +values[2]
-      })
-    }
-  }
-
+  let wiresPart2: Wires
   const solveFor = (wires: Wires, key: string): number => {
     let result: number = 0
     const wire: Wire = wires.get(key)!
@@ -77,8 +57,27 @@ export default async (lineReader: any, params: Params) => {
     return result
   }
 
-  const wiresPart2: Wires = new Map(wires)
+  for await (const line of lineReader) {
+    const values = line.split(' ')
+    // NOT x -> y
+    if (values.length === 4) {
+      wires.set(values[3], { op: 'NOT', src: values[1] })
+    }
+    // 1 -> c or x -> c
+    if (values.length === 3) {
+      wires.set(values[2], isNaN(values[0]) ? values[0] : +values[0])
+    }
+    // 1 something b -> c or a something b -> c
+    if (values.length === 5) {
+      wires.set(values[4], {
+        op: values[1],
+        src1: isNaN(values[0]) ? values[0] : +values[0],
+        src2: isNaN(values[2]) ? values[2] : +values[2]
+      })
+    }
+  }
 
+  wiresPart2 = new Map(wires)
   part1 = solveFor(wires, 'a')
   wiresPart2.set('b', part1)
   part2 = solveFor(wiresPart2, 'a')

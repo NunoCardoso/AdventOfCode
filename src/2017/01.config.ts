@@ -5,8 +5,8 @@ let config: PuzzleConfig = {
     title: 'Inverse Captcha',
     year: 2017,
     day: 1,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
     difficulty: 1

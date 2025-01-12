@@ -17,9 +17,6 @@ export default async (lineReader: any, params: Params) => {
     return '.'
   }
 
-  let row: string = ''
-  for await (const line of lineReader) row = line
-
   const solveFor = (row: string, rowNumber: number) => {
     let count = countDots(row)
     let it = 1
@@ -33,6 +30,9 @@ export default async (lineReader: any, params: Params) => {
     }
     return count
   }
+
+  let row: string = ''
+  for await (const line of lineReader) row = line
 
   if (!params.skipPart1) part1 = solveFor(row, params.rows.part1)
   if (!params.skipPart2) part2 = solveFor(row, params.rows.part2)

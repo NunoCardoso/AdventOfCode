@@ -11,13 +11,6 @@ export default async (lineReader: any, params: Params) => {
   let numberOfMinimumFills: number = 0
   const target = params.limit
 
-  let id: number = 0
-  // ID is needed so jars with same capacity can be identified differently
-  for await (const line of lineReader) containers.push({ id: id++, value: +line })
-
-  let minimumFill: number = containers.length
-  containers.sort((a, b) => b.value - a.value)
-
   const combine = (containers: Containers, temp: Containers = []) => {
     for (let i = 0; i < containers.length; i++) {
       const currentContainer: Containers = [...temp, containers[i]]
@@ -42,8 +35,13 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  combine(containers, [])
-  log.debug(fills)
+  let id: number = 0
+  // ID is needed so jars with same capacity can be identified differently
+  for await (const line of lineReader) containers.push({ id: id++, value: +line })
+
+  let minimumFill: number = containers.length
+  containers.sort((a, b) => b.value - a.value)
+  combine(containers)
 
   return {
     part1: fills.size,

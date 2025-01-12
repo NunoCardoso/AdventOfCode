@@ -59,12 +59,6 @@ export default async (lineReader: any, params: Params) => {
 
   const boss: Boss = { hitPoints: 0, damage: 0, armor: 0 }
 
-  for await (const line of lineReader) {
-    if (line.match(/Hit Points/)) boss.hitPoints = +line.match(/Hit Points: (\d+)/)[1]
-    if (line.match(/Damage/)) boss.damage = +line.match(/Damage: (\d+)/)[1]
-    if (line.match(/Armor/)) boss.armor = +line.match(/Armor: (\d+)/)[1]
-  }
-
   const goToBattle = (hero: Hero, boss: Boss): number => {
     while (hero.hitPoints > 0 && boss.hitPoints > 0) {
       log.debug('Before strike: hero: ', hero, 'boss', boss)
@@ -111,6 +105,12 @@ export default async (lineReader: any, params: Params) => {
   const setupCombinations: Setup[] = getCombinations().sort((a, b) => getCost(a) - getCost(b))
 
   log.debug('I have', setupCombinations.length, 'combinations')
+
+  for await (const line of lineReader) {
+    if (line.match(/Hit Points/)) boss.hitPoints = +line.match(/Hit Points: (\d+)/)[1]
+    if (line.match(/Damage/)) boss.damage = +line.match(/Damage: (\d+)/)[1]
+    if (line.match(/Armor/)) boss.armor = +line.match(/Armor: (\d+)/)[1]
+  }
 
   // I am assuming that we can get a win with a lower gold cost than a certain loss with more expensive gear
   while (part1 === 0 || part2 === 0) {

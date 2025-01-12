@@ -7,11 +7,6 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const packages: number[] = []
-  for await (const line of lineReader) packages.push(+line)
-  // Sort numbers in descending order
-  packages.sort((a, b) => b - a)
-
   const solveFor = (packages: number[], numberOfCompartments: number): number => {
     const totalWeight = packages.reduce((a, b) => a + b)
     const targetWeight = totalWeight / numberOfCompartments
@@ -36,6 +31,11 @@ export default async (lineReader: any, params: Params) => {
 
     return answer
   }
+
+  const packages: number[] = []
+  for await (const line of lineReader) packages.push(+line)
+  // Sort numbers in descending order
+  packages.sort((a, b) => b - a)
 
   part1 = solveFor(packages, params.compartments.part1)
   part2 = solveFor(packages, params.compartments.part2)

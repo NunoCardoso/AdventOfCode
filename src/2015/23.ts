@@ -14,24 +14,6 @@ export default async (lineReader: any, params: Params) => {
 
   const instructions: Instruction[] = []
 
-  for await (const line of lineReader) {
-    const [instruction, param1, param2] = line.split(/\s+/)
-    switch (instruction) {
-      case 'hlf':
-      case 'tpl':
-      case 'inc':
-        instructions.push({ instruction, register: param1 })
-        break
-      case 'jmp':
-        instructions.push({ instruction, amount: +param1 })
-        break
-      case 'jie':
-      case 'jio':
-        instructions.push({ instruction, register: param1[0], amount: +param2 })
-        break
-    }
-  }
-
   const solveFor = (registers: Record<string, number>, instructions: Instruction[], returnRegister: string): number => {
     for (let i = 0; i < instructions.length; i++) {
       switch (instructions[i].instruction) {
@@ -56,6 +38,24 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     return registers[returnRegister]
+  }
+
+  for await (const line of lineReader) {
+    const [instruction, param1, param2] = line.split(/\s+/)
+    switch (instruction) {
+      case 'hlf':
+      case 'tpl':
+      case 'inc':
+        instructions.push({ instruction, register: param1 })
+        break
+      case 'jmp':
+        instructions.push({ instruction, amount: +param1 })
+        break
+      case 'jie':
+      case 'jio':
+        instructions.push({ instruction, register: param1[0], amount: +param2 })
+        break
+    }
   }
 
   part1 = solveFor({ a: 0, b: 0 }, instructions, params.isTest ? 'a' : 'b')

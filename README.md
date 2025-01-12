@@ -104,19 +104,22 @@ List of tags used:
 * Focus on readability. Code should be easy to follow with declarative functions
 * Move away from structures like [number, number, number, string], they are fast but not easy to follow in code.
 * after solution is done, I can remove the partial part codes. Solutions should run both parts in one go. 
+* start the code with variable declarations, them gather all auxiliary functions (properly named). 
+On the final part of the file, we should then read the input, and do a simple readable procedure to get puzzle answers.
 
 ## Typing
-* do type everything. Avoid `any` type. 
-* avoid global.structureClone, it is very slow
-* Reuse types such as `Location`, `Dimension`, `World`, they help.
+* Do not use `any` type. 
+* avoid global.structureClone, it is very slow.
+* Reuse types such as `Location`, `Dimension`, `World`, and auxiliary functions such as `getManhattanDistance`. 
+They are there to help unclutter code.
 * use [] instead of `Array`.
-* If possible, avoid `Record` and use `Map`. `Set` are also useful sometimes instead of `Array`
+* If possible, avoid `Record` and use `Map`. `Set` are also useful sometimes instead of `Array`.
 ** for increments, try map.set("a", (map.get("a") ?? 0) + 1)
 ** prefer reduce for sums 
-* Prefer `Location` to `Point`. `Location` implies coordinates, `Point` is something that has location but also extra stuff
-* Prefer For...Of and For...in then forEach: 
-** For... of loops over the Values
-** For...in: Loops over the Keys.
+* Prefer `Location` to `Point`. `Location` implies coordinates, `Point` is something that can have location or not.
+* Prefer `for...of` and `for...in` than `forEach`: 
+** `for... of` loops over the **values**
+** `for...in` loops over the **keys**.
 ** We can use break and continue (forEach we can't)
 ** we do not need to have the array ready for iteration (permutations and stuff)
 

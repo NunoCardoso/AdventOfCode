@@ -16,10 +16,6 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   const recipes: Recipe[] = []
-  for await (const line of lineReader) {
-    const m = line.match(/^(.*): capacity (.*), durability (.*), flavor (.*), texture (.*), calories (.*)$/)
-    recipes.push([+m[2], +m[3], +m[4], +m[5], +m[6]])
-  }
 
   const calculateIngredient = (amount: number, pleasureness: number) => amount * pleasureness
 
@@ -54,6 +50,11 @@ export default async (lineReader: any, params: Params) => {
       portions.push(100 - portions.reduce((a, b) => a + b))
       calculateBalance(portions, recipes, data)
     }
+  }
+
+  for await (const line of lineReader) {
+    const m = line.match(/^(.*): capacity (.*), durability (.*), flavor (.*), texture (.*), calories (.*)$/)
+    recipes.push([+m[2], +m[3], +m[4], +m[5], +m[6]])
   }
 
   const recipeSlots: number[] = new Array(recipes.length).fill(0)

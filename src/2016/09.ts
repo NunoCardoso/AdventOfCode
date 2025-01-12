@@ -4,9 +4,6 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let data: string = ''
-  for await (const line of lineReader) data = line
-
   const solveFor = (line: string, collectAfterExpand: boolean): number => {
     let size = 0
     while (line.length > 0) {
@@ -37,6 +34,9 @@ export default async (lineReader: any, params: Params) => {
     }
     return size
   }
+
+  let data: string = ''
+  for await (const line of lineReader) data = line
 
   if (!params.skipPart1) part1 = solveFor(data, true)
   if (!params.skipPart2) part2 = solveFor(data, false)

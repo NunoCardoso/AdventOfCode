@@ -3,10 +3,10 @@ export default async (lineReader: any) => {
   let part2: number = 0
 
   for await (const line of lineReader) {
-    const values: Array<number> = line
+    const values: number[] = line
       .match(/\d+/g)
       .map(Number)
-      .sort((a: number, b: number) => (a - b > 0 ? 1 : -1))
+      .sort((a: number, b: number) => a - b)
     part1 += values[values.length - 1] - values[0]
 
     for (let i = 0; i < values.length - 1; i++) {
