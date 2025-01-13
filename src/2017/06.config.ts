@@ -5,11 +5,10 @@ let config: PuzzleConfig = {
     title: 'Memory Reallocation',
     year: 2017,
     day: 6,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Turned out not complicated, just making a math to avoid several array runs',
     difficulty: 1
   },
   logLevel: 'info',

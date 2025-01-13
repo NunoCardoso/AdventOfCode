@@ -1,49 +1,47 @@
 import { Params } from 'aoc.d'
+import { Location } from 'declarations'
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  let values: string[] = []
-  for await (const line of lineReader) {
-    values = line.split(',')
-  }
-
-  const getDistance = (position: number[]) => Math.sqrt(position[0] * position[0] + position[1] * position[1])
-
-  const newMove = (position: number[], value: string) => {
-    if (value === 'n') return [position[0], position[1] - 2]
-    if (value === 's') return [position[0], position[1] + 2]
-    if (value === 'ne') return [position[0] + 1.5, position[1] - 1]
-    if (value === 'se') return [position[0] + 1.5, position[1] + 1]
-    if (value === 'nw') return [position[0] - 1.5, position[1] - 1]
+  const newMove = (location: Location, value: string): Location => {
+    if (value === 'n') return [location[0], location[1] + 2]
+    if (value === 's') return [location[0], location[1] - 2]
+    if (value === 'ne') return [location[0] + 1.5, location[1] + 1]
+    if (value === 'se') return [location[0] + 1.5, location[1] - 1]
+    if (value === 'nw') return [location[0] - 1.5, location[1] + 1]
     //sw
-    return [position[0] - 1.5, position[1] + 1]
+    return [location[0] - 1.5, location[1] - 1]
   }
 
-  const getStepsFrom = (position: number[], steps: number = 0): number => {
-    if (position[0] === 0 && position[1] === 0) return steps
-    let candidates: Record<string, number> = {
-      n: getDistance(newMove(position, 'n')),
-      s: getDistance(newMove(position, 's')),
-      ne: getDistance(newMove(position, 'ne')),
-      se: getDistance(newMove(position, 'se')),
-      sw: getDistance(newMove(position, 'sw')),
-      nw: getDistance(newMove(position, 'nw'))
+  const getStepsFrom = (location: Location, steps: number = 0): number => {
+    // get the increment step to go to 0,0
+    let increment = [location[0] >= 0 ? -1.5 : 1.5, location[1] >= 0 ? -1 : 1]
+    let stepsX = Math.abs(location[0] / increment[0])
+    let stepsY = Math.abs(location[1] / increment[1])
+
+    if (stepsX >= stepsY) {
+      // x axis hit first
+      let remainerX = location[0] + increment[0] * stepsY
+      return stepsY + Math.abs(remainerX / 1.5)
     }
-    let sorted = Object.keys(candidates).sort((a, b) => candidates[a] - candidates[b])
-    return getStepsFrom(newMove(position, sorted[0]), steps + 1)
+
+    let remainerY = location[1] + increment[1] * stepsX
+    return stepsX + Math.abs(remainerY / 2)
   }
 
-  let position = [0, 0]
+  let steps: string[] = []
+  for await (const line of lineReader) steps = line.split(',')
+
+  let location: Location = [0, 0]
   let maximumDistance: number = 0
-  let lastDistance: number = 0
-  values.forEach((value) => {
-    position = newMove(position, value)
-    lastDistance = getStepsFrom(position)
-    if (maximumDistance < lastDistance) maximumDistance = lastDistance
+  let distance: number = 0
+  steps.forEach((step) => {
+    location = newMove(location, step)
+    distance = getStepsFrom(location)
+    if (maximumDistance < distance) maximumDistance = distance
   })
-  // console.log('I am in ', position)
-  let part1 = lastDistance
+  let part1 = distance
   let part2 = maximumDistance
 
   return { part1, part2 }

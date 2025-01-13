@@ -5,11 +5,10 @@ let config: PuzzleConfig = {
     title: 'I Heard You Like Registers',
     year: 2017,
     day: 8,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Just execute instructions and see where the ball lands',
     difficulty: 1
   },
   logLevel: 'debug',

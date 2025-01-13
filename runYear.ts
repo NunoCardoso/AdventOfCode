@@ -18,7 +18,6 @@ let puzzles = fs.readdirSync(path.join('src', year)).filter((file: any) => file.
 let resultFileMD = path.join('reports', year + '.md')
 let resultFileTXT = path.join('reports', year + '.txt')
 
-
 const getPuzzle = async (p: any) => {
   const puzzle = require(path.join(process.argv[2] + '/' + p))
   let _p = { ...puzzle.default, logLevel: 'error', ui: { show: false } }
@@ -207,36 +206,37 @@ const proceed = async () => {
   let f2 = fs.openSync(resultFileTXT, 'w+')
   let totalTime = 0
 
-  Promise.all(puzzles.map(getPuzzle)).then(async (puzzles: PuzzleConfig[]) => {
-    let results: PuzzleOutput[] = []
-    for (let puzzle of puzzles) {
-      let res = (await aoc(puzzle!)) as PuzzleOutput
-      results.push(res)
-      console.clear()
-      getConsoleOutput(results).map((c) => console.log(c))
-      totalTime += res.time
-    }
-    let consoleOutput = getConsoleOutput(results)
-    fs.writeSync(f2, consoleOutput.join('\n'))
+  Promise.all(puzzles.map(getPuzzle))
+    .then(async (puzzles: PuzzleConfig[]) => {
+      let results: PuzzleOutput[] = []
+      for (let puzzle of puzzles) {
+        let res = (await aoc(puzzle!)) as PuzzleOutput
+        results.push(res)
+        console.clear()
+        getConsoleOutput(results).map((c) => console.log(c))
+        totalTime += res.time
+      }
+      let consoleOutput = getConsoleOutput(results)
+      fs.writeSync(f2, consoleOutput.join('\n'))
 
-    let mdOutput = getMdOutput(results, totalTime)
-    fs.writeSync(f, mdOutput)
-  }).finally(() => {
-    console.log('done')
-    process.exit()
-  })
+      let mdOutput = getMdOutput(results, totalTime)
+      fs.writeSync(f, mdOutput)
+    })
+    .finally(() => {
+      console.log('done')
+      process.exit()
+    })
 }
 
 if (fs.existsSync(resultFileMD) || fs.existsSync(resultFileTXT)) {
-  rl.question("Report exists. Overwrite? [yes]/no: ", (answer: string) => {
+  rl.question('Report exists. Overwrite? [yes]/no: ', (answer: string) => {
     if (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'yes' && answer !== '') {
       console.error('Error: report exists')
       process.exit()
     } else {
-       proceed()
+      proceed()
     }
   })
 } else {
-   proceed()
+  proceed()
 }
-

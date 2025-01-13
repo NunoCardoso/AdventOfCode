@@ -4,12 +4,11 @@ let config: PuzzleConfig = {
   config: {
     title: 'Recursive circus',
     year: 2017,
-    day: 1,
-    result: 'unfinished',
-    status: 'unsolved',
+    day: 7,
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Hard to understand the instructions, not a nice puzzle but done',
     difficulty: 2,
     tags: ['Recursion']
   },

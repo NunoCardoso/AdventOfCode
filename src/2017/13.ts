@@ -29,37 +29,23 @@ export default async (lineReader: any, params: Params) => {
   let firewall: Firewall = new Array(maxLayers).fill(null)
   tempFirewall.forEach((layer) => (firewall[layer[0]] = layer[1]))
 
-  const solveForPart1 = (): number =>
-    firewall.reduce((acc: number, layer, index) => {
-      if (layer !== null) {
-        let position = getPosition(layer!, index)
-        if (position === 0) {
-          return acc + layer * index
-        }
-      }
-      return acc
-    }, 0)
-
-  const solveForPart2 = (): number => {
-    let delay = 0
-    let i = 0
-    while (true) {
-      let layer = firewall[i]
-      if (layer !== null && getPosition(layer!, i + delay) === 0) {
-        delay++
-        i = -1
-      }
-      i++
-      if (i === firewall.length) break
+  part1 = firewall.reduce((acc: number, layer, index) => {
+    if (layer !== null) {
+      let position = getPosition(layer!, index)
+      if (position === 0) return acc + layer * index
     }
-    return delay
-  }
+    return acc
+  }, 0)
 
-  if (!params.skipPart1) {
-    part1 = solveForPart1()
-  }
-  if (!params.skipPart2) {
-    part2 = solveForPart2()
+  let iterations = 0
+  while (true) {
+    let layer = firewall[iterations]
+    if (layer !== null && getPosition(layer!, iterations + part2) === 0) {
+      part2++
+      iterations = -1
+    }
+    iterations++
+    if (iterations === firewall.length) break
   }
 
   return { part1, part2, getPosition }

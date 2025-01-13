@@ -5,11 +5,10 @@ let config: PuzzleConfig = {
     title: 'Packet Scanners',
     year: 2017,
     day: 13,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Can has some optimization but nice. had to make test unit.',
     difficulty: 2
   },
   logLevel: 'debug',

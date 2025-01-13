@@ -5,14 +5,13 @@ let config: PuzzleConfig = {
     title: 'High-Entropy Passphrases',
     year: 2017,
     day: 4,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Simple rearranging words for list size comparison',
     difficulty: 1
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: [
     {
       id: 'test1',

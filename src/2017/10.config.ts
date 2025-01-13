@@ -5,11 +5,10 @@ let config: PuzzleConfig = {
     title: 'Knot Hash',
     year: 2017,
     day: 10,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'hard to read part2, difficulty is starting',
     difficulty: 3
   },
   logLevel: 'debug',

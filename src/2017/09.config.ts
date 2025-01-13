@@ -5,11 +5,10 @@ let config: PuzzleConfig = {
     title: 'Stream Processing',
     year: 2017,
     day: 9,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'It actually was easier than I thought',
     difficulty: 2
   },
   logLevel: 'debug',

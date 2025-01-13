@@ -5,11 +5,10 @@ let config: PuzzleConfig = {
     title: 'Digital Plumber',
     year: 2017,
     day: 12,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Fun, good time trying to make sure I do not duplicate code',
     difficulty: 2
   },
   logLevel: 'debug',

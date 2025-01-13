@@ -1,65 +1,58 @@
 import { Params } from 'aoc.d'
 
-type Entry = {
-  pos: number
+type Disc = {
+  atBase: boolean
   weight: number
-  children?: Array<string>
+  children?: string[]
 }
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  let part1: string | undefined
+  let part1: string = ''
   let part2: number = 0
 
-  let data: Record<string, Entry> = {}
+  let tower: Record<string, Disc> = {}
 
-  for await (const line of lineReader) {
-    const [, name, weight, more, others] = line.match(/(.+) \((\d+)\)( -> )?(.*)?/)
-    if (!data[name]) data[name] = { pos: 1, weight: +weight }
-    else data[name] = { ...data[name], pos: data[name]!.pos + 1, weight: +weight }
-    if (more) {
-      let children: Array<string> = []
-      others.split(', ').forEach((otherName: string) => {
-        children.push(otherName)
-        if (!data[otherName]) data[otherName] = { pos: -1, weight: 0 }
-        else data[otherName] = { ...data[otherName], pos: data[otherName].pos - 1 }
-      })
+  const getWeight = (key: string): number =>
+    tower[key].weight + (tower[key].children?.map(getWeight)?.reduce((a, b) => a + b) ?? 0)
 
-      data[name].children = children
-    }
-  }
-
-  const getWeight = (key: string): number => {
-    let entry = data[key]
-    return entry.weight! + (entry.children?.map(getWeight)?.reduce((acc, val) => acc + val, 0) ?? 0)
-  }
-
-  const findUnstableDisc = (e: Entry, diff: number): number => {
-    let weights = e.children?.map(getWeight) ?? []
+  const findUnstableDisc = (disc: Disc, diff: number): number => {
+    let weights: number[] = disc?.children?.map(getWeight) ?? []
     let minWeight = Math.min(...weights)
     let maxWeight = Math.max(...weights)
+    if (minWeight === maxWeight) return disc.weight + diff
 
-    if (minWeight === maxWeight) return e.weight + diff
-
-    let countMinWeight = weights.filter((w) => w === minWeight)
-    let countMaxWeight = weights.filter((w) => w === maxWeight)
+    let countMinWeight = weights.filter((weight) => weight === minWeight)
+    let countMaxWeight = weights.filter((weight) => weight === maxWeight)
     let oddWeight = countMaxWeight.length === 1 ? countMaxWeight[0] : countMinWeight[0]
     let referenceWeight = countMaxWeight.length === 1 ? countMinWeight[0] : countMaxWeight[0]
     let diffWeight = referenceWeight - oddWeight
 
     let oddWeightIndex = weights.indexOf(oddWeight)
-    let newName = e.children?.[oddWeightIndex]
+    let newName = disc.children?.[oddWeightIndex]
 
-    return findUnstableDisc(data[newName!], diffWeight)
+    return findUnstableDisc(tower[newName!], diffWeight)
   }
 
-  // the root name is the only one who has a value of 1, as I am adding -1 for having parent,
-  // +1 for having children. I am doing like this because I don't control when a node is mentioned first,
-  // as a node or as a children
-  //console.log(names)
-  part1 = Object.keys(data).find((key) => data[key].pos === 1)
+  for await (const line of lineReader) {
+    const [, name, weight, more, children] = line.match(/(.+) \((\d+)\)( -> )?(.*)?/)
+    if (!tower[name]) tower[name] = { atBase: true, weight: +weight }
+    // already mentioned previously on a children
+    else tower[name] = { ...tower[name], atBase: false, weight: +weight }
+    if (more) {
+      tower[name].children = []
+      children.split(', ').forEach((disc: string) => {
+        tower[name].children!.push(disc)
+        // weight 0, as we still do not know it, will come in the future
+        if (!tower[disc]) tower[disc] = { atBase: false, weight: 0 }
+        else tower[disc] = { ...tower[disc], atBase: false }
+      })
+    }
+  }
 
-  part2 = findUnstableDisc(data[part1!], 0)
+  part1 = Object.keys(tower).find((key) => tower[key].atBase)!
+
+  part2 = findUnstableDisc(tower[part1!], 0)
 
   return { part1, part2 }
 }

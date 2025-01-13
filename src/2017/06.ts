@@ -6,49 +6,41 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let data: Array<number> = []
+  let memoryBanks: number[] = []
 
-  for await (const line of lineReader) {
-    data = line.split(/\s+/g).map(Number)
-  }
+  for await (const line of lineReader) memoryBanks = line.split(/\s+/g).map(Number)
 
   let memory: Set<string> = new Set()
-  let done = false
-  let memoryString = ''
+  let memoryKey: string, maxBlocks: number, maxBlockIndex: number, blocksToRedistribute: number
+  let reminderToRedistribute: number, higherIndex: number
 
-  do {
-    let index: number = 0
-    let value: number = 0
-    data.forEach((n: number, i: number) => {
-      if (n > value) {
-        value = n
-        index = i
-      }
-    })
-    let amount = Math.floor(value / data.length)
-    let reminder = value % data.length
-    let higherIndex = (index + reminder) % data.length
-    memoryString = ''
-    for (let i = 0; i < data.length; i++) {
-      data[i] += amount
+  while (true) {
+    maxBlocks = Math.max(...memoryBanks)
+    maxBlockIndex = memoryBanks.findIndex((m) => m === maxBlocks)
+    blocksToRedistribute = Math.floor(maxBlocks / memoryBanks.length)
+    reminderToRedistribute = maxBlocks % memoryBanks.length
+    higherIndex = (maxBlockIndex + reminderToRedistribute) % memoryBanks.length
+
+    for (let i = 0; i < memoryBanks.length; i++) {
+      memoryBanks[i] += blocksToRedistribute
       // spread the reminder
       if (
-        (higherIndex > index && i > index && i <= higherIndex) ||
-        (higherIndex < index && (i > index || i <= higherIndex))
+        (higherIndex > maxBlockIndex && i > maxBlockIndex && i <= higherIndex) ||
+        (higherIndex < maxBlockIndex && (i > maxBlockIndex || i <= higherIndex))
       ) {
-        data[i]++
+        memoryBanks[i]++
       }
-      // remove the value from the memory slot
-      if (i === index) data[i] -= value
-      // build a string from memory config
-      memoryString += data[i]
+      // remove the blocks from the memory slot that had the highest number of blocks
+      if (i === maxBlockIndex) memoryBanks[i] -= maxBlocks
     }
-    memory.has(memoryString) ? (done = true) : memory.add(memoryString)
-  } while (!done)
+    memoryKey = memoryBanks.join(',')
+    if (memory.has(memoryKey)) break
+    memory.add(memoryKey)
+  }
 
   part1 = memory.size + 1
-  // spread set into array so I can get the indexOf. Way faster with a set than with an array
-  part2 = part1 - ([...memory].indexOf(memoryString) + 1)
+  // set preserves insert order, so I can know in which cycle the first memory key was added
+  part2 = part1 - ([...memory].indexOf(memoryKey) + 1)
 
   return { part1, part2 }
 }

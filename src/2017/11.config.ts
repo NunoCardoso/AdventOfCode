@@ -5,14 +5,13 @@ let config: PuzzleConfig = {
     title: 'Hex Ed',
     year: 2017,
     day: 11,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'I guess step 2 can be optimized, to avoid repeat',
     difficulty: 2
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: [
     {
       id: 'test1',

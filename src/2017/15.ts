@@ -1,5 +1,5 @@
+import * as console from 'console'
 import { Params } from 'aoc.d'
-import { dec2bin } from 'util/conversion'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -7,57 +7,46 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let remainder = 2147483647
+  let A: bigint = 0n,
+    B: bigint = 0n
 
-  let generatorValues: Record<string, number> = {}
   for await (const line of lineReader) {
     const values = line.match(/Generator (.) starts with (\d+)/)
-    generatorValues[values[1]] = +values[2]
+    if (values[1] === 'A') A = BigInt(values[2])
+    else B = BigInt(values[2])
   }
 
-  const getCommonNumbers = (a: string[], b: string[]) => {
-    let common: number = 0
-    for (var i = 0; i < Math.min(a.length, b.length); i++) {
-      if (a[i] === b[i]) common++
-      else return common
-    }
-  }
+  const mod2147483647 = (x: bigint, factor: bigint): bigint => (x * factor) % 2147483647n
 
-  const generateValue = (value: number, generator: number) => (value * generator) % remainder
-
-  const solveFor = (iterations: number, part: string): number => {
-    let it = 0
-    let count = 0
-    let tempValues: Record<string, string[]> = { A: [], B: [] }
-    while (it < iterations) {
-      Object.keys(generatorValues).forEach((generator) => {
-        let newValue = NaN
-        if (part === 'part1') {
-          newValue = generateValue(generatorValues[generator], params.generator[generator])
-          generatorValues[generator] = newValue
-        } else {
-          while (Number.isNaN(newValue) || newValue % params.multiples[generator] !== 0) {
-            newValue = generateValue(generatorValues[generator], params.generator[generator])
-            generatorValues[generator] = newValue
-          }
-        }
-        // let newValue = (generatorValues[generator] * params.generator[generator] ) % remainder
-        // generatorValues[generator] = newValue
-        tempValues[generator] = dec2bin(newValue).toString().split('').reverse()
-      })
-      let commonNumbers = getCommonNumbers(tempValues['A'], tempValues['B'])!
-      if (commonNumbers >= 16) count++
-      it++
-      if (it % 1000000 === 0) console.log('it', it, 'count', count)
-    }
-    return count
+  // 2147483647 is 0x7FFFFFFF
+  /* const mod2147483647 =(g: bigint, factor: bigint): bigint => {
+    let prod = g * factor
+    g = (prod & 2147483647n) + (prod >> 31n);
+    return g >> 31n ? g - 2147483647n : g;
   }
-
-  if (!params.skipPart1) {
-    part1 = solveFor(params.iterations.part1, 'part1')
+*/
+  let _A = A,
+    _B = B
+  let iterations = 0
+  while (++iterations <= params.iterations.part1) {
+    _A = mod2147483647(_A, params.generatorBigInt.A)
+    _B = mod2147483647(_B, params.generatorBigInt.B)
+    if ((_A & 65535n) === (_B & 65535n)) part1++
+    if (iterations % 10000000 === 0) console.log('it', iterations, 'part1', part1)
   }
-  if (!params.skipPart2) {
-    part2 = solveFor(params.iterations.part2, 'part2')
+  iterations = 0
+  _A = A
+  _B = B
+
+  while (++iterations <= params.iterations.part2) {
+    do {
+      _A = mod2147483647(_A, params.generatorBigInt.A)
+    } while (_A & 3n)
+    do {
+      _B = mod2147483647(_B, params.generatorBigInt.B)
+    } while (_B & 7n)
+    if ((_A & 65535n) === (_B & 65535n)) part2++
+    if (iterations % 1000000 === 0) console.log('it', iterations, 'part2', part2)
   }
 
   return { part1, part2 }

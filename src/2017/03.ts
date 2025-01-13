@@ -1,6 +1,7 @@
 import { Params } from 'aoc.d'
 import { Location } from 'declarations'
 import { getKey } from 'util/location'
+import { range } from 'util/range'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -8,49 +9,53 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const getNextPoint = (direction: string, location: Location): Location => {
+  const getNextLocation = (direction: string, location: Location): Location => {
     if (direction === '>') return [location[0] + 1, location[1]]
     if (direction === '^') return [location[0], location[1] - 1]
     if (direction === '<') return [location[0] - 1, location[1]]
     return [location[0], location[1] + 1] // if (d === 'v')
   }
 
-  let lowerRightCorner = 1
-  let radius = 1
-  while (lowerRightCorner < params.value) {
-    radius++
-    lowerRightCorner = (radius * 2 - 1) * (radius * 2 - 1)
-  }
-  // the outer square is 4 sides of (radius - 1)
-  // find the side, then the distance is (radius - 1) plus distance from center
-  let lowerOtherCorner = lowerRightCorner
-  while (lowerOtherCorner > params.value) lowerOtherCorner -= (radius - 1) * 2
-  const diff = Math.abs(lowerOtherCorner + (radius - 1) - params.value)
-  part1 = radius - 1 + diff
-  log.debug('val', params.value, 'r', radius, 'd', part1, 'low', lowerOtherCorner, 'high', lowerRightCorner)
-
-  const memory: Map<string, number> = new Map()
-  let direction = 'v'
-  const nextDirection: Record<string, string> = { '>': '^', '^': '<', '<': 'v', v: '>' }
-  let point: Point = [0, 0]
-  let value = 1
-  memory.set('0,0', value)
-  while (value < params.value) {
-    let nextPoint = getNextPoint(nextDirection[direction], point)
-    if (memory.has(getKey(nextPoint))) nextPoint = getNextPoint(direction, point)
-    else direction = nextDirection[direction]
-    let sum = 0
-    for (let x = nextPoint[0] - 1; x <= nextPoint[0] + 1; x++) {
-      for (let y = nextPoint[1] - 1; y <= nextPoint[1] + 1; y++) {
-        const key = getKey([x, y])
-        if (memory.has(key)) sum += memory.get(key)!
-      }
+  const solvePart1 = () => {
+    let lowerRightCorner = 1
+    let radius = 1
+    while (lowerRightCorner < params.value) {
+      radius++
+      lowerRightCorner = (radius * 2 - 1) * (radius * 2 - 1)
     }
-    value = sum
-    point = nextPoint
-    memory.set(getKey(point), value)
-  }
-  part2 = value
 
+    let previousCorner = lowerRightCorner
+    while (previousCorner > params.value) previousCorner -= 2 * (radius - 1)
+    const distanceToCenterOfSquareSide = Math.abs(previousCorner + (radius - 1) - params.value)
+    return radius - 1 + distanceToCenterOfSquareSide
+  }
+
+  const solvePart2 = () => {
+    const memory: Map<string, number> = new Map()
+    let direction = 'v'
+    const nextDirection: Record<string, string> = { '>': '^', '^': '<', '<': 'v', v: '>' }
+    let location: Location = [0, 0]
+    let value = 1
+    memory.set(getKey(location), value)
+
+    while (value < params.value) {
+      let nextLocation = getNextLocation(nextDirection[direction], location)
+      if (memory.has(getKey(nextLocation))) nextLocation = getNextLocation(direction, location)
+      else direction = nextDirection[direction]
+      value = 0
+      for (let x of range(3, nextLocation[0] - 1)) {
+        for (let y of range(3, nextLocation[1] - 1)) {
+          const key = getKey([x, y])
+          if (memory.has(key)) value += memory.get(key)!
+        }
+      }
+      memory.set(getKey(nextLocation), value)
+      location = nextLocation
+    }
+    return value
+  }
+
+  part1 = solvePart1()
+  part2 = solvePart2()
   return { part1, part2 }
 }

@@ -6,10 +6,9 @@ let config: PuzzleConfig = {
     year: 2017,
     day: 15,
     result: 'unfinished',
-    status: 'unsolved',
-    speed: 'fast',
+    status: 'solved',
+    speed: 'slow',
     code: 'clean',
-    comment: 'I believe it is intentionally slow, 30sec on part1, need to find a pattern to make it <1s',
     difficulty: 4
   },
   logLevel: 'debug',
@@ -20,24 +19,26 @@ let config: PuzzleConfig = {
       part2: 309
     }
   },
+  mode: 'fastest',
   params: {
+    remainder: 2147483647n,
     iterations: {
       part1: 40000000,
       part2: 5000000
     },
-    multiples: {
-      A: 4,
-      B: 8
-    },
     generator: {
       A: 16807,
       B: 48271
+    },
+    generatorBigInt: {
+      A: 16807n,
+      B: 48271n
     }
   },
   prod: {
     answers: {
-      part1: 594,
-      part2: 328
+      //     part1: 594,
+      //     part2: 328
     }
   }
 }

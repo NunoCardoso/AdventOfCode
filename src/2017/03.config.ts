@@ -5,8 +5,8 @@ let config: PuzzleConfig = {
     title: 'Spiral Memory',
     year: 2017,
     day: 3,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
     difficulty: 1

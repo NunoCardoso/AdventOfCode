@@ -7,6 +7,26 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
+  const getNewOpened = (opened: number[], collected: Set<number>) => {
+    let newOpened: Set<number> = new Set()
+    opened.forEach((o) => {
+      tree[o].forEach((o2) => {
+        if (!collected.has(o2)) {
+          newOpened.add(o2)
+          collected.add(o2)
+        }
+      })
+    })
+    return [...newOpened]
+  }
+
+  const solveFor = (programId: number): Set<number> => {
+    const collected: Set<number> = new Set()
+    let opened = tree[programId]
+    while (opened.length > 0) opened = getNewOpened(opened, collected)
+    return collected
+  }
+
   let tree: Record<number, number[]> = {}
 
   for await (const line of lineReader) {
@@ -23,41 +43,17 @@ export default async (lineReader: any, params: Params) => {
       })
   }
 
-  const getNewOpened = (opened: number[], collected: Set<number>) => {
-    let newOpened: Set<number> = new Set()
-    opened.forEach((o) => {
-      tree[o].forEach((o2) => {
-        if (!collected.has(o2)) newOpened.add(o2)
-      })
-    })
-    newOpened.forEach((o) => collected.add(o))
-    return [...newOpened]
-  }
+  part1 = solveFor(0).size
 
-  const solveFor = (programId: number): Set<number> => {
-    const collected: Set<number> = new Set()
-    let opened = tree[programId]
-    while (opened.length > 0) {
-      opened = getNewOpened(opened, collected)
-    }
-    return collected
+  let uncollected = Object.keys(tree).map(Number)
+  let groups: number[] = []
+  while (uncollected.length > 0) {
+    let seed = uncollected.shift()!
+    groups.push(seed)
+    let collected = solveFor(seed)
+    uncollected = uncollected.filter((program) => !collected.has(program))
   }
-
-  if (!params.skipPart1) {
-    part1 = solveFor(0).size
-  }
-
-  if (!params.skipPart2) {
-    let uncollected = Object.keys(tree).map(Number)
-    let groups: number[] = []
-    while (uncollected.length > 0) {
-      let seed = uncollected.shift()!
-      groups.push(seed)
-      let collected = solveFor(seed)
-      uncollected = uncollected.filter((u) => !collected.has(u))
-    }
-    part2 = groups.length
-  }
+  part2 = groups.length
 
   return { part1, part2 }
 }
