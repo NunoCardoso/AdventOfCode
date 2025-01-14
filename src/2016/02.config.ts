@@ -1,4 +1,6 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
     title: 'Bathroom Security',
     year: 2016,
@@ -7,9 +9,8 @@ export default {
     status: 'solved',
     speed: 'fast',
     code: 'clean',
-    difficult: 1
+    difficulty: 1
   },
-  logLevel: 'info',
   test: {
     id: 'test',
     answers: {
@@ -24,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

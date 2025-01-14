@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '08',
     title: 'Memory Maneuver',
-    status: 'inprogress',
-    comment: '',
+    year: 2018,
+    day: 8,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 0
   },
   logLevel: 'debug',
@@ -22,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config

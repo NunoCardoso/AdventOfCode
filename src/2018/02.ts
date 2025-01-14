@@ -6,8 +6,8 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: string = ''
 
-  let threes = 0,
-    twos = 0
+  let threes = 0
+  let twos = 0
   let seenKeys: string[] = []
 
   const doMatch = (key1: string, key2: string) => key1.split('').filter((c, i) => c !== key2[i]).length <= 1

@@ -12,7 +12,6 @@ let config: PuzzleConfig = {
     tags: ['Path-finding'],
     difficulty: 2
   },
-  logLevel: 'info',
   params: {
     input: 'rrrbmfta'
   },

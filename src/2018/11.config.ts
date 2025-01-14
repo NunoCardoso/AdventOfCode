@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '11',
     title: 'Chronal Charge',
-    status: 'done',
-    comment: 'trick: using summed-area table, that was hard',
+    year: 2018,
+    day: 11,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 5
   },
   logLevel: 'info',
@@ -34,3 +38,5 @@ export default {
     }
   }
 }
+
+export default config

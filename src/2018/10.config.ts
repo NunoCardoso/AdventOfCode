@@ -1,11 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '10',
     title: 'The stars align',
-    status: 'done',
-    comment:
-      'Nice, the hardest was to come out with the heuristic, and the structure to gather stars, bounding box and step',
+    year: 2018,
+    day: 10,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
   logLevel: 'debug',
@@ -41,3 +44,5 @@ export default {
     }
   }
 }
+
+export default config

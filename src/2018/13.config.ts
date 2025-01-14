@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '13',
     title: 'Mine Cart Madness',
-    status: 'done',
-    comment: 'Damn missed the part where they move first by row. read the damn text',
+    year: 2018,
+    day: 13,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 4
   },
   logLevel: 'info',
@@ -36,3 +40,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -10,7 +10,6 @@ export default {
     difficulty: 2,
     tags: ['Regex']
   },
-  logLevel: 'info',
   test: [
     {
       id: 'test1',

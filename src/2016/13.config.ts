@@ -12,7 +12,6 @@ let config: PuzzleConfig = {
     difficulty: 2,
     tags: ['Dijkstra']
   },
-  logLevel: 'info',
   mode: 'fastest',
   test: {
     id: 'test',

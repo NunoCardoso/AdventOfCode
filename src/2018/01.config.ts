@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '01',
+    year: 2018,
+    day: 1,
     title: 'Chronal Calibration',
-    status: 'done',
-    comment: 'choke on part2 because didnt reat it. slow, could be optimized',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   logLevel: 'debug',
@@ -41,3 +45,5 @@ export default {
     }
   }
 }
+
+export default config

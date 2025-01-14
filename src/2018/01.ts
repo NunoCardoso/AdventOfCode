@@ -7,30 +7,19 @@ export default async (lineReader: any, params: Params) => {
   let part2: number | undefined
 
   let changes: number[] = []
-  let seenFrequencies: number[] = [0]
-  let index = 0
-  let result = 0
-
-  let checkPart2 = () => {
-    result += changes[index % changes.length]
-    if (!seenFrequencies.includes(result)) {
-      seenFrequencies.push(result)
-    } else {
-      part2 = result
-    }
-    index++
-  }
-
   for await (const line of lineReader) {
-    const value = Number(line)
-    part1 += value
-    changes.push(value)
-    checkPart2()
+    part1 += +line
+    changes.push(+line)
   }
+
+  let result = 0
+  let iterations = 0
+  let seenFrequencies: Set<number> = new Set()
 
   while (part2 === undefined) {
-    checkPart2()
+    result += changes[iterations++ % changes.length]
+    if (!seenFrequencies.has(result)) seenFrequencies.add(result)
+    else part2 = result
   }
-
   return { part1, part2 }
 }

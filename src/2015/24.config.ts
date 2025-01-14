@@ -12,7 +12,6 @@ let config: PuzzleConfig = {
     tags: ['Combination'],
     difficulty: 5
   },
-  logLevel: 'info',
   params: {
     compartments: {
       part1: 3,

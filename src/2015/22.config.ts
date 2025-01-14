@@ -12,7 +12,6 @@ let config: PuzzleConfig = {
     difficulty: 4,
     tags: ['Path-finding']
   },
-  logLevel: 'info',
   test: [
     {
       id: 'test1',

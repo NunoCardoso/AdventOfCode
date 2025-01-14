@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '03',
     title: 'No Matter How You Slice It',
-    status: 'done',
-    comment: 'easy, but wondered if area scaled up, how would I do it',
+    year: 2018,
+    day: 3,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   logLevel: 'debug',
@@ -28,3 +32,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -9,23 +9,21 @@ export default async (lineReader: any, params: Params) => {
   let polymer: string = ''
   for await (const line of lineReader) polymer = line
 
-  const canReact = (char1: string, char2: string) => char1 !== char2 && char1.toLowerCase() === char2.toLowerCase()
+  const solveFor = (polymer: string, uniqueUnits: string[]): string => {
+    let pattern = uniqueUnits.map((u) => u + u.toUpperCase() + '|' + u.toUpperCase() + u).join('|')
+    let re = new RegExp(`(${pattern})`, 'g')
+    let length = polymer.length
+    do {
+      length = polymer.length
+      polymer = polymer.replaceAll(re, '')
+    } while (polymer.length !== length)
 
-  const solveFor = (polymer: string): number => {
-    let newPolymer: string[] = []
-    for (let i = 0; i < polymer.length; i++) {
-      let char = polymer[i]
-      if (newPolymer.length > 0 && canReact(newPolymer[newPolymer.length - 1]?.[0], char)) {
-        newPolymer.pop()
-      } else {
-        newPolymer.push(char)
-      }
-    }
-    return newPolymer.length
+    return polymer
   }
 
   if (!params.skipPart1) {
-    part1 = solveFor(polymer)
+    let uniqueUnits = [...new Set(polymer.toLowerCase().split(''))]
+    part1 = solveFor(polymer, uniqueUnits).length
   }
   if (!params.skipPart2) {
     // going to Set then back to Array does unique filter
@@ -34,7 +32,8 @@ export default async (lineReader: any, params: Params) => {
     uniqueUnits.forEach((unit) => {
       let pattern = new RegExp(`[${unit}${unit.toUpperCase()}]`, 'g')
       let partialPolymer = polymer.replaceAll(pattern, '')
-      let thisMin = solveFor(partialPolymer)
+
+      let thisMin = solveFor(partialPolymer, uniqueUnits).length
       if (thisMin < minPolymerSize) minPolymerSize = thisMin
     })
 

@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '12',
     title: 'Subterranean Sustainability',
-    status: 'done',
-    comment: 'Clever way of making the puzzle to get the pattern and extrapolate to 50 billion',
+    year: 2018,
+    day: 12,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 4
   },
   logLevel: 'debug',
@@ -27,3 +31,5 @@ export default {
     }
   }
 }
+
+export default config

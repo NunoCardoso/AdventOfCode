@@ -12,7 +12,6 @@ let config: PuzzleConfig = {
     difficulty: 3,
     tags: ['Recursion']
   },
-  logLevel: 'info',
   test: [
     {
       id: 'test1',

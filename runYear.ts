@@ -205,11 +205,13 @@ const proceed = async () => {
   let f = fs.openSync(resultFileMD, 'w+')
   let f2 = fs.openSync(resultFileTXT, 'w+')
   let totalTime = 0
-
+  let currentPuzzle: PuzzleConfig
   Promise.all(puzzles.map(getPuzzle))
     .then(async (puzzles: PuzzleConfig[]) => {
+      // console.log('Puzzles ', puzzles)
       let results: PuzzleOutput[] = []
       for (let puzzle of puzzles) {
+        currentPuzzle = puzzle
         let res = (await aoc(puzzle!)) as PuzzleOutput
         results.push(res)
         console.clear()
@@ -221,6 +223,10 @@ const proceed = async () => {
 
       let mdOutput = getMdOutput(results, totalTime)
       fs.writeSync(f, mdOutput)
+    })
+    .catch((e) => {
+      console.error(currentPuzzle)
+      console.error(e)
     })
     .finally(() => {
       console.log('done')

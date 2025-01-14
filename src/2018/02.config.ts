@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '02',
     title: 'Inventory Management System',
-    status: 'done',
-    comment: 'A little harder to get the regex for part1, rest was ok',
+    year: 2018,
+    day: 2,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
   logLevel: 'debug',
@@ -29,3 +33,5 @@ export default {
     }
   }
 }
+
+export default config

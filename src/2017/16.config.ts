@@ -11,7 +11,6 @@ let config: PuzzleConfig = {
     code: 'clean',
     difficulty: 3
   },
-  logLevel: 'debug',
   test: {
     id: 'test',
     params: {

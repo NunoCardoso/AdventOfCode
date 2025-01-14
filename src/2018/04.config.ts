@@ -1,13 +1,17 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '04',
     title: 'Repose Record',
-    status: 'done',
-    comment: 'Can be optimized. A little hard on the maps',
+    year: 2018,
+    day: 4,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 3
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {
@@ -22,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config

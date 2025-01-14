@@ -9,7 +9,6 @@ export default {
     code: 'clean',
     difficulty: 3
   },
-  logLevel: 'info',
   test: {
     id: 'test',
     params: {

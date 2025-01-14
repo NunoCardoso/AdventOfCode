@@ -5,13 +5,12 @@ let config: PuzzleConfig = {
     title: 'Dueling Generators',
     year: 2017,
     day: 15,
-    result: 'unfinished',
+    result: 'finished',
     status: 'solved',
-    speed: 'slow',
+    speed: 'fast',
     code: 'clean',
     difficulty: 4
   },
-  logLevel: 'debug',
   test: {
     id: 'test',
     answers: {
@@ -37,8 +36,8 @@ let config: PuzzleConfig = {
   },
   prod: {
     answers: {
-      //     part1: 594,
-      //     part2: 328
+      part1: 594,
+      part2: 328
     }
   }
 }

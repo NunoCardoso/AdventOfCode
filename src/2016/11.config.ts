@@ -16,7 +16,6 @@ let config: PuzzleConfig = {
     show: false,
     end: true
   },
-  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

@@ -12,7 +12,6 @@ let config: PuzzleConfig = {
     tags: ['MD5'],
     difficulty: 3
   },
-  logLevel: 'info',
   test: {
     id: 'test',
     params: {

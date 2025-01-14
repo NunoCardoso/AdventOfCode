@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2018',
-    day: '05',
     title: 'Alchemical Reduction',
-    status: 'done',
-    comment: 'string too big for recursion, smart',
+    year: 2018,
+    day: 5,
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
   logLevel: 'debug',
@@ -22,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config
