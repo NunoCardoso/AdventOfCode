@@ -9,39 +9,23 @@ export default async (lineReader: any, params: Params) => {
   let delta: number = 0
   for await (const line of lineReader) delta = +line
 
-  const solveForPart1 = (): number => {
-    let path = [0]
-    let it = 0
-    let currentIndex = 0
-    while (it < params.iterations.part1) {
-      it++
-      currentIndex = ((currentIndex + delta) % path.length) + 1
-      path.splice(currentIndex, 0, it)
-      if (it % 100000 === 0) console.log('it', it)
-    }
-    return path[currentIndex + 1]
-  }
+  let positions = [0]
+  let positionsLength = 1
+  let iterations = 0
+  let currentIndexPart1 = 0
+  let currentIndexPart2 = 0
 
-  const solveForPart2 = (): number => {
-    let pathLength = 1
-    let it = 0
-    let currentIndex = 0
-    let numberAfter0 = -1
-    while (it < params.iterations.part2) {
-      it++
-      currentIndex = ((currentIndex + delta) % pathLength) + 1
-      if (currentIndex === 1) numberAfter0 = it
-      pathLength++
-    }
-    return numberAfter0
+  while (++iterations <= params.iterations.part1) {
+    currentIndexPart1 = ((currentIndexPart1 + delta) % positions.length) + 1
+    positions.splice(currentIndexPart1, 0, iterations)
   }
-
-  if (!params.skipPart1) {
-    part1 = solveForPart1()
+  iterations = 0
+  while (++iterations <= params.iterations.part2) {
+    currentIndexPart2 = ((currentIndexPart2 + delta) % positionsLength) + 1
+    if (currentIndexPart2 === 1) part2 = iterations
+    positionsLength++
   }
-  if (!params.skipPart2) {
-    part2 = solveForPart2()
-  }
+  part1 = positions[currentIndexPart1 + 1]
 
   return { part1, part2 }
 }

@@ -1,6 +1,6 @@
 import { Location } from '../declarations.d'
 
-export const lineIntersect = (a: [Point, Point], b: [Point, Point]): Point | undefined => {
+export const lineIntersect = (a: [Location, Location], b: [Location, Location]): Location | undefined => {
   // Check if none of the lines are of length 0
   if ((a[0][0] === a[1][0] && a[0][1] === a[1][1]) || (b[0][0] === b[1][0] && b[0][1] === b[1][1])) {
     return undefined

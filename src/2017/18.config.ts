@@ -5,11 +5,10 @@ let config: PuzzleConfig = {
     title: 'Duet',
     year: 2017,
     day: 18,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'Damn hard to make it right, the receive and send order was hard, so was pop() or shift()',
     difficulty: 4
   },
   logLevel: 'info',

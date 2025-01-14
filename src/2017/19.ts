@@ -1,23 +1,12 @@
 import { Params } from 'aoc.d'
-import { PointPlus, World } from 'declarations'
+import { LocationPlus, World } from 'declarations'
 
-type Packet = PointPlus<string>
+type Packet = LocationPlus<string>
 
-type WorldLocation = PointPlus<string>
+type WorldLocation = LocationPlus<string>
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
-
-  let world: World<string> = []
-  let rowIndex: number = 0
-  let start: Packet = [0, 0, 'v']
-  for await (const line of lineReader) {
-    if (rowIndex === 0) start = [0, line.indexOf('|'), 'v']
-    world.push(line.split(''))
-    rowIndex++
-  }
-
-  const isSame = (p: Packet | WorldLocation, p2: Packet | WorldLocation) => p[0] === p2[0] && p[1] === p2[1]
 
   const getWorldLocation = (world: World<string>, row: number, col: number): WorldLocation | null => {
     if (row < 0 || row >= world.length || col < 0 || col >= world[row].length) return null
@@ -62,19 +51,25 @@ export default async (lineReader: any, params: Params) => {
     return newPacketLocation
   }
 
-  const solveFor = (world: World<string>, location: Packet): [string, number] => {
-    let letters: string[] = []
-    let newLocation: Packet | null = global.structuredClone(location)
-    let iteration: number = 0
-    do {
-      location = newLocation
-      newLocation = move(location!, world, letters)
-      iteration++
-    } while (!!newLocation && !isSame(newLocation, location))
-    return [letters.join(''), iteration]
+  let world: World<string> = []
+  let rowIndex: number = 0
+  let location: Packet | null = [0, 0, 'v']
+
+  for await (const line of lineReader) {
+    if (rowIndex === 0) location = [0, line.indexOf('|'), 'v']
+    world.push(line.split(''))
+    rowIndex++
   }
 
-  const [part1, part2] = solveFor(world, start)
+  let letters: string[] = []
+  //let newLocation: Packet | null  = [...location]
+  let iteration: number = 0
+  do {
+    location = move(location!, world, letters)
+    iteration++
+  } while (!!location)
+  let part1 = letters.join('')
+  let part2 = iteration
 
   return { part1, part2 }
 }

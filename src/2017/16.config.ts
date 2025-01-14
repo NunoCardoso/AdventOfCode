@@ -5,11 +5,10 @@ let config: PuzzleConfig = {
     title: 'Permutation Promenade',
     year: 2017,
     day: 16,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: 'typical have-to-find-a-delta so I can skip 10000000 iterations. Nice',
     difficulty: 3
   },
   logLevel: 'debug',

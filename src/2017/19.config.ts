@@ -5,12 +5,11 @@ let config: PuzzleConfig = {
     title: 'A Series of Tubes',
     year: 2017,
     day: 19,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment: '',
-    difficulty: 0
+    difficulty: 3
   },
   logLevel: 'info',
   test: {

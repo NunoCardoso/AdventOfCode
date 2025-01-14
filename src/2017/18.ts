@@ -13,18 +13,10 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let instructions: string[] = []
-  let registers: Set<string> = new Set()
-  for await (const line of lineReader) {
-    let instrArray = line.split(' ')
-    if (instrArray[1].match(/\D+/)) registers.add(instrArray[1])
-    instructions.push(instrArray)
-  }
-
   const numberOrString = (target: string, values: Record<string, number>): number =>
     target.match(/\d+/) ? +target : values[target]
 
-  const solveForPart1 = (instructions: string[]): number => {
+  const solveForPart1 = (instructions: string[], registers: Set<string>): number => {
     let values: Record<string, number> = Object.fromEntries([...registers].map((r) => [r, 0]))
     let index = 0
     let soundPlayed: number = Number.NaN
@@ -50,7 +42,7 @@ export default async (lineReader: any, params: Params) => {
     return soundPlayed
   }
 
-  const solveForPart2 = (instructions: string[]): number => {
+  const solveForPart2 = (instructions: string[], registers: Set<string>): number => {
     let count = 0
     let programs: [Program, Program] = [
       {
@@ -84,49 +76,41 @@ export default async (lineReader: any, params: Params) => {
           if (command === 'snd') {
             programs[otherProgramIndex].queue.push(numberOrString(source, p.values))
             if (programs[otherProgramIndex].status === 'waiting') programs[otherProgramIndex].status = 'processing'
-            p.index++
             if (p.id === 1) count++
           }
-          if (command === 'set') {
-            p.values[source] = numberOrString(target, p.values)
-            p.index++
-          }
-          if (command === 'add') {
-            p.values[source] += numberOrString(target, p.values)
-            p.index++
-          }
-          if (command === 'mul') {
-            p.values[source] *= numberOrString(target, p.values)
-            p.index++
-          }
-          if (command === 'mod') {
-            p.values[source] %= numberOrString(target, p.values)
-            p.index++
-          }
+          if (command === 'set') p.values[source] = numberOrString(target, p.values)
+          if (command === 'add') p.values[source] += numberOrString(target, p.values)
+          if (command === 'mul') p.values[source] *= numberOrString(target, p.values)
+          if (command === 'mod') p.values[source] %= numberOrString(target, p.values)
           if (command === 'rcv') {
             // source has to be a string. can't receive a number
             if (p.queue.length > 0) {
               p.values[source] = p.queue.shift()!
-              p.index++
             } else {
-              p.status = 'waiting'
+              return (p.status = 'waiting')
             }
           }
           if (command === 'jgz') {
             let amount = numberOrString(source, p.values)
-            p.index += amount > 0 ? +numberOrString(target, p.values) : 1
+            p.index += amount > 0 ? numberOrString(target, p.values) : 1
+            return
           }
+          p.index++
         })
     }
     return count
   }
 
-  if (!params.skipPart1) {
-    part1 = solveForPart1(instructions)
+  let instructions: string[] = []
+  let registers: Set<string> = new Set()
+  for await (const line of lineReader) {
+    let instrArray = line.split(' ')
+    if (instrArray[1].match(/\D+/)) registers.add(instrArray[1])
+    instructions.push(instrArray)
   }
-  if (!params.skipPart2) {
-    part2 = solveForPart2(instructions)
-  }
+
+  if (!params.skipPart1) part1 = solveForPart1(instructions, registers)
+  if (!params.skipPart2) part2 = solveForPart2(instructions, registers)
 
   return { part1, part2 }
 }

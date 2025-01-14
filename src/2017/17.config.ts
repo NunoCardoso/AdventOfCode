@@ -5,12 +5,10 @@ let config: PuzzleConfig = {
     title: 'Spinlock',
     year: 2017,
     day: 17,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    comment:
-      'Yeah, optimizing part 2 is needed, luckily 0 always stays on index 0 so I can do the calculation without having to keep an array',
     difficulty: 4
   },
   logLevel: 'debug',
