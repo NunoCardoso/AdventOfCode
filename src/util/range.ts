@@ -11,4 +11,7 @@ export const mergeRange = (ranges: Array<Range>, doAdjacents: boolean = true) =>
   return result
 }
 
-export const range = (size: number, startAt: number = 0): number[] => [...Array(size).keys()].map((i) => i + startAt)
+export const range = (size: number, startAt: number = 0): number[] =>
+  Array(size)
+    .fill(0)
+    .map((_, i) => i + startAt)

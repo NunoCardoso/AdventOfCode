@@ -2,9 +2,9 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Binary Diagnostic',
     year: 2021,
     day: 3,
-    title: 'Binary Diagnostic',
     result: 'finished',
     status: 'solved',
     speed: 'fast',

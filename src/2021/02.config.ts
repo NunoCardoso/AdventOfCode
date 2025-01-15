@@ -2,9 +2,9 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Dive!',
     year: 2021,
     day: 2,
-    title: 'Dive!',
     result: 'finished',
     status: 'solved',
     speed: 'fast',

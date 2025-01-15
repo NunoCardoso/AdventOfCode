@@ -1,6 +1,5 @@
 import { Params } from 'aoc.d'
-import { range } from 'lodash'
-
+import { range } from 'util/range'
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 

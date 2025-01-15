@@ -2,14 +2,13 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Giant Squid',
     year: 2021,
     day: 4,
-    title: 'Giant Squid',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'verbose but very quick because I used indexes to make sure I check only bingo cards with valid numbers',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
   logLevel: 'info',

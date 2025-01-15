@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
-import { range } from 'lodash'
-import { Location, World } from '../declarations'
+import { range } from 'util/range'
+import { Location, World } from '../declarations.d'
 
 export const getPowerLevel = (row: number, col: number, serial: number): number =>
   (Math.floor((((row + 10) * col + serial) * (row + 10)) / 100) % 10) - 5
@@ -16,14 +16,11 @@ export const getPowerLevelSumTable = (
   return (
     (powerLevelSumTable[row - 1][col - 1] ?? 0) +
     (powerLevelGrid[row][col] ?? 0) +
-    range(0, row).reduce(
+    range(row).reduce(
       (acc, _row) => acc + (_row === 0 || col === 0 ? 0 : getPowerLevel(_row, col, gridSerialInput)),
       0
     ) +
-    range(0, col).reduce(
-      (acc, _col) => acc + (row === 0 || _col === 0 ? 0 : getPowerLevel(row, _col, gridSerialInput)),
-      0
-    )
+    range(col).reduce((acc, _col) => acc + (row === 0 || _col === 0 ? 0 : getPowerLevel(row, _col, gridSerialInput)), 0)
   )
 }
 

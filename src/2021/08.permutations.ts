@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { Permutation } from 'js-combinatorics'
+import { permutation } from 'util/permutation'
 
 type Digit = {
   source: string
@@ -52,7 +52,7 @@ export default async (lineReader: any, params: Params) => {
   data.forEach((line: Puzzle) => {
     let validPermutation: Array<string> | undefined
     let leftCode: Array<number> | undefined
-    const permutations: Array<Array<string>> = new Permutation(['N', 'NW', 'NE', 'C', 'SW', 'SE', 'S']).toArray()
+    const permutations: Array<Array<string>> = permutation(['N', 'NW', 'NE', 'C', 'SW', 'SE', 'S'])
 
     permutations: for (let x = 0; x < permutations.length; x++) {
       leftCode = []

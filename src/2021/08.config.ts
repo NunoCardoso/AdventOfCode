@@ -2,15 +2,15 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Seven Segment Search',
     year: 2021,
     day: 8,
-    title: 'Seven Segment Search',
     result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    status: 'solved',
+    speed: 'fast',
+    code: 'dirty',
+    difficulty: 3
   },
-  mode: 'noperm',
   test: {
     id: 'test',
     answers: {

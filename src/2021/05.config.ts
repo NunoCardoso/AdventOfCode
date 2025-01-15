@@ -2,14 +2,13 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Hydrothermal Venture',
     year: 2021,
     day: 5,
-    title: 'Hydrothermal Venture',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'I am collecting 2 data sets, one for each part, while input parsing',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   test: {
