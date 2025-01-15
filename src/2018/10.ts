@@ -4,21 +4,11 @@ import { BoundingBox } from '../declarations'
 type Star = [number, number, number, number]
 
 type Step = [Star[], [BoundingBox, number], number]
-
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: string = ''
   let part2: number = 0
-
-  let stars: Star[] = []
-
-  for await (const line of lineReader) {
-    const [, pX, pY, vX, vY] = line
-      .match(/position=<\s*([^\s]+),\s*([^\s]+)> velocity=<\s*([^\s]+),\s*([^\s]+)>/)
-      .map(Number)
-    stars.push([pX, pY, vX, vY])
-  }
 
   const getBoundingBoxArea = (boundingBox: BoundingBox): number =>
     (boundingBox[1][0] - boundingBox[0][0]) * (boundingBox[1][1] - boundingBox[0][1])
@@ -68,13 +58,21 @@ export default async (lineReader: any, params: Params) => {
   const solveFor = (initialStars: Star[]): Step => {
     let currentStep: Step = [[...initialStars], getBoundingBox(initialStars), 0]
     let previousStep: Step | null = null
-
     while (previousStep === null || previousStep[1][1] > currentStep[1][1]) {
       previousStep = currentStep
       currentStep = runStars(previousStep)
     }
-    log.debug('done', render(currentStep), previousStep[1][1], currentStep[1][1])
+    if (params.ui?.show) log.info(render(currentStep))
     return previousStep!
+  }
+
+  let stars: Star[] = []
+
+  for await (const line of lineReader) {
+    const [, pX, pY, vX, vY] = line
+      .match(/position=<\s*([^\s]+),\s*([^\s]+)> velocity=<\s*([^\s]+),\s*([^\s]+)>/)
+      .map(Number)
+    stars.push([pX, pY, vX, vY])
   }
 
   const resultStep = solveFor(stars)

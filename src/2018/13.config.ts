@@ -5,8 +5,8 @@ let config: PuzzleConfig = {
     title: 'Mine Cart Madness',
     year: 2018,
     day: 13,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
     difficulty: 4
@@ -20,14 +20,12 @@ let config: PuzzleConfig = {
   test: [
     {
       id: 'test1',
-      skip: 'part2',
       answers: {
         part1: '7,3'
       }
     },
     {
       id: 'test2',
-      skip: 'part1',
       answers: {
         part2: '6,4'
       }

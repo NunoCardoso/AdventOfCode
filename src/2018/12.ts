@@ -66,7 +66,7 @@ export default async (lineReader: any, params: Params) => {
       }
 
       if (nextState.join('') === currentState.join('')) {
-        console.log('Locked at iterations', iterations)
+        log.debug('Locked at iterations', iterations)
         locked = true
       }
 
@@ -81,24 +81,16 @@ export default async (lineReader: any, params: Params) => {
       )
     }
 
-    // part1
     if (!locked) {
       return currentState.reduce((acc, val, it) => acc + (val === '#' ? it + negativeStateShift : 0), 0)
     }
 
-    // part2
-    // at iteration 126, I am getting the same result, shifted 1 place to the right (index at 47)
-    // so at iteration 50.000.000.000, I should have a negative shift of 50.000.000.000 + 47 - 126
     let newNegativeStateShift = maxIterations + negativeStateShift - iterations
     return currentState.reduce((acc, val, it) => acc + (val === '#' ? it + newNegativeStateShift : 0), 0)
   }
 
-  if (!params.skipPart1) {
-    part1 = solveFor(initialState, params.generations.part1)
-  }
-  if (!params.skipPart2) {
-    part2 = solveFor(initialState, params.generations.part2)
-  }
+  part1 = solveFor(initialState, params.generations.part1)
+  part2 = solveFor(initialState, params.generations.part2)
 
   return { part1, part2 }
 }

@@ -5,8 +5,8 @@ let config: PuzzleConfig = {
     title: 'The stars align',
     year: 2018,
     day: 10,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
     difficulty: 2

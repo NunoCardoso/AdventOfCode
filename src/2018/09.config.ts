@@ -2,7 +2,7 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
-    title: '',
+    title: 'Marble Mania',
     year: 2018,
     day: 9,
     result: 'finished',

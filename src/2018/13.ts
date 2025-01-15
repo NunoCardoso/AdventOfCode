@@ -1,14 +1,14 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
 import { waitForKey } from 'util/promise'
-import { Point, World } from '../declarations'
+import { Location, World } from '../declarations'
 
 type Direction = '<' | '>' | '^' | 'v'
 
 type Turn = 'left' | 'straight' | 'right'
 type Cart = {
   id: number
-  location: Point
+  location: Location
   direction: Direction
   nextTurn: Turn
   active: boolean
@@ -18,9 +18,6 @@ export default async (lineReader: any, params: Params) => {
 
   let part1: string = ''
   let part2: string = ''
-
-  let world: World<string> = []
-  let carts: Cart[] = []
 
   const replaceCharacter = (world: World<string>, rowIndex: number, colIndex: number) => {
     // need to replace the value, let's assume it can be |, - or +
@@ -39,23 +36,6 @@ export default async (lineReader: any, params: Params) => {
     //if (trackOnRight && trackOnLeft && trackOnTop && trackOnBottom)
     return '+'
   }
-
-  for await (const line of lineReader) world.push(line.split(''))
-
-  world.forEach((row, rowIndex) => {
-    row.forEach((cell, colIndex) => {
-      if (['<', '>', 'v', '^'].includes(cell)) {
-        carts.push({
-          id: carts.length,
-          location: [rowIndex, colIndex],
-          direction: cell as Direction,
-          nextTurn: 'left',
-          active: true
-        })
-        world[rowIndex][colIndex] = replaceCharacter(world, rowIndex, colIndex)
-      }
-    })
-  })
 
   const printWorld = (world: World<string>, carts: Cart[], previousCarts: Cart[]) => {
     world.forEach((row, rowIndex) => {
@@ -80,7 +60,7 @@ export default async (lineReader: any, params: Params) => {
     return values[(values.indexOf(turn) + 1) % values.length]
   }
 
-  const point2string = (p: Point): string => p[1] + ',' + p[0]
+  const point2string = (p: Location): string => p[1] + ',' + p[0]
 
   const move = (world: World<string>, cart: Cart) => {
     let newTrack
@@ -145,31 +125,29 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const solveFor = (world: World<string>, carts: Cart[]): string => {
-    let colisionPoint: string | undefined = undefined
+    let colisionLocation: string | undefined = undefined
     let cartLocations: Record<string, number> = {}
     carts.forEach((cart) => (cartLocations[point2string(cart.location)] = cart.id))
-    while (!colisionPoint) {
+    while (!colisionLocation) {
       carts.forEach((cart) => {
         delete cartLocations[point2string(cart.location)]
         move(world, cart)
         let newLocation = point2string(cart.location)
-        if (cartLocations[newLocation] !== undefined) colisionPoint = newLocation
+        if (cartLocations[newLocation] !== undefined) colisionLocation = newLocation
         else cartLocations[newLocation] = cart.id
       })
     }
-    return colisionPoint
+    return colisionLocation
   }
 
-  const solveForPart2 = async (world: World<string>, carts: Cart[]): Promise<string> => {
+  const solveForPart2 = (world: World<string>, carts: Cart[]): string => {
     let cartLocations: Record<string, number[]> = {}
     carts.forEach((cart) => (cartLocations[point2string(cart.location)] = [cart.id]))
     let answer = undefined
     let previousCarts: Cart[] = []
     while (!answer) {
-      //log.debug('carts', carts.map((c) => c.id))
       if (params.ui?.show && params.ui?.during) {
         printWorld(world, carts, previousCarts)
-        if (params.ui?.keypress) await waitForKey()
         previousCarts = global.structuredClone(carts)
       }
 
@@ -213,15 +191,42 @@ export default async (lineReader: any, params: Params) => {
         answer = point2string(carts[0].location)
       }
     }
-    // @ts-ignore
     return answer
   }
 
+  let worldPart1: World<string> = []
+  let worldPart2: World<string> = []
+  let cartsPart1: Cart[] = []
+  let cartsPart2: Cart[] = []
+
+  for await (const line of lineReader) {
+    worldPart1.push(line.split(''))
+    worldPart2.push(line.split(''))
+  }
+
+  worldPart1.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      if (['<', '>', 'v', '^'].includes(cell)) {
+        let cart: Cart = {
+          id: cartsPart1.length,
+          location: [rowIndex, colIndex],
+          direction: cell as Direction,
+          nextTurn: 'left',
+          active: true
+        }
+        cartsPart1.push({ ...cart })
+        cartsPart2.push({ ...cart })
+        worldPart1[rowIndex][colIndex] = replaceCharacter(worldPart1, rowIndex, colIndex)
+        worldPart2[rowIndex][colIndex] = replaceCharacter(worldPart2, rowIndex, colIndex)
+      }
+    })
+  })
+
   if (!params.skipPart1) {
-    part1 = solveFor(global.structuredClone(world), global.structuredClone(carts))
+    part1 = solveFor(worldPart1, cartsPart1)
   }
   if (!params.skipPart2) {
-    part2 = await solveForPart2(world, carts)
+    part2 = solveForPart2(worldPart2, cartsPart2)
   }
 
   return { part1, part2 }

@@ -5,13 +5,13 @@ let config: PuzzleConfig = {
     title: 'Subterranean Sustainability',
     year: 2018,
     day: 12,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
     difficulty: 4
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {

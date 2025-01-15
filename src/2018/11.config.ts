@@ -5,8 +5,8 @@ let config: PuzzleConfig = {
     title: 'Chronal Charge',
     year: 2018,
     day: 11,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
     difficulty: 5
@@ -14,6 +14,9 @@ let config: PuzzleConfig = {
   logLevel: 'info',
   test: [
     {
+      params: {
+        input: 18
+      },
       id: 'test1',
       answers: {
         part1: '33,45',
@@ -21,6 +24,9 @@ let config: PuzzleConfig = {
       }
     },
     {
+      params: {
+        input: 42
+      },
       id: 'test2',
       answers: {
         part1: '21,61',
@@ -29,6 +35,7 @@ let config: PuzzleConfig = {
     }
   ],
   params: {
+    input: 7400,
     size: 300
   },
   prod: {
