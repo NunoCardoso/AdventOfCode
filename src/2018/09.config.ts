@@ -5,12 +5,14 @@ let config: PuzzleConfig = {
     title: '',
     year: 2018,
     day: 9,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    difficulty: 5
+    difficulty: 5,
+    tags: ['Map-based-linked-lists']
   },
+  mode: 'fastest',
   logLevel: 'debug',
   test: [
     {

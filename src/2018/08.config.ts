@@ -5,11 +5,11 @@ let config: PuzzleConfig = {
     title: 'Memory Maneuver',
     year: 2018,
     day: 8,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
     code: 'clean',
-    difficulty: 0
+    difficulty: 3
   },
   logLevel: 'debug',
   test: {

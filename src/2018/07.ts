@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { Combination } from 'js-combinatorics'
+import { combination } from 'util/combination'
 
 type WorkerTask = { time: number; task: string } | null
 type Workers = Record<string, WorkerTask>
@@ -26,48 +26,6 @@ export default async (lineReader: any, params: Params) => {
   let part2: number | undefined = 0
 
   let letterIndex = '_ABCDEFGHIJKLMNOPQRSTUVWXYZ' // underscore to add +1 on index
-  const taskXisFollowedByTaskY: Record<string, string[]> = {}
-  const taskXisPrecededByTaskY: Record<string, string[]> = {}
-
-  let taskList: string[] = []
-
-  for await (const line of lineReader) {
-    const [, source, target] = line.match(/Step (.+) must be finished before step (.+) can begin./)
-    if (!taskXisFollowedByTaskY[source]) taskXisFollowedByTaskY[source] = [target]
-    else taskXisFollowedByTaskY[source].push(target)
-    if (!taskXisPrecededByTaskY[target]) taskXisPrecededByTaskY[target] = [source]
-    else taskXisPrecededByTaskY[target].push(source)
-    if (!taskList.includes(source)) taskList.push(source)
-    if (!taskList.includes(target)) taskList.push(target)
-  }
-
-  const firstTask = taskList.find((task) => !taskXisPrecededByTaskY[task])!
-
-  const solvePart1 = () => {
-    // the first task has no preceding tasks
-    const doneTasks = [firstTask]
-    let pendingTasks = taskXisFollowedByTaskY[firstTask]
-
-    while (pendingTasks.length > 0) {
-      // get more pending tasks that have all preceding tasks done
-      // I only need the first one (as they are already in alphabetical order)
-      let doableTask = pendingTasks.find((t) =>
-        taskXisPrecededByTaskY[t].every((dependentT) => doneTasks.includes(dependentT))
-      )
-
-      if (doableTask) {
-        // take it off from pending tasks, put it to done
-        pendingTasks = pendingTasks.filter((t) => t !== doableTask)
-        doneTasks.push(doableTask)
-        // get more pending tasks (if not there)
-        taskXisFollowedByTaskY[doableTask]?.forEach((newTask) => {
-          if (!pendingTasks.includes(newTask)) pendingTasks.push(newTask)
-        })
-        pendingTasks.sort((a, b) => a.localeCompare(b))
-      }
-    }
-    return doneTasks.join('')
-  }
 
   const timeToDoTask = (task: string) => params.costPerStep + letterIndex.indexOf(task)
 
@@ -99,7 +57,6 @@ export default async (lineReader: any, params: Params) => {
           if (!doableTasks.includes(t)) doableTasks.push(t)
         })
     })
-    //log.debug('get doable tasks for ', doableTasks)
     return doableTasks
   }
 
@@ -162,16 +119,13 @@ export default async (lineReader: any, params: Params) => {
       ]
 
     // if there are doable tasks, let's assign them to idle workers
-    let combinations: string[][]
-
     // if less doable tasks than workers, just push all tasks.
-    if (doableTasks.length <= nextIdleWorkers.length) {
-      combinations = [doableTasks.slice(0, nextIdleWorkers.length)]
-    } else {
-      // make combinations if there are more tasks than workers
-      combinations = new Combination(doableTasks.join(''), nextIdleWorkers.length).toArray()
-    }
-    // console.log('\ncombinations', combinations, 'idle workers', nextIdleWorkers)
+    // if not, make combinations if there are more tasks than workers
+    let combinations: string[][] =
+      doableTasks.length <= nextIdleWorkers.length
+        ? [doableTasks.slice(0, nextIdleWorkers.length)]
+        : combination(doableTasks, nextIdleWorkers.length)
+
     return combinations.map((combination) => {
       let newWorkers: Workers = {}
       let assignedTasks: string[] = []
@@ -200,7 +154,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   const doDijkstra = (opened: Path[], data: Data) => {
-    const path: Path = opened.splice(-1)[0]
+    const path: Path = opened.pop()!
 
     log.debug(
       '=== Dijkstra === opened',
@@ -216,13 +170,39 @@ export default async (lineReader: any, params: Params) => {
         (typeof data.path[data.path.length - 1]?.time === 'number' &&
           path[path.length - 1].time < data.path[data.path.length - 1]?.time)
       ) {
-        log.info('got lowest', path[path.length - 1].time, printPath(path))
+        log.debug('got lowest', path[path.length - 1].time, printPath(path))
         data.path = path
       }
       return
     }
 
     getNewPaths(path)?.forEach((newPath) => opened.push(newPath))
+  }
+
+  const solvePart1 = () => {
+    // the first task has no preceding tasks
+    const doneTasks = [firstTask]
+    let pendingTasks = taskXisFollowedByTaskY[firstTask]
+
+    while (pendingTasks.length > 0) {
+      // get more pending tasks that have all preceding tasks done
+      // I only need the first one (as they are already in alphabetical order)
+      let doableTask = pendingTasks.find((t) =>
+        taskXisPrecededByTaskY[t].every((dependentT) => doneTasks.includes(dependentT))
+      )
+
+      if (doableTask) {
+        // take it off from pending tasks, put it to done
+        pendingTasks = pendingTasks.filter((t) => t !== doableTask)
+        doneTasks.push(doableTask)
+        // get more pending tasks (if not there)
+        taskXisFollowedByTaskY[doableTask]?.forEach((newTask) => {
+          if (!pendingTasks.includes(newTask)) pendingTasks.push(newTask)
+        })
+        pendingTasks.sort((a, b) => a.localeCompare(b))
+      }
+    }
+    return doneTasks.join('')
   }
 
   const solvePart2 = () => {
@@ -248,25 +228,30 @@ export default async (lineReader: any, params: Params) => {
       ]
     ]
 
-    let iterations = 0
-    while (openedPaths.length > 0) {
-      doDijkstra(openedPaths, data)
-      if (iterations % 100 === 0) {
-        log.info('it', iterations, 'opened', openedPaths.length)
-        iterations++
-      }
-    }
-    log.info('Got lowest', data.path![data.path!.length - 1]?.time, printPath(data.path!))
+    while (openedPaths.length > 0) doDijkstra(openedPaths, data)
+    log.debug('Got lowest', data.path![data.path!.length - 1]?.time, printPath(data.path!))
     return data.path![data.path!.length - 1]?.time
   }
 
-  if (!params.skipPart1) {
-    part1 = solvePart1()
+  const taskXisFollowedByTaskY: Record<string, string[]> = {}
+  const taskXisPrecededByTaskY: Record<string, string[]> = {}
+
+  let taskList: string[] = []
+
+  for await (const line of lineReader) {
+    const [, source, target] = line.match(/Step (.+) must be finished before step (.+) can begin./)
+    if (!taskXisFollowedByTaskY[source]) taskXisFollowedByTaskY[source] = [target]
+    else taskXisFollowedByTaskY[source].push(target)
+    if (!taskXisPrecededByTaskY[target]) taskXisPrecededByTaskY[target] = [source]
+    else taskXisPrecededByTaskY[target].push(source)
+    if (!taskList.includes(source)) taskList.push(source)
+    if (!taskList.includes(target)) taskList.push(target)
   }
 
-  if (!params.skipPart2) {
-    part2 = solvePart2()
-  }
+  const firstTask = taskList.find((task) => !taskXisPrecededByTaskY[task])!
+
+  part1 = solvePart1()
+  part2 = solvePart2()
 
   return { part1, part2 }
 }
