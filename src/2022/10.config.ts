@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '10',
+    year: 2022,
+    day: 10,
     title: 'Cathode-Ray Tube',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Ugly output but it works, functional puzzle where we do the sums while parsing input'
   },
   params: {
@@ -36,3 +41,5 @@ export default {
     }
   }
 }
+
+export default config

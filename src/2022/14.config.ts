@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '14',
+    year: 2022,
+    day: 14,
     title: 'Regolith Reservoir',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment:
       'The hardest part is to get used to x, y coords instead of row, col. Not the fastest solution, as I ' +
       'do drop sand point by point, but it is fast enough'
@@ -31,3 +36,5 @@ export default {
     }
   }
 }
+
+export default config

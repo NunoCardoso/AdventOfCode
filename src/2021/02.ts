@@ -1,35 +1,36 @@
 // action, amount
-type Coord = [string, number]
+type Command = [string, number]
 
 export default async (lineReader: any) => {
-  const data: Array<Coord> = []
+  const commands: Command[] = []
 
   for await (const line of lineReader) {
     const [left, right] = line.split(' ')
-    data.push([left, +right])
+    commands.push([left, +right])
   }
 
-  const solveFor = (mode: string) => {
-    let distance: number = 0
-    let depth: number = 0
-    let aim: number = 0
-    data.forEach((coord) => {
-      if (coord[0] === 'forward') {
-        distance += coord[1]
-        if (mode === 'part2') depth += coord[1] * aim
-      } else if (coord[0] === 'up') {
-        if (mode === 'part2') aim += -1 * coord[1]
-        else depth += -1 * coord[1]
-      } else {
-        if (mode === 'part2') aim += coord[1]
-        else depth += coord[1]
-      }
-    })
-    return depth * distance
+  let distance: number = 0
+  let depthPart1: number = 0
+  let depthPart2: number = 0
+  let aim: number = 0
+
+  for (let command of commands) {
+    if (command[0] === 'forward') {
+      distance += command[1]
+      depthPart2 += command[1] * aim
+    }
+    if (command[0] === 'up') {
+      aim += -1 * command[1]
+      depthPart1 += -1 * command[1]
+    }
+    if (command[0] === 'down') {
+      aim += command[1]
+      depthPart1 += command[1]
+    }
   }
 
   return {
-    part1: solveFor('part1'),
-    part2: solveFor('part2')
+    part1: depthPart1 * distance,
+    part2: depthPart2 * distance
   }
 }

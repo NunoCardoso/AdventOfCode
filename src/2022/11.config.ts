@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '11',
+    year: 2022,
+    day: 11,
     title: 'Monkey in the Middle',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'First puzzle using the multiple common denominator to extrapolate results'
   },
   params: {
@@ -26,3 +31,5 @@ export default {
     }
   }
 }
+
+export default config

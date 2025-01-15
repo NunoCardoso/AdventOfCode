@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '14',
+    year: 2024,
+    day: 14,
     title: 'Restroom Redoubt',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Nice heuristic to see if I can detect a picture on part 2, nice to see if AI can do it',
     difficulty: 3
   },
@@ -32,3 +37,5 @@ export default {
     }
   }
 }
+
+export default config

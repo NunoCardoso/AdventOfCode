@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '03',
+    year: 2024,
+    day: 3,
     title: 'Mull It Over',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Nice that I still remember OR regexes, really helps a lot here',
     difficulty: 1
   },
@@ -29,3 +34,5 @@ export default {
     }
   }
 }
+
+export default config

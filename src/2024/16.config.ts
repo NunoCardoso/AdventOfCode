@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '16',
+    year: 2024,
+    day: 16,
     title: 'Reindeer Maze',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment:
       'This one took me a while to figure out the trick, which is to let opened paths that have same distance, ' +
       'and visited indexes with same distance, to keep going, not prune them.',
@@ -39,3 +44,5 @@ export default {
     }
   }
 }
+
+export default config

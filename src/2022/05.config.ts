@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '05',
+    year: 2022,
+    day: 5,
     title: 'Supply Stacks',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Good puzzle to play with splices.'
   },
   ui: {
@@ -23,3 +28,5 @@ export default {
     }
   }
 }
+
+export default config

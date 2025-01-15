@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '01',
+    year: 2024,
+    day: 1,
     title: 'Historian Hysteria',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Simple list sort and reduce. A little hiccup on unsure if distances can be negative',
     difficulty: 1
   },
@@ -22,3 +27,5 @@ export default {
     }
   }
 }
+
+export default config

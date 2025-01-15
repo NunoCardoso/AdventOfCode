@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '01',
+    year: 2022,
+    day: 1,
     title: 'Calorie Counting',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Functional puzzle, doing counts while parsing input, returning top counts'
   },
   test: {
@@ -20,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

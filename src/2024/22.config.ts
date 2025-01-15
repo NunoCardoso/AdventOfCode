@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '22',
+    year: 2024,
+    day: 22,
     title: 'Monkey Market',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment:
       'Not hard but hard to comprehend the whole thing. Had trouble separating price from price diff from' +
       'secret number, but with careful debugging, I managed.',
@@ -31,3 +36,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '09',
+    year: 2024,
+    day: 9,
     title: 'Disk Fragmenter',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Avoided lists, ended up to use a list anyway.',
     difficulty: 3
   },
@@ -22,3 +27,5 @@ export default {
     }
   }
 }
+
+export default config

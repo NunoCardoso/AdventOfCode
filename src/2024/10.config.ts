@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '10',
+    year: 2024,
+    day: 10,
     title: 'Hoof It',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Really simple path finding, interesting that I found solution for part2 before part1',
     difficulty: 2
   },
@@ -29,3 +34,5 @@ export default {
     }
   }
 }
+
+export default config

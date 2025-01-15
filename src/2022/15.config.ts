@@ -1,7 +1,13 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '15',
+    year: 2022,
+    day: 15,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment:
       'This is a great puzzle, as it is way easier to rotate 45 degrees and use square areas instead of diamond' +
       'areas. also, finding the sole beacon for part 2 requires some brainstorming explained on readme'
@@ -28,3 +34,5 @@ export default {
     }
   }
 }
+
+export default config

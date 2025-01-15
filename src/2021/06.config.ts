@@ -1,10 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2021',
-    day: '06',
+    year: 2021,
+    day: 6,
     title: 'Lanternfish',
     comment: 'Compact solution for a simple puzzle',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     difficulty: 1
   },
   params: {
@@ -27,3 +32,5 @@ export default {
     }
   }
 }
+
+export default config

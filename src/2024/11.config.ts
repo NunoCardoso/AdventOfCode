@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '11',
+    year: 2024,
+    day: 11,
     title: 'Plutonian Pebbles',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Same but with cache, results are same time',
     difficulty: 4
   },
@@ -28,3 +33,5 @@ export default {
     }
   }
 }
+
+export default config

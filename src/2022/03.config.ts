@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '03',
+    year: 2022,
+    day: 3,
     title: 'Rucksack Reorganization',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Functional puzzle, using custom intersect to find common letters while parsing input'
   },
   test: {
@@ -20,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

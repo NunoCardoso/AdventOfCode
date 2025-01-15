@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '18',
+    year: 2024,
+    day: 18,
     title: 'RAM Run',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment:
       'In this puzzle, X is horizontal (col) distance, Y is vertical (row) distance. I am out of ideas to' +
       'optimize, maybe try bytes / 2, then bytes / 4, etc',

@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2021',
-    day: '05',
+    year: 2021,
+    day: 5,
     title: 'Hydrothermal Venture',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'I am collecting 2 data sets, one for each part, while input parsing',
     difficulty: 1
   },
@@ -21,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config

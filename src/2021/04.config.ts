@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2021',
-    day: '04',
+    year: 2021,
+    day: 4,
     title: 'Giant Squid',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'verbose but very quick because I used indexes to make sure I check only bingo cards with valid numbers',
     difficulty: 2
   },
@@ -22,3 +27,5 @@ export default {
     }
   }
 }
+
+export default config

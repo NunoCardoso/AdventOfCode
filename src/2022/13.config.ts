@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '13',
+    year: 2022,
+    day: 13,
     title: 'Distress Signal',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Somehow I managed to not mess up the recursion, which is quite interesting',
     tags: ['recursion']
   },
@@ -21,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config

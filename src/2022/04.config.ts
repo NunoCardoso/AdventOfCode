@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '04',
+    year: 2022,
+    day: 4,
     title: 'Camp Cleanup',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment:
       'Functional puzzle, compacted the code to very hard to do the overlap logic and summing answers while parsing input'
   },
@@ -21,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config

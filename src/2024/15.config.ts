@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '15',
+    year: 2024,
+    day: 15,
     title: 'Warehouse Woes',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Hard part2. I only got it as I sorted the paths. A lot of simplifications can be done',
     difficulty: 4
   },
@@ -40,3 +45,5 @@ export default {
     }
   }
 }
+
+export default config

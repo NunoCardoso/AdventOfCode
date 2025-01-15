@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '02',
+    year: 2022,
+    day: 2,
     title: 'Rock Paper Scissors',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Functional puzzle, summing answers while parsing input. Rules are hardcoded.'
   },
   test: {
@@ -20,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '07',
+    year: 2022,
+    day: 7,
     title: 'No Space Left On Device',
-    status: 'done',
-    tags: [],
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Properly optimized script with no need for recursion, to compute directory sizes'
   },
   params: {
@@ -26,3 +30,5 @@ export default {
     }
   }
 }
+
+export default config

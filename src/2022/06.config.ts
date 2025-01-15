@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '06',
+    year: 2022,
+    day: 6,
     title: 'Tuning Trouble',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'Simple text regex puzzle, compact solution script, easy with the use of Set'
   },
   params: {
@@ -56,3 +61,4 @@ export default {
     }
   }
 }
+export default config

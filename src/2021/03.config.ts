@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2021',
-    day: '03',
+    year: 2021,
+    day: 3,
     title: 'Binary Diagnostic',
-    status: 'done',
-    comment: 'Not sure if it can be more compact, or efficient',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 2
   },
   test: {
@@ -21,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

@@ -1,10 +1,15 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2021',
-    day: '07',
+    year: 2021,
+    day: 7,
     title: 'The Treachery of Whale',
     comment: 'Brute force works ok, calculating distances for each position',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     difficulty: 2
   },
   test: {
@@ -21,3 +26,5 @@ export default {
     }
   }
 }
+
+export default config

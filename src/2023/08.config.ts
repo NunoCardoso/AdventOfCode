@@ -1,7 +1,13 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2023',
-    day: '08'
+    year: 2023,
+    day: 8,
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty'
   },
   logLevel: 'info',
   test: [
@@ -31,3 +37,5 @@ export default {
     }
   }
 }
+
+export default config

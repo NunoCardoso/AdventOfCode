@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '23',
+    year: 2024,
+    day: 23,
     title: 'LAN Party',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'The second part requires the Bron–Kerbosch algorithm so it is efficient under 1s',
     tags: ['Bron–Kerbosch'],
     difficulty: 5
@@ -23,3 +28,5 @@ export default {
     }
   }
 }
+
+export default config

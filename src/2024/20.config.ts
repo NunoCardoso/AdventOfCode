@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '20',
+    year: 2024,
+    day: 20,
     title: 'Race Condition',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment:
       'Really nice one. Good to anlyse and see that a manhatan distance is the way to go. Just weird that ' +
       'paths that drill through the same walls are considered different only because they start on different points of ' +
@@ -55,3 +60,5 @@ export default {
     }
   }
 }
+
+export default config

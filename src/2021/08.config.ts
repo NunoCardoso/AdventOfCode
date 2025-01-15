@@ -1,8 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2021',
-    day: '08',
-    title: 'Seven Segment Search'
+    year: 2021,
+    day: 8,
+    title: 'Seven Segment Search',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty'
   },
   mode: 'noperm',
   test: {
@@ -19,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

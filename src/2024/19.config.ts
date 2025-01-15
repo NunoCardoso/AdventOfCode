@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '19',
+    year: 2024,
+    day: 19,
     title: 'Linen Layout',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'I could see this that would need a cache by a mile. Not that dfifficult since I was ready for cache.',
     difficulty: 3
   },
@@ -22,3 +27,5 @@ export default {
     }
   }
 }
+
+export default config

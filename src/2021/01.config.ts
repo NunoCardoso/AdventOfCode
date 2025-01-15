@@ -1,10 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2021',
-    day: '01',
+    year: 2021,
+    day: 1,
     title: 'Sonar Sweep',
-    status: 'done',
-    comment: 'Parse numeric input and doing counts',
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
     difficulty: 1
   },
   test: {
@@ -21,3 +25,5 @@ export default {
     }
   }
 }
+
+export default config

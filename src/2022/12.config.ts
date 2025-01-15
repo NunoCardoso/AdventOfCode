@@ -1,11 +1,16 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2022',
-    day: '12',
+    year: 2022,
+    day: 12,
     title: 'Hill Climbing Algorithm',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'This is the cleanest, simplest Dijkstra algorithm implementation from all puzzles',
-    tags: ['dijkstra']
+    tags: ['Dijkstra']
   },
   ui: {
     show: true,
@@ -25,3 +30,5 @@ export default {
     }
   }
 }
+
+export default config

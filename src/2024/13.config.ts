@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '13',
+    year: 2024,
+    day: 13,
     title: 'Claw Contraption',
-    status: 'done',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment:
       'Actually very easy, once you understand that it is just a pair of lines and solution is in the interception',
     difficulty: 1
@@ -22,3 +27,5 @@ export default {
     }
   }
 }
+
+export default config

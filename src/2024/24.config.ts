@@ -1,9 +1,14 @@
-export default {
+import { PuzzleConfig } from 'aoc.d'
+
+let config: PuzzleConfig = {
   config: {
-    year: '2024',
-    day: '24',
+    year: 2024,
+    day: 24,
     title: 'Crossed Wires',
-    status: 'solved',
+    result: 'unfinished',
+    status: 'unsolved',
+    speed: 'slow',
+    code: 'dirty',
     comment: 'This was the hardest. Solved by hand (see readme), no program yet',
     difficulty: 5
   },
@@ -41,3 +46,5 @@ export default {
     }
   }
 }
+
+export default config
