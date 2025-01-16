@@ -1,7 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
 import { Location, World } from 'declarations'
-import _ from 'lodash'
 import { getKey, getManhattanDistance, isSame } from 'util/location'
 import { range } from 'util/range'
 
@@ -68,83 +67,27 @@ export default async (lineReader: any, params: Params) => {
       )
   }
 
-  /*const getNewSteps = (world: World, opened: Array<Step>, visited: Record<string, number>, head: Step, data: Data) => {
-    const newSteps: Array<Step> = _.reject(
-      [
-        [
-          [head[0][0] - 1, head[0][1]],
-          head[1] +
-          (outOfBounds([head[0][0] - 1, head[0][1]], world) ? 0 : (world[head[0][0] - 1][head[0][1]] as number)),
-          getManhattanDistance([head[0][0] - 1, head[0][1]], data.end)
-        ],
-        [
-          [head[0][0] + 1, head[0][1]],
-          head[1] +
-          (outOfBounds([head[0][0] + 1, head[0][1]], world) ? 0 : (world[head[0][0] + 1][head[0][1]] as number)),
-          getManhattanDistance([head[0][0] + 1, head[0][1]], data.end)
-        ],
-        [
-          [head[0][0], head[0][1] - 1],
-          head[1] +
-          (outOfBounds([head[0][0], head[0][1] - 1], world) ? 0 : (world[head[0][0]][head[0][1] - 1] as number)),
-          getManhattanDistance([head[0][0], head[0][1] - 1], data.end)
-        ],
-        [
-          [head[0][0], head[0][1] + 1],
-          head[1] +
-          (outOfBounds([head[0][0], head[0][1] + 1], world) ? 0 : (world[head[0][0]][head[0][1] + 1] as number)),
-          getManhattanDistance([head[0][0], head[0][1] + 1], data.end)
-        ]
-      ],
-      (newStep: Step) => {
-        if (outOfBounds(newStep[0], world)) {
-          return true
-        }
-
-        const newKey = getKey(newStep[0])
-        // reject if it's in the visited list, and it has a worst cost; otherwise, keep it
-        if (Object.prototype.hasOwnProperty.call(visited, newKey) && visited[newKey] <= newStep[1]) {
-          return true
-        }
-
-        const matchOpenedPathIndex = _.findIndex(opened, (s: Step) => isSame(s[0], newStep[0]))
-        if (matchOpenedPathIndex >= 0) {
-          // worse cost
-          if (opened[matchOpenedPathIndex][1] <= newStep[1]) {
-            return true
-          } else {
-            opened.splice(matchOpenedPathIndex, 1)
-          }
-        }
-
-        return false
-      }
-    )
-
-    return newSteps
-  }*/
-
-  const printStep = (s: Step) => JSON.stringify(s)
+  const isWorthless = (data: Data, head: Step) => {
+    // cost + distance, assuming distance is manhattan distance with only 1s
+    if (!data.step) return false
+    if (head[1] + head[2] >= data.step[1]) return true
+    return false
+  }
 
   const Astar = (world: World, queue: Step[], queueIndex: QueueIndex, visited: Visited, data: Data) => {
     const head: Step = queue.pop()!
     const headKey: string = getKey(head[0])
     delete queueIndex[headKey]
-    log.debug('=== A* ===', head)
-    //log.debug('queue', queue.length, queue.map((s) => printStep(s)).join(', '))
+    visited[headKey] = head[1]
 
     if (isSame(head[0], data.end)) {
-      if (!data.step || data.step[1] > head[1]) {
-        log.debug('Found lowest score', head[1])
-        data.step = head
-      }
+      if (!data.step || data.step[1] > head[1]) data.step = head
       return
     }
 
-    visited[headKey] = head[1]
+    // if (isWorthless(data, head)) return
+
     let newSteps: Step[] = getNewSteps(world, queue, queueIndex, visited, head, data)
-    log.debug('got new steps')
-    // log.debug(newSteps.map((step) => printStep(step)).join(', '))
 
     if (newSteps.length !== 0) {
       newSteps.forEach((newStep) => {
@@ -153,24 +96,29 @@ export default async (lineReader: any, params: Params) => {
         // if this has a better one, keep it, visited will be reset later
         if (!!visited[newHeadKey] && visited[newHeadKey] < newStep[1]) return
 
+        // this is important
         // if opened one has a better cost, do not continue
         // else, remove that opened one. This will be added later
-        if (!!queueIndex[newHeadKey] && queueIndex[newHeadKey] < newStep[1]) return
-        else {
-          let index = queue.findIndex((q) => isSame(newStep[0], q[0]))
-          if (index >= 0) {
-            queue.splice(index, 1)
+        if (!!queueIndex[newHeadKey]) {
+          if (queueIndex[newHeadKey] < newStep[1]) return
+          else {
+            let index = queue.findIndex((q) => isSame(newStep[0], q[0]))
+            // doing this avoid splice. It saves time.
+            if (index >= 0) {
+              queue[index] = newStep
+              queueIndex[newHeadKey] = newStep[1]
+            }
           }
+        } else {
+          queue.push(newStep)
+          queueIndex[newHeadKey] = newStep[1]
         }
-        queue.push(newStep)
-        queueIndex[newHeadKey] = newStep[1]
       })
       // good: lowest cost first, lowest distance after
-      queue.sort((a: Step, b: Step) => (b[1] - a[1] > 0 ? 1 : b[1] - a[1] < 0 ? -1 : b[2] - a[2]))
+      //  queue.sort((a: Step, b: Step) => (b[1] - a[1] > 0 ? 1 : b[1] - a[1] < 0 ? -1 : b[2] - a[2]))
 
-      // not as good
-      //queue.sort((a: Step, b: Step) => (2*b[1] + b[2]) - (2*a[1] + a[2]))
-
+      // this is good for some reason
+      queue.sort((a: Step, b: Step) => 1 * (b[1] - a[1]) - 100 * (b[2] - a[2]))
       //Bad:
       // queue.sort((a: Step, b: Step) => b[2] - a[2] > 0 ? 1 : b[2] - a[2] < 0 ? -1 : b[1] - a[1])
     }
@@ -187,9 +135,15 @@ export default async (lineReader: any, params: Params) => {
       end,
       step: undefined
     }
-    log.debug('start', start, 'end', end)
-    while (queue.length > 0) Astar(world, queue, queueIndex, visited, data)
-    return data.step ? data.step[1] : 0
+    let iterations: number = 0
+    while (queue.length > 0) {
+      Astar(world, queue, queueIndex, visited, data)
+      iterations++
+      if (iterations % 50000 == 0) {
+        log.info('i', iterations, 'queue', queue.length)
+      }
+    }
+    return data.step![1]
   }
 
   const world1: World = []
@@ -211,9 +165,6 @@ export default async (lineReader: any, params: Params) => {
       }
     }
   }
-
-  log.debug('World 1 size', [world1.length, world1[0].length])
-  log.debug('World 2 size', [world2.length, world2[0].length])
 
   if (!params.skipPart1) part1 = solveFor(world1)
   if (!params.skipPart2) part2 = solveFor(world2)

@@ -10,7 +10,7 @@ let config: PuzzleConfig = {
     speed: 'fast',
     code: 'clean',
     difficulty: 2,
-    tags: ['Dijkstra']
+    tags: ['Dijkstra', 'Path-finding']
   },
   mode: 'fastest',
   test: {

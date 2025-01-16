@@ -9,7 +9,8 @@ let config: PuzzleConfig = {
     status: 'unsolved',
     speed: 'fast',
     code: 'clean',
-    difficulty: 5
+    difficulty: 5,
+    tags: ['Path-finding']
   },
   logLevel: 'debug',
   test: {

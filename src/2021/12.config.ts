@@ -10,7 +10,7 @@ let config: PuzzleConfig = {
     speed: 'fast',
     code: 'clean',
     difficulty: 0,
-    tags: ['Breadth-first']
+    tags: ['Breadth-first', 'Path-finding']
   },
   logLevel: 'info',
   ui: { show: false, during: true },

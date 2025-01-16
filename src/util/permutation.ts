@@ -1,8 +1,9 @@
-export const permutation = <T = number>(array: T[]): T[][] => {
+export const permutation = <T = number>(array: T[], maxSize?: number): T[][] => {
   const result: T[][] = []
+  let size = maxSize ?? array.length
 
   const permute = (current: T[], remaining: T[]): void => {
-    if (remaining.length === 0) {
+    if (current.length === size) {
       result.push([...current]) // Add the current permutation to the result
     } else {
       for (let i = 0; i < remaining.length; i++) {

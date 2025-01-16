@@ -1,6 +1,7 @@
 import { Params } from 'aoc.d'
-import { Point } from 'declarations'
-import _ from 'lodash'
+import { BoundingBox } from 'declarations'
+
+type Hit = [time: number, speed: number]
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -8,78 +9,101 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const start: Point = [0, 0]
-  const end1: Point = [0, 0]
-  const end2: Point = [0, 0]
-
-  const inTarget = (p: Point) => {
-    return p[0] >= end1[0] && p[0] <= end2[0] && p[1] <= end1[1] && p[1] >= end2[1]
+  const getAllYHits = (initialYSpeed: number, target: BoundingBox) => {
+    let yLocation = 0
+    let ySpeed = initialYSpeed
+    let time = 1
+    let res: Hit[] = []
+    while (true) {
+      yLocation += ySpeed
+      if (yLocation <= target[0][1] && yLocation >= target[1][1]) res.push([time, initialYSpeed])
+      if (yLocation < target[1][1]) break // overshoot
+      ySpeed -= 1
+      time++
+    }
+    return res
   }
 
-  const isOvershot = (p: Point, speed: Point) => {
-    return (
-      !inTarget(p) &&
-      // overshot on x and y
-      (p[0] > end2[0] ||
-        p[1] < end2[1] ||
-        // low x but with no speed to reach target
-        (p[0] < end1[0] && speed[0] === 0))
-    )
+  const getAllXHits = (initialXSpeed: number, target: BoundingBox, highestXtime: number, allowedTimes: number[]) => {
+    let xLocation = 0
+    let xSpeed = initialXSpeed
+    let time = 1
+    let res: Hit[] = []
+    while (true) {
+      xLocation += xSpeed
+      if (xLocation <= target[1][0] && xLocation >= target[0][0] && allowedTimes.includes(time))
+        res.push([time, initialXSpeed])
+      if (xLocation > target[1][0]) break // overshoot
+      if (xSpeed > 0) xSpeed -= 1
+      time++
+      if (time > highestXtime) break
+    }
+    return res
   }
+
+  const getLowestXSpeed = (leftmostPosition: number): number => {
+    let val = -1 + Math.sqrt(1 + 8 * leftmostPosition) / 2
+    return Math.ceil(val)
+  }
+
+  let target: BoundingBox = [
+    [0, 0],
+    [0, 0]
+  ]
 
   for await (const line of lineReader) {
-    const values = line.match(/target area: x=(\d+)..(\d+), y=-(\d+)..-(\d+)/)
-    end1[0] = parseInt(values[1])
-    end2[0] = parseInt(values[2])
-    end2[1] = -1 * parseInt(values[3])
-    end1[1] = -1 * parseInt(values[4])
-    log.info('end1', end1, 'end2', end2)
+    const [, x1, x2, y1, y2] = line.match(/target area: x=(.+)\.\.(.+), y=(.+)\.\.(.+)/).map(Number)
+    target = [
+      [x1, y2],
+      [x2, y1]
+    ]
   }
 
-  const simulate = (speed: Point): number | undefined => {
-    const currentPoint = [start[0], start[1]] as Point
-    const currentSpeed = [speed[0], speed[1]] as Point
-    let highestY = 0
-    let it = 0
+  let timeAndYSpeeds: Record<number, number[]> = {}
+  let timeAndXSpeeds: Record<number, number[]> = {}
 
-    let status
-    while (!status) {
-      currentPoint[0] = currentPoint[0] + currentSpeed[0]
-      currentPoint[1] = currentPoint[1] + currentSpeed[1]
-      currentSpeed[0] = currentSpeed[0] === 0 ? 0 : currentSpeed[0] > 0 ? currentSpeed[0] - 1 : currentSpeed[0] + 1
-      currentSpeed[1]--
-      if (currentPoint[1] > highestY) {
-        log.debug('it', it, 'highestY', currentPoint[1])
-        highestY = currentPoint[1]
-      }
-      if (inTarget(currentPoint)) {
-        log.debug('it', it, 'in target')
-        status = 'inTarget'
-      }
-      if (isOvershot(currentPoint, currentSpeed)) {
-        log.debug('it', it, 'overshoot')
-        status = 'overshot'
-      }
-      it++
-    }
-    if (status === 'inTarget') {
-      return highestY
-    }
-    return undefined
+  let shotsInTarget: Hit[] = []
+  let lowestYSpeed = target[1][1]
+  let highestYSpeed = -1 * (lowestYSpeed + 1)
+  let highestYtime: number = 0
+
+  part1 = (highestYSpeed * (highestYSpeed + 1)) / 2
+  // ySpeed will range from targetBottomY to -1*(targetBottomY + 1)
+  for (let ySpeed = lowestYSpeed; ySpeed <= highestYSpeed; ySpeed++) {
+    shotsInTarget = getAllYHits(ySpeed, target)
+    shotsInTarget.forEach((hit) => {
+      if (!timeAndYSpeeds[hit[0]]) timeAndYSpeeds[hit[0]] = []
+      if (!timeAndYSpeeds[hit[0]].includes(hit[1])) timeAndYSpeeds[hit[0]].push(hit[1])
+      if (hit[0] > highestYtime) highestYtime = hit[0]
+    })
   }
 
-  // limit values could be better
-  for (let x = 2; x < 1000; x++) {
-    for (let y = -500; y < 5000; y++) {
-      const highestY: number | undefined = simulate([x, y])
-      if (_.isNumber(highestY)) {
-        if (part1 < highestY) {
-          part1 = highestY
-        }
-        part2++
+  // now let's get the X ones.
+  let lowestXSpeed = getLowestXSpeed(target[0][0])
+  let highestXSpeed = target[1][0]
+  let highestXtime: number = highestYtime
+  // we will only check times that exist in Y, so no point in adding times in X that are not common
+  let allowedTimes: number[] = Object.keys(timeAndYSpeeds).map(Number)
+
+  for (let xSpeed = lowestXSpeed; xSpeed <= highestXSpeed; xSpeed++) {
+    shotsInTarget = getAllXHits(xSpeed, target, highestXtime, allowedTimes)
+    shotsInTarget.forEach((hit) => {
+      if (!timeAndXSpeeds[hit[0]]) timeAndXSpeeds[hit[0]] = []
+      if (!timeAndXSpeeds[hit[0]].includes(hit[1])) timeAndXSpeeds[hit[0]].push(hit[1])
+    })
+  }
+
+  let uniqueSpeeds: Set<string> = new Set<string>()
+
+  Object.keys(timeAndXSpeeds).forEach((time: string) => {
+    for (let xSpeed of timeAndXSpeeds[+time]) {
+      for (let ySpeed of timeAndYSpeeds[+time]) {
+        uniqueSpeeds.add(xSpeed + ',' + ySpeed)
       }
     }
-  }
+  })
+
+  part2 = uniqueSpeeds.size
 
   return { part1, part2 }
 }
