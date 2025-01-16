@@ -2,12 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Transparent Origami',
     year: 2021,
     day: 13,
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 3
   },
   logLevel: 'info',
   ui: { show: false, during: true },
@@ -20,7 +22,13 @@ let config: PuzzleConfig = {
   prod: {
     answers: {
       part1: 802,
-      part2: 'RKHFZGUB'
+      part2:
+        '###..#..#.#..#.####.####..##..#..#.###..\n' +
+        '#..#.#.#..#..#.#.......#.#..#.#..#.#..#.\n' +
+        '#..#.##...####.###....#..#....#..#.###..\n' +
+        '###..#.#..#..#.#.....#...#.##.#..#.#..#.\n' +
+        '#.#..#.#..#..#.#....#....#..#.#..#.#..#.\n' +
+        '#..#.#..#.#..#.#....####..###..##..###..\n'
     }
   }
 }

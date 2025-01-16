@@ -4,6 +4,12 @@ import clc from 'cli-color'
 import { Prod, PuzzleConfig, PuzzleOutput, Result, Speed, Status, Test } from './aoc.d'
 const readline = require('readline')
 
+const padCenter = (s: string, len: number) => {
+  let _s = s.substring(0, Math.floor(s.length / 2))
+  let _s2 = s.substring(Math.floor(s.length / 2), s.length)
+  return _s.padStart(Math.ceil(len / 2), ' ') + _s2.padEnd(Math.floor(len / 2), ' ')
+}
+
 export default async (puzzle: PuzzleConfig) => {
   const log = require('console-log-level')({ level: puzzle.logLevel })
 
@@ -134,9 +140,13 @@ export default async (puzzle: PuzzleConfig) => {
   }
 
   let string = ` 🎅 Advent of Code ${year} / ${day} 🎅 `
-  console.info('╔' + '═'.repeat(string.length) + '╗')
-  console.info(`║${string}║`)
-  console.info('╚' + '═'.repeat(string.length) + '╝')
+  let title = puzzle.config.title
+  let biggestString = Math.max(string.length, title.length)
+
+  console.info('╔' + '═'.repeat(biggestString) + '╗')
+  console.info(`║${padCenter(string, biggestString)}║`)
+  console.info(`║${padCenter(title, biggestString)}║`)
+  console.info('╚' + '═'.repeat(biggestString) + '╝')
 
   if (Object.prototype.hasOwnProperty.call(puzzle, 'test')) {
     if (Array.isArray(puzzle.test)) {

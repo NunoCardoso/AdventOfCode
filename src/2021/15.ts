@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Point, World } from 'declarations'
+import { Location, World } from 'declarations'
 import _ from 'lodash'
 
 // x, y, distance, cost
@@ -38,15 +38,15 @@ export default async (lineReader: any, params: Params) => {
 
   log.info('World 1 size', [world1.length, world1[0].length])
   log.info('World 2 size', [world2.length, world2[0].length])
-  const getKey = (s: Step | Point): string => '[' + s[0] + ',' + s[1] + ']'
+  const getKey = (s: Step | Location): string => '[' + s[0] + ',' + s[1] + ']'
 
-  const readKey = (s: string): Point => [...s.matchAll(/\d+/g)].map((x: any) => parseInt(x[0])) as Point
-  const isSame = (s: Step | Point, s2: Step | Point): boolean => s[0] === s2[0] && s[1] === s2[1]
+  const readKey = (s: string): Location => [...s.matchAll(/\d+/g)].map((x: any) => parseInt(x[0])) as Location
+  const isSame = (s: Step | Location, s2: Step | Location): boolean => s[0] === s2[0] && s[1] === s2[1]
 
-  const outOfBounds = (newStep: Step | Point, end: Point) =>
+  const outOfBounds = (newStep: Step | Location, end: Location) =>
     newStep[0] < 0 || newStep[1] < 0 || newStep[0] > end[0] || newStep[1] > end[1]
 
-  const getDistanceToFinish = (x: number, y: number, end: Point): number => end[0] - x + (end[1] - y)
+  const getDistanceToFinish = (x: number, y: number, end: Location): number => end[0] - x + (end[1] - y)
 
   const printWorld = (
     world: World<string | number>,
@@ -56,7 +56,7 @@ export default async (lineReader: any, params: Params) => {
   ) => {
     const _world = _.cloneDeep(world)
     Object.keys(visited).forEach((s: string) => {
-      const p: Point = readKey(s)
+      const p: Location = readKey(s)
       _world[p[0]][p[1]] = clc.red('V')
     })
     opened.forEach((s: Step) => {

@@ -1,95 +1,89 @@
 import { Params } from 'aoc.d'
-import clc from 'cli-color'
-import { Dimension, Point } from 'declarations'
-import _, { parseInt } from 'lodash'
+import { Dimension, Location } from 'declarations'
+import { getKey } from 'util/location'
 
-type Rule = [string, number]
+type Rule = [axis: string, amount: number]
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
-  const part2: number = 0
+  let part2: string = ''
+
+  const printGrid = (dots: Location[], dimension: Dimension): string[] => {
+    let res = []
+    for (let y = 0; y < dimension[1]; y++) {
+      let line = ''
+      for (let x = 0; x < dimension[0]; x++) line += dots.some((dot) => dot[0] === x && dot[1] === y) ? '#' : '.'
+      res.push(line + '\n')
+    }
+    return res
+  }
 
   const dimension: Dimension = [0, 0]
-  let dots: Array<Point> = []
-  const rules: Array<Rule> = []
-
-  const printGrid = (dots: Array<Point>) => {
-    for (let y = 0; y < dimension[1]; y++) {
-      let line = clc.blue(y.toString().padStart(3, '0')) + ' '
-      for (let x = 0; x < dimension[0]; x++) {
-        if (_.find(dots, (dot) => dot[0] === x && dot[1] === y)) {
-          line += clc.red('#')
-        } else {
-          line += '.'
-        }
-      }
-      console.log(line)
-    }
-    console.log('\n')
-  }
+  let dots: Location[] = []
+  let dotRecord: Set<string> = new Set<string>()
+  const rules: Rule[] = []
 
   for await (const line of lineReader) {
     if (!line.startsWith('fold') && line.length > 0) {
       const dot = line.split(',').map(Number)
       dots.push(dot)
-      if (dot[0] > dimension[0]) {
-        dimension[0] = dot[0]
-      }
-      if (dot[1] > dimension[1]) {
-        dimension[1] = dot[1]
-      }
+      dotRecord.add(getKey(dot))
+      if (dot[0] > dimension[0]) dimension[0] = dot[0]
+      if (dot[1] > dimension[1]) dimension[1] = dot[1]
     }
     if (line.startsWith('fold')) {
-      const m = line.match(/fold along (.)=(\d+)/)
-      rules.push([m[1], parseInt(m[2])])
+      const [, axis, amount] = line.match(/fold along (.)=(\d+)/)
+      rules.push([axis, +amount])
     }
   }
 
   dimension[0]++
   dimension[1]++
 
-  log.info('world of dimension', dimension)
-
   rules.forEach((rule, ruleNumber) => {
-    const index: number = rule[0] === 'x' ? 0 : 1
-    const fold = rule[1]
-    const topPart = fold
-    const bottomPart = dimension[index] - fold - 1
-    if (bottomPart <= topPart) {
-      for (let i = 0; i < dots.length; i++) {
-        if (dots[i][index] > topPart) {
-          const _diff = dots[i][index] - topPart
-          dots[i][index] = topPart - _diff
+    const axisIndex: number = rule[0] === 'x' ? 0 : 1
+    const whereToFold = rule[1]
+    const sizeOfFoldedSide = dimension[axisIndex] - whereToFold - 1
+    // the fold side will be all contained inside the unfolded side
+    if (sizeOfFoldedSide <= whereToFold) {
+      dimension[axisIndex] = whereToFold // shrink the dimension
+      for (let dot of dots) {
+        if (dot[axisIndex] > whereToFold) {
+          dotRecord.delete(getKey(dot))
+          dot[axisIndex] = 2 * whereToFold - dot[axisIndex]
+          dotRecord.add(getKey(dot))
         }
       }
-      dimension[index] = topPart
     } else {
-      let biggestNegativeNumber = 0
-      for (let i = 0; i < dots.length; i++) {
-        if (dots[i][index] > bottomPart) {
-          const _diff = dots[i][index] - bottomPart
-          dots[i][index] = bottomPart - _diff
-          if (dots[i][index] < biggestNegativeNumber) {
-            biggestNegativeNumber = dots[i][index]
-          }
+      // the fold side will overflow the unfolded side
+      let biggestNegativeNumber = 0 // the biggest overflowing row
+      for (let dot of dots) {
+        if (dot[axisIndex] > sizeOfFoldedSide) {
+          dotRecord.delete(getKey(dot))
+          dot[axisIndex] = 2 * sizeOfFoldedSide - dot[axisIndex]
+          dotRecord.add(getKey(dot))
+          if (dot[axisIndex] < biggestNegativeNumber) biggestNegativeNumber = dot[axisIndex]
         }
       }
       if (biggestNegativeNumber < 0) {
-        for (let i = 0; i < dots.length; i++) {
-          dots[i][index] += Math.abs(biggestNegativeNumber)
+        for (let dot of dots) {
+          dotRecord.delete(getKey(dot))
+          dot[axisIndex] += Math.abs(biggestNegativeNumber)
+          dotRecord.add(getKey(dot))
         }
       }
-      dimension[index] = dimension[index] - fold + Math.abs(biggestNegativeNumber)
+      dimension[axisIndex] = dimension[axisIndex] - whereToFold + Math.abs(biggestNegativeNumber)
     }
-    dots = _.uniqWith(dots, _.isEqual).filter((dot) => dot[index] !== fold)
-    if (ruleNumber === 0) {
-      part1 = dots.length
-    }
+
+    dots = [...dotRecord]
+      .map((x) => x.split(',').map(Number) as Location)
+      .filter((dot) => dot[axisIndex] !== whereToFold)
+    if (ruleNumber === 0) part1 = dots.length
   })
 
-  printGrid(dots)
+  part2 = printGrid(dots, dimension).join('')
 
   return { part1, part2 }
 }

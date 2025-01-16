@@ -2,13 +2,17 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Chiton',
     year: 2021,
     day: 15,
     result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    status: 'solved',
+    speed: 'medium',
+    code: 'dirty',
+    difficulty: 3,
+    tags: ['A*']
   },
+  //mode: 'fastest',
   logLevel: 'info',
   ui: {
     show: false,

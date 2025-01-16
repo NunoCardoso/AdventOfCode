@@ -5,10 +5,10 @@ let config: PuzzleConfig = {
     title: 'Seven Segment Search',
     year: 2021,
     day: 8,
-    result: 'unfinished',
+    result: 'finished',
     status: 'solved',
     speed: 'fast',
-    code: 'dirty',
+    code: 'clean',
     difficulty: 3
   },
   test: {

@@ -2,14 +2,16 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Smoke Basin',
     year: 2021,
     day: 9,
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2
   },
-  ui: { show: true, end: true },
+  ui: { show: false, end: true },
   test: {
     id: 'test',
     answers: {

@@ -2,12 +2,15 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Passage Pathing',
     year: 2021,
     day: 12,
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 0,
+    tags: ['Breadth-first']
   },
   logLevel: 'info',
   ui: { show: false, during: true },

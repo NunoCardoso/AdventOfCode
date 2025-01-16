@@ -6,76 +6,57 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const rules: Record<string, string> = {}
-  let mainCounter: Record<string, number> = {}
+  const countDifference = (polymerTemplate: Record<string, number>, seed: string) => {
+    const letterCounter: Record<string, number> = {}
+    for (let key of Object.keys(polymerTemplate)) {
+      letterCounter[key[0]] = (letterCounter[key[0]] ?? 0) + polymerTemplate[key]
+      letterCounter[key[1]] = (letterCounter[key[1]] ?? 0) + polymerTemplate[key]
+    }
+
+    // every letter count is doubled except the edges, so let's add the "missing" counts
+    // so we can divide by 2 and get the right counts.
+    letterCounter[seed[0]] += 1
+    letterCounter[seed[seed.length - 1]] += 1
+    const counts = Object.values(letterCounter).sort((a, b) => b - a)
+    return (counts[0] - counts[counts.length - 1]) / 2
+  }
+
+  const insertionRules: Record<string, string> = {}
+  let polymerTemplate: Record<string, number> = {}
   let seed: string = ''
 
   for await (const line of lineReader) {
-    const m = line.match(/(.+) -> (.+)/)
-    if (m) {
-      rules[m[1]] = m[2]
-    } else {
-      if (line.length > 0) {
+    if (!!line) {
+      if (!seed) {
         seed = line
         for (let i = 0; i < line.length - 1; i++) {
-          const letters = line[i] + line[i + 1]
-          mainCounter[letters] = (mainCounter[letters] ?? 0) + 1
+          const pairOfLetters = line[i] + line[i + 1]
+          polymerTemplate[pairOfLetters] = (polymerTemplate[pairOfLetters] ?? 0) + 1
         }
+      } else {
+        const [, left, right] = line?.match(/(.+) -> (.+)/)
+        insertionRules[left] = right
       }
     }
   }
 
-  const countSize = (subCounter: Record<string, number>): number => {
-    return Object.values(subCounter).reduce((x, y) => x + y, 0)
-  }
-
-  const countDifference = (subCounter: Record<string, number>) => {
-    const c = Object.values(subCounter).sort((a, b) => (a - b < 0 ? 1 : -1))
-    return (c[0] - c[c.length - 1]) / 2
-  }
-
-  let it = 1
+  let iterations = 0
   const maxIterations = Math.max(params.iterations.part1, params.iterations.part2)
 
-  while (it <= maxIterations) {
-    const newMainCounter: Record<string, number> = {}
-    const newSubCounter: Record<string, number> = {}
-
-    let keys = Object.keys(mainCounter)
-
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]
-      const newLetter = rules[key]
+  while (++iterations <= maxIterations) {
+    const newPolymerTemplate: Record<string, number> = {}
+    for (let key of Object.keys(polymerTemplate)) {
+      const newLetter = insertionRules[key]
       if (newLetter) {
         let polymer = key[0] + newLetter
-        newMainCounter[polymer] = (newMainCounter[polymer] ?? 0) + mainCounter[key]
+        newPolymerTemplate[polymer] = (newPolymerTemplate[polymer] ?? 0) + polymerTemplate[key]
         polymer = newLetter + key[1]
-        newMainCounter[polymer] = (newMainCounter[polymer] ?? 0) + mainCounter[key]
+        newPolymerTemplate[polymer] = (newPolymerTemplate[polymer] ?? 0) + polymerTemplate[key]
       }
     }
-
-    keys = Object.keys(newMainCounter)
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]
-      newSubCounter[key[0]] = (newSubCounter[key[0]] ?? 0) + newMainCounter[key]
-      newSubCounter[key[1]] = (newSubCounter[key[1]] ?? 0) + newMainCounter[key]
-    }
-
-    // every letter count is doubled except the edges, so let's add and slice in half
-    newSubCounter[seed[0]] += 1
-    newSubCounter[seed[seed.length - 1]] += 1
-
-    mainCounter = newMainCounter
-
-    if (it === params.iterations.part1) {
-      part1 = countDifference(newSubCounter)
-    }
-    if (it === params.iterations.part2) {
-      part2 = countDifference(newSubCounter)
-    }
-
-    log.debug('It', it, 'length', countSize(newSubCounter), 'diff', countDifference(newSubCounter))
-    it++
+    polymerTemplate = newPolymerTemplate
+    if (iterations === params.iterations.part1) part1 = countDifference(polymerTemplate, seed)
+    if (iterations === params.iterations.part2) part2 = countDifference(polymerTemplate, seed)
   }
 
   return { part1, part2 }

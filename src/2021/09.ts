@@ -1,162 +1,108 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
 import { Dimension, World } from 'declarations'
-import _ from 'lodash'
+import { range } from 'util/range'
 
-type Coord = {
-  point: {
-    x: number
-    y: number
-  }
-  height: number
-  basin?: any
-}
+type LocationPlus = [x: number, y: number, height: number, basin?: number]
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  const world: World = []
-  let worldDimension: Dimension = [0, 0]
+  const isLocationSeen = (locations: LocationPlus[], location: LocationPlus) =>
+    locations.some((l: LocationPlus) => l[0] === location[0] && l[1] === location[1])
 
-  for await (const line of lineReader) {
-    world.push(line.split('').map(Number))
-  }
-  worldDimension = [world.length, world[0].length]
+  const getKey = (location: LocationPlus): string => location[0] + ',' + location[1]
 
-  log.info('world of ', worldDimension)
-
-  const isCoordSeen = (coords: Array<Coord>, c: Coord) =>
-    _.findIndex(coords, (_c: Coord) => _c.point.x === c.point.x && _c.point.y === c.point.y) >= 0
-
-  const printGrid = (world: World, holes: Array<Coord>, basins: Array<Coord>) => {
+  const printGrid = (world: World, lowPoints: LocationPlus[], basins: string[]) => {
     world.forEach((row, i) => {
       let line = ''
       row.forEach((cell, j) => {
-        const point = { point: { x: i, y: j }, height: world[i][j] }
-        if (isCoordSeen(holes, point)) {
-          line += clc.red(point.height)
-        } else {
-          if (isCoordSeen(basins, point)) {
-            line += clc.blue(point.height)
-          } else {
-            line += point.height
-          }
-        }
+        const location: LocationPlus = [i, j, world[i][j]]
+        const key = getKey(location)
+        if (isLocationSeen(lowPoints, location)) line += clc.bgRed(location[2])
+        else if (basins.includes(key)) line += clc.bgCyanBright(location[2])
+        else line += clc.bgGreen.bold(location[2])
       })
       console.log(line)
     })
   }
 
-  const getAdjacentCoords = (coord: Coord, excluding: Array<Coord> = []): Array<Coord> => {
-    const coords: Array<Coord> = []
-    let newCoord: Coord
-    if (coord.point.y > 0) {
-      newCoord = {
-        point: { x: coord.point.x, y: coord.point.y - 1 },
-        height: world[coord.point.x][coord.point.y - 1]
-      }
-      if (!isCoordSeen(excluding, newCoord)) {
-        coords.push(newCoord)
-      }
+  const getAdjacentLocations = (
+    location: LocationPlus,
+    world: World,
+    worldDimension: Dimension,
+    visited: Set<string> = new Set<string>()
+  ): LocationPlus[] => {
+    const locations: LocationPlus[] = []
+    let newLocation: LocationPlus
+    if (location[1] > 0) {
+      newLocation = [location[0], location[1] - 1, world[location[0]][location[1] - 1]]
+      if (!visited.has(getKey(newLocation))) locations.push(newLocation)
     }
-    if (coord.point.y < worldDimension[1] - 1) {
-      newCoord = {
-        point: { x: coord.point.x, y: coord.point.y + 1 },
-        height: world[coord.point.x][coord.point.y + 1]
-      }
-      if (!isCoordSeen(excluding, newCoord)) {
-        coords.push(newCoord)
-      }
+    if (location[1] < worldDimension[1] - 1) {
+      newLocation = [location[0], location[1] + 1, world[location[0]][location[1] + 1]]
+      if (!visited.has(getKey(newLocation))) locations.push(newLocation)
     }
-    if (coord.point.x > 0) {
-      newCoord = {
-        point: { x: coord.point.x - 1, y: coord.point.y },
-        height: world[coord.point.x - 1][coord.point.y]
-      }
-      if (!isCoordSeen(excluding, newCoord)) {
-        coords.push(newCoord)
-      }
+    if (location[0] > 0) {
+      newLocation = [location[0] - 1, location[1], world[location[0] - 1][location[1]]]
+      if (!visited.has(getKey(newLocation))) locations.push(newLocation)
     }
-    if (coord.point.x < worldDimension[0] - 1) {
-      newCoord = {
-        point: { x: coord.point.x + 1, y: coord.point.y },
-        height: world[coord.point.x + 1][coord.point.y]
-      }
-      if (!isCoordSeen(excluding, newCoord)) {
-        coords.push(newCoord)
-      }
+    if (location[0] < worldDimension[0] - 1) {
+      newLocation = [location[0] + 1, location[1], world[location[0] + 1][location[1]]]
+      if (!visited.has(getKey(newLocation))) locations.push(newLocation)
     }
-    return coords
+    return locations
   }
 
-  const getCandidateCoords = (coords: Array<Coord>): Array<Coord> => {
-    return coords.filter((c: Coord) => c.height !== 9)
-  }
+  const getMoreLocations = (locations: LocationPlus[]): LocationPlus[] =>
+    locations.filter((c: LocationPlus) => c[2] !== 9)
 
-  const isLowerPoint = (c: Coord, adjacentCoords: Array<Coord>) => {
-    return _.every(adjacentCoords, (_c) => _c.height > c.height)
-  }
+  const isLowerPoint = (location: LocationPlus, otherLocations: LocationPlus[]) =>
+    otherLocations.every((l) => l[2] > location[2])
 
-  const searchAlgorithm = async (visited: Array<Coord>, opened: Array<Coord>) => {
-    const coord: Coord = opened.splice(-1)[0]
-
-    const neighborCoords: Array<Coord> = getAdjacentCoords(coord, visited)
-
-    if (!isCoordSeen(visited, coord)) {
-      visited.push(coord)
-    }
-
-    const candidateCoords: Array<Coord> = getCandidateCoords(neighborCoords)
-    candidateCoords.forEach((c) => {
-      if (!isCoordSeen(opened, c)) {
-        opened.push(c)
-      }
+  const doSearch = (opened: LocationPlus[], visited: Set<string>, world: World, worldDimension: Dimension) => {
+    const head: LocationPlus = opened.pop()!
+    const neighbors: LocationPlus[] = getAdjacentLocations(head, world, worldDimension, visited)
+    visited.add(getKey(head))
+    const newLocations: LocationPlus[] = getMoreLocations(neighbors)
+    newLocations.forEach((newLocation) => {
+      if (!opened.some((l) => getKey(l) === getKey(newLocation))) opened.push(newLocation)
     })
   }
 
-  const holes: Array<Coord> = []
-  const basins: Array<Coord> = []
+  const world: World = []
+  for await (const line of lineReader) world.push(line.split('').map(Number))
+  let worldDimension: Dimension = [world.length, world[0].length]
 
-  for (let row = 0; row < world.length; row++) {
-    for (let column = 0; column < world[row].length; column++) {
-      const current: Coord = { point: { x: row, y: column }, height: world[row][column] }
-      const adjacentCoords = getAdjacentCoords(current)
-      if (isLowerPoint(current, adjacentCoords)) {
-        holes.push(current)
-      }
+  log.debug('world of ', worldDimension)
+
+  const lowPoints: LocationPlus[] = []
+  const basins: string[] = [] // this is just for UI
+
+  for (let row of range(worldDimension[0])) {
+    for (let column of range(worldDimension[1])) {
+      const location: LocationPlus = [row, column, world[row][column], undefined]
+      const adjacentLocations = getAdjacentLocations(location, world, worldDimension)
+      if (isLowerPoint(location, adjacentLocations)) lowPoints.push(location)
     }
   }
 
-  for (let i = 0; i < holes.length; i++) {
-    const hole = _.cloneDeep(holes[i])
-
-    const visited: Array<Coord> = []
-    const opened: Array<Coord> = [hole]
-
-    while (!_.isEmpty(opened)) {
-      await searchAlgorithm(visited, opened)
-    }
-    holes[i].basin = visited.length
-    basins.push(...visited)
-    if (params.ui?.show && params.ui?.during) {
-      printGrid(world, holes, basins)
-    }
+  for (let lowPoint of lowPoints) {
+    const visited: Set<string> = new Set<string>()
+    const opened: LocationPlus[] = [lowPoint]
+    while (opened.length > 0) doSearch(opened, visited, world, worldDimension)
+    lowPoint[3] = visited.size
+    if (params.ui?.show) basins.push(...visited)
   }
 
-  const part1 = holes.map((hole) => world[hole.point.x][hole.point.y]).reduce((x, y) => x + y + 1, 0)
+  const part1 = lowPoints.reduce((acc, lowPoint) => acc + lowPoint[2] + 1, 0)
 
-  const part2 = holes
-    .sort((a, b) => (a.basin < b.basin ? 1 : -1))
+  const part2 = lowPoints
+    .sort((a, b) => b[3]! - a[3]!)
     .slice(0, 3)
-    .map((hole) => hole.basin!)
-    .reduce((x, y) => x * y, 1)
+    .reduce((acc, point) => acc * point[3]!, 1)
 
-  if (params.ui?.show && params.ui?.end) {
-    printGrid(world, holes, basins)
-  }
+  if (params.ui?.show && params.ui?.end) printGrid(world, lowPoints, basins)
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

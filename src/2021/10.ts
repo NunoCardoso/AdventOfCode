@@ -1,79 +1,53 @@
 import { Params } from 'aoc.d'
 
-type Result = {
-  corrupt: boolean
-  chars: string
-}
-
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  const lines: Array<string> = []
   let part1 = 0
   let part2 = 0
 
   const corruptScore: Record<string, number> = { ')': 3, ']': 57, '}': 1197, '>': 25137 }
   const correctScore: Record<string, number> = { ')': 1, ']': 2, '}': 3, '>': 4 }
 
-  for await (const line of lineReader) {
-    lines.push(line)
-  }
-
-  const checkCorrupt = (line: string): Result => {
-    const opens: Array<string> = []
+  // if corrupt, return string is just one char
+  const processLine = (line: string): string => {
+    const opens: string[] = []
     let pop
-    const chars = line.split('')
-    for (let i = 0; i < chars.length; i++) {
-      if (['{', '<', '(', '['].indexOf(chars[i]) >= 0) {
-        opens.push(chars[i])
+    for (let char of line) {
+      if (['{', '<', '(', '['].indexOf(char) >= 0) {
+        opens.push(char)
         continue
       }
       pop = opens.pop()
-      if (chars[i] === '}' && pop !== '{') {
-        return { corrupt: true, chars: chars[i] }
-      }
-      if (chars[i] === '>' && pop !== '<') {
-        return { corrupt: true, chars: chars[i] }
-      }
-      if (chars[i] === ')' && pop !== '(') {
-        return { corrupt: true, chars: chars[i] }
-      }
-      if (chars[i] === ']' && pop !== '[') {
-        return { corrupt: true, chars: chars[i] }
-      }
+      if (char === '}' && pop !== '{') return char
+      if (char === '>' && pop !== '<') return char
+      if (char === ')' && pop !== '(') return char
+      if (char === ']' && pop !== '[') return char
     }
-    return {
-      corrupt: false,
-      chars: opens
-        .reverse()
-        .map((x) => {
-          if (x === '{') return '}'
-          if (x === '(') return ')'
-          if (x === '<') return '>'
-          if (x === '[') return ']'
-          return ''
-        })
-        .join('')
-    }
+    return opens
+      .reverse()
+      .map((x) => {
+        if (x === '{') return '}'
+        if (x === '(') return ')'
+        if (x === '<') return '>'
+        if (x === '[') return ']'
+        return ''
+      })
+      .join('')
   }
 
-  let part2lines: Array<number> = []
+  const lines: string[] = []
+  for await (const line of lineReader) lines.push(line)
+
+  let part2lines: number[] = []
+
   lines.forEach((line) => {
-    const val = checkCorrupt(line)
-    log.debug('line', line, 'val', val)
-    if (val.corrupt) {
-      part1 += corruptScore[val.chars]
-    } else {
-      part2lines.push(
-        val.chars.split('').reduce((x, y) => {
-          return x * 5 + correctScore[y]
-        }, 0)
-      )
-    }
+    const val = processLine(line)
+    if (val.length === 1) part1 += corruptScore[val]
+    else part2lines.push(val.split('').reduce((acc, char) => acc * 5 + correctScore[char], 0))
   })
 
-  part2lines = part2lines.sort((a, b) => (a > b ? 1 : -1))
-  part2 = part2lines[Math.floor(part2lines.length / 2)]
+  part2 = part2lines.sort((a, b) => a - b)[Math.floor(part2lines.length / 2)]
 
   return { part1, part2 }
 }
