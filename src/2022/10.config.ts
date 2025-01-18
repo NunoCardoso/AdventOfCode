@@ -2,14 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Cathode-Ray Tube',
     year: 2022,
     day: 10,
-    title: 'Cathode-Ray Tube',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'Ugly output but it works, functional puzzle where we do the sums while parsing input'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2
   },
   params: {
     limit: 240,

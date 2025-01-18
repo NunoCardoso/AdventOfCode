@@ -1,131 +1,139 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { World } from 'declarations'
+import { Location, World } from 'declarations'
+import { getKey, getManhattanDistance, isSame } from 'util/location'
+import { QueueLinkedList } from 'util/queuelist'
 
-// x, y, score, path
-type Point = [number, number, number, Set<string>?]
+type Step = [row: number, col: number, score: number, path: string[]]
+
 type Data = {
-  lowestScore: number
-  path: Set<string>
+  end: Location
+  score: number
+  path: string[]
 }
+
+type VisitedIndex = Record<string, number>
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  let it: number = 0
-  let start: Point
-  const starts: Array<Point> = []
-  let end: Point
-  const world: World<string> = []
-
-  const isSame = (p: Point, p2: Point): boolean => p[0] === p2[0] && p[1] === p2[1]
-
   const getHeight = (level: string): number => 'abcdefghijklmnopqrstuvwxyz'.indexOf(level)
 
-  const getKey = (p: Point): string => '' + p[0] + ',' + p[1]
+  const outOfBounds = (world: World<string>, step: Step) =>
+    step[0] < 0 || step[1] < 0 || step[0] >= world.length || step[1] >= world[0].length
 
-  const outOfBounds = (p: Point) => p[0] < 0 || p[1] < 0 || p[0] >= world.length || p[1] >= world[0].length
-  const getNewPoints = (point: Point, visited: Set<string>): Array<Point> =>
+  const getNewSteps = (world: World<string>, step: Step, visitedIndex: VisitedIndex, data: Data): Step[] =>
     (
       [
-        [point[0] - 1, point[1], point[2] + 1],
-        [point[0] + 1, point[1], point[2] + 1],
-        [point[0], point[1] - 1, point[2] + 1],
-        [point[0], point[1] + 1, point[2] + 1]
-      ] as Array<Point>
-    ).filter((newPoint: Point) => {
-      if (outOfBounds(newPoint)) return false
-      if (getHeight(world[newPoint[0]][newPoint[1]]) - getHeight(world[point[0]][point[1]]) > 1) return false
-      newPoint[3] = new Set(point[3])!.add(getKey(newPoint))
-      return !visited.has(getKey(newPoint))
+        [step[0] - 1, step[1], step[2] + 1, step[3]],
+        [step[0] + 1, step[1], step[2] + 1, step[3]],
+        [step[0], step[1] - 1, step[2] + 1, step[3]],
+        [step[0], step[1] + 1, step[2] + 1, step[3]]
+      ] as Step[]
+    ).filter((newStep: Step) => {
+      if (outOfBounds(world, newStep)) return false
+      if (getHeight(world[newStep[0]][newStep[1]]) - getHeight(world[step[0]][step[1]]) > 1) return false
+      // pointless if this has more cost than the best so far
+      if (newStep[2] > data.score) return false
+      // we have visited this node before with a better score, give up
+      let key = getKey([newStep[0], newStep[1]])
+      if (visitedIndex[key] && visitedIndex[key] < newStep[2]) return false
+      newStep[3].push(key)
+      return true
     })
 
-  const doDijkstra = (opened: Array<Point>, openedIndex: Set<string>, visited: Set<string>, data: Data) => {
-    const point: Point = opened.splice(-1)[0]
-    const pointKey = getKey(point)
-    log.debug('=== Dijkstra ===', point, 'opened', opened.length, 'data', data)
+  const itWillNotBeBetter = (step: Step, data: Data) => {
+    if (data.score < step[2] + getManhattanDistance([step[0], step[1]], data.end)) return true
+    return false
+  }
 
-    if (isSame(point, end)) {
-      if (data.lowestScore > point[2]) {
-        log.debug('got lowest', point)
-        data.lowestScore = point[2]
-        data.path = point[3]!
+  const doDijkstra = (world: World<string>, queue: QueueLinkedList<Step>, visitedIndex: VisitedIndex, data: Data) => {
+    const step: Step = queue.pop()!
+    const key = getKey([step[0], step[1]])
+    //log.debug('=== Dijkstra ===', step.location, 'queue', queue.length, 'data', data)
+
+    visitedIndex[key] = step[2]
+
+    if (isSame([step[0], step[1]], data.end)) {
+      if (data.score > step[2]) {
+        data.score = step[2]
+        data.path = step[3]
       }
       return
     }
-    visited.add(pointKey)
-    openedIndex.delete(pointKey)
 
-    const newPoints: Array<Point> = getNewPoints(point, visited)
-    if (newPoints.length !== 0) {
-      newPoints.forEach((newPoint) => {
-        const newPointKey = getKey(newPoint)
-        if (!openedIndex.has(newPointKey)) {
-          opened.push(newPoint)
-          openedIndex.add(newPointKey)
+    // cut this if it will never give something useful
+    if (itWillNotBeBetter(step, data)) return
+
+    const newSteps: Step[] = getNewSteps(world, step, visitedIndex, data)
+    if (newSteps.length !== 0) {
+      newSteps.forEach((newStep) => {
+        const key = getKey([newStep[0], newStep[1]])
+
+        // we have this node before as opened
+        if (queue.has(key)) {
+          let currentScore: number | null = queue.getSort(key)
+          // if this is worse, return
+          if (currentScore! < newStep[2]) return
+          // if it is better, replace it in the queue
+          if (currentScore! > newStep[2]) {
+            queue.remove(key)
+            queue.add(newStep, newStep[2], key)
+          }
         } else {
-          const index = opened.findIndex((p: Point) => isSame(p, newPoint))
-          if (opened[index][2] > newPoint[2]) opened[index] = newPoint
+          // if we are here, we did not have this visited or visited with worse score,
+          // we do not have this in queue
+          queue.add(newStep, newStep[2], key)
         }
       })
-      opened.sort((a, b) => b[2] - a[2])
     }
   }
 
   const printData = (world: World<string>, data: Data) => {
     world.forEach((row, i) => {
-      console.log(row.map((cell, j) => (data.path.has(i + ',' + j) ? clc.red(world[i][j]) : world[i][j])).join(''))
+      console.log(row.map((cell, j) => (data.path.includes(i + ',' + j) ? clc.red(world[i][j]) : world[i][j])).join(''))
     })
     console.log('')
   }
 
-  const solveFor = (opened: Array<Point>): number => {
-    const visited: Set<string> = new Set()
-    const data: Data = { lowestScore: Number.POSITIVE_INFINITY, path: new Set() }
-    const openedIndex: Set<string> = new Set()
-    opened.forEach((point) => openedIndex.add(getKey(point)))
-    let iterations = 0
-    while (opened.length > 0) {
-      doDijkstra(opened, openedIndex, visited, data)
-      if (it % 100 === 0) {
-        log.debug('it', iterations, 'opened length', opened.length)
-        iterations++
-      }
-    }
+  const solveFor = (world: World<string>, queue: QueueLinkedList<Step>, end: Location): number => {
+    const visitedIndex: VisitedIndex = {}
+    const data: Data = { end, score: Number.MAX_VALUE, path: [] }
+    while (!queue.isEmpty()) doDijkstra(world, queue, visitedIndex, data)
     if (params.ui?.show && params.ui?.end) printData(world, data)
-    return data.lowestScore
+    return data.score
   }
 
+  let rowIndex: number = 0
+  const startsPart1: QueueLinkedList<Step> = new QueueLinkedList<Step>()
+  const startsPart2: QueueLinkedList<Step> = new QueueLinkedList<Step>()
+  let end: Location = [0, 0]
+  const world: World<string> = []
+
   for await (const line of lineReader) {
-    const row: Array<string> = []
-    line.split('').forEach((char: string, i: number) => {
-      if (char === 'S') {
-        start = [it, i, 0, new Set<string>().add(it + ',' + i)]
+    const row: string[] = []
+    line.split('').forEach((cell: string, colIndex: number) => {
+      if (cell === 'S') {
+        let key = getKey([rowIndex, colIndex])
+        startsPart1.add([rowIndex, colIndex, 0, [key]], 0, key)
         row.push('a')
-      } else if (char === 'a') {
-        starts.push([it, i, 0, new Set<string>().add(it + ',' + i)])
-        row.push(char)
-      } else if (char === 'E') {
-        end = [it, i, 0]
+      } else if (cell === 'a') {
+        let key = getKey([rowIndex, colIndex])
+        startsPart2.add([rowIndex, colIndex, 0, [key]], 0, key)
+        row.push(cell)
+      } else if (cell === 'E') {
+        end = [rowIndex, colIndex]
         row.push('z')
       } else {
-        row.push(char)
+        row.push(cell)
       }
     })
     world.push(row)
-    it++
+    rowIndex++
   }
 
-  let part1: number = 0
-  let part2: number = 0
-
-  if (!params.skipPart1) {
-    part1 = solveFor([start!])
-  }
-
-  if (!params.skipPart2) {
-    part2 = solveFor(starts)
-  }
+  let part1: number = solveFor(world, startsPart1, end)
+  let part2: number = solveFor(world, startsPart2, end)
 
   return { part1, part2 }
 }

@@ -2,14 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Monkey in the Middle',
     year: 2022,
     day: 11,
-    title: 'Monkey in the Middle',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'First puzzle using the multiple common denominator to extrapolate results'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 3
   },
   params: {
     iterations: {

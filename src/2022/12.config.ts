@@ -2,18 +2,19 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Hill Climbing Algorithm',
     year: 2022,
     day: 12,
-    title: 'Hill Climbing Algorithm',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'This is the cleanest, simplest Dijkstra algorithm implementation from all puzzles',
-    tags: ['Dijkstra']
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    tags: ['Dijkstra', 'Path-finding'],
+    difficulty: 3
   },
+  // mode: 'fastest',
   ui: {
-    show: true,
+    show: false,
     end: true
   },
   test: {

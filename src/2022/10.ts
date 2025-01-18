@@ -5,8 +5,8 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: string = ''
 
-  const signals: Array<number> = []
-  const screen: Array<string> = new Array(params.limit).fill('.')
+  const signals: number[] = []
+  const screen: string[] = new Array(params.limit).fill('.')
 
   const checkCycle = (cycles: number, signal: number) => {
     // part 1
@@ -24,6 +24,7 @@ export default async (lineReader: any, params: Params) => {
 
   let cycles: number = 0
   let signal: number = 1
+
   for await (const line of lineReader) {
     const [operation, amount] = line.split(' ')
     cycles++
@@ -35,12 +36,10 @@ export default async (lineReader: any, params: Params) => {
     }
   }
 
-  if (!params.skipPart1) part1 = signals.reduce((memo: number, val: number) => memo + val)
+  part1 = signals.reduce((acc: number, val: number) => acc + val)
 
-  if (!params.skipPart2) {
-    for (let cursor = params.limit; cursor >= 0; cursor -= params.lineWidth) screen.splice(cursor, 0, '\n')
-    part2 = screen.join('')
-  }
+  for (let cursor = params.limit; cursor >= 0; cursor -= params.lineWidth) screen.splice(cursor, 0, '\n')
+  part2 = screen.join('')
 
   return { part1, part2 }
 }
