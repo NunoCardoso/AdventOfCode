@@ -2,14 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'No Space Left On Device',
     year: 2022,
     day: 7,
-    title: 'No Space Left On Device',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'Properly optimized script with no need for recursion, to compute directory sizes'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2
   },
   params: {
     cutoffDirSize: 100000,

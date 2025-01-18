@@ -2,14 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Tuning Trouble',
     year: 2022,
     day: 6,
-    title: 'Tuning Trouble',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'Simple text regex puzzle, compact solution script, easy with the use of Set'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 1
   },
   params: {
     size: {

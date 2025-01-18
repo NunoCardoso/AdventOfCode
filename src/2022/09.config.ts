@@ -5,11 +5,11 @@ let config: PuzzleConfig = {
     year: 2022,
     day: 9,
     title: 'Rope Bridge',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'Good puzzle solution for any length'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2
   },
   params: {
     ropeLength: {

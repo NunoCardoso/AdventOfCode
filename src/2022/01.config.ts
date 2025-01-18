@@ -2,14 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Calorie Counting',
     year: 2022,
     day: 1,
-    title: 'Calorie Counting',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'Functional puzzle, doing counts while parsing input, returning top counts'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 1
   },
   test: {
     id: 'test',

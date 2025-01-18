@@ -2,14 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Treetop Tree House',
     year: 2022,
     day: 8,
-    title: 'Treetop Tree House',
-    comment: 'Very simple solution iterating on all 4 directions while computing partial scores',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2
   },
   test: {
     id: 'test',

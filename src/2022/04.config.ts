@@ -2,15 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Camp Cleanup',
     year: 2022,
     day: 4,
-    title: 'Camp Cleanup',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment:
-      'Functional puzzle, compacted the code to very hard to do the overlap logic and summing answers while parsing input'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 1
   },
   test: {
     id: 'test',

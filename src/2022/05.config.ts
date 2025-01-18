@@ -2,16 +2,17 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Supply Stacks',
     year: 2022,
     day: 5,
-    title: 'Supply Stacks',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'Good puzzle to play with splices.'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2
   },
   ui: {
+    show: true,
     end: true
   },
   test: {

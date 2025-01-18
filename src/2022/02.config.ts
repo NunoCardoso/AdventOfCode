@@ -2,14 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Rock Paper Scissors',
     year: 2022,
     day: 2,
-    title: 'Rock Paper Scissors',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'Functional puzzle, summing answers while parsing input. Rules are hardcoded.'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 1
   },
   test: {
     id: 'test',

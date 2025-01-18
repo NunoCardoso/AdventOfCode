@@ -17,8 +17,8 @@ export default async (lineReader: any, params: Params) => {
         continue
       }
       // left, right, top, bottom
-      const treesAreVisible: Array<boolean> = [true, true, true, true]
-      const treeScore = [0, 0, 0, 0]
+      const treesAreVisible: boolean[] = [true, true, true, true]
+      const treeScore: number[] = [0, 0, 0, 0]
       for (let cursor = column - 1; cursor >= 0; cursor--) {
         treeScore[0]++
         if (trees[row][cursor] >= trees[row][column]) {
