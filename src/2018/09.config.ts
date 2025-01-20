@@ -10,7 +10,7 @@ let config: PuzzleConfig = {
     speed: 'fast',
     code: 'clean',
     difficulty: 5,
-    tags: ['Map-based-linked-lists']
+    tags: ['Linked-lists']
   },
   mode: 'fastest',
   logLevel: 'debug',

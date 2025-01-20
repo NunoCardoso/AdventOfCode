@@ -15,7 +15,7 @@ export type Tag =
   | 'Depth-first'
   | 'Path-finding'
   | 'Bron–Kerbosch'
-  | 'Map-based-linked-lists'
+  | 'Linked-lists'
 
 export type Answer = string | number
 

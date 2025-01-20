@@ -16,12 +16,8 @@ export default async (lineReader: any, params: Params) => {
     return values.length
   }
 
-  if (!params.skipPart1) {
-    part1 = solveFor()
-  }
-  if (!params.skipPart2) {
-    part2 = solveFor()
-  }
+  if (!params.skipPart1) part1 = solveFor()
+  if (!params.skipPart2) part2 = solveFor()
 
   return { part1, part2 }
 }

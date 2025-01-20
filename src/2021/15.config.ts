@@ -10,7 +10,7 @@ let config: PuzzleConfig = {
     speed: 'medium',
     code: 'dirty',
     difficulty: 3,
-    tags: ['A*', 'Path-finding']
+    tags: ['A*', 'Path-finding', 'Linked-lists']
   },
   mode: 'fastest',
   logLevel: 'info',

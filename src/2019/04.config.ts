@@ -2,27 +2,24 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
-    title: 'Distress Signal',
-    year: 2022,
-    day: 13,
+    title: 'Secure Container',
+    year: 2019,
+    day: 4,
     result: 'finished',
     status: 'solved',
     speed: 'fast',
     code: 'clean',
-    tags: ['Recursion'],
-    difficulty: 2
+    difficulty: 1
   },
-  test: {
-    id: 'test',
-    answers: {
-      part1: 13,
-      part2: 140
-    }
+  //mode: 'bruteforce',
+  logLevel: 'debug',
+  params: {
+    input: '307237-769058'
   },
   prod: {
     answers: {
-      part1: 5684,
-      part2: 22932
+      part1: 889,
+      part2: 589
     }
   }
 }

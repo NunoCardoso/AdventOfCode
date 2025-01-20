@@ -2,16 +2,15 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Regolith Reservoir',
     year: 2022,
     day: 14,
-    title: 'Regolith Reservoir',
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment:
-      'The hardest part is to get used to x, y coords instead of row, col. Not the fastest solution, as I ' +
-      'do drop sand point by point, but it is fast enough'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    tags: ['Recursion'],
+    difficulty: 3
   },
   ui: {
     show: true,

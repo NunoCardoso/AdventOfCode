@@ -2,15 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Beacon Exclusion Zone',
     year: 2022,
     day: 15,
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment:
-      'This is a great puzzle, as it is way easier to rotate 45 degrees and use square areas instead of diamond' +
-      'areas. also, finding the sole beacon for part 2 requires some brainstorming explained on readme'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 4
   },
   test: {
     id: 'test',

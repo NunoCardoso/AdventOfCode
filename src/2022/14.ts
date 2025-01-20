@@ -1,20 +1,22 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Point, World } from 'declarations'
+import { Location, World } from 'declarations'
 
 type Dimensions = Record<string, number>
 
 export default async (lineReader: any, params: Params) => {
+  const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+
   let part1: number = 0
   let part2: number = 0
 
-  const rocks: Array<Point> = []
+  const rocks: Location[] = []
 
-  const fillOutData = (rocks: Array<Point>, d: Dimensions): [World<string>, Dimensions] => {
+  const fillOutData = (rocks: Location[], d: Dimensions): [World<string>, Dimensions] => {
     const world: World<string> = new Array(d.maxY + 1)
     for (let y = 0; y <= d.maxY; y++) world[y] = new Array(d.maxX + 1).fill('.')
     // grid works in rows/cols, start is in x/y, so we invert
-    rocks.forEach((rock: Point) => (world[rock[1]][rock[0]] = '#'))
+    rocks.forEach((rock: Location) => (world[rock[1]][rock[0]] = '#'))
     world[params.start[1]][params.start[0]] = '+'
     return [world, d]
   }
@@ -23,7 +25,7 @@ export default async (lineReader: any, params: Params) => {
     const lines = []
     for (let y = dimensions.minY; y <= dimensions.maxY; y++) {
       let line: string = ''
-      for (let x = dimensions.minX; x <= dimensions.maxX; x++) {
+      for (let x = dimensions.minX; x <= dimensions.maxX; x++)
         line +=
           world[y][x] === '#'
             ? clc.red('#')
@@ -32,39 +34,40 @@ export default async (lineReader: any, params: Params) => {
               : world[y][x] === '+'
                 ? clc.green('+')
                 : world[y][x]
-      }
+
       lines.push(line)
     }
-    lines.forEach((b, i) => console.log(i.toString().padStart(3, '0'), b))
+    lines.forEach((b, i) => log.info(i.toString().padStart(3, '0'), b))
   }
 
-  const dropSand = (world: World<string>, dimensions: Dimensions, point: Point): Point | null => {
-    let newPoint: Point = [point[0], point[1] + 1]
-    if (newPoint[1] > dimensions.maxY) return null
-    let below = world[newPoint[1]][newPoint[0]]
-    if (below === '.') return dropSand(world, dimensions, newPoint)
+  const dropSand = (world: World<string>, dimensions: Dimensions, location: Location): Location | null => {
+    let newLocation: Location = [location[0], location[1] + 1]
+    if (newLocation[1] > dimensions.maxY) return null
+    let below = world[newLocation[1]][newLocation[0]]
+    if (below === '.') return dropSand(world, dimensions, newLocation)
     if (below === '#' || below === 'o') {
       // swerve to the left
-      newPoint = [point[0] - 1, point[1] + 1]
-      const below = world[newPoint[1]][newPoint[0]]
-      if (below === '.') return dropSand(world, dimensions, newPoint)
+      newLocation = [location[0] - 1, location[1] + 1]
+      const below = world[newLocation[1]][newLocation[0]]
+      if (below === '.') return dropSand(world, dimensions, newLocation)
     }
     // swerve to the right
-    newPoint = [point[0] + 1, point[1] + 1]
-    below = world[newPoint[1]][newPoint[0]]
-    if (below === '.') return dropSand(world, dimensions, newPoint)
+    newLocation = [location[0] + 1, location[1] + 1]
+    below = world[newLocation[1]][newLocation[0]]
+    if (below === '.') return dropSand(world, dimensions, newLocation)
     // if I am here after all dropping attempts, then I am stuck
-    if (point[0] === params.start[0] && point[1] === params.start[1]) return null
-    return point
+    if (location[0] === params.start[0] && location[1] === params.start[1]) return null
+    return location
   }
 
-  const startSand = (world: World<string>, dimensions: Dimensions, origin: Point) => {
+  const startSand = (world: World<string>, dimensions: Dimensions, origin: Location) => {
     let sands = 0
+    let location: Location | null
     while (true) {
-      const finalPosition: Point | null = dropSand(world, dimensions, origin)
-      if (!finalPosition) break
+      location = dropSand(world, dimensions, origin)
+      if (!location) break
       else {
-        world[finalPosition[1]][finalPosition[0]] = 'o'
+        world[location[1]][location[0]] = 'o'
         sands++
       }
       if (params.ui?.show && params.ui?.during) render(world, dimensions)
@@ -82,8 +85,8 @@ export default async (lineReader: any, params: Params) => {
   for await (const line of lineReader) {
     const values = line.split(' -> ')
     for (let i = 0; i < values.length - 1; i++) {
-      const from: Point = values[i].split(',').map(Number) as Point
-      const to: Point = values[i + 1].split(',').map(Number) as Point
+      const from: Location = values[i].split(',').map(Number) as Location
+      const to: Location = values[i + 1].split(',').map(Number) as Location
       const rowDirection: number = to[0] - from[0] < 0 ? -1 : 1
       const colDir: number = to[1] - from[1] < 0 ? -1 : 1
       for (let row = from[0]; rowDirection === -1 ? row >= to[0] : row <= to[0]; row += rowDirection) {
@@ -118,8 +121,5 @@ export default async (lineReader: any, params: Params) => {
     if (params.ui?.show && params.ui?.end) render(world, dimensions)
   }
 
-  return {
-    part1,
-    part2
-  }
+  return { part1, part2 }
 }

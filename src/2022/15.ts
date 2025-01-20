@@ -1,40 +1,45 @@
 import { Params } from 'aoc.d'
-import { Point, Range } from 'declarations'
+import { Location, Range } from 'declarations'
 import { lineIntersect } from 'util/geometry'
+import { getKey } from 'util/location'
 import { mergeRange } from 'util/range'
 
 // x, y, index of beacon
-type Sensor = { center: Point; corners: Array<Point> }
+type Sensor = {
+  center: Location
+  corners: Location[]
+}
+type Beacon = Location
+
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
   let part1: number = 0
   let part2: number = 0
 
-  const beacons: Array<Point> = []
+  const beacons: Beacon[] = []
   const beaconIndex: Set<string> = new Set() // to remove duplicates
-  const sensors: Array<Sensor> = []
+  const sensors: Sensor[] = []
 
-  const getKey = (p: Point) => p[0] + ',' + p[1]
-  const rotate45deg = (p: Point): Point => [p[0] + p[1], p[1] - p[0]]
-  const unrotate45deg = (p: Point): Point => [(p[0] - p[1]) / 2, (p[1] + p[0]) / 2]
-  const getAxisRatio = (p: Point) => p[0] + p[1]
+  const rotate45deg = (beacon: Beacon): Beacon => [beacon[0] + beacon[1], beacon[1] - beacon[0]]
+  const unrotate45deg = (beacon: Beacon): Beacon => [(beacon[0] - beacon[1]) / 2, (beacon[1] + beacon[0]) / 2]
+  const getAxisRatio = (p: Location) => p[0] + p[1]
 
-  const sensorIncludesPoint = (sensor1: Sensor, p: Point) => {
-    if (p[0] < sensor1.corners[0][0] || sensor1.corners[1][0] < p[0]) return false
-    if (p[1] < sensor1.corners[0][1] || sensor1.corners[3][1] < p[1]) return false
+  const sensorIncludesLocation = (sensor1: Sensor, location: Location) => {
+    if (location[0] < sensor1.corners[0][0] || sensor1.corners[1][0] < location[0]) return false
+    if (location[1] < sensor1.corners[0][1] || sensor1.corners[3][1] < location[1]) return false
     return true
   }
 
-  const getInterceptedSensors = (sensors: Array<Sensor>, constantY: number): Array<Sensor> =>
+  const getInterceptedSensors = (sensors: Sensor[], constantY: number): Sensor[] =>
     sensors.filter(
       (sensor) =>
         sensor.corners.some((corner) => getAxisRatio(corner) < constantY) &&
         sensor.corners.some((corner) => getAxisRatio(corner) >= constantY)
     )
 
-  const getSensorRangeInterceptions = (sensors: Array<Sensor>, axis: number): Array<Array<Point>> => {
-    const sensorRangeInterceptions: Array<Array<Point>> = []
+  const getSensorRangeInterceptions = (sensors: Sensor[], axis: number): Location[][] => {
+    const sensorRangeInterceptions: Location[][] = []
 
     sensors.forEach((sensor) => {
       // square corners: [0=NW, 1=NE, 2=SW, 3=NE]
@@ -56,7 +61,7 @@ export default async (lineReader: any, params: Params) => {
     return sensorRangeInterceptions
   }
 
-  const rectangleLines = (sensor: Sensor): Array<[Point, Point]> => [
+  const rectangleLines = (sensor: Sensor): [Location, Location][] => [
     [sensor.corners[0], sensor.corners[1]],
     [sensor.corners[0], sensor.corners[2]],
     [sensor.corners[1], sensor.corners[3]],
@@ -64,11 +69,11 @@ export default async (lineReader: any, params: Params) => {
   ]
 
   const rectangleIntersects = (sensorA: Sensor, sensorB: Sensor) => {
-    const intersects: Array<Point> = []
-    rectangleLines(sensorA).forEach((lineA: [Point, Point]) => {
-      rectangleLines(sensorB).forEach((lineB: [Point, Point]) => {
-        const intersectPoint = lineIntersect(lineA, lineB)
-        if (intersectPoint) intersects.push(intersectPoint)
+    const intersects: Location[] = []
+    rectangleLines(sensorA).forEach((lineA: [Location, Location]) => {
+      rectangleLines(sensorB).forEach((lineB: [Location, Location]) => {
+        const intersectLocation = lineIntersect(lineA, lineB)
+        if (intersectLocation) intersects.push(intersectLocation)
       })
     })
     return intersects
@@ -93,32 +98,32 @@ export default async (lineReader: any, params: Params) => {
       beacons.push(beacon)
       beaconIndex.add(getKey(beacon))
     }
-    const sensor = { center: rotate45deg([x1, y1]), corners: [] as Array<Point> }
+    const sensor: Sensor = { center: rotate45deg([x1, y1]), corners: [] }
     const beaconRadius = Math.max(Math.abs(beacon[0] - sensor.center[0]), Math.abs(beacon[1] - sensor.center[1]))
     sensor.corners = [
       [sensor.center[0] - beaconRadius, sensor.center[1] - beaconRadius],
       [sensor.center[0] + beaconRadius, sensor.center[1] - beaconRadius],
       [sensor.center[0] - beaconRadius, sensor.center[1] + beaconRadius],
       [sensor.center[0] + beaconRadius, sensor.center[1] + beaconRadius]
-    ] as Array<Point>
+    ] as Location[]
     sensors.push(sensor)
   }
 
   if (!params.skipPart1) {
-    const startPoint: Point = [0!, params!.y]
-    const endPoint: Point = [params.limit!, params!.y]
-    const startPointRotated = rotate45deg(startPoint)
-    const endPointRotated = rotate45deg(endPoint)
-    const probedAxisSlope = getAxisRatio(startPointRotated) // endPointRotated weill have the same
-    log.debug(startPoint, endPoint, startPointRotated, endPointRotated, probedAxisSlope)
-    const interceptedSensors: Array<Sensor> = getInterceptedSensors(sensors, probedAxisSlope)
+    const startLocation: Location = [0!, params!.y]
+    const endLocation: Location = [params.limit!, params!.y]
+    const startLocationRotated = rotate45deg(startLocation)
+    const endLocationRotated = rotate45deg(endLocation)
+    const probedAxisSlope = getAxisRatio(startLocationRotated) // endLocationRotated will have the same
+    log.debug(startLocation, endLocation, startLocationRotated, endLocationRotated, probedAxisSlope)
+    const interceptedSensors: Sensor[] = getInterceptedSensors(sensors, probedAxisSlope)
     // pairs of points where max sensor range intercepts the axis slope, one pair per beacon
     // if it intercepts a corner, both points are equal
-    const rangeInterceptions: Array<Array<Point>> = getSensorRangeInterceptions(interceptedSensors, probedAxisSlope)
+    const rangeInterceptions: Location[][] = getSensorRangeInterceptions(interceptedSensors, probedAxisSlope)
     // since the flat slope is now converted to a 45 degree, I can count y or x values. I will use x as they are sorted
     log.debug('range interceptions', rangeInterceptions)
-    let rangesWhereBeaconCannotExist: Array<Range> = rangeInterceptions
-      .map((range: Array<Point>) => [range[0][0], range[1][0]] as Range)
+    let rangesWhereBeaconCannotExist: Range[] = rangeInterceptions
+      .map((range: Location[]) => [range[0][0], range[1][0]] as Range)
       .sort((a: Range, b: Range) => a[0] - b[0] || a[1] - b[1])
     // let's merge common ranges so it is easier to see h (have it sorted by x from min to max)
     rangesWhereBeaconCannotExist = mergeRange(rangesWhereBeaconCannotExist)
@@ -132,7 +137,7 @@ export default async (lineReader: any, params: Params) => {
 
   if (!params.skipPart2) {
     // we need to find intersects for all rectangles, along with corners
-    const intersectsAndCorners: Array<Point> = []
+    const intersectsAndCorners: Location[] = []
     const intersectsAndCornersIndex: Set<string> = new Set()
 
     for (let i = 0; i < sensors.length - 1; i++) {
@@ -161,11 +166,11 @@ export default async (lineReader: any, params: Params) => {
       }
     })
 
-    const foundBeacons: Array<Point> = []
+    const foundBeacons: Location[] = []
     intersectsAndCorners.forEach((candidateBeacon) => {
       // let's see if that beacon is not inside a sensor square
       const originalBeacon = unrotate45deg(candidateBeacon)
-      if (sensors.every((sensor, i) => !sensorIncludesPoint(sensor, candidateBeacon))) {
+      if (sensors.every((sensor, i) => !sensorIncludesLocation(sensor, candidateBeacon))) {
         if (
           originalBeacon[0] >= 0 &&
           originalBeacon[0] <= params.limit &&
@@ -177,9 +182,7 @@ export default async (lineReader: any, params: Params) => {
       }
     })
 
-    if (foundBeacons.length > 0) {
-      part2 = foundBeacons![0][0] * 4000000 + foundBeacons![0][1]
-    }
+    part2 = foundBeacons![0][0] * 4000000 + foundBeacons![0][1]
   }
 
   return { part1, part2 }

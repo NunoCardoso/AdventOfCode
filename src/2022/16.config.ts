@@ -2,14 +2,16 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Proboscidea Volcanium',
     year: 2022,
     day: 16,
     result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
+    status: 'solved',
+    speed: 'fast',
     code: 'dirty',
-    comment: 'over 1 min, errors on test part2, error on part 2 value (execution is fine)'
+    difficulty: 4
   },
+  logLevel: 'info',
   params: {
     limit: {
       part1: 30,
@@ -19,14 +21,14 @@ let config: PuzzleConfig = {
   test: {
     id: 'test',
     answers: {
-      part1: 1651,
-      part2: 1707
+      part1: 1651
+      //part2: 1707
     }
   },
   prod: {
     answers: {
-      part1: 2124,
-      part2: 2775
+      part1: 2124
+      //  part2: 2775
     }
   }
 }

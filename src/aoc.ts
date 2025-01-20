@@ -60,7 +60,7 @@ export default async (puzzle: PuzzleConfig) => {
     const answer = await app(lineReader, runParams)
     result.time = new Date().getTime() - result.time
 
-    if (!!run?.answers?.part1) {
+    if (!runParams.skipPart1) {
       result.part1.skip = false
       result.part1.answer = answer.part1
       result.part1.expected = run.answers?.part1
@@ -68,7 +68,7 @@ export default async (puzzle: PuzzleConfig) => {
       result.part1.skip = true
     }
 
-    if (!!run?.answers?.part2) {
+    if (!runParams.skipPart2) {
       result.part2.skip = false
       result.part2.answer = answer.part2
       result.part2.expected = run.answers?.part2

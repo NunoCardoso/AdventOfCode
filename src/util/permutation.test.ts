@@ -52,5 +52,7 @@ describe('util/permutation', () => {
       [4, 2],
       [4, 3]
     ])
+
+    expect(permutation([1], 2)).toEqual([])
   })
 })

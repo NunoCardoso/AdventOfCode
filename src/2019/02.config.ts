@@ -2,32 +2,28 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
-    title: 'Hill Climbing Algorithm',
-    year: 2022,
-    day: 12,
+    title: 'Program Alarm',
+    year: 2019,
+    day: 2,
     result: 'finished',
     status: 'solved',
     speed: 'fast',
     code: 'clean',
-    tags: ['Dijkstra', 'Path-finding', 'Linked-lists'],
-    difficulty: 3
-  },
-  // mode: 'fastest',
-  ui: {
-    show: false,
-    end: true
+    difficulty: 0
   },
   test: {
     id: 'test',
     answers: {
-      part1: 31,
-      part2: 29
+      part1: 3500
     }
+  },
+  params: {
+    target: 19690720
   },
   prod: {
     answers: {
-      part1: 412,
-      part2: 402
+      part1: 6730673,
+      part2: 3749
     }
   }
 }

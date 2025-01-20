@@ -8,3 +8,4 @@ x
 # no JS allowed
 *.js
 *.js.map
+.aocrc
