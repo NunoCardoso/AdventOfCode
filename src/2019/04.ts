@@ -12,7 +12,8 @@ export default async (lineReader: any, params: Params) => {
   const getNonAdjacentNumber = (number: number, round: 'floor' | 'ceil'): number => {
     const digits: string[] = number.toString().split('')
     for (let cursor of range(5)) {
-      if (digits[cursor + 1] < digits[cursor]) { // I can do string comparison between single digits.
+      if (digits[cursor + 1] < digits[cursor]) {
+        // I can do string comparison between single digits.
         // Once a violation is found, set all subsequent digits to the previous digit
         const fillValue = digits[cursor]
         for (let otherCursor of rangeFromToInclusive(cursor, 5)) digits[otherCursor] = fillValue
@@ -47,7 +48,7 @@ export default async (lineReader: any, params: Params) => {
     let numberCount: number[] = makeMap(numbers)
     for (let cursor of range(5)) {
       if (numbers[cursor] === numbers[cursor + 1]) hasAdjacentNumber = true
-      if ((numbers[cursor + 1] - numbers[cursor]) < 0) hasDecreasingValue = true
+      if (numbers[cursor + 1] - numbers[cursor] < 0) hasDecreasingValue = true
     }
     if (hasAdjacentNumber && !hasDecreasingValue) part1++
     if (numberCount.includes(2) && !hasDecreasingValue) part2++

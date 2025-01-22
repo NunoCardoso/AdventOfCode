@@ -16,10 +16,7 @@ export const range = (size: number, startAt: number = 0): number[] =>
     .fill(0)
     .map((_, i) => i + startAt)
 
-
 export const rangeFromToInclusive = (from: number, to: number): number[] =>
   Array(to - from + 1)
-  .fill(0)
-  .map((_, i) => i + from)
-
-
+    .fill(0)
+    .map((_, i) => i + from)

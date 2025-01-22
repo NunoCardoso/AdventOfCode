@@ -1,210 +1,174 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import _ from 'lodash'
+import { Location3D } from 'declarations'
+
+type Dimension = [minX: number, maxX: number, minY: number, maxY: number, minZ: number, maxZ: number]
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  type Point = [number, number, number]
+  let dimension: Dimension = [0, 0, 0, 0, 0, 0]
 
-  let minX: number | undefined,
-    maxX: number | undefined,
-    minY: number | undefined,
-    maxY: number | undefined,
-    minZ: number | undefined,
-    maxZ: number | undefined
+  const isObsidian = (needle: Location3D, haystack: Record<string, Location3D>): boolean =>
+    !!haystack[needle[0] + ',' + needle[1] + ',' + needle[2]]
 
-  const isObsidian = (needle: Point, haystack: Record<string, Point>): boolean =>
-    Object.prototype.hasOwnProperty.call(haystack, '' + needle[0] + ',' + needle[1] + ',' + needle[2])
+  const isOutside = (needle: Location3D, haystack: Record<string, Location3D>) =>
+    outsideBoundaries(needle) ? true : isObsidian(needle, haystack)
 
-  const isOutside = (needle: Point, haystack: Record<string, Point>) => {
-    if (outsideBoundaries(needle)) {
-      return true
-    }
-    return Object.prototype.hasOwnProperty.call(haystack, '' + needle[0] + ',' + needle[1] + ',' + needle[2])
-  }
+  const numberOfExposedSurfaces = (location: Location3D, obsidianLocationsMap: Record<string, Location3D>): number =>
+    (
+      [
+        [location[0] + 1, location[1], location[2]],
+        [location[0] - 1, location[1], location[2]],
+        [location[0], location[1] + 1, location[2]],
+        [location[0], location[1] - 1, location[2]],
+        [location[0], location[1], location[2] + 1],
+        [location[0], location[1], location[2] - 1]
+      ] as Location3D[]
+    ).reduce((acc, location) => acc + (!isObsidian(location, obsidianLocationsMap) ? 1 : 0), 0)
 
-  const numberOfExposedSurfaces = (point: Point, obsidianPointKeys: Record<string, Point>): number => {
-    return (
-      6 -
-      (isObsidian([point[0] + 1, point[1], point[2]], obsidianPointKeys) ? 1 : 0) -
-      (isObsidian([point[0] - 1, point[1], point[2]], obsidianPointKeys) ? 1 : 0) -
-      (isObsidian([point[0], point[1] + 1, point[2]], obsidianPointKeys) ? 1 : 0) -
-      (isObsidian([point[0], point[1] - 1, point[2]], obsidianPointKeys) ? 1 : 0) -
-      (isObsidian([point[0], point[1], point[2] + 1], obsidianPointKeys) ? 1 : 0) -
-      (isObsidian([point[0], point[1], point[2] - 1], obsidianPointKeys) ? 1 : 0)
-    )
-  }
+  const numberOfExposedSurfacesToOutside = (
+    location: Location3D,
+    outsideLocation3DKeys: Record<string, Location3D>
+  ): number =>
+    (
+      [
+        [location[0] + 1, location[1], location[2]],
+        [location[0] - 1, location[1], location[2]],
+        [location[0], location[1] + 1, location[2]],
+        [location[0], location[1] - 1, location[2]],
+        [location[0], location[1], location[2] + 1],
+        [location[0], location[1], location[2] - 1]
+      ] as Location3D[]
+    ).reduce((acc, location) => acc + (isOutside(location, outsideLocation3DKeys) ? 1 : 0), 0)
 
-  const numberOfExposedSurfaces2 = (point: Point, outsidePointKeys: Record<string, Point>): number => {
-    return (
-      0 +
-      (isOutside([point[0] + 1, point[1], point[2]], outsidePointKeys) ? 1 : 0) +
-      (isOutside([point[0] - 1, point[1], point[2]], outsidePointKeys) ? 1 : 0) +
-      (isOutside([point[0], point[1] + 1, point[2]], outsidePointKeys) ? 1 : 0) +
-      (isOutside([point[0], point[1] - 1, point[2]], outsidePointKeys) ? 1 : 0) +
-      (isOutside([point[0], point[1], point[2] + 1], outsidePointKeys) ? 1 : 0) +
-      (isOutside([point[0], point[1], point[2] - 1], outsidePointKeys) ? 1 : 0)
-    )
-  }
+  const outsideBoundaries = (c: Location3D) =>
+    c[0] < dimension[0]! ||
+    c[0] > dimension[1]! ||
+    c[1] < dimension[2]! ||
+    c[1] > dimension[3]! ||
+    c[2] < dimension[4]! ||
+    c[2] > dimension[5]!
 
-  const outsideBoundaries = (c: Point) => {
-    return c[0] < minX! || c[0] > maxX! || c[1] < minY! || c[1] > maxY! || c[2] < minZ! || c[2] > maxZ!
-  }
-
-  const getCandidates = ({
-    obsidianPointKeys,
-    opened,
-    visited,
-    current
-  }: {
-    obsidianPointKeys: Record<string, Point>
-    opened: Array<Point>
-    visited: Record<string, Point>
-    current: Point
-  }) => {
-    let candidates: Array<Point> = [
-      [current[0] + 1, current[1], current[2]],
-      [current[0] - 1, current[1], current[2]],
-      [current[0], current[1] + 1, current[2]],
-      [current[0], current[1] - 1, current[2]],
-      [current[0], current[1], current[2] + 1],
-      [current[0], current[1], current[2] - 1]
-    ]
-
-    candidates = _.reject(candidates, (c: Point) => {
+  const getMoreLocations = (
+    obsidianLocationsMap: Record<string, Location3D>,
+    queue: Location3D[],
+    visited: Record<string, Location3D>,
+    current: Location3D
+  ): Location3D[] =>
+    (
+      [
+        [current[0] + 1, current[1], current[2]],
+        [current[0] - 1, current[1], current[2]],
+        [current[0], current[1] + 1, current[2]],
+        [current[0], current[1] - 1, current[2]],
+        [current[0], current[1], current[2] + 1],
+        [current[0], current[1], current[2] - 1]
+      ] as Location3D[]
+    ).filter((c: Location3D) => {
       // reject off bounds
-      if (outsideBoundaries(c)) {
-        // console.log('rejected', c, 'out of bounds')
-        return true
-      }
+      if (outsideBoundaries(c)) return false
       // reject already visited
-      if (isVisited(visited, c)) {
-        // console.log('rejected', c, 'already visited')
-        return true
-      }
+      if (isVisited(visited, c)) return false
       // reject already opened
-      if (_.find(opened, (o: Point) => o[0] === c[0] && o[1] === c[1] && o[2] === c[2]) !== undefined) {
-        // console.log('rejected', c, 'already opened')
-        return true
-      }
-      // reject Point that are obsidian
-      if (isObsidian(c, obsidianPointKeys)) {
-        // console.log('rejected', c, 'is in obsidian')
-        return true
-      }
-      return false
+      if (queue.some((o: Location3D) => o[0] === c[0] && o[1] === c[1] && o[2] === c[2])) return false
+      // reject Location3D that are obsidian
+      if (isObsidian(c, obsidianLocationsMap)) return false
+      return true
     })
-    if (candidates.length > 0) {
-      opened.push(...candidates)
-    }
-  }
 
-  const isVisited = (visited: Record<string, Point>, c: Point) =>
+  const isVisited = (visited: Record<string, Location3D>, c: Location3D) =>
     Object.prototype.hasOwnProperty.call(visited, '' + c[0] + ',' + c[1] + ',' + c[2])
 
-  const setVisited = (visited: Record<string, Point>, c: Point): void => {
+  const setVisited = (visited: Record<string, Location3D>, c: Location3D): void => {
     visited['' + c[0] + ',' + c[1] + ',' + c[2]] = c
   }
 
+  const printObsidian = (
+    dimension: Dimension,
+    outsideLocationsMap: Record<string, Location3D>,
+    obsidianLocationsMap: Record<string, Location3D>
+  ) => {
+    for (let z = dimension[4]!; z <= dimension[5]!; z++) {
+      const lines = []
+      for (let x = dimension[0]!; x <= dimension[1]!; x++) {
+        let line = ''
+        for (let y = dimension[2]!; y <= dimension[3]!; y++) {
+          if (isOutside([x, y, z], outsideLocationsMap)) line += clc.blue('O')
+          else if (isObsidian([x, y, z], obsidianLocationsMap)) line += clc.red('X')
+          else line += '.'
+        }
+        lines.push(line)
+      }
+      log.info('z=', z)
+      lines.forEach((l) => log.info(l))
+    }
+  }
+
   const exploreOutside = (
-    obsidianPointKeys: Record<string, Point>,
-    initialPaths: Array<Point>
-  ): Record<string, Point> => {
+    obsidianLocationsMap: Record<string, Location3D>,
+    initialPaths: Location3D[]
+  ): Record<string, Location3D> => {
     log.debug('started explore outside')
-    const visited: Record<string, Point> = {}
-    const opened: Array<Point> = initialPaths
-    while (opened.length > 0) {
-      const current: Point = opened.splice(-1)[0]
+    const visited: Record<string, Location3D> = {}
+    const queue: Location3D[] = initialPaths
+    while (queue.length > 0) {
+      const current: Location3D = queue.pop()!
       if (!isVisited(visited, current)) {
-        // console.log('Trying opened', current)
         setVisited(visited, current)
-        getCandidates({ obsidianPointKeys, opened, visited, current })
+        let moreLocations: Location3D[] = getMoreLocations(obsidianLocationsMap, queue, visited, current)
+        if (moreLocations.length > 0) queue.push(...moreLocations)
       }
     }
-    log.debug('ended explore outside, found', Object.keys(visited).length, 'points outside')
+    log.debug('ended explore outside, found', Object.keys(visited).length, 'Location3Ds outside')
     return visited
   }
 
-  const obsidianPointKeys: Record<string, Point> = {}
+  const obsidianLocationsMap: Record<string, Location3D> = {}
 
   for await (const line of lineReader) {
-    const matches = line.match(/^(\d+),(\d+),(\d+)$/)
-    const x = parseInt(matches![1])
-    const y = parseInt(matches![2])
-    const z = parseInt(matches![3])
-    if (minX === undefined || x < minX) minX = x
-    if (maxX === undefined || x > maxX) maxX = x
-    if (minY === undefined || y < minY) minY = y
-    if (maxY === undefined || y > maxY) maxY = y
-    if (minZ === undefined || z < minZ) minZ = z
-    if (maxZ === undefined || z > maxZ) maxZ = z
-    obsidianPointKeys[line] = [x, y, z]
+    const [, x, y, z] = line.match(/^(\d+),(\d+),(\d+)$/).map(Number)
+    if (x < dimension[0]) dimension[0] = x
+    if (x > dimension[1]) dimension[1] = x
+    if (y < dimension[2]) dimension[2] = y
+    if (y > dimension[3]) dimension[3] = y
+    if (z < dimension[4]) dimension[4] = z
+    if (z > dimension[5]) dimension[5] = z
+    obsidianLocationsMap[line] = [x, y, z]
   }
 
   let part1: number = 0
   let part2: number = 0
-  const maxSpace = (maxX! - minX! + 1) * (maxY! - minY! + 1) * (maxZ! - minZ! + 1)
+  const maxSpace =
+    (dimension[1]! - dimension[0]! + 1) * (dimension[3]! - dimension[2]! + 1) * (dimension[5]! - dimension[4]! + 1)
 
-  if (params.part1?.skip !== true) {
-    log.debug('obsidian points total', obsidianPointKeys.length)
-    log.debug('dimensions', maxX! - minX! + 1, maxY! - minY! + 1, maxZ! - minZ! + 1, 'total ', maxSpace)
-    Object.values(obsidianPointKeys).forEach((point) => {
-      part1 += numberOfExposedSurfaces(point, obsidianPointKeys)
-    })
-  }
+  if (params.part1?.skip !== true)
+    part1 = Object.values(obsidianLocationsMap).reduce(
+      (acc, location) => acc + numberOfExposedSurfaces(location, obsidianLocationsMap),
+      0
+    )
 
   if (params.part2?.skip !== true) {
-    // get all the connected points that are outside obsidian
-    // then we know which points are inside obsidian
-    const initialPaths: Array<[number, number, number]> = []
-    for (let x = 0; x <= maxX!; x++) {
-      for (let y = 0; y <= maxY!; y++) {
-        for (let z = 0; z <= maxZ!; z++) {
-          if (x === 0 || x === maxX! || y === 0 || y === maxY! || z === 0 || z === maxZ!) {
-            if (!Object.prototype.hasOwnProperty.call(obsidianPointKeys, '' + x + ',' + y + ',' + z)) {
-              initialPaths.push([x, y, z])
-            }
+    // get all the connected Location3Ds that are outside obsidian
+    // then we know which Location3Ds are inside obsidian
+    const initialPaths: Location3D[] = []
+    for (let x = 0; x <= dimension[1]!; x++) {
+      for (let y = 0; y <= dimension[3]!; y++) {
+        for (let z = 0; z <= dimension[5]!; z++) {
+          if (x === 0 || x === dimension[1]! || y === 0 || y === dimension[3]! || z === 0 || z === dimension[5]!) {
+            if (!obsidianLocationsMap[x + ',' + y + ',' + z]) initialPaths.push([x, y, z])
           }
         }
       }
     }
-    const outsidePointKeys: Record<string, Point> = exploreOutside(obsidianPointKeys, initialPaths)
-    const insidePoints = maxSpace - Object.keys(obsidianPointKeys).length - Object.keys(outsidePointKeys).length
-    log.debug(
-      'max space',
-      maxSpace,
-      'obsidians',
-      Object.keys(obsidianPointKeys).length,
-      'outside',
-      Object.keys(outsidePointKeys).length,
-      'inside',
-      insidePoints
-    )
-    Object.values(obsidianPointKeys).forEach((point) => {
-      part2 += numberOfExposedSurfaces2(point, outsidePointKeys)
-    })
+    const outsideLocationsMap: Record<string, Location3D> = exploreOutside(obsidianLocationsMap, initialPaths)
 
-    if (params.ui?.show) {
-      for (let z = minZ!; z <= maxZ!; z++) {
-        const lines = []
-        for (let x = minX!; x <= maxX!; x++) {
-          let line = ''
-          for (let y = minY!; y <= maxY!; y++) {
-            if (isOutside([x, y, z], outsidePointKeys)) {
-              line += clc.blue('O')
-            } else if (isObsidian([x, y, z], obsidianPointKeys)) {
-              line += clc.red('X')
-            } else {
-              line += '.'
-            }
-          }
-          lines.push(line)
-        }
-        console.log('z=', z)
-        lines.forEach((l) => console.log(l))
-      }
-    }
+    part2 = Object.values(obsidianLocationsMap).reduce(
+      (acc, location) => acc + numberOfExposedSurfacesToOutside(location, outsideLocationsMap),
+      0
+    )
+
+    if (params.ui?.show) printObsidian(dimension, outsideLocationsMap, obsidianLocationsMap)
   }
   return { part1, part2 }
 }

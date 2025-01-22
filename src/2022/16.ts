@@ -91,17 +91,41 @@ export default async (lineReader: any, params: Params) => {
     data.valvesWithFlow.filter((v) => step.every((a) => !a.valvesHandled.includes(v)))
 
   const hasPotential = (step: Step, data: Data): boolean => {
-    log.info('trying out step', printStep(step))
-    if (getPressure(step) > data.score) return true
-    let valvesRemaining = getRemainingValves(step, data).sort((a, b) => data.valveFlow[a] - data.valveFlow[b])
-    if (valvesRemaining.length === 0) return true
+    log.debug('hasPotential: trying out step', printStep(step))
+    if (getPressure(step) > data.score) {
+      log.debug('hasPotential: already best')
+      return true
+    }
+    if (step.every((agent) => agent.timeLeft > data.totalTime / 2)) {
+      log.debug('hasPotential: too soon to tell')
+      return true
+    }
+
+    let valvesRemaining = getRemainingValves(step, data)
+    log.debug('hasPotential: valvesRemaining: ', valvesRemaining)
+    if (valvesRemaining.length === 0) {
+      log.debug('hasPotential: no more valves')
+      return true
+    }
     let newStep = cloneStep(step)
+    valvesRemaining.sort((a, b) => data.valveFlow[a] - data.valveFlow[b])
     let iteration = 0
-    while (valvesRemaining.length > 0 || newStep.every((agent) => agent.timeLeft <= 2)) {
+    while (valvesRemaining.length > 0 && newStep.every((agent) => agent.timeLeft > 2)) {
+      log.debug(
+        'hasPotential: iteration',
+        valvesRemaining,
+        newStep.map((agent) => agent.timeLeft)
+      )
       let targetAgent = iteration % newStep.length // for round-robin valves
       // assume all valve openings has cost of 2 (one move, one opening)
       if (newStep[targetAgent].timeLeft - 2 > 0) {
         let valve = valvesRemaining.pop()!
+        log.debug(
+          'hasPotential: adding valve',
+          valve,
+          'more',
+          (newStep[targetAgent].timeLeft - 2) * data.valveFlow[valve]
+        )
         // no need to sync valvesHandled and valve
         newStep[targetAgent].pressureReleased += (newStep[targetAgent].timeLeft - 2) * data.valveFlow[valve]
         newStep[targetAgent].timeLeft -= 2
@@ -109,11 +133,11 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     let hasPotential = getPressure(newStep) > data.score
-    log.info(
+    log.debug(
+      'hasPotential conclusion: ',
+      hasPotential,
       'step',
       printStep(step),
-      'hasPotential',
-      hasPotential,
       'getPressure(newStep)',
       getPressure(newStep),
       'data.score',
@@ -135,10 +159,10 @@ export default async (lineReader: any, params: Params) => {
       return newSteps
     }
 
-    log.debug('valves remaining', valvesRemaining)
+    // log.debug('valves remaining', valvesRemaining)
     // case 2: 2+ valve left
     for (let nextValves of permutation(valvesRemaining, step.length)) {
-      log.debug('nextValves ', nextValves)
+      //  log.debug('nextValves ', nextValves)
       let newStep = cloneStep(step)
       let addedMove: boolean = false
 
@@ -238,9 +262,9 @@ export default async (lineReader: any, params: Params) => {
     )
     while (queue.length > 0) {
       doSearch(queue, data, valveMap)
-      if (iterations % 100 === 0) {
-        log.debug('it', iterations, 'opened length', queue.length)
-        iterations++
+      iterations++
+      if (iterations % 10000 === 0) {
+        log.info('it', iterations, 'opened length', queue.length, 'data.score', data.score)
       }
     }
     //if (params.ui?.show && params.ui?.end)
@@ -283,9 +307,10 @@ export default async (lineReader: any, params: Params) => {
     }
   })
 
-  //log.debug('Valve map', valveMap)
+  log.debug('Valve map', valveMap)
 
   if (!params.skipPart1) part1 = solveFor(false, params!.limit.part1, valvesWithFlow, valveFlow, valveMap)
+  if (!params.skipPart2) part2 = solveFor(true, params!.limit.part2, valvesWithFlow, valveFlow, valveMap)
 
   return { part1, part2 }
 }

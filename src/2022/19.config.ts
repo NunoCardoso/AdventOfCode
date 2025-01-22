@@ -2,18 +2,15 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Not Enough Minerals',
     year: 2022,
     day: 19,
     result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
+    status: 'solved',
+    speed: 'fast',
     code: 'dirty',
-    comment:
-      'Look at index.fastest.ts and index.notsofastest.ts.\n' +
-      '\n' +
-      'Just adding an object to group resources and robots, makes the code 10x slower.\n' +
-      '\n' +
-      'it is the same algorithm.'
+    tags: ['Path-finding'],
+    difficulty: 5
   },
   mode: 'fastest',
   params: {

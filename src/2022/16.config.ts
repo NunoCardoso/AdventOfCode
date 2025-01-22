@@ -7,9 +7,10 @@ let config: PuzzleConfig = {
     day: 16,
     result: 'unfinished',
     status: 'solved',
-    speed: 'fast',
-    code: 'dirty',
-    difficulty: 4
+    speed: 'slow',
+    code: 'clean',
+    difficulty: 4,
+    tags: ['Path-finding']
   },
   logLevel: 'info',
   params: {
@@ -21,14 +22,14 @@ let config: PuzzleConfig = {
   test: {
     id: 'test',
     answers: {
-      part1: 1651
-      //part2: 1707
+      part1: 1651,
+      part2: 1707
     }
   },
   prod: {
     answers: {
-      part1: 2124
-      //  part2: 2775
+      part1: 2124,
+      part2: 2775
     }
   }
 }

@@ -22,7 +22,7 @@ export default async (lineReader: any, params: Params) => {
     let numberCount: number[] = makeMap(numbers)
     for (let cursor of range(5)) {
       if (numbers[cursor] === numbers[cursor + 1]) hasAdjacentNumber = true
-      if ((numbers[cursor + 1] - numbers[cursor]) < 0) hasDecreasingValue = true
+      if (numbers[cursor + 1] - numbers[cursor] < 0) hasDecreasingValue = true
     }
     if (hasAdjacentNumber && !hasDecreasingValue) part1++
     if (numberCount.includes(2) && !hasDecreasingValue) part2++

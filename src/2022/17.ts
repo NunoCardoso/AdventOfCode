@@ -1,172 +1,135 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import _ from 'lodash'
+import { Location } from 'declarations'
+
+type Well = string[]
+type Rock = Location[]
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  let windData: Array<string>
-  type Point = Array<number>
-  type Well = Array<string>
-  type Rock = Array<Point>
+  let part1: number = 0
+  let part2: number = 0
 
-  const newRock = (i: number, leftmostPos: number, bottommostPos: number): Rock => {
-    if (i % 5 === 0) {
+  const makeNewRock = (rockNumber: number, leftmostPosition: number, bottommostPosition: number): Rock => {
+    if (rockNumber % 5 === 0) {
       //   ####
       return [
-        [leftmostPos, bottommostPos],
-        [leftmostPos + 1, bottommostPos],
-        [leftmostPos + 2, bottommostPos],
-        [leftmostPos + 3, bottommostPos]
+        [leftmostPosition, bottommostPosition],
+        [leftmostPosition + 1, bottommostPosition],
+        [leftmostPosition + 2, bottommostPosition],
+        [leftmostPosition + 3, bottommostPosition]
       ]
     }
-    if (i % 5 === 1) {
+    if (rockNumber % 5 === 1) {
       // .#.
       // ###
       // .#.
       return [
-        [leftmostPos, bottommostPos + 1],
-        [leftmostPos + 1, bottommostPos + 1],
-        [leftmostPos + 2, bottommostPos + 1],
-        [leftmostPos + 1, bottommostPos],
-        [leftmostPos + 1, bottommostPos + 2]
+        [leftmostPosition, bottommostPosition + 1],
+        [leftmostPosition + 1, bottommostPosition + 1],
+        [leftmostPosition + 2, bottommostPosition + 1],
+        [leftmostPosition + 1, bottommostPosition],
+        [leftmostPosition + 1, bottommostPosition + 2]
       ]
     }
-    if (i % 5 === 2) {
+    if (rockNumber % 5 === 2) {
       // ..#
       // ..#
       // ###
       return [
-        [leftmostPos, bottommostPos],
-        [leftmostPos + 1, bottommostPos],
-        [leftmostPos + 2, bottommostPos],
-        [leftmostPos + 2, bottommostPos + 1],
-        [leftmostPos + 2, bottommostPos + 2]
+        [leftmostPosition, bottommostPosition],
+        [leftmostPosition + 1, bottommostPosition],
+        [leftmostPosition + 2, bottommostPosition],
+        [leftmostPosition + 2, bottommostPosition + 1],
+        [leftmostPosition + 2, bottommostPosition + 2]
       ]
     }
-    if (i % 5 === 3) {
+    if (rockNumber % 5 === 3) {
       // #
       // #
       // #
       // #
       return [
-        [leftmostPos, bottommostPos],
-        [leftmostPos, bottommostPos + 1],
-        [leftmostPos, bottommostPos + 2],
-        [leftmostPos, bottommostPos + 3]
+        [leftmostPosition, bottommostPosition],
+        [leftmostPosition, bottommostPosition + 1],
+        [leftmostPosition, bottommostPosition + 2],
+        [leftmostPosition, bottommostPosition + 3]
       ]
     }
 
     // ##
     // ##
     return [
-      [leftmostPos, bottommostPos],
-      [leftmostPos, bottommostPos + 1],
-      [leftmostPos + 1, bottommostPos + 1],
-      [leftmostPos + 1, bottommostPos]
+      [leftmostPosition, bottommostPosition],
+      [leftmostPosition, bottommostPosition + 1],
+      [leftmostPosition + 1, bottommostPosition + 1],
+      [leftmostPosition + 1, bottommostPosition]
     ]
   }
 
-  const makeWind = (wind: string, well: Well, rock: Array<Point>) => {
+  const makeWind = (wind: string, well: Well, rock: Rock) => {
     if (wind === '>') {
-      const cantMoveToRight = _.find(rock, (p: Point) => {
+      const cantMoveToRight = rock.some((location: Location) => {
         // out of bounds
-        if (p[0] >= wellWidth - 1) {
-          return true
-        }
-        // point Y is inside well and occupied on right
-        if (p[1] < well.length) {
-          const wellRow = well[p[1]]
-          if (wellRow.split('')[p[0] + 1] === '#') {
-            return true
-          }
-        }
+        if (location[0] >= wellWidth - 1) return true
+        // there are pieces on the right and inside the well
+        if (location[1] < well.length && well[location[1]].split('')[location[0] + 1] === '#') return true
       })
-      if (!cantMoveToRight) {
-        rock.map((p) => p[0]++)
-      }
+      // just move 1 step on X axis
+      if (!cantMoveToRight) rock.forEach((location) => location[0]++)
     }
     if (wind === '<') {
-      const cantMoveToLeft = _.find(rock, (p: Point) => {
+      const cantMoveToLeft = rock.some((location: Location) => {
         // out of bounds
-        if (p[0] <= 0) {
-          return true
-        }
-        // point Y is inside well and occupied on left
-        if (p[1] < well.length) {
-          const wellRow = well[p[1]]
-          if (wellRow.split('')[p[0] - 1] === '#') {
-            return true
-          }
-        }
+        if (location[0] <= 0) return true
+        // Location Y is inside well and occupied on left
+        if (location[1] < well.length && well[location[1]].split('')[location[0] - 1] === '#') return true
       })
-      if (!cantMoveToLeft) {
-        rock.map((p) => p[0]--)
-      }
+      if (!cantMoveToLeft) rock.forEach((location) => location[0]--)
     }
   }
-  const makeGravity = (rock: Array<Point>) => {
-    rock.map((p) => p[1]--)
-  }
+  const makeGravity = (rock: Rock) => rock.forEach((p) => p[1]--)
 
-  const checkIfStopped = (well: Well, rock: Rock): boolean => {
-    const stopped =
-      _.find(rock, (p: Point) => {
-        // we hit the bottom
-        if (p[1] === 0) {
-          return true
-        }
-        const rowToCheck = p[1] - 1
-        if (rowToCheck < well.length) {
-          const wellRow = well[rowToCheck]
-          if (wellRow.split('')[p[0]] === '#') {
-            return true
-          }
-        }
-        return false
-      }) !== undefined
-    return stopped
-  }
+  const checkIfStopped = (well: Well, rock: Rock): boolean =>
+    rock.some((p: Location) => {
+      // we hit the bottom
+      if (p[1] === 0) return true
+      const rowToCheck = p[1] - 1
+      if (rowToCheck < well.length && well[rowToCheck].split('')[p[0]] === '#') return true
+      return false
+    })
 
-  const addRock = (well: Well, rock: Rock) => {
-    rock.forEach((piece: Point) => {
+  const addRock = (well: Well, rock: Rock) =>
+    rock.forEach((piece: Location) => {
       if (piece[1] > well.length - 1) {
-        for (let i = well.length; i <= piece[1]; i++) {
-          well.push('.'.repeat(wellWidth))
-        }
+        for (let i = well.length; i <= piece[1]; i++) well.push('.'.repeat(wellWidth))
       }
       const wellRowSplits = well[piece[1]].split('')
       wellRowSplits[piece[0]] = '#'
       well[piece[1]] = wellRowSplits.join('')
     })
-  }
 
   const printWell = (well: Well, rock?: Rock) => {
-    const line = _.cloneDeep(well)
-    if (rock) {
-      rock.forEach((piece: Point) => {
-        if (piece[1] > line.length - 1) {
-          for (let i = well.length; i <= piece[1]; i++) {
-            line.push('.'.repeat(wellWidth))
-          }
+    const line = [...well]
+    rock?.forEach((piece: Location) => {
+      if (piece[1] > line.length - 1) {
+        for (let i = well.length; i <= piece[1]; i++) {
+          line.push('.'.repeat(wellWidth))
         }
-        const wellRowSplits = line[piece[1]].split('')
-        wellRowSplits[piece[0]] = '@'
-        line[piece[1]] = wellRowSplits.join('')
-      })
-    }
+      }
+      const wellRowSplits = line[piece[1]].split('')
+      wellRowSplits[piece[0]] = '@'
+      line[piece[1]] = wellRowSplits.join('')
+    })
 
     for (let i = line.length - 1; i >= 0; i--) {
-      console.log(
-        clc.cyan('|') + line[i].replaceAll('@', clc.red('@')).replaceAll('#', clc.yellow('#')) + clc.cyan('|')
-      )
+      log.info(clc.cyan('|') + line[i].replaceAll('@', clc.red('@')).replaceAll('#', clc.yellow('#')) + clc.cyan('|'))
     }
-    console.log(clc.cyan('+' + '-'.repeat(wellWidth) + '|'))
-    console.log('\n')
+    log.info(clc.cyan('+' + '-'.repeat(wellWidth) + '|') + '\n')
   }
 
-  const doTetris = (well: Well, finalTarget: number) => {
-    log.info('number of wind changes', windData.length)
+  const doTetris = (well: Well, windData: string[], finalTarget: number) => {
     let numberRocks: number = 0
     let windIterations = 0
 
@@ -182,28 +145,16 @@ export default async (lineReader: any, params: Params) => {
     while (numberRocks < finalTarget) {
       const leftborder = 2
       const bottomborder = well.length + 3
-      const rock = newRock(numberRocks, leftborder, bottomborder)
-      let stopped: boolean = false
+      const rock = makeNewRock(numberRocks, leftborder, bottomborder)
 
-      while (!stopped) {
+      while (true) {
         const windIndex = windIterations % windData.length
-        const wind = windData[windIndex]
-        makeWind(wind, well, rock)
-        const _stopped: boolean = checkIfStopped(well, rock)
-        if (_stopped) {
-          stopped = _stopped
-        } else {
-          makeGravity(rock)
-        }
-        if (params.ui?.show && params.ui?.during) {
-          printWell(well, rock)
-        }
         windIterations++
 
         if (windIterations === firstCutoff) {
           heightFirstStage = well.length
           rocksFirstStage = numberRocks
-          log.info(
+          log.trace(
             'First cutoff, number rocks',
             rocksFirstStage,
             'wind iteration',
@@ -215,7 +166,7 @@ export default async (lineReader: any, params: Params) => {
         if (windIterations === secondCutoff) {
           heightSecondStage = well.length - heightFirstStage
           rocksSecondStage = numberRocks - rocksFirstStage
-          log.info(
+          log.trace(
             'Second cutoff, number rocks',
             rocksSecondStage,
             'wind iteration',
@@ -225,9 +176,9 @@ export default async (lineReader: any, params: Params) => {
           )
 
           const howManyTimesICanRepeatThePattern = Math.floor((finalTarget - rocksFirstStage) / rocksSecondStage)
-          log.info('I think pattern repeats', howManyTimesICanRepeatThePattern, 'times')
+          log.trace('I think pattern repeats', howManyTimesICanRepeatThePattern, 'times')
           const howManyRocksNow = rocksFirstStage + howManyTimesICanRepeatThePattern * rocksSecondStage
-          log.info(
+          log.trace(
             'Rocks grow',
             howManyTimesICanRepeatThePattern,
             'times',
@@ -238,7 +189,7 @@ export default async (lineReader: any, params: Params) => {
             howManyRocksNow
           )
           howMuchHeightToAddLater = howManyTimesICanRepeatThePattern * heightSecondStage
-          log.info(
+          log.trace(
             'height grow',
             howManyTimesICanRepeatThePattern,
             'times',
@@ -248,40 +199,36 @@ export default async (lineReader: any, params: Params) => {
           )
           // I have to remove the time I added already
           howMuchHeightToAddLater = howMuchHeightToAddLater - heightSecondStage
-          log.info('howMuchHeightToAddLater', howMuchHeightToAddLater)
+          log.trace('howMuchHeightToAddLater', howMuchHeightToAddLater)
           numberRocks = howManyRocksNow
-          log.info('writing rocks', howManyRocksNow)
+          log.trace('writing rocks', howManyRocksNow)
+        }
+
+        const wind = windData[windIndex]
+        makeWind(wind, well, rock)
+
+        if (!checkIfStopped(well, rock)) makeGravity(rock)
+        else break
+        if (params.ui?.show && params.ui?.during) {
+          printWell(well, rock)
         }
       }
       addRock(well, rock)
-      if (params.ui?.show && params.ui?.end) {
-        printWell(well)
-      }
+      if (params.ui?.show && params.ui?.end) printWell(well)
       numberRocks++
     }
     const finalHeight = well.length + howMuchHeightToAddLater
-    log.info('doRun complete, number of rocks', numberRocks, 'height', finalHeight) //, 'first line', well[0],'last line', well[well.length -1])
+    log.trace('doRun complete, number of rocks', numberRocks, 'height', finalHeight) //, 'first line', well[0],'last line', well[well.length -1])
     return finalHeight
   }
 
   const wellWidth: number = params!.wellWidth
-  const well1: Well = []
-  const well2: Well = []
-  let part1: number = 0
-  let part2: number = 0
 
-  for await (const line of lineReader) {
-    windData = line.split('')
-  }
-  if (params.part1?.skip !== true) {
-    part1 = doTetris(well1, params!.rocks.part1)
-  }
-  if (params.part2?.skip !== true) {
-    part2 = doTetris(well2, params!.rocks.part2)
-  }
+  let windData: string[] = []
+  for await (const line of lineReader) windData = line.split('')
 
-  return {
-    part1,
-    part2
-  }
+  if (params.part1?.skip !== true) part1 = doTetris([], windData, params!.rocks.part1)
+  if (params.part2?.skip !== true) part2 = doTetris([], windData, params!.rocks.part2)
+
+  return { part1, part2 }
 }

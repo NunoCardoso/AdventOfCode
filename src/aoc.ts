@@ -141,7 +141,7 @@ export default async (puzzle: PuzzleConfig) => {
 
   let string = ` 🎅 Advent of Code ${year} / ${day} 🎅 `
   let title = puzzle.config.title
-  let biggestString = Math.max(string.length, title.length)
+  let biggestString = Math.max(string.length, title.length + 2)
 
   console.info('╔' + '═'.repeat(biggestString) + '╗')
   console.info(`║${padCenter(string, biggestString)}║`)

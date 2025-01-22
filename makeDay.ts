@@ -1,9 +1,13 @@
 import * as fs from 'fs'
-import * as path from 'path'
 import { exec } from 'node:child_process'
+import * as path from 'path'
 
-if (process.argv[2]?.length !== 4 && !process.argv[2]?.startsWith('20') &&
-  !process.argv[3]?.match(/^\d+$/) && !(process.argv[2]?.length > 0)) {
+if (
+  process.argv[2]?.length !== 4 &&
+  !process.argv[2]?.startsWith('20') &&
+  !process.argv[3]?.match(/^\d+$/) &&
+  !(process.argv[2]?.length > 0)
+) {
   console.error('usage: ts-node makePuzzle {year} {day} {title}')
   process.exit()
 }
@@ -22,7 +26,7 @@ let newInputDirPath = path.join(__dirname, '/input/', year, '/')
 if (!fs.existsSync(newInputDirPath)) fs.mkdirSync(newInputDirPath)
 
 // check if config exists
-let newFileConfigPath = path.join(__dirname, '/src/',year, '/', day2digit + '.config.ts')
+let newFileConfigPath = path.join(__dirname, '/src/', year, '/', day2digit + '.config.ts')
 if (fs.existsSync(newFileConfigPath)) {
   console.error('Error: ' + newFileConfigPath + ' exists')
   process.exit()
@@ -34,9 +38,7 @@ let newInputFilePath = path.join(__dirname, '/input/', year, '/', day2digit + '.
 // read cookie info
 let session = fs.readFileSync(path.join(__dirname, '.aocrc'), 'utf8')
 
-exec(
-  `curl 'https://adventofcode.com/${year}/day/${day}/input' -H 'Cookie: session=${session}' > ${newInputFilePath}`
-)
+exec(`curl 'https://adventofcode.com/${year}/day/${day}/input' -H 'Cookie: session=${session}' > ${newInputFilePath}`)
 
 // make test.txt
 let newTextFilePath = path.join(__dirname, '/input/', year, '/', day2digit + '.test.txt')
@@ -44,14 +46,15 @@ let file = fs.openSync(newTextFilePath, 'a')
 fs.closeSync(file)
 
 // make puzzle file
-let newFilePuzzlePath = path.join(__dirname, '/src/',year, '/', day2digit + '.ts')
+let newFilePuzzlePath = path.join(__dirname, '/src/', year, '/', day2digit + '.ts')
 fs.copyFileSync(path.join(__dirname, '/src/', 'template', '/', 'index.ts'), newFilePuzzlePath)
 
 // make config file
 let content = fs.readFileSync(__dirname + '/src/template/config.ts.template', 'utf8')
-content = content.replace(/\{\{year}}/g, year)
-      .replace(/\{\{day}}/g, day)
-      .replace(/\{\{title}}/g, title)
+content = content
+  .replace(/\{\{year}}/g, year)
+  .replace(/\{\{day}}/g, day)
+  .replace(/\{\{title}}/g, title)
 
 file = fs.openSync(newFileConfigPath, 'a')
 fs.writeSync(file, content)
