@@ -9,7 +9,6 @@
   },
   "compilerOptions": {
     "baseUrl": "src",
-    "lib": ["ES2021.String"],
     "rootDir": "src",
     "allowJs": false,
     "skipLibCheck": true,

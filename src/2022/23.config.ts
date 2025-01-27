@@ -2,14 +2,16 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Unstable Diffusion',
     year: 2022,
     day: 23,
     result: 'unfinished',
     status: 'unsolved',
     speed: 'slow',
     code: 'dirty',
-    comment: 'on 6 seconds'
+    difficulty: 4
   },
+  logLevel: 'info',
   ui: {
     show: true,
     during: false,

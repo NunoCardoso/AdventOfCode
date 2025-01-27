@@ -1,107 +1,80 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import _ from 'lodash'
+import { BoundingBox } from 'declarations'
+import { range } from 'util/range'
+
+type Coordinates = 'N' | 'NW' | 'NE' | 'W' | 'E' | 'SW' | 'S' | 'SE'
+type Elf = [row: number, y: number, id: number, wantsX?: number, wantsY?: number, coordinate?: Coordinates]
+type ElfAround = [row: number, column: number, coordinate: Coordinates]
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  type Coord = 'N' | 'NW' | 'NE' | 'W' | 'E' | 'SW' | 'S' | 'SE'
-  type World = { rows: number; columns: number }
-  type Elf = { x: number; y: number; id: number; wants?: { x: number; y: number; d: Coord } }
-  type ElfAround = { x: number; y: number; d: Coord }
-  type ElfsAround = Array<ElfAround>
-  type Elves = Array<Elf>
+  let part1: number = 0
+  let part2: number = 0
 
-  const matrix: World = { rows: 0, columns: 0 }
-  const originalElves: Elves = []
-  let rowNumber: number = 0
+  const getNeighborElves = (elf: Elf, boundingBox: BoundingBox, elfPosition: Set<string>): ElfAround[] =>
+    (
+      [
+        [elf[0] - 1, elf[1] - 1, 'NW'],
+        [elf[0] - 1, elf[1], 'N'],
+        [elf[0] - 1, elf[1] + 1, 'NE'],
+        [elf[0], elf[1] - 1, 'W'],
+        [elf[0], elf[1] + 1, 'E'],
+        [elf[0] + 1, elf[1] - 1, 'SW'],
+        [elf[0] + 1, elf[1], 'S'],
+        [elf[0] + 1, elf[1] + 1, 'SE']
+      ] as ElfAround[]
+    ).filter(
+      (c: ElfAround) =>
+        c[0] >= boundingBox[0][0] &&
+        c[0] < boundingBox[1][0] &&
+        c[1] >= boundingBox[0][1] &&
+        c[1] < boundingBox[1][1] &&
+        elfPosition.has(c[0] + ',' + c[1])
+    )
 
-  for await (const line of lineReader) {
-    const vals = line.split('')
-    matrix.columns = vals.length
-    vals.forEach((val: string, columnNumber: number) => {
-      if (val === '#') {
-        const elf = { x: rowNumber, y: columnNumber, id: originalElves.length, wants: undefined }
-        originalElves.push(elf)
-      }
-    })
-    rowNumber++
-  }
-  matrix.rows = rowNumber
-
-  const elfsAround = (elf: Elf, matrix: World, elvesKeys: Record<string, Elf>): ElfsAround => {
-    const candidates: Array<[number, number, string]> = [
-      [elf.x - 1, elf.y - 1, 'NW'],
-      [elf.x - 1, elf.y, 'N'],
-      [elf.x - 1, elf.y + 1, 'NE'],
-      [elf.x, elf.y - 1, 'W'],
-      [elf.x, elf.y + 1, 'E'],
-      [elf.x + 1, elf.y - 1, 'SW'],
-      [elf.x + 1, elf.y, 'S'],
-      [elf.x + 1, elf.y + 1, 'SE']
-    ]
-    return _.filter(
-      candidates,
-      (c: [number, number, string]) =>
-        c[0] >= 0 &&
-        c[0] < matrix.rows &&
-        c[1] >= 0 &&
-        c[1] < matrix.columns &&
-        Object.prototype.hasOwnProperty.call(elvesKeys, '' + c[0] + ',' + c[1])
-    ).map((c: [number, number, string]) => ({ x: c[0], y: c[1], d: c[2] }) as ElfAround)
-  }
-
-  const getElfWish = (direction: string, otherElfs: ElfsAround): string => {
-    const foundElfBlocking: boolean = _.find(otherElfs, (elf: ElfAround) => elf.d.indexOf(direction) >= 0) !== undefined
+  const getElfWish = (direction: string, neighborElf: ElfAround[]): string => {
+    //    console.log('direction', direction, 'other', neighborElf)
+    const foundElfBlocking: boolean = neighborElf.some((elf: ElfAround) => elf[2].indexOf(direction) >= 0)
     return foundElfBlocking ? '' : direction
   }
 
-  const printWorld = (matrix: World, elves: Elves) => {
-    const m: Array<Array<string>> = []
-    for (let i = 0; i < matrix.rows; i++) {
-      m.push(new Array(matrix.columns).fill('.'))
-    }
-    elves.forEach((elf) => {
-      m[elf.x][elf.y] = clc.red('#')
-    })
-    console.log(clc.cyan('+' + '-'.repeat(matrix.columns) + '+'))
-    m.forEach((row: Array<string>) => console.log(clc.cyan('|') + row.join('') + clc.cyan('|')))
-    console.log(clc.cyan('+' + '-'.repeat(matrix.columns) + '+'))
+  const printWorld = (boundingBox: BoundingBox, elves: Elf[]) => {
+    const world: string[][] = []
+    console.log(boundingBox)
+    for (let i = boundingBox[0][0]; i <= boundingBox[1][0]; i++)
+      world.push(new Array(boundingBox[1][1] + 1 - boundingBox[0][1]).fill('.'))
+    let compensateX = 0 - boundingBox[0][0]
+    let compensateY = 0 - boundingBox[0][1]
+    elves.forEach((elf) => (world[elf[0] + compensateX][elf[1] + compensateY] = clc.red('#')))
+    log.info(clc.cyan('+' + '-'.repeat(boundingBox[1][1] + 1 - boundingBox[0][1]) + '+'))
+    world.forEach((row: string[]) => log.info(clc.cyan('|') + row.join('') + clc.cyan('|')))
+    log.info(clc.cyan('+' + '-'.repeat(boundingBox[1][1] + 1 - boundingBox[0][1]) + '+'))
   }
 
-  log.info('Initial matrix size', matrix.rows, matrix.columns)
-
-  const order: Array<Coord> = ['N', 'S', 'W', 'E']
-
-  const generateKeys = (elves: Elves): Record<string, Elf> => {
-    const elvesKeys: Record<string, Elf> = {}
-    elves.forEach((elf) => {
-      elvesKeys['' + elf.x + ',' + elf.y] = elf
-    })
-    return elvesKeys
-  }
-
-  const runSimulation = (maxRound: number, elves: Elves, whatToReturn: string): number => {
+  const solveFor = (elves: Elf[], maxRound: number, whatToReturn: string): number => {
     let round: number = 0
     let allSpaced: boolean = false
-    let elvesKeys: Record<string, Elf> = generateKeys(elves)
+    let elfPosition: Set<string> = new Set<string>()
+    elves.forEach((elf) => elfPosition.add(elf[0] + ',' + elf[1]))
+    const order: Coordinates[] = ['N', 'S', 'W', 'E']
 
     while (!allSpaced && round < maxRound) {
       let _allSpaced = true
-      const wishedSpaces: Record<string, Elves> = {}
-      const widenTheGrid: Array<Coord> = []
+      const wishedSpaces: Record<string, Elf[]> = {}
 
-      for (let elfIndex = 0; elfIndex < elves.length; elfIndex++) {
-        const otherElfs: ElfsAround = elfsAround(elves[elfIndex], matrix, elvesKeys)
+      for (let elfIndex of range(elves.length)) {
+        const otherElfs: ElfAround[] = getNeighborElves(elves[elfIndex], boundingBox, elfPosition)
 
         // check if we are done with moves by checking if one elf is not spaced
-        if (_allSpaced === true && !_.isEmpty(otherElfs)) {
+        if (_allSpaced === true && otherElfs.length > 0) {
           _allSpaced = false
         }
 
         // stage 1: check if elf has a moving wish
         let elfWish: string = ''
-        if (!_.isEmpty(otherElfs)) {
+        if (otherElfs.length > 0) {
           wishLoop: for (let j = 0; j < order.length; j++) {
             const index = (j + round) % order.length
             elfWish = getElfWish(order[index], otherElfs)
@@ -112,23 +85,31 @@ export default async (lineReader: any, params: Params) => {
 
           if (elfWish !== '') {
             if (elfWish === 'N') {
-              elves[elfIndex].wants = { x: elves[elfIndex].x - 1, y: elves[elfIndex].y, d: elfWish }
+              elves[elfIndex][3] = elves[elfIndex][0] - 1
+              elves[elfIndex][4] = elves[elfIndex][1]
+              elves[elfIndex][5] = elfWish
             }
             if (elfWish === 'W') {
-              elves[elfIndex].wants = { x: elves[elfIndex].x, y: elves[elfIndex].y - 1, d: elfWish }
+              elves[elfIndex][3] = elves[elfIndex][0]
+              elves[elfIndex][4] = elves[elfIndex][1] - 1
+              elves[elfIndex][5] = elfWish
             }
             if (elfWish === 'S') {
-              elves[elfIndex].wants = { x: elves[elfIndex].x + 1, y: elves[elfIndex].y, d: elfWish }
+              elves[elfIndex][3] = elves[elfIndex][0] + 1
+              elves[elfIndex][4] = elves[elfIndex][1]
+              elves[elfIndex][5] = elfWish
             }
             if (elfWish === 'E') {
-              elves[elfIndex].wants = { x: elves[elfIndex].x, y: elves[elfIndex].y + 1, d: elfWish }
+              elves[elfIndex][3] = elves[elfIndex][0]
+              elves[elfIndex][4] = elves[elfIndex][1] + 1
+              elves[elfIndex][5] = elfWish
             }
-            const key: string = '' + elves[elfIndex].wants!.x + ',' + elves[elfIndex].wants!.y
+            const key: string = '' + elves[elfIndex][3] + ',' + elves[elfIndex][4]
             // more than one elf may wish to go to same place
             if (!Object.prototype.hasOwnProperty.call(wishedSpaces, key)) {
-              wishedSpaces[key] = [_.cloneDeep(elves[elfIndex])]
+              wishedSpaces[key] = [global.structuredClone(elves[elfIndex])]
             } else {
-              wishedSpaces[key].push(_.cloneDeep(elves[elfIndex]))
+              wishedSpaces[key].push(global.structuredClone(elves[elfIndex]))
             }
           }
         }
@@ -138,51 +119,35 @@ export default async (lineReader: any, params: Params) => {
         // only move the ones with no conflicts
         if (wishedSpaces[key].length === 1) {
           const movedElf: Elf = wishedSpaces[key][0]
-          movedElf.x = movedElf.wants!.x
-          movedElf.y = movedElf.wants!.y
+          movedElf[0] = movedElf[3]!
+          movedElf[1] = movedElf[4]!
           // check if we need to widen the matrix
-          if (movedElf.x < 0 || movedElf.x >= matrix.rows || movedElf.y < 0 || movedElf.y >= matrix.columns) {
-            if (widenTheGrid.indexOf(movedElf.wants!.d) < 0) {
-              widenTheGrid.push(movedElf.wants!.d)
-            }
-          }
-          // set it on the main elves array
-          elves[movedElf.id] = {
-            ...movedElf,
-            wants: undefined
-          }
+          if (movedElf[0] < boundingBox[0][0]) boundingBox[0][0] = movedElf[0]
+          if (movedElf[0] > boundingBox[1][0]) boundingBox[1][0] = movedElf[0]
+          if (movedElf[1] < boundingBox[0][1]) boundingBox[0][1] = movedElf[1]
+          if (movedElf[1] > boundingBox[1][1]) boundingBox[1][1] = movedElf[1]
+
+          // set it on the main elves array, discarding its wishes
+          elves[movedElf[2]] = [movedElf[0], movedElf[1], movedElf[2]]
         }
       })
 
-      // now, elves moved, let's widen the grid if necessary
-      if (widenTheGrid.indexOf('N') >= 0) {
-        matrix.rows += 1
-        elves = elves.map((elf) => ({ ...elf, x: elf.x + 1 }))
-      }
-      if (widenTheGrid.indexOf('W') >= 0) {
-        matrix.columns += 1
-        elves = elves.map((elf) => ({ ...elf, y: elf.y + 1 }))
-      }
-      if (widenTheGrid.indexOf('S') >= 0) {
-        matrix.rows += 1
-      }
-      if (widenTheGrid.indexOf('E') >= 0) {
-        matrix.columns += 1
-      }
-
       // reset the index with new moved elfs
-      elvesKeys = {}
-      elves.forEach((elf) => {
-        elvesKeys['' + elf.x + ',' + elf.y] = _.cloneDeep(elf)
-      })
+      elfPosition.clear()
+      elves.forEach((elf) => elfPosition.add(elf[0] + ',' + elf[1]))
 
       allSpaced = _allSpaced
       round++
 
       if (params.ui?.show && params.ui?.during) {
         console.log('round', round, 'All spaced', allSpaced)
-        printWorld(matrix, elves)
+        printWorld(boundingBox, elves)
       }
+    }
+
+    if (params.ui?.show && params.ui?.end) {
+      console.log('round', round, 'All spaced', allSpaced)
+      printWorld(boundingBox, elves)
     }
 
     if (whatToReturn === 'rounds') {
@@ -190,32 +155,38 @@ export default async (lineReader: any, params: Params) => {
     }
     const b = { minX: 10000, maxX: -10000, minY: 10000, maxY: -10000 }
     elves.forEach((elf) => {
-      if (elf.x < b.minX) {
-        b.minX = elf.x
-      }
-      if (elf.x > b.maxX) {
-        b.maxX = elf.x
-      }
-      if (elf.y < b.minY) {
-        b.minY = elf.y
-      }
-      if (elf.y > b.maxY) {
-        b.maxY = elf.y
-      }
+      if (elf[0] < b.minX) b.minX = elf[0]
+      if (elf[0] > b.maxX) b.maxX = elf[0]
+      if (elf[1] < b.minY) b.minY = elf[1]
+      if (elf[1] > b.maxY) b.maxY = elf[1]
     })
     return (b.maxX - b.minX + 1) * (b.maxY - b.minY + 1) - elves.length
   }
 
-  let part1: number = 0
-  let part2: number = 0
-  if (params.part1?.skip !== true) {
-    part1 = runSimulation(params!.iterations.part1, _.cloneDeep(originalElves), 'emptySpaces')
+  let rowNumber: number = 0
+  const boundingBox: BoundingBox = [
+    [0, 0],
+    [0, 0]
+  ]
+  const originalElvesPart1: Elf[] = []
+  const originalElvesPart2: Elf[] = []
+
+  for await (const line of lineReader) {
+    const vals = line.split('')
+    boundingBox[1][1] = vals.length
+    vals.forEach((val: string, columnNumber: number) => {
+      if (val === '#') {
+        const elf: Elf = [rowNumber, columnNumber, originalElvesPart1.length]
+        originalElvesPart1.push(elf)
+        originalElvesPart2.push(elf)
+      }
+    })
+    rowNumber++
   }
-  if (params.part2?.skip !== true) {
-    part2 = runSimulation(params!.iterations.part2, _.cloneDeep(originalElves), 'rounds')
-  }
-  return {
-    part1,
-    part2
-  }
+  boundingBox[1][0] = rowNumber
+
+  if (!params.skipPart1) part1 = solveFor(originalElvesPart1, params!.iterations.part1, 'emptySpaces')
+  if (!params.skipPart2) part2 = solveFor(originalElvesPart2, params!.iterations.part2, 'rounds')
+
+  return { part1, part2 }
 }
