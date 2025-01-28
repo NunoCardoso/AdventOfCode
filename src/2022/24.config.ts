@@ -2,17 +2,20 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Blizzard Basin',
     year: 2022,
     day: 24,
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: 'too long, but it finishes with right solution'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 5,
+    tags: ['Breadth-first', 'Path-finding']
   },
+  logLevel: 'info',
   ui: {
-    show: true,
-    during: false,
+    show: false,
+    during: true,
     end: true,
     wait: 10
   },

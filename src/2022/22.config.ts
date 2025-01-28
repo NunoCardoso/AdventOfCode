@@ -5,10 +5,10 @@ let config: PuzzleConfig = {
     title: 'Monkey map',
     year: 2022,
     day: 22,
-    result: 'unfinished',
+    result: 'finished',
     status: 'solved',
     speed: 'fast',
-    code: 'dirty',
+    code: 'clean',
     difficulty: 5
   },
   logLevel: 'info',

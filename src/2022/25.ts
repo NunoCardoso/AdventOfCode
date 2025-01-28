@@ -1,130 +1,66 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  const data: any = []
+  let part1: string = ''
+  let part2: string = ''
 
-  const dec2SNAFU = (val: string) => {
-    let _val: number = parseInt(val)
-    const exps: Array<number> = []
-    const dividers: Array<number> = []
-    const remainers: Array<number> = []
+  const dec2SNAFU = (value: number) => {
+    const exps: number[] = []
+    const dividers: number[] = []
+    const remainers: number[] = []
 
     // find the last exp
     let exp: number = 0
-    let result: number = 0
+    let partial: number = 0
     do {
-      result = Math.pow(5, exp)
-      if (result <= _val) {
-        exps.push(result)
-      }
+      partial = Math.pow(5, exp)
+      if (partial <= value) exps.push(partial)
       exp++
-    } while (result < _val)
+    } while (partial < value)
 
-    log.debug('exp', exp, 'exps', exps)
     for (let i = exps.length - 1; i >= 0; i--) {
       const exp: number = exps[i]
-      const divider: number = Math.floor(_val / exp)
+      const divider: number = Math.floor(value / exp)
       dividers.unshift(divider)
-      const remainer: number = _val % exp
+      const remainer: number = value % exp
       remainers.unshift(remainer)
-      log.debug('_val', _val, 'exp', exp, 'divider', divider, 'remainer', remainer)
-      _val = remainer
+      value = remainer
     }
-    log.debug('remainers', remainers, 'divivers', dividers)
 
     let remainer: boolean = false
-    const __res: Array<string> = []
-    for (let i = 0; i < dividers.length; i++) {
-      const _res: string = encode(dividers[i], remainer)
-      __res.unshift(_res)
-      if (dividers[i] > 2) {
-        remainer = true
-      } else {
-        remainer = false
-      }
+    const result: string[] = []
+    for (let divider of dividers) {
+      result.unshift(encode(divider, remainer))
+      remainer = divider > 2
     }
-    log.debug('__res', __res, 'remainer', remainer)
-
-    if (remainer) {
-      __res.unshift('1')
-    }
-    return __res.join('')
+    if (remainer) result.unshift('1')
+    return result.join('')
   }
 
   const decode = (val: string): number => {
-    if (val === '=') {
-      return -2
-    }
-    if (val === '-') {
-      return -1
-    }
-    return parseInt(val)
+    if (val === '=') return -2
+    if (val === '-') return -1
+    return +val
   }
 
   const encode = (val: number, remainer: boolean): string => {
-    if (val === 0) {
-      return remainer ? '1' : '0'
-    }
-    if (val === 1) {
-      return remainer ? '2' : '1'
-    }
-    if (val === 2) {
-      return remainer ? '=' : '2'
-    }
-    if (val === 3) {
-      return remainer ? '-' : '='
-    }
-    //  if (val === 4) {
-    return remainer ? '0' : '-'
+    if (val === 0) return remainer ? '1' : '0'
+    if (val === 1) return remainer ? '2' : '1'
+    if (val === 2) return remainer ? '=' : '2'
+    if (val === 3) return remainer ? '-' : '='
+    return remainer ? '0' : '-' //  if (val === 4) {
+  }
+  const SNAFU2dec = (line: string) => {
+    const total = line.split('').map(decode)
+    return total.reverse().reduce((acc: number, value: number, index) => acc + value * Math.pow(5, index), 0)
   }
 
-  const SNAFU2dec = (val: string) => {
-    const total = val?.split('').map(decode)
-    log.debug('val', val, 'total', total)
-    let i = 0
-    return _.reduceRight(
-      total,
-      (memo: number, val: number) => {
-        return memo + val * Math.pow(5, i++)
-      },
-      0
-    )
-  }
+  let acc: number = 0
+  for await (const line of lineReader) acc += SNAFU2dec(line)
 
-  for await (const line of lineReader) {
-    const vals = line.trim().split(/\s+/)
-    if (vals.length === 1) {
-      data.push(vals[0])
-    } else {
-      const d = { src: vals[0], trg: vals[1] }
-      data.push(d)
-    }
-  }
+  part1 = dec2SNAFU(acc)
 
-  let part1: string = ''
-  if (params.isTest) {
-    console.log(params.mode)
-    if (params.mode === 'dec2SNAFU') {
-      data.forEach((x: any) => {
-        log.info('Generated', dec2SNAFU(x.src), 'expected', x.trg)
-      })
-    }
-    if (params.mode === 'SNAFU2dec') {
-      data.forEach((x: any) => {
-        log.info('Generated', SNAFU2dec(x.src), 'expected', x.trg)
-      })
-    }
-  } else {
-    if (params.part1?.skip !== true) {
-      log.debug('data length', data.length)
-      const decimals: Array<number> = data.map(SNAFU2dec)
-      const total: number = _.reduce(decimals, (memo: number, val: number) => memo + val, 0)
-      log.debug('total', total)
-      part1 = dec2SNAFU('' + total)
-    }
-    return { part1, part2: 0 }
-  }
+  return { part1, part2 }
 }

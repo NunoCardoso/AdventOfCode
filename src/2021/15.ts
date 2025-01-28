@@ -1,7 +1,6 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
 import { Location, World } from 'declarations'
-import _ from 'lodash'
 
 // x, y, distance, cost
 type Step = [number, number, number, number]
@@ -54,7 +53,7 @@ export default async (lineReader: any, params: Params) => {
     visited: Record<string, number>,
     finished: Record<string, number>
   ) => {
-    const _world = _.cloneDeep(world)
+    const _world = global.structuredClone(world)
     Object.keys(visited).forEach((s: string) => {
       const p: Location = readKey(s)
       _world[p[0]][p[1]] = clc.red('V')
@@ -94,7 +93,7 @@ export default async (lineReader: any, params: Params) => {
       }
     }
 
-    const newSteps: Array<Step> = _.reject(
+    const newSteps: Array<Step> = (
       [
         [
           head[0] - 1,
@@ -120,31 +119,30 @@ export default async (lineReader: any, params: Params) => {
           getDistanceToFinish(head[0], head[1] + 1, finished.end),
           head[3] + (outOfBounds([head[0], head[1] + 1], finished.end) ? 0 : (world[head[0]][head[1] + 1] as number))
         ]
-      ],
-      (newStep: Step) => {
-        if (outOfBounds(newStep, finished.end)) {
-          return true
-        }
-
-        const newKey = getKey(newStep)
-        // reject if it's in the visited list, and it has a worst cost; otherwise, keep it
-        if (Object.prototype.hasOwnProperty.call(visited, newKey) && visited[newKey] <= newStep[3]) {
-          return true
-        }
-
-        const matchOpenedPathIndex = _.findIndex(opened, (s: Step) => isSame(s, newStep))
-        if (matchOpenedPathIndex >= 0) {
-          // worse cost
-          if (opened[matchOpenedPathIndex][3] <= newStep[3]) {
-            return true
-          } else {
-            opened.splice(matchOpenedPathIndex, 1)
-          }
-        }
-
+      ] as Step[]
+    ).filter((newStep: Step) => {
+      if (outOfBounds(newStep, finished.end)) {
         return false
       }
-    )
+
+      const newKey = getKey(newStep)
+      // reject if it's in the visited list, and it has a worst cost; otherwise, keep it
+      if (Object.prototype.hasOwnProperty.call(visited, newKey) && visited[newKey] <= newStep[3]) {
+        return false
+      }
+
+      const matchOpenedPathIndex = opened.findIndex((s: Step) => isSame(s, newStep))
+      if (matchOpenedPathIndex >= 0) {
+        // worse cost
+        if (opened[matchOpenedPathIndex][3] <= newStep[3]) {
+          return false
+        } else {
+          opened.splice(matchOpenedPathIndex, 1)
+        }
+      }
+
+      return true
+    })
 
     if (newSteps.length !== 0) {
       opened.push(...newSteps)
@@ -167,7 +165,7 @@ export default async (lineReader: any, params: Params) => {
 
       if (params.ui?.show && params.ui?.during) {
         printWorld(world, opened, visited, finished)
-        if (_.isNumber(params.ui?.wait)) {
+        if (typeof params.ui?.wait === 'number') {
           await new Promise((resolve) => setTimeout(resolve, params.ui!.wait ?? 100))
         }
       }

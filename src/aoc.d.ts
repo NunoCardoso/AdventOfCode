@@ -58,7 +58,7 @@ export type PuzzleConfig = {
   mode?: string
   logLevel?: string
   ui?: UI
-  test?: Test | Array<Test>
+  test?: Test | Test[]
   prod: Prod
   params?: Params
 }

@@ -1,5 +1,4 @@
 import { Params } from 'aoc.d'
-import _ from 'lodash'
 
 type Monkeys = Record<string, number | string[]>
 
@@ -41,7 +40,7 @@ export default async (lineReader: any, params: Params) => {
     delete monkeys2.root
     let firstmonkey = 0
     // second monkey is not tied to human
-    const secondmonkey = resolve(_.cloneDeep(monkeys2), (monkeyRoot as string[])[2])
+    const secondmonkey = resolve(global.structuredClone(monkeys2), (monkeyRoot as string[])[2])
 
     // guessing humn until log.debug on line 73 produces a firstmonkey - secondmonkey closer to 0
     if (!params.isTest) {
@@ -51,7 +50,7 @@ export default async (lineReader: any, params: Params) => {
     while (firstmonkey !== secondmonkey) {
       part2++
       monkeys2.humn = part2
-      firstmonkey = resolve(_.cloneDeep(monkeys2), (monkeyRoot as string[])[1])
+      firstmonkey = resolve(global.structuredClone(monkeys2), (monkeyRoot as string[])[1])
       log.debug('tried', part2, 'got', firstmonkey, secondmonkey, firstmonkey - secondmonkey)
     }
   }

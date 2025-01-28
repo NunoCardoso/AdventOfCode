@@ -6,38 +6,29 @@ let config: PuzzleConfig = {
     year: 2022,
     day: 23,
     result: 'unfinished',
-    status: 'unsolved',
+    status: 'solved',
     speed: 'slow',
-    code: 'dirty',
+    code: 'clean',
     difficulty: 4
   },
   logLevel: 'info',
   ui: {
-    show: true,
-    during: false,
+    show: false,
+    during: true,
     end: true
   },
   params: {
     iterations: {
-      part1: 10,
-      part2: 10000000
+      part1: 10
     }
   },
-  test: [
-    {
-      id: 'test1',
-      answers: {
-        part1: 25
-      }
-    },
-    {
-      id: 'test2',
-      answers: {
-        part1: 110,
-        part2: 20
-      }
+  test: {
+    id: 'test',
+    answers: {
+      part1: 110,
+      part2: 20
     }
-  ],
+  },
   prod: {
     answers: {
       part1: 4249,

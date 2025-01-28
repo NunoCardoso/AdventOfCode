@@ -1,5 +1,5 @@
 import { Params } from 'aoc.d'
-import { intersection } from 'lodash'
+import { intersect } from '../util/array'
 
 type Orbits = Record<string, string>
 export default async (lineReader: any, params: Params) => {
@@ -35,8 +35,8 @@ export default async (lineReader: any, params: Params) => {
   const solveForPart2 = (planets: string[], orbits: Orbits): number => {
     let youConnection = distanceFrom(orbits['YOU'], 'COM', orbits)
     let sanConnection = distanceFrom(orbits['SAN'], 'COM', orbits)
-    let intersect = intersection(youConnection, sanConnection)
-    return youConnection.indexOf(intersect[0]) + sanConnection.indexOf(intersect[0])
+    let intersection = intersect(youConnection, sanConnection)
+    return youConnection.indexOf(intersection[0]) + sanConnection.indexOf(intersection[0])
   }
 
   if (!params.skipPart1) part1 = solveFor([...planets], orbits)

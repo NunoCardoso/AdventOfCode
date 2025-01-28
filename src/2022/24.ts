@@ -1,473 +1,207 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import _ from 'lodash'
+import { Dimension, Location, LocationPlus } from 'declarations'
+import { leastCommonMultiple } from 'util/commons'
+import { getKey, isSame } from 'util/location'
+import { range } from 'util/range'
+
+type Blizzard = LocationPlus<string>
+
+type Data = {
+  start: Location
+  end: Location
+  numberOfSnapshots: number
+  worldDimension: Dimension
+  lowestScore: number | undefined
+}
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  const directions = ['>', '<', 'v', '^']
-  type Point = [number, number]
-  type Grid = Array<Array<string>>
-  type World = {
-    grid: Grid
-    moves: Array<Grid>
-    rows: number
-    columns: number
-  }
-  type Blizzard = {
-    point: Point
-    direction: string
-  }
-  type Blizzards = Array<Blizzard>
-  type Step = {
+  let part1: number = 0
+  let part2: number = 0
+
+  const printWorld = (
+    worldSnapshot: Set<string>,
+    worldDimension: Dimension,
+    queue: Location[],
+    iteration: number,
     stage: number
-    point: [number, number]
-    move: number
-    i: number
-    action: string
-    distance: number
-  }
-  type Steps = Array<Step>
-  type Path = {
-    head: Step
-    tail: Steps
-  }
-  type Paths = Array<Path>
-
-  const biggestCommonDenominator = (x: number, y: number) => {
-    while (y) {
-      const t = y
-      y = x % y
-      x = t
-    }
-    return x
-  }
-
-  const printWorld = ({
-    world,
-    opened,
-    iteration,
-    letter
-  }: {
-    world: World
-    opened: Paths
-    iteration: number
-    letter: Record<string, string>
-  }) => {
-    const m: string = !_.isEmpty(opened) ? opened[0].head.move.toString() : '-'
-    console.log(
+  ) => {
+    log.info(
       '      ' +
-        _.range(0, world.columns)
+        range(worldDimension[1])
           .map((i: number) => Math.floor(i / 100).toString())
           .join('')
     )
-    console.log(
-      'm ' +
-        m.padStart(2, '0') +
+    log.info(
+      's ' +
+        stage.toString().padStart(2, '0') +
         ' ' +
-        _.range(0, world.columns)
+        range(worldDimension[1])
           .map((i: number) => Math.floor((i % 100) / 10).toString())
           .join('')
     )
-    console.log(
+    log.info(
       'i ' +
-        (iteration + 1).toString().padStart(2, '0') +
+        iteration.toString().padStart(2, '0') +
         ' ' +
-        _.range(0, world.columns)
+        range(worldDimension[1])
           .map((i: number) => (i % 10).toString())
           .join('')
     )
-
     let start = '.'
     let end = '.'
 
-    const worldMove: Grid = _.cloneDeep(world.moves[opened[0].head.move])
+    let queueLocations: Set<string> = new Set<string>()
+    queue.forEach((l) => queueLocations.add(getKey(l)))
 
-    opened.forEach((path: Path) => {
-      if (path.head.point[0] < 0) {
-        start = clc.blue(letter.opened)
-      } else if (path.head.point[0] >= worldMove.length) {
-        end = clc.blue(letter.opened)
-      } else {
-        worldMove[path.head.point[0]][path.head.point[1]] = clc.blue(letter.opened)
-      }
-    })
-
-    console.log('    ' + clc.green('#') + start + clc.green('#'.repeat(world.columns)))
-    worldMove.forEach((m, i) => {
-      console.log(
+    log.info('    ' + clc.green('#') + start + clc.green('#'.repeat(worldDimension[1])))
+    for (let row of range(worldDimension[0])) {
+      log.info(
         ' ' +
-          //  (i === path.head.point[0] ? clc.red(i.toString().padStart(2, '0')) :
-          i
-            .toString()
-            .padStart(2, '0') +
+          row.toString().padStart(2, '0') +
           ' ' +
           clc.green('#') +
-          m
-            .map((v: string) => {
-              if (directions.indexOf(v) >= 0 || v.match(/\d+/)) {
-                return clc.red(v)
-              }
-              return v
+          range(worldDimension[1])
+            .map((column) => {
+              let key = getKey([row, column])
+              if (queueLocations.has(key)) return clc.blue('O')
+              if (worldSnapshot.has(key)) return clc.red('░')
+              return '.'
             })
             .join('') +
           clc.green('#')
       )
-    })
-    console.log('    ' + clc.green('#'.repeat(world.columns)) + end + clc.green('#'))
+    }
+    log.info('    ' + clc.green('#'.repeat(worldDimension[1])) + end + clc.green('#'))
   }
 
-  const getDistance = (point1: Point, point2: Point): number =>
-    Math.sqrt((point1[0] - point2[0]) * (point1[0] - point2[0]) + (point1[1] - point2[1]) * (point1[1] - point2[1]))
-
-  const generateMove = (i: number, templateGrid: Grid, blizzards: Blizzards): Grid => {
-    const grid = _.cloneDeep(templateGrid)
-    blizzards.forEach((blizzard) => {
-      const newPoint: Point = [blizzard.point[0], blizzard.point[1]]
-      if (blizzard.direction === 'v') {
-        newPoint[0] = (newPoint[0] + i) % templateGrid.length
-      }
-      if (blizzard.direction === '^') {
-        newPoint[0] = (newPoint[0] - (i % templateGrid.length) + templateGrid.length) % templateGrid.length
-      }
-      if (blizzard.direction === '<') {
-        newPoint[1] = (newPoint[1] - (i % templateGrid[0].length) + templateGrid[0].length) % templateGrid[0].length
-      }
-      if (blizzard.direction === '>') {
-        newPoint[1] = (newPoint[1] + i) % templateGrid[0].length
-      }
-      if (grid[newPoint[0]][newPoint[1]] === '.') {
-        grid[newPoint[0]][newPoint[1]] = blizzard.direction
-      } else if (directions.indexOf(grid[newPoint[0]][newPoint[1]]) >= 0) {
-        grid[newPoint[0]][newPoint[1]] = '2'
-      } else {
-        grid[newPoint[0]][newPoint[1]] = (parseInt(grid[newPoint[0]][newPoint[1]]) + 1).toString()
-      }
-    })
-    return grid
+  // I want to write over the blizzard positions, so I can reuse on next iteration
+  const generateMove = (blizzards: Blizzard[], worldDimension: Dimension): Set<string> => {
+    let snapshot: Set<string> = new Set()
+    for (let blizzard of blizzards) {
+      if (blizzard[2] === 'v') blizzard[0] = (blizzard[0] + 1) % worldDimension[0]
+      if (blizzard[2] === '^') blizzard[0] = (blizzard[0] - 1 + worldDimension[0]) % worldDimension[0]
+      if (blizzard[2] === '<') blizzard[1] = (blizzard[1] - 1 + worldDimension[1]) % worldDimension[1]
+      if (blizzard[2] === '>') blizzard[1] = (blizzard[1] + 1) % worldDimension[1]
+      snapshot.add(getKey(blizzard))
+    }
+    return snapshot
   }
 
-  const printPath = (path: Path) =>
-    printStep(path.head) + '=>(' + path.tail.length + ')' + path.tail.map((_s) => '{' + printStep(_s) + '}').join('')
-
-  const printStep = (step: Step) => '#' + step.move + '[' + step.point[0] + ',' + step.point[1] + ']' + step.action
-
-  const makeNewPaths = ({ paths, world }: { paths: Paths; world: World }): Paths => {
-    const newPaths: Paths = []
-    paths.forEach((path: Path) => {
-      const newTail: Steps = path.tail.concat(path.head)
-      const newI: number = path.head.i + 1
-      const newMove: number = newI % world.moves.length
-      const goal = path.head.stage % 2 === 1 ? end : start
-
-      log.trace(
-        'newPaths before',
-        newPaths.map((x: Path) => printPath(x))
-      )
-      let _newPaths: Paths = [
-        {
-          head: {
-            stage: path.head.stage,
-            point: [path.head.point[0] - 1, path.head.point[1]],
-            action: '<',
-            move: newMove,
-            i: newI,
-            distance: getDistance([path.head.point[0] - 1, path.head.point[1]], goal)
-          },
-          tail: newTail
-        },
-        {
-          head: {
-            stage: path.head.stage,
-            point: [path.head.point[0] + 1, path.head.point[1]],
-            action: '>',
-            move: newMove,
-            i: newI,
-            distance: getDistance([path.head.point[0] + 1, path.head.point[1]], goal)
-          },
-          tail: newTail
-        },
-        {
-          head: {
-            stage: path.head.stage,
-            point: [path.head.point[0], path.head.point[1] + 1],
-            action: 'v',
-            move: newMove,
-            i: newI,
-            distance: getDistance([path.head.point[0], path.head.point[1] + 1], goal)
-          },
-          tail: newTail
-        },
-        {
-          head: {
-            stage: path.head.stage,
-            point: [path.head.point[0], path.head.point[1] - 1],
-            action: '^',
-            move: newMove,
-            i: newI,
-            distance: getDistance([path.head.point[0], path.head.point[1] - 1], goal)
-          },
-          tail: newTail
-        },
-        {
-          head: {
-            stage: path.head.stage,
-            point: [path.head.point[0], path.head.point[1]],
-            action: '*',
-            move: newMove,
-            i: newI,
-            distance: path.head.distance
-          },
-          tail: newTail
-        }
-      ]
-
-      _newPaths = _.reject(_newPaths, (newPath: Path) => {
-        if (matchesPoint(newPath.head.point, end) || matchesPoint(newPath.head.point, start)) {
-          return false
-        }
-        if (
-          newPath.head.point[0] < 0 ||
-          newPath.head.point[1] < 0 ||
-          newPath.head.point[0] >= world.rows ||
-          newPath.head.point[1] >= world.columns
-        ) {
-          log.trace('rejecting new path', printPath(newPath), 'out of bounds')
-          return true
-        }
-        const worldMove = world.moves[newMove]
-        if (worldMove[newPath.head.point[0]][newPath.head.point[1]] !== '.') {
-          log.trace(
-            'rejecting new path',
-            printPath(newPath),
-            'on moves #',
-            newMove,
-            'value is',
-            worldMove[newPath.head.point[0]][newPath.head.point[1]]
-          )
-          return true
-        }
-
-        const alreadyExists = _.findIndex(newPaths, (_p: Path) => matchesHead(_p, newPath))
-        if (alreadyExists >= 0) {
-          if (newPath.tail.length < newPaths[alreadyExists].tail.length) {
-            log.trace('new step', printPath(newPath), 'on moves #', newMove, 'has a shorter tail, replacing')
-            newPaths[alreadyExists] = newPath
-          } else {
-            log.trace('rejecting new step', printPath(newPath), 'on moves #', newMove, 'already on list')
-          }
-          return true
-        }
-        return false
-      })
-
-      newPaths.push(..._newPaths)
-      log.trace(
-        'generated _newPaths',
-        _newPaths.map((x: Path) => printPath(x))
-      )
-      log.trace(
-        'newPaths for ',
-        printPath(path),
-        'is now',
-        newPaths.map((x: Path) => printPath(x))
-      )
-    })
-    return newPaths
-  }
-
-  const matchesHead = (p1: Path, p2: Path) => matchesPoint(p1.head.point, p2.head.point)
-
-  const matchesPoint = (p1: Point, p2: Point) => p1[0] === p2[0] && p1[1] === p2[1]
-
-  const searchAlgorithm = async ({
-    opened,
-    finished,
-    world,
-    end,
-    iteration,
-    endStage
-  }: {
-    opened: Paths
-    finished: Paths
-    world: World
-    end: Point
-    iteration: number
-    endStage: number
-  }) => {
-    log.debug('=== Starting === best finished', finished.length > 0 ? finished[0].tail.length : '-')
-    log.debug(finished.length > 0 ? printPath(finished[0]) : '-')
-
-    for (let i = 0; i < opened.length; i++) {
-      if (matchesPoint(opened[i].head.point, end) && opened[i].head.stage % 2 === 1) {
-        if (opened[i].head.stage === endStage) {
-          if (_.isEmpty(finished) || opened[i].tail.length < finished[0].tail.length) {
-            log.debug('Found better path with length', opened[i].tail.length, printPath(opened[i]))
-            finished.unshift(opened[i])
-          }
-        } else {
-          log.info('Stage', opened[i].head.stage, 'complete')
-          log.info('Trimming and switching')
-          const thepath = _.cloneDeep(opened[i])
-          thepath.head.stage++
-          opened.splice(0, opened.length)
-          opened.push(thepath)
-          log.info('opened is now', opened.length)
-        }
+  const getNewLocations = (worldSnapshot: Set<string>, data: Data, location: Location): Location[] =>
+    (
+      [
+        [location[0] + 1, location[1]],
+        [location[0] - 1, location[1]],
+        [location[0], location[1] + 1],
+        [location[0], location[1] - 1],
+        [location[0], location[1]]
+      ] as Location[]
+    ).filter((l) => {
+      if (l[0] < 0 || l[1] < 0 || l[0] >= data.worldDimension[0] || l[1] >= data.worldDimension[1]) {
+        if (!isSame(data.end, l) && !isSame(data.start, l)) return false
       }
-      if (matchesPoint(opened[i].head.point, start) && opened[i].head.stage % 2 === 0) {
-        log.info('Stage', opened[i].head.stage, 'complete')
-        log.info('Trimming and switching')
-        const thepath = _.cloneDeep(opened[i])
-        thepath.head.stage++
-        opened.splice(0, opened.length)
-        opened.push(thepath)
-        log.info('opened is now', opened.length)
+      let key = getKey(l)
+      // check if there is a blizzard, return true if it does not have
+      return !worldSnapshot.has(key)
+    })
+
+  const breadthFirst = (
+    worldSnapshots: Set<string>[],
+    queue: Location[],
+    data: Data,
+    iteration: number,
+    stage: number
+  ): Location[] => {
+    //log.debug('=== Starting === Stage', stage, 'queue', queue.length, 'iteration', iteration)
+    let newQueue: Record<string, Location> = {}
+    let nextSnapshot = iteration % data.numberOfSnapshots
+
+    for (let location of queue) {
+      //log.debug( 'world snapshots', worldSnapshots.length, 'nextSnapshot', nextSnapshot)
+      const newLocations = getNewLocations(worldSnapshots[nextSnapshot], data, location)
+
+      for (let newLocation of newLocations) {
+        if (isSame(newLocation, data.end)) {
+          log.debug('Found end')
+          data.lowestScore = iteration
+          return []
+        }
+        let key: string = getKey(newLocation)
+        if (!newQueue[key]) newQueue[key] = newLocation
       }
     }
 
-    const newOpenedStart = makeNewPaths({ paths: opened, world })
+    if (params.ui?.show && params.ui?.during)
+      printWorld(worldSnapshots[nextSnapshot], data.worldDimension, Object.values(newQueue), iteration, stage)
 
-    // Writing to the same object
-    opened.splice(0, opened.length)
-    opened.push(...newOpenedStart)
-
-    // sort and prune
-    opened.sort((a: Path, b: Path) => a.head.distance - b.head.distance).splice(20, 100)
-
-    log.trace(opened)
-    if (params.ui?.show && params.ui?.during) {
-      printWorld({
-        world,
-        opened: opened,
-        iteration,
-        letter: { path: 'S', opened: 'O', new: '@' }
-      })
-      await new Promise((resolve) => setTimeout(resolve, params.ui?.wait ?? 1000))
-    }
+    return Object.values(newQueue)
   }
 
-  const world: World = { grid: [], rows: 0, columns: 0, moves: [] }
-  const blizzards: Blizzards = []
-  let linenumber = 0
-  const start: Point = [-1, 0]
-  let part1: number = 0
-  let part2: number = 0
+  ///////////////
+
+  const blizzards: Blizzard[] = []
+  let rowNumber = 0
+  const start: Location = [-1, 0]
+  const worldDimension: Dimension = [0, 0]
+  let worldSnapshots: Set<string>[] = []
+  let worldSnapshot: Set<string> = new Set<string>()
 
   for await (const line of lineReader) {
-    if (line.startsWith('#.#')) {
-      world.columns = line.length - 2
-    } else if (line.endsWith('#.#')) {
-      world.rows = linenumber - 1
-    } else {
-      const vals = line.split('')
-      vals.forEach((char: string, i: number) => {
-        if (char !== '#' && char !== '.') {
-          blizzards.push({
-            point: [linenumber - 1, i - 1],
-            direction: char
-          })
-        }
-      })
-    }
-    linenumber++
+    if (worldDimension[1] === 0) worldDimension[1] = line.length - 2
+    line.split('').forEach((blizzard: string, colNumber: number) => {
+      if (blizzard !== '#' && blizzard !== '.') {
+        blizzards.push([rowNumber - 1, colNumber - 1, blizzard])
+        worldSnapshot.add(getKey([rowNumber - 1, colNumber - 1]))
+      }
+    })
+    rowNumber++
   }
-  const end: Point = [world.rows, world.columns - 1]
 
-  const templateGrid: Grid = []
-  for (let i = 0; i < world.rows; i++) {
-    templateGrid.push('.'.repeat(world.columns).split(''))
-  }
-  const numberOfDifferentMoves = (world.columns * world.rows) / biggestCommonDenominator(world.rows, world.columns)
-  log.debug('World with', world.columns, 'columns', world.rows, 'rows, generating', numberOfDifferentMoves, 'moves')
-  for (let i = 0; i < numberOfDifferentMoves; i++) {
-    const move: Grid = generateMove(i, templateGrid, blizzards)
-    world.moves.push(move)
-  }
+  worldSnapshots.push(worldSnapshot)
+  worldDimension[0] = rowNumber - 2
+  const end: Location = [worldDimension[0], worldDimension[1] - 1]
+  const numberOfSnapshots = leastCommonMultiple(worldDimension[0], worldDimension[1])
+
+  log.debug('World ', worldDimension, 'generating', numberOfSnapshots, 'moves')
+  // we already did the world snapshot at time 0.
+  for (let iteration of range(numberOfSnapshots - 1, 1)) worldSnapshots.push(generateMove(blizzards, worldDimension))
+
   log.debug('Done creating moves')
 
-  let finished: Paths = []
-  let opened: Paths = [
-    {
-      head: {
-        stage: 1,
-        point: start,
-        i: 0,
-        move: 0,
-        distance: getDistance(start, end),
-        action: ''
-      },
-      tail: []
-    }
-  ]
+  let iteration: number = 1
+  let data: Data = { start, end, numberOfSnapshots, worldDimension, lowestScore: undefined }
+  let queue: Location[] = [[...data.start]]
 
-  let iteration: number = 0
-  while (_.isEmpty(finished)) {
-    await searchAlgorithm({
-      opened: opened,
-      finished,
-      world,
-      end,
-      iteration,
-      endStage: 1
-    })
+  while (true) {
+    queue = breadthFirst(worldSnapshots, queue, data, iteration, 1)
+    if (data.lowestScore) {
+      part1 = iteration++
+      break
+    } else iteration++
+  }
+
+  data = { start: end, end: start, numberOfSnapshots, worldDimension, lowestScore: undefined }
+  queue = [[...data.start]]
+
+  while (true) {
+    queue = breadthFirst(worldSnapshots, queue, data, iteration, 2)
     iteration++
-
-    if (iteration % 10 === 0) {
-      log.debug(iteration, 'opened', opened.length, 'finished', finished.length > 0 ? finished[0].tail.length : '-')
-    }
-  }
-  // log.info(printPath(finished[0]))
-  part1 = finished[0].tail.length
-  if (params.ui?.show && params.ui?.end) {
-    printWorld({
-      world,
-      opened: opened,
-      iteration,
-      letter: { path: 'S', opened: 'O', new: '@' }
-    })
+    if (data.lowestScore) break
   }
 
-  finished = []
-  opened = [
-    {
-      head: {
-        stage: 1,
-        point: start,
-        i: 0,
-        move: 0,
-        distance: getDistance(start, end),
-        action: ''
-      },
-      tail: []
-    }
-  ]
+  data = { start, end, numberOfSnapshots, worldDimension, lowestScore: undefined }
+  queue = [[...data.start]]
 
-  iteration = 0
-  while (_.isEmpty(finished)) {
-    await searchAlgorithm({
-      opened: opened,
-      finished,
-      world,
-      end,
-      iteration,
-      endStage: 3
-    })
-    iteration++
-
-    if (iteration % 10 === 0) {
-      log.debug(iteration, 'opened', opened.length, 'finished', finished.length > 0 ? finished[0].tail.length : '-')
-    }
+  while (queue.length > 0) {
+    queue = breadthFirst(worldSnapshots, queue, data, iteration, 3)
+    if (data.lowestScore) {
+      part2 = iteration
+      break
+    } else iteration++
   }
-  if (params.ui?.show && params.ui?.end) {
-    printWorld({
-      world,
-      opened: opened,
-      iteration,
-      letter: { path: 'S', opened: 'O', new: '@' }
-    })
-  }
-  part2 = finished[0].tail.length
 
   return { part1, part2 }
 }

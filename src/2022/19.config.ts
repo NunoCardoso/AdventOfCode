@@ -5,14 +5,13 @@ let config: PuzzleConfig = {
     title: 'Not Enough Minerals',
     year: 2022,
     day: 19,
-    result: 'unfinished',
+    result: 'finished',
     status: 'solved',
     speed: 'fast',
-    code: 'dirty',
+    code: 'clean',
     tags: ['Path-finding'],
     difficulty: 5
   },
-  mode: 'fastest',
   params: {
     limit: {
       part1: 24,

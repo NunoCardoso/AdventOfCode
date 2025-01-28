@@ -2,7 +2,6 @@ export type Location = [row: number, col: number]
 
 export type Location3D = [x: number, y: number, z: number]
 
-// deprecated
 export type LocationPlus<T = number> = [row: number, col: number, T]
 
 export type Direction = '<' | '>' | '^' | 'v'
