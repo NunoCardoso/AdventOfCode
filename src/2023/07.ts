@@ -14,7 +14,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const hands: Array<Hand> = []
+  const hands: Hand[] = []
   const cardTypePart1 = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2']
   const cardTypePart2 = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J']
   const handType = ['5kind', '4kind', 'FullHouse', '3kind', '2pairs', '1pair', 'HighCard']
@@ -27,7 +27,7 @@ export default async (lineReader: any, params: Params) => {
 
   const getHandType = (hand: string) => {
     const hash: Map<string, number> = countCards(hand)
-    const values: Array<number> = Array.from(hash.values()).sort((a, b) => a - b)
+    const values: number[] = [...hash.values()].sort((a, b) => a - b)
     if (values.length === 1) return '5kind'
     if (values.length === 2 && values[1] === 4) return '4kind'
     if (values.length === 2 && values[1] === 3) return 'FullHouse'
@@ -37,7 +37,7 @@ export default async (lineReader: any, params: Params) => {
     return 'HighCard'
   }
 
-  const decideOnStrongest = (a: Hand, b: Hand, cardType: Array<string>): number => {
+  const decideOnStrongest = (a: Hand, b: Hand, cardType: string[]): number => {
     for (let i = 0; i < a.cards.length; i++) {
       if (cardType.indexOf(b.cards[i]) > cardType.indexOf(a.cards[i])) return 1
       if (cardType.indexOf(b.cards[i]) < cardType.indexOf(a.cards[i])) return -1
@@ -45,19 +45,18 @@ export default async (lineReader: any, params: Params) => {
     return 0
   }
 
-  const doSort = (d: Array<Hand>, which: keyof Hand, cardScore: Array<string>) => {
-    return d.sort((a: Hand, b: Hand) => {
-      // @ts-ignore
-      if (handType.indexOf(b[which]) > handType.indexOf(a[which])) return 1
-      // @ts-ignore
-      if (handType.indexOf(b[which]) < handType.indexOf(a[which])) return -1
-      return decideOnStrongest(a, b, cardScore)
-    })
-  }
+  const doSort = (hand: Hand[], which: keyof Hand, cardScore: string[]) =>
+    hand.sort((a: Hand, b: Hand) =>
+      handType.indexOf(b[which] as string) > handType.indexOf(a[which] as string)
+        ? 1
+        : handType.indexOf(b[which] as string) < handType.indexOf(a[which] as string)
+          ? -1
+          : decideOnStrongest(a, b, cardScore)
+    )
 
   const doJoker = (hand: string) => {
     const hash: Map<string, number> = countCards(hand)
-    const allOtherCards = Array.from(hash.keys()).filter((card) => card !== 'J')
+    const allOtherCards = [...hash.keys()].filter((card) => card !== 'J')
     let bestHandType = handType.indexOf(getHandType(hand))
     let bestHand = hand
 
@@ -85,12 +84,11 @@ export default async (lineReader: any, params: Params) => {
     })
   }
 
-  if (!params.skipPart1) {
+  if (!params.skipPart1)
     part1 = doSort(hands, 'type' as keyof Hand, cardTypePart1).reduce((a, b, i) => a + b.rank * (i + 1), 0)
-  }
-  if (!params.skipPart2) {
+
+  if (!params.skipPart2)
     part2 = doSort(hands, 'typeWithJoker' as keyof Hand, cardTypePart2).reduce((a, b, i) => a + b.rank * (i + 1), 0)
-  }
 
   return { part1, part2 }
 }

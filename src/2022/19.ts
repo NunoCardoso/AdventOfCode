@@ -203,7 +203,7 @@ export default async (lineReader: any, params: Params) => {
     return data.geodeHighScore
   }
 
-  const blueprints: Array<Blueprint> = []
+  const blueprints: Blueprint[] = []
   for await (const line of lineReader) {
     const [, id, oreRobotOre, clayRobotOre, obsidianRobotOre, obsidianRobotClay, geodeRobotOre, geodeRobotObsidian] =
       line.match(

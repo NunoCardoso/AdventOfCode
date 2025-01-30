@@ -2,12 +2,15 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Hot Springs',
     year: 2023,
     day: 12,
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 4,
+    tags: ['Path-finding', 'Depth-first']
   },
   logLevel: 'info',
   test: {

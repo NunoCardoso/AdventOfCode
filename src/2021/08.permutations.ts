@@ -3,18 +3,18 @@ import { permutation } from 'util/permutation'
 
 type Digit = {
   source: string
-  answer?: Array<number>
+  answer?: number[]
 }
 
 type Puzzle = {
-  left: Array<Digit>
-  right: Array<Digit>
+  left: Digit[]
+  right: Digit[]
 }
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
 
-  const data: Array<Puzzle> = []
+  const data: Puzzle[] = []
 
   for await (const line of lineReader) {
     const m = line.trim().split(/\s+/)
@@ -24,9 +24,9 @@ export default async (lineReader: any, params: Params) => {
     })
   }
 
-  const coordEquals = (a: Array<string>, b: Array<string>) => a.sort().join('.') === b.sort().join('.')
+  const coordEquals = (a: string[], b: string[]) => a.sort().join('.') === b.sort().join('.')
 
-  const makeNumber = (source: Array<string>, permutation: Array<string>): number | undefined => {
+  const makeNumber = (source: string[], permutation: string[]): number | undefined => {
     // source is like ['b', 'e'], I can convert to ['NW', 'NE']
     // positions are permutated, indexes for segment letters are from 0 to 7
     const coords = source.map((s) => permutation['abcdefg'.indexOf(s)]).sort()
@@ -47,12 +47,12 @@ export default async (lineReader: any, params: Params) => {
     return undefined
   }
 
-  const solutions: Array<string> = []
+  const solutions: string[] = []
 
   data.forEach((line: Puzzle) => {
-    let validPermutation: Array<string> | undefined
-    let leftCode: Array<number> | undefined
-    const permutations: Array<Array<string>> = permutation(['N', 'NW', 'NE', 'C', 'SW', 'SE', 'S'])
+    let validPermutation: string[] | undefined
+    let leftCode: number[] | undefined
+    const permutations: string[][] = permutation(['N', 'NW', 'NE', 'C', 'SW', 'SE', 'S'])
 
     permutations: for (let x = 0; x < permutations.length; x++) {
       leftCode = []
@@ -67,7 +67,7 @@ export default async (lineReader: any, params: Params) => {
       }
     }
 
-    const rightCode: Array<number> = []
+    const rightCode: number[] = []
     for (let i = 0; i < line.right.length; i++) {
       const possibleNumber: number | undefined = makeNumber(line.right[i].source.split(''), validPermutation!)
       if (possibleNumber !== undefined) rightCode.push(possibleNumber)

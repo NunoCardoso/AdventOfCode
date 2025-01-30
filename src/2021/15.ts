@@ -49,7 +49,7 @@ export default async (lineReader: any, params: Params) => {
 
   const printWorld = (
     world: World<string | number>,
-    opened: Array<Step>,
+    opened: Step[],
     visited: Record<string, number>,
     finished: Record<string, number>
   ) => {
@@ -69,7 +69,7 @@ export default async (lineReader: any, params: Params) => {
 
   const searchAlgorithm = async (
     world: World,
-    opened: Array<Step>,
+    opened: Step[],
     visited: Record<string, number>,
     finished: Record<string, any>
   ) => {
@@ -93,7 +93,7 @@ export default async (lineReader: any, params: Params) => {
       }
     }
 
-    const newSteps: Array<Step> = (
+    const newSteps: Step[] = (
       [
         [
           head[0] - 1,
@@ -156,7 +156,7 @@ export default async (lineReader: any, params: Params) => {
 
   const getThemPath = async (
     world: World,
-    opened: Array<Step>,
+    opened: Step[],
     visited: Record<string, number>,
     finished: Record<string, any>
   ) => {

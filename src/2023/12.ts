@@ -1,6 +1,7 @@
 import { Params } from 'aoc.d'
 
-type Puzzle = [string, Array<number>]
+type Puzzle = [string, number[]]
+type Cache = Map<string, number>
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -8,25 +9,13 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  const puzzlePart1: Array<Puzzle> = []
-  const puzzlePart2: Array<Puzzle> = []
+  const getKey = (spring: string, values: number[]): string => spring + ';' + values.join(',')
 
-  for await (const line of lineReader) {
-    const [spring, values] = line.split(/\s/)
-    puzzlePart1.push([spring, values.split(',').map(Number)])
-    puzzlePart2.push([Array(5).fill(spring).join('?'), Array(5).fill(values).join(',').split(',').map(Number)])
-  }
-
-  const getKey = (spring: string, values: Array<number>): string => spring + ';' + values.join(',')
-
-  const deepFirst = (spring: string, values: Array<number>, cache: Map<string, number>, depth: number): number => {
+  const depthFirst = (spring: string, values: number[], cache: Map<string, number>, depth: number): number => {
     // spring starts with . , just trim it
-    if (spring.startsWith('.')) {
-      spring = spring.match(/^\.*(.*?)\.*$/)![1]
-    }
+    if (spring.startsWith('.')) spring = spring.match(/^\.*(.*?)\.*$/)![1]
 
     log.debug(' '.repeat(depth) + 'deepFirst', spring, values)
-
     // no spring left, return OK if we are out of values
     // if we still have values, it means we are expecting more # or ?
     if (spring === '') {
@@ -50,7 +39,7 @@ export default async (lineReader: any, params: Params) => {
 
     // spring starts with ?  => treat as ., keep drilling
     if (spring.startsWith('?')) {
-      result += deepFirst(spring.substring(1, spring.length), values, cache, depth + 1)
+      result += depthFirst(spring.substring(1, spring.length), values, cache, depth + 1)
       log.debug(' '.repeat(depth) + 'Condition 1 returned', result)
     }
 
@@ -72,7 +61,7 @@ export default async (lineReader: any, params: Params) => {
         // we slice another character as the next character HAS to be a . or a ?, to make a block valid
         const newNewSpring = newSpring.substring(1, newSpring.length)
         const newValues = values.slice(1, values.length)
-        result += deepFirst(newNewSpring, newValues, cache, depth + 1)
+        result += depthFirst(newNewSpring, newValues, cache, depth + 1)
         log.debug(' '.repeat(depth) + 'Condition 2 returned', result)
       }
     }
@@ -81,17 +70,20 @@ export default async (lineReader: any, params: Params) => {
     return result
   }
 
-  const solveFor = (puzzles: Array<Puzzle>): number => {
-    const cache = new Map<string, number>()
-    return puzzles.reduce((acc, puzzle) => acc + deepFirst(puzzle[0], puzzle[1], cache, 0), 0)
+  const solveFor = (puzzles: Puzzle[], cache: Cache): number =>
+    puzzles.reduce((acc, puzzle) => acc + depthFirst(puzzle[0], puzzle[1], cache, 0), 0)
+
+  const puzzlePart1: Puzzle[] = []
+  const puzzlePart2: Puzzle[] = []
+
+  for await (const line of lineReader) {
+    const [spring, values] = line.split(/\s/)
+    puzzlePart1.push([spring, values.split(',').map(Number)])
+    puzzlePart2.push([Array(5).fill(spring).join('?'), Array(5).fill(values).join(',').split(',').map(Number)])
   }
 
-  if (!params.skipPart1) {
-    part1 = solveFor(puzzlePart1)
-  }
-  if (!params.skipPart2) {
-    part2 = solveFor(puzzlePart2)
-  }
+  if (!params.skipPart1) part1 = solveFor(puzzlePart1, new Map<string, number>())
+  if (!params.skipPart2) part2 = solveFor(puzzlePart2, new Map<string, number>())
 
   return { part1, part2 }
 }

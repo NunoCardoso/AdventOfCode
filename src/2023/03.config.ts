@@ -2,12 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Gear Ratios',
     year: 2023,
     day: 3,
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 2
   },
   logLevel: 'info',
   ui: {

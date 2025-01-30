@@ -1,4 +1,8 @@
 import { Params } from 'aoc.d'
+import { range } from 'util/range'
+
+type Cache = Map<string, [number, number]>
+type CacheHit = [number, [number, number]] | undefined
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -6,14 +10,7 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let columns: Array<string> | undefined
-
-  for await (const line of lineReader) {
-    if (!columns) columns = new Array(line.length).fill('')
-    line.split('').forEach((char: string, i: number) => (columns![i] += char))
-  }
-
-  const printColumns = (columns: Array<string>) => {
+  const printColumns = (columns: string[]) => {
     for (let i = 0; i < columns[0].length; i++) {
       let l = ''
       for (let j = 0; j < columns.length; j++) {
@@ -49,47 +46,39 @@ export default async (lineReader: any, params: Params) => {
       })
       .join('#')
 
+  // transpose input
+  let columns: string[] = []
+  for await (const line of lineReader) {
+    if (columns.length === 0) columns = new Array(line.length).fill('')
+    line.split('').forEach((char: string, colIndex: number) => (columns[colIndex] += char))
+  }
+
   if (!params.skipPart1) {
-    if (params.ui.show) {
-      printColumns(columns!)
-    }
+    if (params.ui?.show) printColumns(columns!)
     part1 = columns!.map((column: string) => score(tiltColumn(column))).reduce((a, b) => a + b)
   }
 
   if (!params.skipPart2) {
-    let i = 0
-    const cache: Map<string, [number, number]> = new Map()
-    let cacheHit: [number, [number, number]] | undefined
+    let iterations = 0
+    const cache: Cache = new Map()
+    let cacheHit: CacheHit
 
     while (!cacheHit) {
-      ;['north', 'west', 'south', 'east'].forEach((dir: string) => {
-        log.debug('tilting and rotating on', dir)
-        columns = rotate90(columns!.map(tiltColumn))
-      })
+      range(4).forEach(() => (columns = rotate90(columns!.map(tiltColumn))))
 
       // let's make a snapshot of this world
       const columnSnapshot = columns!.reduce((a, b) => a + b, '')
       const columnScore = columns!.map(score).reduce((a, b) => a + b)
 
-      if (!cache.has(columnSnapshot)) cache.set(columnSnapshot, [i, columnScore])
-      else if (!cacheHit) cacheHit = [i, cache.get(columnSnapshot)!]
-      i++
+      if (!cache.has(columnSnapshot)) cache.set(columnSnapshot, [iterations, columnScore])
+      else if (!cacheHit) cacheHit = [iterations, cache.get(columnSnapshot)!]
+      iterations++
     }
-    /* so, in test, I get cacheHit at [ 9, [ 2, 69 ] ]
-    Meaning that I did 3 cycles (iteration 0-2), and then there was a repeat on 7 cycles (iteration 3-9)
 
-    To know the repeated cycle index that matches the (1000000000 - 1) cycle,
-    subtract 2 (first repeat cycle index) => 999999997, then mod it to the delta (999999997 % 7 = 3)
-    I need the score of the 3rd repeat cycle, so, first repeat cycle index (2) + 3 = cycle 5 from cache.
-    scores are already computed in the cache as [1][1]
-    */
     const firstRepeatedCycle = cacheHit[1][0]
     const delta = cacheHit[0] - firstRepeatedCycle
     const repeatedCycleIndex = ((params.cycles - 1 - firstRepeatedCycle) % delta) + firstRepeatedCycle
-    const cachedCycle: Array<number> | undefined = Array.from(cache.values()).find(
-      (val) => val[0] === repeatedCycleIndex
-    )
-    part2 = cachedCycle![1]
+    part2 = [...cache.values()].find((val) => val[0] === repeatedCycleIndex)![1]
   }
 
   return { part1, part2 }

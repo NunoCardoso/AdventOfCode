@@ -2,12 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Cube Conundrum',
     year: 2023,
     day: 2,
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 1
   },
   params: {
     cubes: [12, 13, 14]

@@ -13,7 +13,7 @@ export default async (lineReader: any, params: Params) => {
 
   let it: number = 0
   let start: Location
-  const starts: Array<Location> = []
+  const starts: Location[] = []
   let end: Location
   const world: World<string> = []
 
@@ -24,14 +24,14 @@ export default async (lineReader: any, params: Params) => {
   const getKey = (p: Location): string => '' + p[0] + ',' + p[1]
 
   const outOfBounds = (p: Location) => p[0] < 0 || p[1] < 0 || p[0] >= world.length || p[1] >= world[0].length
-  const getNewLocations = (point: Location, visited: Set<string>): Array<Location> =>
+  const getNewLocations = (point: Location, visited: Set<string>): Location[] =>
     (
       [
         [point[0] - 1, point[1], point[2] + 1],
         [point[0] + 1, point[1], point[2] + 1],
         [point[0], point[1] - 1, point[2] + 1],
         [point[0], point[1] + 1, point[2] + 1]
-      ] as Array<Location>
+      ] as Location[]
     ).filter((newLocation: Location) => {
       if (outOfBounds(newLocation)) return false
       if (getHeight(world[newLocation[0]][newLocation[1]]) - getHeight(world[point[0]][point[1]]) > 1) return false
@@ -39,7 +39,7 @@ export default async (lineReader: any, params: Params) => {
       return !visited.has(getKey(newLocation))
     })
 
-  const doDijkstra = (opened: Array<Location>, openedIndex: Set<string>, visited: Set<string>, data: Data) => {
+  const doDijkstra = (opened: Location[], openedIndex: Set<string>, visited: Set<string>, data: Data) => {
     const point: Location = opened.splice(-1)[0]
     const pointKey = getKey(point)
     log.debug('=== Dijkstra ===', point, 'opened', opened.length, 'data', data)
@@ -55,7 +55,7 @@ export default async (lineReader: any, params: Params) => {
     visited.add(pointKey)
     openedIndex.delete(pointKey)
 
-    const newLocations: Array<Location> = getNewLocations(point, visited)
+    const newLocations: Location[] = getNewLocations(point, visited)
     if (newLocations.length !== 0) {
       newLocations.forEach((newLocation) => {
         const newLocationKey = getKey(newLocation)
@@ -78,7 +78,7 @@ export default async (lineReader: any, params: Params) => {
     console.log('')
   }
 
-  const solveFor = (opened: Array<Location>): number => {
+  const solveFor = (opened: Location[]): number => {
     const visited: Set<string> = new Set()
     const data: Data = { lowestScore: Number.POSITIVE_INFINITY, path: new Set() }
     const openedIndex: Set<string> = new Set()
@@ -96,7 +96,7 @@ export default async (lineReader: any, params: Params) => {
   }
 
   for await (const line of lineReader) {
-    const row: Array<string> = []
+    const row: string[] = []
     line.split('').forEach((char: string, i: number) => {
       if (char === 'S') {
         start = [it, i, 0, new Set<string>().add(it + ',' + i)]

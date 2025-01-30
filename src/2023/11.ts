@@ -1,5 +1,8 @@
 import { Params } from 'aoc.d'
-import { Point } from 'declarations'
+import { Location } from 'declarations'
+import { combination } from 'util/combination'
+import { getManhattanDistance } from 'util/location'
+import { range } from 'util/range'
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -8,53 +11,42 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   let worldColumns: number = 0
-  const galaxies: Array<Point> = []
-  let it = 0
-  const rowsWithoutGalaxies: Array<number> = []
-  const columnsWithoutGalaxies: Array<number> = []
+  const galaxies: Location[] = []
+  const rowsWithoutGalaxies: number[] = []
+  const columnsWithoutGalaxies: number[] = []
   const columnsWithGalaxies: Set<number> = new Set()
 
+  let rowIndex = 0
   for await (const line of lineReader) {
     if (worldColumns === 0) worldColumns = line.length
-    line.split('').forEach((char: string, i: number) => {
+    line.split('').forEach((char: string, colIndex: number) => {
       if (char === '#') {
-        columnsWithGalaxies.add(i)
-        galaxies.push([it, i])
+        columnsWithGalaxies.add(colIndex)
+        galaxies.push([rowIndex, colIndex])
       }
     })
-    if (line.indexOf('#') < 0) rowsWithoutGalaxies.push(it)
-    it++
+    if (line.indexOf('#') < 0) rowsWithoutGalaxies.push(rowIndex)
+    rowIndex++
   }
 
-  for (let i = 0; i < worldColumns; i++) {
-    if (!columnsWithGalaxies.has(i)) columnsWithoutGalaxies.push(i)
-  }
+  for (let galaxy of range(worldColumns)) if (!columnsWithGalaxies.has(galaxy)) columnsWithoutGalaxies.push(galaxy)
 
-  const distanceBetweenTwoPoints = (p1: Point, p2: Point, distanceInEmpty: number) =>
-    Math.abs(p2[0] - p1[0]) +
-    Math.abs(p2[1] - p1[1]) +
-    rowsWithoutGalaxies.filter((row: number) => row > Math.min(p2[0], p1[0]) && row < Math.max(p2[0], p1[0])).length *
+  const distanceBetweenTwoPoints = (l1: Location, l2: Location, distanceInEmpty: number) =>
+    getManhattanDistance(l1, l2) +
+    rowsWithoutGalaxies.filter((row: number) => row > Math.min(l2[0], l1[0]) && row < Math.max(l2[0], l1[0])).length *
       distanceInEmpty +
-    columnsWithoutGalaxies.filter((col: number) => col > Math.min(p2[1], p1[1]) && col < Math.max(p2[1], p1[1]))
+    columnsWithoutGalaxies.filter((col: number) => col > Math.min(l2[1], l1[1]) && col < Math.max(l2[1], l1[1]))
       .length *
       distanceInEmpty
 
-  const solveFor = (distanceInEmpty: number): number => {
-    let lowestSum = 0
-    for (let i = 0; i < galaxies.length - 1; i++) {
-      for (let j = i + 1; j < galaxies.length; j++) {
-        lowestSum += distanceBetweenTwoPoints(galaxies[i], galaxies[j], distanceInEmpty)
-      }
-    }
-    return lowestSum
-  }
+  const solveFor = (distanceInEmpty: number): number =>
+    combination(galaxies, 2).reduce(
+      (acc, galaxyPair) => acc + distanceBetweenTwoPoints(galaxyPair[0], galaxyPair[1], distanceInEmpty),
+      0
+    )
 
-  if (!params.skipPart1) {
-    part1 = solveFor(1)
-  }
-  if (!params.skipPart2) {
-    part2 = solveFor(params.distance - 1)
-  }
+  if (!params.skipPart1) part1 = solveFor(1)
+  if (!params.skipPart2) part2 = solveFor(params.distance - 1)
 
   return { part1, part2 }
 }

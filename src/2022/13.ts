@@ -1,7 +1,7 @@
 import { Params } from 'aoc.d'
 import { range } from 'util/range'
 
-type Packet = Array<Packet | number>
+type Packet = (Packet | number)[]
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })

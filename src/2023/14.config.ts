@@ -2,12 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Parabolic Reflector Dish',
     year: 2023,
     day: 14,
-    result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty'
+    result: 'finished',
+    status: 'solved',
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 3
   },
   logLevel: 'info',
   params: {

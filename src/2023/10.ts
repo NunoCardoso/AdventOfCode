@@ -1,10 +1,11 @@
 import { Params } from 'aoc.d'
 import clc from 'cli-color'
-import { Dimension, Point, World } from 'declarations'
+import { Dimension, Location, World } from 'declarations'
+import { getKey } from 'util/location'
 
 type Data = {
-  path: Array<Point>
-  numberOfInnerPoints: number
+  path: Location[]
+  numberOfInnerLocations: number
 }
 
 export default async (lineReader: any, params: Params) => {
@@ -12,22 +13,6 @@ export default async (lineReader: any, params: Params) => {
 
   let part1: number = 0
   let part2: number = 0
-
-  const world: World<string> = []
-  let start: Point | undefined
-
-  const getKey = (p: Point) => '' + p[0] + '-' + p[1]
-
-  let it: number = 0
-  for await (const line of lineReader) {
-    world.push(line.split(''))
-    const index = line.indexOf('S')
-    if (index >= 0) start = [it, index]
-    it++
-  }
-
-  const worldDimensions: Dimension = [world.length, world[0].length]
-  log.debug('world', worldDimensions)
 
   const boxChars: any = { '|': '│', 7: '╮', J: '╯', F: '╭', L: '╰', '-': '─' }
 
@@ -56,169 +41,178 @@ export default async (lineReader: any, params: Params) => {
     console.log('')
   }
 
-  const outOfBounds = (newPoint: Point) =>
-    newPoint[0] < 0 || newPoint[0] >= worldDimensions[0] || newPoint[1] < 0 || newPoint[1] >= worldDimensions[1]
+  const outOfBounds = (newLocation: Location) =>
+    newLocation[0] < 0 ||
+    newLocation[0] >= worldDimensions[0] ||
+    newLocation[1] < 0 ||
+    newLocation[1] >= worldDimensions[1]
 
-  const isSame = (p: Point, p2: Point) => p[0] === p2[0] && p[1] === p2[1]
+  const isSame = (p: Location, p2: Location) => p[0] === p2[0] && p[1] === p2[1]
 
-  const getValue = (p: Point) => world[p[0]][p[1]]
+  const getPipe = (p: Location): string => world[p[0]][p[1]]
 
-  const getNextPoints = (point: Point, visited: Map<string, number>) =>
+  const getNextLocations = (location: Location, visited: Set<string>) =>
     (
       [
-        [point[0] - 1, point[1]],
-        [point[0] + 1, point[1]],
-        [point[0], point[1] - 1],
-        [point[0], point[1] + 1]
-      ] as Array<Point>
-    ).filter((newPoint: Point) => {
-      if (outOfBounds(newPoint)) {
-        return false
-      }
-      const newKey = getKey(newPoint)
-      if (visited.has(newKey)) {
-        return false
-      }
-      const pointValue = getValue(point)
-      const newPointValue = getValue(newPoint)
-
-      const isTop = (newPointValue: string, point: Point, newPoint: Point): boolean =>
-        ['S', '7', '|', 'F'].includes(newPointValue) && newPoint[0] === point[0] - 1
-
-      const isBottom = (newPointValue: string, point: Point, newPoint: Point): boolean =>
-        ['S', 'J', '|', 'L'].includes(newPointValue) && newPoint[0] === point[0] + 1
-
-      const isLeft = (newPointValue: string, point: Point, newPoint: Point): boolean =>
-        ['S', 'L', '-', 'F'].includes(newPointValue) && newPoint[1] === point[1] - 1
-
-      const isRight = (newPointValue: string, point: Point, newPoint: Point): boolean =>
-        ['S', 'J', '-', '7'].includes(newPointValue) && newPoint[1] === point[1] + 1
-
-      if (pointValue === '|' && (isTop(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))) {
-        return true
-      }
-      if (pointValue === '-' && (isLeft(newPointValue, point, newPoint) || isRight(newPointValue, point, newPoint))) {
-        return true
-      }
-      if (pointValue === 'L' && (isTop(newPointValue, point, newPoint) || isRight(newPointValue, point, newPoint))) {
-        return true
-      }
-      if (pointValue === 'J' && (isTop(newPointValue, point, newPoint) || isLeft(newPointValue, point, newPoint))) {
-        return true
-      }
-      if (pointValue === '7' && (isLeft(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))) {
-        return true
-      }
-      if (pointValue === 'F' && (isRight(newPointValue, point, newPoint) || isBottom(newPointValue, point, newPoint))) {
-        return true
-      }
+        [location[0] - 1, location[1]],
+        [location[0] + 1, location[1]],
+        [location[0], location[1] - 1],
+        [location[0], location[1] + 1]
+      ] as Location[]
+    ).filter((newLocation: Location) => {
+      if (outOfBounds(newLocation)) return false
+      const newKey = getKey(newLocation)
+      if (visited.has(newKey)) return false
+      const locationPipe = getPipe(location)
+      const newLocationPipe = getPipe(newLocation)
+      const isTop = (newLocationValue: string, location: Location, newLocation: Location): boolean =>
+        ['S', '7', '|', 'F'].includes(newLocationValue) && newLocation[0] === location[0] - 1
+      const isBottom = (newLocationValue: string, location: Location, newLocation: Location): boolean =>
+        ['S', 'J', '|', 'L'].includes(newLocationValue) && newLocation[0] === location[0] + 1
+      const isLeft = (newLocationValue: string, location: Location, newLocation: Location): boolean =>
+        ['S', 'L', '-', 'F'].includes(newLocationValue) && newLocation[1] === location[1] - 1
+      const isRight = (newLocationValue: string, location: Location, newLocation: Location): boolean =>
+        ['S', 'J', '-', '7'].includes(newLocationValue) && newLocation[1] === location[1] + 1
       if (
-        pointValue === 'S' &&
-        ((['7', '|', 'F'].includes(newPointValue) && newPoint[0] === point[0] - 1) ||
-          (['J', '|', 'L'].includes(newPointValue) && newPoint[0] === point[0] + 1) ||
-          (['J', '-', '7'].includes(newPointValue) && newPoint[1] === point[1] + 1) ||
-          (['L', '-', 'F'].includes(newPointValue) && newPoint[1] === point[1] - 1))
-      ) {
-        // top
+        locationPipe === '|' &&
+        (isTop(newLocationPipe, location, newLocation) || isBottom(newLocationPipe, location, newLocation))
+      )
         return true
-      }
+      if (
+        locationPipe === '-' &&
+        (isLeft(newLocationPipe, location, newLocation) || isRight(newLocationPipe, location, newLocation))
+      )
+        return true
+      if (
+        locationPipe === 'L' &&
+        (isTop(newLocationPipe, location, newLocation) || isRight(newLocationPipe, location, newLocation))
+      )
+        return true
+      if (
+        locationPipe === 'J' &&
+        (isTop(newLocationPipe, location, newLocation) || isLeft(newLocationPipe, location, newLocation))
+      )
+        return true
+      if (
+        locationPipe === '7' &&
+        (isLeft(newLocationPipe, location, newLocation) || isBottom(newLocationPipe, location, newLocation))
+      )
+        return true
+      if (
+        locationPipe === 'F' &&
+        (isRight(newLocationPipe, location, newLocation) || isBottom(newLocationPipe, location, newLocation))
+      )
+        return true
+      if (
+        locationPipe === 'S' &&
+        ((['7', '|', 'F'].includes(newLocationPipe) && newLocation[0] === location[0] - 1) ||
+          (['J', '|', 'L'].includes(newLocationPipe) && newLocation[0] === location[0] + 1) ||
+          (['J', '-', '7'].includes(newLocationPipe) && newLocation[1] === location[1] + 1) ||
+          (['L', '-', 'F'].includes(newLocationPipe) && newLocation[1] === location[1] - 1))
+      )
+        return true
       return false
     })
 
-  const breathFirst = (opened: Array<Point>, visited: Map<string, number>, data: Data, distance: number) => {
-    const point = opened.splice(-1)[0]
-    const key = getKey(point)
-    visited.set(key, distance + 1)
-    const nextPoints = getNextPoints(point, visited)
-    if (nextPoints.length === 0) {
-      // cleanup
-      opened.splice(0, opened.length)
+  const breathFirst = (queue: Location[], visited: Set<string>, data: Data) => {
+    const location = queue.pop()!
+    const key = getKey(location)
+    visited.add(key)
+    const nextLocations = getNextLocations(location, visited)
+    if (nextLocations.length === 0) {
+      // empty the queue
+      queue.splice(0, queue.length)
       return
     }
-    // no sort, so it's a depth first. Also, search only one pipe edge
-    data.path.push(nextPoints[0])
-    opened.push(nextPoints[0])
+    data.path.push(nextLocations[0])
+    queue.push(nextLocations[0])
   }
 
-  const guessPipeValue = (p: Point, pipeBefore: Point, pipeAfter: Point): string => {
+  const guessPipeValue = (p: Location, pipeBefore: Location, pipeAfter: Location): string => {
     if (
       (isSame([p[0], p[1] - 1], pipeBefore) && isSame([p[0], p[1] + 1], pipeAfter)) ||
       (isSame([p[0], p[1] - 1], pipeAfter) && isSame([p[0], p[1] + 1], pipeBefore))
-    ) {
+    )
       return '-'
-    }
     if (
       (isSame([p[0] - 1, p[1]], pipeBefore) && isSame([p[0] + 1, p[1]], pipeAfter)) ||
       (isSame([p[0] - 1, p[1]], pipeAfter) && isSame([p[0] + 1, p[1]], pipeBefore))
-    ) {
+    )
       return '|'
-    }
     if (
       (isSame([p[0] + 1, p[1]], pipeBefore) && isSame([p[0], p[1] - 1], pipeAfter)) ||
       (isSame([p[0] + 1, p[1]], pipeAfter) && isSame([p[0], p[1] - 1], pipeBefore))
-    ) {
+    )
       return '7'
-    }
     if (
       (isSame([p[0] + 1, p[1]], pipeBefore) && isSame([p[0], p[1] + 1], pipeAfter)) ||
       (isSame([p[0] + 1, p[1]], pipeAfter) && isSame([p[0], p[1] + 1], pipeBefore))
-    ) {
+    )
       return 'F'
-    }
     if (
       (isSame([p[0] - 1, p[1]], pipeBefore) && isSame([p[0], p[1] - 1], pipeAfter)) ||
       (isSame([p[0] - 1, p[1]], pipeAfter) && isSame([p[0], p[1] - 1], pipeBefore))
-    ) {
+    )
       return 'J'
-    }
     if (
       (isSame([p[0] - 1, p[1]], pipeBefore) && isSame([p[0], p[1] + 1], pipeAfter)) ||
       (isSame([p[0] - 1, p[1]], pipeAfter) && isSame([p[0], p[1] + 1], pipeBefore))
-    ) {
+    )
       return 'L'
-    }
     return ''
   }
 
+  // while I am changing the world for print, I am also counting inner spaces
   const labelPipesAndSpaces = (world: World<string>, data: Data) =>
-    world.map((row, i) => {
-      const pipePointKeysInRow: Set<string> = new Set(data.path.filter((point: Point) => point[0] === i).map(getKey))
+    world.map((row, rowIndex) => {
+      const pipeLocationKeysInRow: Set<string> = new Set(
+        data.path.filter((location: Location) => location[0] === rowIndex).map(getKey)
+      )
       let inner: boolean = false
-      return row.map((cell, j) => {
-        let val: string
-        if (pipePointKeysInRow.has(getKey([i, j]))) {
-          val = 'P'
-          if (getValue([i, j]) === 'S') {
-            // S point is always the data.path[0], use the point in front and back ([1] and [length -1]) to guess value
-            cell = guessPipeValue([i, j], data.path[data.path.length - 1], data.path[1])
+      return row.map((cell, colIndex) => {
+        let value: string
+        if (pipeLocationKeysInRow.has(getKey([rowIndex, colIndex]))) {
+          value = 'P'
+          if (getPipe([rowIndex, colIndex]) === 'S') {
+            // S Location is always the data.path[0], use the Location in front and back ([1] and [length -1]) to guess value
+            cell = guessPipeValue([rowIndex, colIndex], data.path[data.path.length - 1], data.path[1])
           }
           if (['|', 'L', 'J'].includes(cell)) inner = !inner
         } else {
-          val = inner ? 'I' : 'O'
-          if (inner) data.numberOfInnerPoints++
+          value = inner ? 'I' : 'O'
+          if (inner) data.numberOfInnerLocations++
         }
-        return val
+        return value
       })
     })
 
-  if (!params.skipPart1) {
-    const visited: Map<string, number> = new Map().set(getKey(start!), 0)
-    const data: Data = { path: [start!], numberOfInnerPoints: 0 }
-    const opened = [start!]
-    let it = 0
+  const world: World<string> = []
+  let start: Location = [0, 0]
+  let rowIndex: number = 0
 
-    while (opened.length > 0) {
-      breathFirst(opened, visited, data, it)
-      it++
-    }
-    const situationWorld = labelPipesAndSpaces(world, data)
-    if (params.ui.show) {
-      printGrid(world, situationWorld)
-    }
-
-    part1 = data.path.length / 2
-    if (!params.skipPart2) part2 = data.numberOfInnerPoints
+  for await (const line of lineReader) {
+    world.push(line.split(''))
+    const index = line.indexOf('S')
+    if (index >= 0) start = [rowIndex, index]
+    rowIndex++
   }
+
+  const worldDimensions: Dimension = [world.length, world[0].length]
+  log.debug('world', worldDimensions)
+
+  const visited: Set<string> = new Set<string>()
+  visited.add(getKey(start!))
+  const data: Data = { path: [start!], numberOfInnerLocations: 0 }
+  const queue = [start!]
+  while (queue.length > 0) breathFirst(queue, visited, data)
+  const situationWorld = labelPipesAndSpaces(world, data)
+
+  if (params.ui.show) {
+    printGrid(world, situationWorld)
+  }
+
+  part1 = data.path.length / 2
+  part2 = data.numberOfInnerLocations
 
   return { part1, part2 }
 }

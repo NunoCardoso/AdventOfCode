@@ -1,6 +1,6 @@
 import { Params } from 'aoc.d'
 
-type Replacements = Map<string, Array<string>>
+type Replacements = Map<string, string[]>
 
 export default async (lineReader: any, params: Params) => {
   const log = require('console-log-level')({ level: params.logLevel ?? 'info' })

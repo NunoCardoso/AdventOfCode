@@ -7,10 +7,10 @@ export default async (lineReader: any, params: Params) => {
 
   const directions = ['>', '<', 'v', '^']
   type Point = [number, number]
-  type Grid = Array<Array<string>>
+  type Grid = string[][]
   type World = {
     grid: Grid
-    moves: Array<Grid>
+    moves: Grid[]
     rows: number
     columns: number
   }
@@ -18,7 +18,7 @@ export default async (lineReader: any, params: Params) => {
     point: Point
     direction: string
   }
-  type Blizzards = Array<Blizzard>
+  type Blizzards = Blizzard[]
   type Step = {
     stage: number
     point: [number, number]
@@ -27,12 +27,12 @@ export default async (lineReader: any, params: Params) => {
     action: string
     distance: number
   }
-  type Steps = Array<Step>
+  type Steps = Step[]
   type Path = {
     head: Step
     tail: Steps
   }
-  type Paths = Array<Path>
+  type Paths = Path[]
 
   const biggestCommonDenominator = (x: number, y: number) => {
     while (y) {
