@@ -1,8 +1,8 @@
 import { Params } from 'aoc.d'
-import { Point as Coord, World } from 'declarations'
+import { Location as Coord, World } from 'declarations'
 
 // x, y, straightsLeft, direction, distance, score
-type Point = {
+type Location = {
   position: Coord
   straightsLeft: number
   direction: string
@@ -25,11 +25,11 @@ export default async (lineReader: any, params: Params) => {
   const worldDimensions = [world.length, world[0].length]
   log.info('world dimensions', worldDimensions)
   const calculateDistance = (p: Coord | CoordPlus, end: Coord) => end[0] - p[0] + (end[1] - p[1])
-  const getKey = (p: Point) => p.position[0] + ';' + p.position[1] + ';' + p.straightsLeft + ';' + p.direction
-  const isValidEnd = (c1: Point, c2: Coord) => c1.position[0] === c2[0] && c1.position[1] === c2[1]
+  const getKey = (p: Location) => p.position[0] + ';' + p.position[1] + ';' + p.straightsLeft + ';' + p.direction
+  const isValidEnd = (c1: Location, c2: Coord) => c1.position[0] === c2[0] && c1.position[1] === c2[1]
 
   // prettier ignore
-  const printPoint = (p: Point) =>
+  const printLocation = (p: Location) =>
     '[' +
     p.position[0] +
     ',' +
@@ -47,7 +47,7 @@ export default async (lineReader: any, params: Params) => {
   const isOutOfBounds = (c: Coord | CoordPlus) =>
     c[0] < 0 || c[1] < 0 || c[0] >= worldDimensions[0] || c[1] >= worldDimensions[1]
 
-  const isSame = (p1: Point, p2: Point) =>
+  const isSame = (p1: Location, p2: Location) =>
     p1.position[0] === p2.position[0] &&
     p1.position[1] === p2.position[1] &&
     p1.straightsLeft === p2.straightsLeft &&
@@ -76,8 +76,8 @@ export default async (lineReader: any, params: Params) => {
     return sum
   }
 
-  const getNewPoints = (p: Point, data: any) => {
-    const newPoints: Array<Point> = []
+  const getNewLocations = (p: Location, data: any) => {
+    const newLocations: Array<Location> = []
     let newPositions: Array<CoordPlus> = []
     // straight is allowed
     if (p.direction !== '' && p.straightsLeft > 0) {
@@ -94,7 +94,7 @@ export default async (lineReader: any, params: Params) => {
         newPositions = [[p.position[0] + 1, p.position[1], p.direction, world[p.position[0] + 1][p.position[1]]]]
       }
       newPositions?.forEach((newPosition) => {
-        newPoints.push({
+        newLocations.push({
           position: [newPosition[0], newPosition[1]]!,
           direction: newPosition[2],
           distance: calculateDistance(newPosition!, data.end),
@@ -148,7 +148,7 @@ export default async (lineReader: any, params: Params) => {
       }
     }
     newPositions?.forEach((newPosition, i) => {
-      newPoints.push({
+      newLocations.push({
         position: [newPosition[0], newPosition[1]]!,
         direction: newPosition[2],
         distance: calculateDistance(newPosition!, data.end),
@@ -157,20 +157,20 @@ export default async (lineReader: any, params: Params) => {
       })
     })
 
-    return newPoints
+    return newLocations
   }
 
-  const breathFirst = (opened: Array<Point>, openedIndex: Set<string>, visited: Map<string, number>, data: any) => {
-    const point = opened.splice(-1)[0]
-    const key = getKey(point)
+  const breathFirst = (opened: Array<Location>, openedIndex: Set<string>, visited: Map<string, number>, data: any) => {
+    const Location = opened.splice(-1)[0]
+    const key = getKey(Location)
     openedIndex.delete(key)
 
-    log.debug('Start point', printPoint(point), 'opened', opened.length, 'visited', visited.size)
+    log.debug('Start Location', printLocation(Location), 'opened', opened.length, 'visited', visited.size)
 
-    if (isValidEnd(point, data.end)) {
-      if (!data.lowestScore || data.lowestScore > point.score!) {
-        // log.info('lowest score found', point.score)
-        data.lowestScore = point.score!
+    if (isValidEnd(Location, data.end)) {
+      if (!data.lowestScore || data.lowestScore > Location.score!) {
+        // log.info('lowest score found', Location.score)
+        data.lowestScore = Location.score!
         // cleanup opened with worse scores
         for (let i = opened.length - 1; i >= 0; i--) {
           if (opened[i].score >= data.lowestScore) {
@@ -183,17 +183,17 @@ export default async (lineReader: any, params: Params) => {
       return
     }
 
-    // I already visited this point with a lower or equal score, return, useless
-    if (visited.has(key) && visited.get(key)! <= point.score!) {
+    // I already visited this Location with a lower or equal score, return, useless
+    if (visited.has(key) && visited.get(key)! <= Location.score!) {
       log.debug('hit on visited cache')
       return
     }
-    visited.set(key, point.score)
+    visited.set(key, Location.score)
 
     if (openedIndex.has(key)) {
-      // I have this point opened with a lower or equal score, return, useless
-      const foundOpenedIndex = opened.findIndex((o) => isSame(o, point))
-      if (foundOpenedIndex >= 0 && opened[foundOpenedIndex].score! <= point.score!) {
+      // I have this Location opened with a lower or equal score, return, useless
+      const foundOpenedIndex = opened.findIndex((o) => isSame(o, Location))
+      if (foundOpenedIndex >= 0 && opened[foundOpenedIndex].score! <= Location.score!) {
         log.debug('hit on opened cache')
         return
       } else {
@@ -203,10 +203,10 @@ export default async (lineReader: any, params: Params) => {
       }
     }
 
-    const newPoints = getNewPoints(point, data)
-    log.debug('Got', newPoints.length, 'new points,', newPoints.map(printPoint).join(','))
-    if (newPoints.length > 0) {
-      opened.push(...newPoints)
+    const newLocations = getNewLocations(Location, data)
+    log.debug('Got', newLocations.length, 'new Locations,', newLocations.map(printLocation).join(','))
+    if (newLocations.length > 0) {
+      opened.push(...newLocations)
       // lowest distance to end first
       opened.sort((a, b) =>
         // (b.distance - a.distance > 0 ? 1 : b.distance - a.distance < 0 ? -1 : b.score! - a.score!)
@@ -223,14 +223,14 @@ export default async (lineReader: any, params: Params) => {
       maxStraight,
       minCurve
     }
-    const start: Point = {
+    const start: Location = {
       position: [0, 0],
       straightsLeft: maxStraight,
       direction: '',
       distance: calculateDistance([0, 0], data.end),
       score: 0
     }
-    const opened: Array<Point> = [start]
+    const opened: Array<Location> = [start]
     const openedIndex: Set<string> = new Set<string>().add(getKey(start))
     let it = 0
     while (opened.length > 0) {

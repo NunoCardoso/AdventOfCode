@@ -16,7 +16,7 @@ export default async (lineReader: any, params: Params) => {
     if (piece.length === 4) return '4'
     if (piece.length === 6) {
       let missingLetter = 'abcdefg'.split('').find((l) => piece.indexOf(l) < 0)!
-      if (code[missingLetter].length > 1) console.error('Code is still not unique')
+      if (code[missingLetter].length > 1) log.error('Code is still not unique')
       if (code[missingLetter].length === 1 && code[missingLetter][0] === 'C') return '0'
       if (code[missingLetter].length === 1 && code[missingLetter][0] === 'SW') return '9'
       //if (code[missingLetter].length === 1 && code[missingLetter][0] === 'NE')
@@ -115,7 +115,7 @@ export default async (lineReader: any, params: Params) => {
     }
 
     Object.values(code).forEach((v) => {
-      if (v.length !== 1) console.error('Code is not ready', code)
+      if (v.length !== 1) log.error('Code is not ready', code)
     })
 
     log.debug('Puzzle', JSON.stringify(puzzle), 'code', JSON.stringify(code))

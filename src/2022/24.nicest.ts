@@ -55,13 +55,13 @@ export default async (lineReader: any, params: Params) => {
     letter: Record<string, string>
   }) => {
     const m: string = opened.length > 0 ? opened[0].head.move.toString() : '-'
-    console.log(
+    log.info(
       '      ' +
         range(world.columns)
           .map((i: number) => Math.floor(i / 100).toString())
           .join('')
     )
-    console.log(
+    log.info(
       'm ' +
         m.padStart(2, '0') +
         ' ' +
@@ -69,7 +69,7 @@ export default async (lineReader: any, params: Params) => {
           .map((i: number) => Math.floor((i % 100) / 10).toString())
           .join('')
     )
-    console.log(
+    log.info(
       'i ' +
         (iteration + 1).toString().padStart(2, '0') +
         ' ' +
@@ -93,9 +93,9 @@ export default async (lineReader: any, params: Params) => {
       }
     })
 
-    console.log('    ' + clc.green('#') + start + clc.green('#'.repeat(world.columns)))
+    log.info('    ' + clc.green('#') + start + clc.green('#'.repeat(world.columns)))
     worldMove.forEach((m, i) => {
-      console.log(
+      log.info(
         ' ' +
           //  (i === path.head.point[0] ? clc.red(i.toString().padStart(2, '0')) :
           i
@@ -114,7 +114,7 @@ export default async (lineReader: any, params: Params) => {
           clc.green('#')
       )
     })
-    console.log('    ' + clc.green('#'.repeat(world.columns)) + end + clc.green('#'))
+    log.info('    ' + clc.green('#'.repeat(world.columns)) + end + clc.green('#'))
   }
 
   const getDistance = (point1: Point, point2: Point): number =>

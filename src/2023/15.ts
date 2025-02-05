@@ -2,7 +2,7 @@ import { Params } from 'aoc.d'
 
 type Instruction = [string, string, string?]
 type Lens = [string, number]
-type Box = Array<Lens>
+type Box = Lens[]
 
 export default async (lineReader: any, params: Params) => {
   // const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
@@ -10,47 +10,34 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let data: Array<Instruction> = []
-  for await (const line of lineReader) {
-    data = line.split(',').map((bit: string) => bit.match(/^(\w+)=?(.+)/))
-  }
+  // & 0xFF is the same as % 256
+  const calculateHash = (char: string, value: number): number => ((value + char.charCodeAt(0)) * 17) & 0xff
 
-  const calculateHash = (char: string, value: number) => ((value + char.charCodeAt(0)) * 17) % 256
+  const getHashValue = (hash: string): number => hash.split('').reduce((acc, char) => calculateHash(char, acc), 0)
 
-  const getHashValue = (hash: string): number => {
-    let value = 0
-    hash.split('').forEach((char) => {
-      value = calculateHash(char, value)
-    })
-    return value
-  }
+  let instructions: Instruction[] = []
+  for await (const line of lineReader) instructions = line.split(',').map((bit: string) => bit.match(/^(\w+)=?(.+)/))
 
-  if (!params.skipPart1) {
-    data.forEach((instruction: Instruction) => {
-      part1 += getHashValue(instruction[0])
-    })
-  }
+  part1 = instructions.reduce((acc, instruction) => acc + getHashValue(instruction[0]), 0)
 
-  if (!params.skipPart2) {
-    const boxes: Array<Box> = Array(256)
-      .fill(null)
-      .map(() => [])
-    data.forEach((instruction: Instruction) => {
-      const label = instruction[1]
-      const boxId = getHashValue(instruction[1])
-      if (instruction[2] === '-') {
-        boxes[boxId] = boxes[boxId].filter((lens: any) => lens[0] !== label)
-      } else {
-        const indexOf = boxes[boxId].findIndex((lens: any) => lens[0] === label)
-        indexOf >= 0 ? (boxes[boxId][indexOf][1] = +instruction[2]!) : boxes[boxId].push([label, +instruction[2]!])
-      }
-    })
-    boxes.forEach((box: Box, boxIndex) => {
-      box?.forEach((lens: Lens, lensIndex: number) => {
-        part2 += (boxIndex + 1) * (lensIndex + 1) * lens[1]
-      })
-    })
-  }
+  const boxes: Box[] = Array(256)
+    .fill(null)
+    .map(() => [])
+  instructions.forEach((instruction: Instruction) => {
+    const label = instruction[1]
+    const boxId = getHashValue(instruction[1])
+    if (instruction[2] === '-') boxes[boxId] = boxes[boxId].filter((lens) => lens[0] !== label)
+    else {
+      const indexOf = boxes[boxId].findIndex((lens: any) => lens[0] === label)
+      indexOf >= 0 ? (boxes[boxId][indexOf][1] = +instruction[2]!) : boxes[boxId].push([label, +instruction[2]!])
+    }
+  })
+
+  part2 = boxes.reduce(
+    (acc, box: Box, boxIndex) =>
+      acc + box.reduce((acc, lens: Lens, lensIndex) => acc + (boxIndex + 1) * (lensIndex + 1) * lens[1], 0),
+    0
+  )
 
   return { part1, part2 }
 }

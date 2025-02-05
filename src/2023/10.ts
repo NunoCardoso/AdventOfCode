@@ -20,7 +20,7 @@ export default async (lineReader: any, params: Params) => {
 
   const printGrid = (world: World<string>, situationWorld: World<string>) => {
     world.forEach((row, i) => {
-      console.log(
+      log.info(
         row
           .map((cell, j) => {
             const type = situationWorld[i][j]
@@ -38,7 +38,7 @@ export default async (lineReader: any, params: Params) => {
           .join('')
       )
     })
-    console.log('')
+    log.info('')
   }
 
   const outOfBounds = (newLocation: Location) =>

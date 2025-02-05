@@ -2,6 +2,8 @@ import { Params } from 'aoc.d'
 import { permutation } from '../util/permutation'
 import { diagnosticProgram } from './05'
 
+const log = require('console-log-level')({ level: params.logLevel ?? 'info' })
+
 export const amplifierProgram = (values: number[], permute: number[], initialValue: number = 0) => {
   let val: number = diagnosticProgram([...values], [permute[0], initialValue])
   val = diagnosticProgram([...values], [permute[1], val])
@@ -12,7 +14,7 @@ export const amplifierProgram = (values: number[], permute: number[], initialVal
 
 export const amplifierProgram2 = (values: number[], permute: number[], initialValue: number = 0) => {
   let val: number = diagnosticProgram([...values], [permute[0], initialValue])
-  console.log(val, [permute[0], initialValue])
+  log.info(val, [permute[0], initialValue])
   val = diagnosticProgram([...values], [permute[1], val])
   val = diagnosticProgram([...values], [permute[2], val])
   val = diagnosticProgram([...values], [permute[3], val])

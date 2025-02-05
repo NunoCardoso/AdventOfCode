@@ -38,18 +38,18 @@ Reports will be pushed into the `report` directory.
 
 # Puzzle status
 
-| year | result       | status     | speed                         | code    | comment                                                  | report                   |
-|------|--------------|------------|-------------------------------|---------|----------------------------------------------------------|--------------------------|
-| 2015 | ✅ FINISHED   | ✅ SOLVED   | all but MD5s under 1 second   | cleaned | linted, cleaned                                          | reports/2015.md          |
-| 2016 | ❌ UNFINISHED | ❌ UNSOLVED | all but 3 MD5s under 1 second | cleaned | stuck on 22 (hard disk move), linted, cleaned            | reports/2016.md          |
-| 2017 | ❌ UNFINISHED | ❌ UNSOLVED | all under 1 second            | cleaned | In progress, ongoing on 20, linted, cleaned              | reports/2017.md          |
-| 2018 | ❌ UNFINISHED | ❌ UNSOLVED | all under 1 second            | cleaned | In progress, ongoing on 14                               | reports/2018.md          |
-| 2019 | ❌ UNFINISHED | ❌ UNSOLVED | all under 1 second            | cleaned | In progress, ongoing on 7                                | reports/2019.md          |
-| 2020 | ❌ UNFINISHED | ❌ UNSOLVED |                               |         | TO DO                                                    | reports/2020.md          |
-| 2021 | ❌ UNFINISHED | ❌ UNSOLVED | all except 15 under 1 second  | cleaned | linted, cleaned                                          | reports/2021.md          |
-| 2022 | ❌ UNFINISHED | ✅ SOLVED   | all but 16, 23 under 1 second | cleaned | linted, cleaned                                          | reports/2022.md          |
-| 2023 | ❌ UNFINISHED | ❌ UNSOLVED | ?                             | to do   | Unoptimized, needs to do last puzzles                    | reports/2023.md          |
-| 2024 | ❌ UNFINISHED | ✅ SOLVED   | ?                             | to do   | 24 solved manually, code still needs clean and optimized | reports/2024.md          |
+| year | result       | status     | speed                         | code            | comment                                                  | report                   |
+|------|--------------|------------|-------------------------------|-----------------|----------------------------------------------------------|--------------------------|
+| 2015 | ✅ FINISHED   | ✅ SOLVED   | all but MD5s under 1 second   | linted, cleaned | all done                                                 | reports/2015.md          |
+| 2016 | ❌ UNFINISHED | ❌ UNSOLVED | all but 3 MD5s under 1 second | linted, cleaned | stuck on 22 (hard disk move)                             | reports/2016.md          |
+| 2017 | ❌ UNFINISHED | ❌ UNSOLVED | all under 1 second            | linted, cleaned | In progress, waiting on 20                               | reports/2017.md          |
+| 2018 | ❌ UNFINISHED | ❌ UNSOLVED | all under 1 second            | linted, cleaned | In progress, waiting on 14                               | reports/2018.md          |
+| 2019 | ❌ UNFINISHED | ❌ UNSOLVED | all under 1 second            | linted, cleaned | In progress, waiting on 7                                | reports/2019.md          |
+| 2020 | ❌ UNFINISHED | ❌ UNSOLVED |                               |                 | TO DO                                                    | reports/2020.md          |
+| 2021 | ❌ UNFINISHED | ❌ UNSOLVED | all except 15 under 1 second  | linted, cleaned | In progress, waiting on 19                               | reports/2021.md          |
+| 2022 | ❌ UNFINISHED | ✅ SOLVED   | all but 16, 23 under 1 second | linted, cleaned | all solved                                               | reports/2022.md          |
+| 2023 | ❌ UNFINISHED | ❌ UNSOLVED | redoing 16                    | to do           | 16 refactor, last puzzles unsolved                       | reports/2023.md          |
+| 2024 | ❌ UNFINISHED | ✅ SOLVED   | ?                             | to do           | 24 solved manually, code still needs clean and optimized | reports/2024.md          |
 
 # Puzzle options options: 
 

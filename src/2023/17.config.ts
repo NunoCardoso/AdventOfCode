@@ -2,13 +2,14 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'Clumsy Crucible',
     year: 2023,
     day: 17,
     result: 'unfinished',
     status: 'unsolved',
     speed: 'slow',
-    code: 'dirty',
-    comment: 'slow, 3 min, try depth first?'
+    code: 'clean',
+    difficulty: 0
   },
   logLevel: 'info',
   test: [

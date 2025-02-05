@@ -61,10 +61,8 @@ export default async (lineReader: any, params: Params) => {
     opened.forEach((s: Step) => {
       _world[s[0]][s[1]] = clc.cyan('O')
     })
-    _world.forEach((w) => {
-      console.log(w.join(''))
-    })
-    console.log('lowest cost', finished.lowestCost)
+    _world.forEach((w) => log.info(w.join('')))
+    log.info('lowest cost', finished.lowestCost)
   }
 
   const searchAlgorithm = async (

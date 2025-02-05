@@ -2,15 +2,17 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
+    title: 'The Floor Will Be Lava',
     year: 2023,
     day: 16,
     result: 'unfinished',
     status: 'unsolved',
-    speed: 'slow',
-    code: 'dirty',
-    comment: '37s without cache, cache goes memory busted'
+    speed: 'fast',
+    code: 'clean',
+    difficulty: 4
   },
-  logLevel: 'info',
+  mode: 'fastest',
+  logLevel: 'debug',
   test: {
     id: 'test',
     answers: {
@@ -20,8 +22,8 @@ let config: PuzzleConfig = {
   },
   prod: {
     answers: {
-      part1: 7060,
-      part2: 7493
+      //     part1: 7060,
+      // d    part2: 7493
     }
   }
 }

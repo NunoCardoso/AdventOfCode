@@ -23,7 +23,7 @@ export default async (lineReader: any, params: Params) => {
         else if (basins.includes(key)) line += clc.bgCyanBright(location[2])
         else line += clc.bgGreen.bold(location[2])
       })
-      console.log(line)
+      log.info(line)
     })
   }
 

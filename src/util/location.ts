@@ -1,6 +1,7 @@
 import { Location, LocationPlus } from '../declarations.d'
 
-export const isSame = (l1: Location, l2: Location) => l1[0] === l2[0] && l1[1] === l2[1]
+export const isSame = (l1: Location | LocationPlus<any>, l2: Location | LocationPlus<any>) =>
+  l1[0] === l2[0] && l1[1] === l2[1]
 
 export const fromKey = (s: string): Location => s.split(',').map(Number) as Location
 

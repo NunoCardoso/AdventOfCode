@@ -11,14 +11,12 @@ export default async (lineReader: any, params: Params) => {
   let part2: number = 0
 
   const printColumns = (columns: string[]) => {
-    for (let i = 0; i < columns[0].length; i++) {
+    for (let row of range(columns.length)) {
       let l = ''
-      for (let j = 0; j < columns.length; j++) {
-        l += columns[j][i]
-      }
-      console.log(l)
+      for (let col of range(columns[0].length)) l += columns[row][col]
+      log.info(l)
     }
-    console.log('\n')
+    log.info('\n')
   }
 
   const score = (column: string): number =>
@@ -27,11 +25,11 @@ export default async (lineReader: any, params: Params) => {
       .map((c: string, i: number) => (c === 'O' ? column.length - i : 0))
       .reduce((a, b) => a + b, 0)
 
-  const rotate90 = (columns: Array<string>): Array<string> => {
-    const newColumns: Array<string> = Array(columns[0].length).fill('')
-    for (let i = 0; i < columns.length; i++) {
-      for (let j = 0; j < columns[0].length; j++) {
-        newColumns[newColumns.length - 1 - j] += columns[i][j]
+  const rotate90 = (columns: string[]): string[] => {
+    const newColumns: string[] = Array(columns[0].length).fill('')
+    for (let row of range(columns.length)) {
+      for (let col of range(columns[0].length)) {
+        newColumns[newColumns.length - 1 - col] += columns[row][col]
       }
     }
     return newColumns

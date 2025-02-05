@@ -91,9 +91,9 @@ export default async (lineReader: any, params: Params) => {
 
   const printData = (world: World<string>, data: Data) => {
     world.forEach((row, i) => {
-      console.log(row.map((cell, j) => (data.path.includes(i + ',' + j) ? clc.red(world[i][j]) : world[i][j])).join(''))
+      log.info(row.map((cell, j) => (data.path.includes(i + ',' + j) ? clc.red(world[i][j]) : world[i][j])).join(''))
     })
-    console.log('')
+    log.info('')
   }
 
   const solveFor = (world: World<string>, queue: QueueLinkedList<Step>, end: Location): number => {

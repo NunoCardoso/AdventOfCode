@@ -32,7 +32,7 @@ export default async (lineReader: any, params: Params) => {
     _A = mod2147483647(_A, params.generatorBigInt.A)
     _B = mod2147483647(_B, params.generatorBigInt.B)
     if ((_A & 65535n) === (_B & 65535n)) part1++
-    if (iterations % 10000000 === 0) console.log('it', iterations, 'part1', part1)
+    if (iterations % 10000000 === 0) log.debug('it', iterations, 'part1', part1)
   }
   iterations = 0
   _A = A
@@ -46,7 +46,7 @@ export default async (lineReader: any, params: Params) => {
       _B = mod2147483647(_B, params.generatorBigInt.B)
     } while (_B & 7n)
     if ((_A & 65535n) === (_B & 65535n)) part2++
-    if (iterations % 1000000 === 0) console.log('it', iterations, 'part2', part2)
+    if (iterations % 1000000 === 0) log.debug('it', iterations, 'part2', part2)
   }
 
   return { part1, part2 }
