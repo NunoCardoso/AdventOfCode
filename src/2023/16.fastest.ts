@@ -125,8 +125,11 @@ export default async (lineReader: any, params: Params) => {
       return beam
     })
 
-    let beam = [...new Set(beams[0].concat(beams[1]).concat(newTail))]
+    let partBeam = [...new Set(beams[0].concat(beams[1]))]
+    log.debug('depthFirst: 2: adding fork to cache', headKey, JSON.stringify(partBeam))
+    cache.set(headKey, partBeam)
 
+    let beam = [...new Set(partBeam.concat(tail))]
     log.debug('depthFirst: 2: returning beam', JSON.stringify(beam))
     return beam
   }

@@ -7,7 +7,7 @@ let config: PuzzleConfig = {
     day: 16,
     result: 'unfinished',
     status: 'unsolved',
-    speed: 'fast',
+    speed: 'medium',
     code: 'clean',
     difficulty: 4
   },
@@ -22,8 +22,8 @@ let config: PuzzleConfig = {
   },
   prod: {
     answers: {
-      //     part1: 7060,
-      // d    part2: 7493
+      //      part1: 7060,
+      //    part2: 7493
     }
   }
 }
