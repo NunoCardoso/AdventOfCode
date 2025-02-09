@@ -2,35 +2,36 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
-    title: 'Handy Haversacks',
+    title: 'Adapter Array',
     year: 2020,
-    day: 7,
+    day: 10,
     result: 'finished',
     status: 'solved',
     speed: 'fast',
     code: 'clean',
-    difficulty: 3,
-    tags: ['Recursion', 'Depth-first']
+    difficulty: 4
   },
   logLevel: 'debug',
   test: [
     {
       id: 'test1',
       answers: {
-        part1: 4
+        part1: 35,
+        part2: 8
       }
     },
     {
       id: 'test2',
       answers: {
-        part2: 126
+        part1: 220,
+        part2: 19208
       }
     }
   ],
   prod: {
     answers: {
-      part1: 348,
-      part2: 18885
+      part1: 2100,
+      part2: 16198260678656
     }
   }
 }
