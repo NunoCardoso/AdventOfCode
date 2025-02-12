@@ -1,19 +1,30 @@
 export const permutation = <T = number>(array: T[], maxSize?: number): T[][] => {
   const result: T[][] = []
-  let size = maxSize ?? array.length
+  const size = maxSize ?? array.length
+  const used: boolean[] = new Array(array.length).fill(false)
+  const current: T[] = []
 
-  const permute = (current: T[], remaining: T[]): void => {
+  const backtrack = () => {
     if (current.length === size) {
-      result.push([...current]) // Add the current permutation to the result
-    } else {
-      for (let i = 0; i < remaining.length; i++) {
-        const next = remaining[i]
-        const newRemaining = remaining.slice(0, i).concat(remaining.slice(i + 1))
-        permute([...current, next], newRemaining)
-      }
+      result.push([...current])
+      return
+    }
+    for (let i = 0; i < array.length; i++) {
+      if (used[i]) continue
+      used[i] = true
+      current.push(array[i])
+      backtrack()
+      current.pop()
+      used[i] = false
     }
   }
 
-  permute([], array)
+  backtrack()
   return result
+}
+
+export const permutationWithRepetition = <T = number>(array: T[], size: number): T[][] => {
+  return Array(size)
+    .fill(array)
+    .reduce<T[][]>((acc, curr) => acc.flatMap((perm) => curr.map((item: T) => [...perm, item])), [[]])
 }

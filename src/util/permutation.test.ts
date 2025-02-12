@@ -1,5 +1,4 @@
-import { permutation } from './permutation'
-;('./permutation')
+import { permutation, permutationWithRepetition } from './permutation'
 
 describe('util/permutation', () => {
   test('permutation', () => {
@@ -54,5 +53,43 @@ describe('util/permutation', () => {
     ])
 
     expect(permutation([1], 2)).toEqual([])
+  })
+
+  test('permutationWithRepetition', () => {
+    // 24 values
+    expect(permutationWithRepetition([0, 1], 5)).toEqual([
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1],
+      [0, 0, 0, 1, 0],
+      [0, 0, 0, 1, 1],
+      [0, 0, 1, 0, 0],
+      [0, 0, 1, 0, 1],
+      [0, 0, 1, 1, 0],
+      [0, 0, 1, 1, 1],
+      [0, 1, 0, 0, 0],
+      [0, 1, 0, 0, 1],
+      [0, 1, 0, 1, 0],
+      [0, 1, 0, 1, 1],
+      [0, 1, 1, 0, 0],
+      [0, 1, 1, 0, 1],
+      [0, 1, 1, 1, 0],
+      [0, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0],
+      [1, 0, 0, 0, 1],
+      [1, 0, 0, 1, 0],
+      [1, 0, 0, 1, 1],
+      [1, 0, 1, 0, 0],
+      [1, 0, 1, 0, 1],
+      [1, 0, 1, 1, 0],
+      [1, 0, 1, 1, 1],
+      [1, 1, 0, 0, 0],
+      [1, 1, 0, 0, 1],
+      [1, 1, 0, 1, 0],
+      [1, 1, 0, 1, 1],
+      [1, 1, 1, 0, 0],
+      [1, 1, 1, 0, 1],
+      [1, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1]
+    ])
   })
 })
