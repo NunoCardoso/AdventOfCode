@@ -1,6 +1,6 @@
-import * as path from 'path'
 import aoc from 'aoc'
 import { PuzzleConfig } from 'aoc.d'
+import * as path from 'path'
 
 if (process.argv[2]?.length !== 4 && !process.argv[2]?.startsWith('20')) {
   console.error('usage: ts-node runDay {year} {day}')

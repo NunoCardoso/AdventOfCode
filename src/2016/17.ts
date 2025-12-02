@@ -1,5 +1,6 @@
 import { Params } from 'aoc.d'
 import { Location, LocationPlus } from 'declarations'
+
 const SparkMD5 = require('spark-md5')
 
 type Mode = 'shortest' | 'longest'

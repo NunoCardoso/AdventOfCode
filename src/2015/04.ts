@@ -1,4 +1,5 @@
 import { Params } from 'aoc.d'
+
 const SparkMD5 = require('spark-md5')
 
 export default async (lineReader: any, params: Params) => {

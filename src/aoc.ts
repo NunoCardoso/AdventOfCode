@@ -1,7 +1,8 @@
+import clc from 'cli-color'
 import fs from 'fs'
 import path from 'path'
-import clc from 'cli-color'
 import { Prod, PuzzleConfig, PuzzleOutput, Result, Speed, Status, Test } from './aoc.d'
+
 const readline = require('readline')
 
 const padCenter = (s: string, len: number) => {

@@ -1,5 +1,5 @@
-import * as console from 'console'
 import { Params } from 'aoc.d'
+import * as console from 'console'
 
 export const keypadMoves: Record<string, Record<string, string>> = {
   A: {

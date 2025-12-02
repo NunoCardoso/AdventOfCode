@@ -1,7 +1,9 @@
 const path = require('path')
 const fs = require('fs')
+
 import aoc from 'aoc'
 import { PuzzleConfig, PuzzleOutput, PuzzleOutputAnswer } from 'aoc.d'
+
 var readline = require('readline')
 var rl = readline.createInterface(process.stdin, process.stdout)
 

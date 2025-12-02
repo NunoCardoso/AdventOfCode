@@ -1,5 +1,5 @@
-import * as console from 'console'
 import { Params } from 'aoc.d'
+import * as console from 'console'
 import { range } from 'util/range'
 
 type Event = {
