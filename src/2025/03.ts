@@ -31,7 +31,10 @@ export default async (lineReader: any, params: Params) => {
 
       let template = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
-      //do
+      /* do {
+        let index = valueIndex[template.pop()]
+
+      }*/
       for (let i = 0; i < value.length - 1; i++) {
         for (let j = i + 1; j < value.length; j++) {
           number = Number(value[i] + value[j])
