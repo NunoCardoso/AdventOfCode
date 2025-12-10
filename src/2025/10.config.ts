@@ -2,33 +2,27 @@ import { PuzzleConfig } from 'aoc.d'
 
 let config: PuzzleConfig = {
   config: {
-    title: 'Playground',
+    title: 'Factory',
     year: 2025,
-    day: 8,
+    day: 10,
     result: 'unfinished',
-    status: 'unsolved',
-    speed: 'slow',
+    status: 'solved',
+    speed: 'fast',
     code: 'dirty',
     difficulty: 0
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {
-      part1: 40,
-      part2: 25272
-    },
-    params: {
-      iterations: 10
+      //part1: 7,
+      part2: 33
     }
   },
   prod: {
-    params: {
-      iterations: 1000
-    },
     answers: {
-      part1: 103488,
-      part2: 8759985540
+      //part1: 488,
+      //part2: 0
     }
   }
 }
