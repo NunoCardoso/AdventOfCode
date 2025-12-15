@@ -6,62 +6,93 @@ export default async (lineReader: any, params: Params) => {
   let part1: number = 0
   let part2: number = 0
 
-  let values: string[] = []
-  // indexes for each number, so I can analyse 9, then 8, etc
-  let valueIndex: Record<string, number>[] = []
-  for await (const line of lineReader) {
-    values.push(line)
-    let index: Record<string, number> = {}
-    line.split('').forEach((l, i) => {
-      if (index[l] === undefined) index[l] = []
-      index[l].push(i)
-    })
-    valueIndex.push(index)
-  }
+  let batteries: string[] = []
 
-  const solveFor = (howMany: number): number => {
-    let res = 0
+  type JoltageIndex = Record<string, number[]>
 
-    values.forEach((value, i) => {
-      let max = 0,
-        number = 0
+  for await (const line of lineReader) batteries.push(line)
 
-      let index: Record<string, number> = valueIndex[i]
-      // index for the number
+  const findJoltage = (
+    battery: string,
+    joltageIndex: JoltageIndex,
+    joltageLength: number,
+    testJoltage: string[],
+    currentJoltage: string,
+    startIndex: number,
+    max: number
+  ): number => {
+    log.debug('findJoltage for', battery, joltageLength, testJoltage, currentJoltage, startIndex, max)
 
-      let template = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    // we are running out of testVoltage numbers, return max
+    if (testJoltage.length === 0) {
+      log.debug('no more test joltage, return max', max)
+      return max
+    }
+    // we are finished with the number, return the highest one
+    if (joltageLength === 0) {
+      let newMax = Math.max(Number(currentJoltage), max)
+      log.debug('no more howMany, returning', newMax)
+      return newMax
+    }
+    let test: string = testJoltage.pop()!
+    if (!joltageIndex[test]) {
+      // try next on template
+      log.debug('no number', test, 'in', battery, 'going deeper')
+      return findJoltage(battery, joltageIndex, joltageLength, testJoltage, currentJoltage, startIndex, max)
+    }
+    // this is hopeless, will never be higher than max
+    let maxNumber = Number(currentJoltage + '9'.repeat(joltageLength))
+    if (maxNumber < max) {
+      log.debug('maxNumber', maxNumber, 'will never be bigger than max', max, 'leaving')
+      return max
+    }
 
-      /* do {
-        let index = valueIndex[template.pop()]
-
-      }*/
-      for (let i = 0; i < value.length - 1; i++) {
-        for (let j = i + 1; j < value.length; j++) {
-          number = Number(value[i] + value[j])
-          if (number > max) max = number
-        }
+    for (let index of joltageIndex[test]) {
+      // index is from a number on the left, forget about it
+      if (index < startIndex) {
+        log.debug('index', index, 'left of startIndex', startIndex, 'skipping')
+        continue
       }
-      //console.log('value', value, 'max', max)
-      res += max
-    })
-    return res
+      // too short, can't work, skipping
+      if (index + joltageLength > battery.length) {
+        log.debug(
+          'index',
+          index,
+          'joltageLength',
+          joltageLength,
+          'battery.length',
+          battery.length,
+          'Too short, skipping'
+        )
+        continue
+      }
+      // collect and iterate
+      log.debug('collecting and going deeper')
+      return findJoltage(
+        battery,
+        joltageIndex,
+        joltageLength - 1,
+        ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+        currentJoltage + '' + test,
+        index + 1,
+        max
+      )
+    }
+    log.debug('looping')
+    return findJoltage(battery, joltageIndex, joltageLength, testJoltage, currentJoltage, startIndex, max)
   }
 
-  /* const solveFor = (): number => {
-     let res = 0
-     values.forEach(value => {
-        let max = 0, number = 0
-        for (let i = 0; i < value.length - 1; i++) {
-          for (let j = i + 1; j < value.length; j++) {
-            number = Number(value[i] + value[j])
-            if ( number > max ) max = number
-          }
-        }
-        //console.log('value', value, 'max', max)
-        res += max
-     })
-     return res
-   }*/
+  const solveFor = (joltageLength: number): number =>
+    batteries.reduce((acc, battery, i) => {
+      let joltageIndex: JoltageIndex = {} //indexes for each number, so I can analyse 9, then 8, etc
+      battery.split('').forEach((joltage, index) => {
+        if (joltageIndex[joltage] === undefined) joltageIndex[joltage] = []
+        joltageIndex[joltage].push(index)
+      })
+      return (
+        acc + findJoltage(battery, joltageIndex, joltageLength, ['1', '2', '3', '4', '5', '6', '7', '8', '9'], '', 0, 0)
+      )
+    }, 0)
 
   if (!params.skipPart1) part1 = solveFor(2)
   if (!params.skipPart2) part2 = solveFor(12)

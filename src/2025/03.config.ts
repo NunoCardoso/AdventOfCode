@@ -5,13 +5,13 @@ let config: PuzzleConfig = {
     title: 'Lobby',
     year: 2025,
     day: 3,
-    result: 'unfinished',
-    status: 'unsolved',
+    result: 'finished',
+    status: 'solved',
     speed: 'fast',
-    code: 'dirty',
-    difficulty: 0
+    code: 'clean',
+    difficulty: 3
   },
-  logLevel: 'debug',
+  logLevel: 'info',
   test: {
     id: 'test',
     answers: {
@@ -21,8 +21,8 @@ let config: PuzzleConfig = {
   },
   prod: {
     answers: {
-      part1: 17359
-      //part2: 0
+      part1: 17359,
+      part2: 172787336861064
     }
   }
 }
